@@ -17,6 +17,12 @@ revArray<T>::revArray(uint32 capacity)
 	array = new T[capacity];
 }
 
+template<typename T>
+revArray<T>::~revArray()
+{
+	delete[] array;
+	array = nullptr;
+}
 
 template<typename T>
 void revArray<T>::Add(const T& obj)

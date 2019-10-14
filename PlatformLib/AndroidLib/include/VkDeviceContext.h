@@ -16,11 +16,32 @@ public:
 
     bool Create(Window& window);
     void Destroy();
+
+    const VkDevice& GetDevice() const
+    {
+        return device;
+    }
+
+    const VkPhysicalDevice& GetGpuDevice() const
+    {
+        return gpu;
+    }
+
+    const VkSurfaceKHR& GetSurface() const
+    {
+        return surface;
+    }
+
+    uint32 GetQueueFamilyIndex() const
+    {
+        return queueFamilyIndex;
+    }
 private:
     VkInstance instance;
     VkDevice device;
     VkSurfaceKHR surface;
     VkPhysicalDevice gpu;
+    uint32 queueFamilyIndex;
 };
 
 #endif

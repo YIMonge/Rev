@@ -11,7 +11,6 @@
                         __LINE__);                                    \
   }
 
-
 bool VkDeviceContext::Create(Window& window)
 {
     if(!InitVulkan())
@@ -74,7 +73,6 @@ bool VkDeviceContext::Create(Window& window)
 
 
     // Find queue for graphics
-    uint32 queueFamilyIndex;
     for (queueFamilyIndex=0; queueFamilyIndex < queueFamilyCount; queueFamilyIndex++) {
         if (queueFamilyProperties[queueFamilyIndex].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
             break;

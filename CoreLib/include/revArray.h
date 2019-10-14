@@ -10,6 +10,7 @@ class revArray
 public:
 	revArray();
 	revArray(uint32 capacity);
+	~revArray();
 
 	void Add(const T& obj);
 	void Remove(uint32 index);

@@ -15,10 +15,12 @@ VkRenderer::~VkRenderer()
 void VkRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
     context.Create(*window);
+    swapChain.Create(context);
 }
 
 void VkRenderer::ShutDown()
 {
+    swapChain.Destroy();
     context.Destroy();
 }
 

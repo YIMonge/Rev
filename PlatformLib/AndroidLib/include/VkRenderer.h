@@ -4,7 +4,7 @@
 #include "IRenderer.h"
 #ifdef _USE_VULKAN
 #include "VkDeviceContext.h"
-
+#include "VkSwapChain.h"
 
 class VkRenderer : public IRenderer
 {
@@ -26,6 +26,7 @@ public:
 
 private:
 	VkDeviceContext context;
+	VkSwapChain swapChain;
 };
 
 #endif
