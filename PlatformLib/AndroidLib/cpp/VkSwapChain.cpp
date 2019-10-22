@@ -13,7 +13,7 @@ VkSwapChain::~VkSwapChain()
 {
 }
 
-bool VkSwapChain::Create(VkDeviceContext& deviceContext)
+bool VkSwapChain::Create(const VkDeviceContext& deviceContext)
 {
     VkSurfaceCapabilitiesKHR  capabilities;
     const VkPhysicalDevice& gpu = deviceContext.GetGpuDevice();
@@ -61,7 +61,7 @@ bool VkSwapChain::Create(VkDeviceContext& deviceContext)
     return true;
 }
 
-void VkSwapChain::Destroy(VkDeviceContext& deviceContext)
+void VkSwapChain::Destroy(const VkDeviceContext& deviceContext)
 {
     /*
     const VkDevice& device = deviceContext.GetDevice();
