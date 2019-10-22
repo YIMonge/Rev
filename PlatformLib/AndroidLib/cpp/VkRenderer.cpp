@@ -20,7 +20,7 @@ void VkRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 
 void VkRenderer::ShutDown()
 {
-    swapChain.Destroy();
+    swapChain.Destroy(context);
     context.Destroy();
 }
 

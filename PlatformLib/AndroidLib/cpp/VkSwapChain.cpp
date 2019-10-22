@@ -63,9 +63,11 @@ bool VkSwapChain::Create(VkDeviceContext& deviceContext)
 
 void VkSwapChain::Destroy(VkDeviceContext& deviceContext)
 {
+    /*
     const VkDevice& device = deviceContext.GetDevice();
     for(int i = 0; i < length; ++i){
     }
+     */
 }
 
 #endif
