@@ -2,6 +2,16 @@ cmake_minimum_required(VERSION 3.4.1)
 
 message("Build Start")
 
+# Choose Graphics system
+set(VULKAN 1)
+set(GLES 0)
+
+if(VULKAN)
+    add_definitions(-D_USE_VULKAN)
+elseif(GLES)
+    add_definitions(-D_USE_GLES)
+endif()
+
 set(CORELIB_DIR  ../../../../../../CoreLib)
 set(PLATFORMLIB_DIR  ../../../../../../PlatformLib)
 set(ANDROIDLIB_DIR  ../../../../../../PlatformLib/AndroidLib)
@@ -12,12 +22,9 @@ set(${CMAKE_C_FLAGS}, "${CMAKE_C_FLAGS}")
 # TODO:check app size betweeen hidden and public
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-
 add_definitions(
         -D_ANDROID
-        -D_USE_VULKAN
         -DVK_USE_PLATFORM_ANDROID_KHR
-        #-D_USE_GLES
 )
 
 add_library(native_app STATIC

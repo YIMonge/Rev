@@ -45,7 +45,13 @@ bool VkRenderInfo::Create(const VkDeviceContext &deviceContext, const VkSwapChai
     return vkCreateRenderPass(deviceContext.GetDevice(), &renderPassCreateInfo, nullptr, &renderPass) == VK_SUCCESS;
 }
 
-void VkRenderInfo::Destroy()
+void VkRenderInfo::Destroy(const VkDeviceContext& deviceContext)
 {
-
+    VkDevice device = deviceContext.GetDevice();
+    if(cmdBuffer != nullptr) {
+        vkFreeCommandBuffers(device, cmdPool, cmdBufferLength, cmdBuffer);
+        delete[] cmdBuffer;
+    }
+    vkDestroyCommandPool(device, cmdPool, nullptr);
+    vkDestroyRenderPass(device, renderPass, nullptr);
 }

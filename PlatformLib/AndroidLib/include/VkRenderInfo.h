@@ -8,13 +8,13 @@ class VkRenderInfo
 {
 public:
     bool Create(const VkDeviceContext& deviceContext, const VkSwapChain& swapChain);
-    void Destroy();
+    void Destroy(const VkDeviceContext& deviceContext);
 
 private:
     VkRenderPass renderPass;
-    //VkCommandPool  cmdPool;
-    //VkCommandBuffer* cmdBuffer;
-    //uint32 cmdBufferLength;
+    VkCommandPool  cmdPool;
+    VkCommandBuffer* cmdBuffer;
+    uint32 cmdBufferLength;
     //VkSemaphore  semaphore;
     //VkFence fence;
 };

@@ -63,11 +63,13 @@ bool VkSwapChain::Create(const VkDeviceContext& deviceContext)
 
 void VkSwapChain::Destroy(const VkDeviceContext& deviceContext)
 {
-    /*
     const VkDevice& device = deviceContext.GetDevice();
-    for(int i = 0; i < length; ++i){
+    for(int i = 0; i < length; ++i) {
+        vkDestroyFramebuffer(device, frameBuffers[i], nullptr);
+        vkDestroyImageView(device, views[i], nullptr);
+        vkDestroyImage(device, images[i], nullptr);
     }
-     */
+    vkDestroySwapchainKHR(device, swapChain, nullptr);
 }
 
 #endif
