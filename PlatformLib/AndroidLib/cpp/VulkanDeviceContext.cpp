@@ -1,4 +1,4 @@
-#include "VkDeviceContext.h"
+#include "VulkanDeviceContext.h"
 #include "Window.h"
 #include "Log.h"
 
@@ -11,7 +11,7 @@
                         __LINE__);                                    \
   }
 
-bool VkDeviceContext::Create(Window& window)
+bool VulkanDeviceContext::Create(Window& window)
 {
     if(!InitVulkan())
     {
@@ -120,7 +120,7 @@ bool VkDeviceContext::Create(Window& window)
 }
 
 
-void VkDeviceContext::Destroy()
+void VulkanDeviceContext::Destroy()
 {
     vkDestroySurfaceKHR(instance, surface, nullptr);
     vkDestroyDevice(device, nullptr);

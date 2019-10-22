@@ -1,16 +1,17 @@
-#ifndef __VkRenderer_H__
-#define __VkRenderer_H__
+#ifndef __VULKANRENDERER_H__
+#define __VULKANRENDERER_H__
 
 #include "IRenderer.h"
 #ifdef _USE_VULKAN
-#include "VkDeviceContext.h"
-#include "VkSwapChain.h"
+#include "VulkanDeviceContext.h"
+#include "VulkanSwapChain.h"
+#include "VulkanRenderInfo.h"
 
-class VkRenderer : public IRenderer
+class VulkanRenderer : public IRenderer
 {
 public:
-    VkRenderer();
-    virtual ~VkRenderer();
+    VulkanRenderer();
+    virtual ~VulkanRenderer();
 
 	virtual void StartUp(Window* window, const GraphicsDesc& desc);
 	virtual void ShutDown();
@@ -25,8 +26,9 @@ public:
 	virtual void SetAlphaTest(ALPHA_TEST func, float value);
 
 private:
-	VkDeviceContext context;
-	VkSwapChain swapChain;
+	VulkanDeviceContext context;
+	VulkanSwapChain swapChain;
+	VulkanRenderInfo renderInfo;
 };
 
 #endif

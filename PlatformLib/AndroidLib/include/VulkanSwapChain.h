@@ -1,19 +1,19 @@
-#ifndef __VKSWAPCHAIN_H__
-#define __VKSWAPCHAIN_H__
+#ifndef __VULKANSWAPCHAIN_H__
+#define __VULKANSWAPCHAIN_H__
 
 #ifdef _USE_VULKAN
 
-#include "VkDeviceContext.h"
+#include "VulkanDeviceContext.h"
 #include "revArray.h"
 
-class VkSwapChain
+class VulkanSwapChain
 {
 public:
-    VkSwapChain();
-    ~VkSwapChain();
+    VulkanSwapChain();
+    ~VulkanSwapChain();
 
-    bool Create(const VkDeviceContext& deviceContext);
-    void Destroy(const VkDeviceContext& deviceContext);
+    bool Create(const VulkanDeviceContext& deviceContext);
+    void Destroy(const VulkanDeviceContext& deviceContext);
 
     VkFormat GetFormat() const { return format; }
 private:

@@ -8,13 +8,13 @@
 	#elif defined(_USE_DIRECTX12)
 	#include "DX12Renderer.h"
 	#elif defined(_USE_VULKAN)
-	#include "VkRenderer.h"
+	#include "VulkanRenderer.h"
 	#endif
 #elif defined(_ANDROID)
 	#if defined(_USE_GLES)
 	#include "GLESRenderer.h"
 	#elif defined(_USE_VULKAN)
-	#include "VkRenderer.h"
+	#include "VulkanRenderer.h"
 	#endif
 #endif
 
@@ -31,7 +31,7 @@ void revGraphics::StartUp(Window* window, const GraphicsDesc& desc)
 #elif defined(_USE_DIRECTX12)
 	renderer = new DX12Renderer();
 #elif defined(_USE_VULKAN)
-	renderer = new VkRenderer();
+	renderer = new VulkanRenderer();
 #else
 	renderer = new GLESRenderer();
 #endif

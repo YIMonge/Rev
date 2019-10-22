@@ -1,5 +1,5 @@
-#ifndef __VKDEVICECONTEXT_H__
-#define __VKDEVICECONTEXT_H__
+#ifndef __VulkanDeviceContext_H__
+#define __VulkanDeviceContext_H__
 
 #ifdef _USE_VULKAN
 
@@ -8,11 +8,11 @@
 
 class Window;
 
-class VkDeviceContext : public IDeviceContext
+class VulkanDeviceContext : public IDeviceContext
 {
 public:
-    VkDeviceContext(){}
-    virtual ~VkDeviceContext(){}
+    VulkanDeviceContext(){}
+    virtual ~VulkanDeviceContext(){}
 
     bool Create(Window& window);
     void Destroy();

@@ -1,19 +1,19 @@
 #include <string.h>
 #include "revArray.h"
-#include "VkSwapChain.h"
+#include "VulkanSwapChain.h"
 
 #ifdef _USE_VULKAN
 
-VkSwapChain::VkSwapChain()
+VulkanSwapChain::VulkanSwapChain()
 {
     memset(&swapChain, 0, sizeof(swapChain));
 }
 
-VkSwapChain::~VkSwapChain()
+VulkanSwapChain::~VulkanSwapChain()
 {
 }
 
-bool VkSwapChain::Create(const VkDeviceContext& deviceContext)
+bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
 {
     VkSurfaceCapabilitiesKHR  capabilities;
     const VkPhysicalDevice& gpu = deviceContext.GetGpuDevice();
@@ -61,7 +61,7 @@ bool VkSwapChain::Create(const VkDeviceContext& deviceContext)
     return true;
 }
 
-void VkSwapChain::Destroy(const VkDeviceContext& deviceContext)
+void VulkanSwapChain::Destroy(const VulkanDeviceContext& deviceContext)
 {
     const VkDevice& device = deviceContext.GetDevice();
     for(int i = 0; i < length; ++i) {

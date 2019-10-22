@@ -88,12 +88,22 @@ target_include_directories(native-activity PRIVATE
         ${ANDROID_NDK}/sources/android/native_app_glue)
 
 # add lib dependencies
-target_link_libraries(native-activity
+if(VULKAN)
+    target_link_libraries(native-activity
         android
         native_app
         Rev
         AndroidLib
         CoreLib
-        EGL
-        GLESv1_CM
         log)
+elseif(GLES)
+    target_link_libraries(native-activity
+            android
+            native_app
+            Rev
+            AndroidLib
+            CoreLib
+            EGL
+            GLESv1_CM
+            log)
+endif()

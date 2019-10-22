@@ -1,6 +1,8 @@
-#include "VkRenderInfo.h"
+#include "VulkanRenderInfo.h"
 
-bool VkRenderInfo::Create(const VkDeviceContext &deviceContext, const VkSwapChain& swapChain)
+#ifdef _USE_VULKAN
+
+bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const VulkanSwapChain& swapChain)
 {
     VkAttachmentDescription attachmentDescription {
         .format = swapChain.GetFormat(),
@@ -45,7 +47,7 @@ bool VkRenderInfo::Create(const VkDeviceContext &deviceContext, const VkSwapChai
     return vkCreateRenderPass(deviceContext.GetDevice(), &renderPassCreateInfo, nullptr, &renderPass) == VK_SUCCESS;
 }
 
-void VkRenderInfo::Destroy(const VkDeviceContext& deviceContext)
+void VulkanRenderInfo::Destroy(const VulkanDeviceContext& deviceContext)
 {
     VkDevice device = deviceContext.GetDevice();
     if(cmdBuffer != nullptr) {
@@ -55,3 +57,5 @@ void VkRenderInfo::Destroy(const VkDeviceContext& deviceContext)
     vkDestroyCommandPool(device, cmdPool, nullptr);
     vkDestroyRenderPass(device, renderPass, nullptr);
 }
+
+#endif
