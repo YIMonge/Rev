@@ -52,6 +52,12 @@ T& revArray<T>::operator [] (int32 i)
 }
 
 template<typename T>
+const T& revArray<T>::operator [] (int32 i) const
+{
+	return array[i];
+}
+
+template<typename T>
 void revArray<T>::Resize(uint32 capacity)
 {
 	size = capacity;

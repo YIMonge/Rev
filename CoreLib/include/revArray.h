@@ -16,6 +16,7 @@ public:
 	void Remove(uint32 index);
 	void Remove(const T& obj);
 	T& operator [] (int32 i);
+	const T& operator [] (int32 i) const;
 
 	void Resize(uint32 capacity);
 	uint32 Count() const;
