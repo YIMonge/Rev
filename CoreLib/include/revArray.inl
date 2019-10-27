@@ -5,16 +5,18 @@
 template<typename T>
 revArray<T>::revArray() 
 : size(0)
+, count(10)
 {
-	// default size is 10
-	array = new T[10];
+	// default capacity is 10
+	array = new T[count];
 }
 
 template<typename T>
 revArray<T>::revArray(uint32 capacity)
 : size(0)
+, count(capacity)
 {
-	array = new T[capacity];
+	array = new T[count];
 }
 
 template<typename T>
@@ -50,37 +52,39 @@ T& revArray<T>::operator [] (int32 i)
 }
 
 template<typename T>
-void revArray<T>::SetCapacity(uint32 capacity)
+void revArray<T>::Resize(uint32 capacity)
 {
+	size = capacity;
 	T* new_array = new T[capacity];
 	if(array != nullptr){
-		memcpy(new_array, array, sizeof(array));
+		memcpy(new_array, array, count * sizeof(T));
 		delete[] array;
 	}
+	count = capacity;
 	array = new_array;	
 }
 
 template<typename T>
-uint32 revArray<T>::GetCapacity() const
+uint32 revArray<T>::Count() const
 {
-	return sizeof(array) / sizeof(T);
+	return size;
 }
 
 template<typename T>
 void revArray<T>::GrowIfNeeded()
 {
-	uint32 capacity = GetCapacity();
-	if(size + 1 < capacity)
+	if(size + 1 < count)
 	{
 		return;
 	}
 
-	T* new_array = new T[capacity * 2];
+	T* new_array = new T[count * 2];
 	
 	if(array != nullptr){
-		memcpy(new_array, array, sizeof(array));
+		memcpy(new_array, array, sizeof(T) * count);
 		delete[] array;
 	}
+	count *= 2;
 	array = new_array;
 }
 

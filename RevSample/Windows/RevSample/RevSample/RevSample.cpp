@@ -7,6 +7,8 @@
 #include "revBitset.h"
 #include "revThread.h"
 #include "revThreadPool.h"
+#include "revArray.h"
+
 
 #include <stdio.h>
 
@@ -31,6 +33,7 @@ public:
 
 	float r;
 };
+
 
 
 

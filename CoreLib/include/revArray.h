@@ -17,8 +17,8 @@ public:
 	void Remove(const T& obj);
 	T& operator [] (int32 i);
 
-	void SetCapacity(uint32 capacity);
-	uint32 GetCapacity() const;
+	void Resize(uint32 capacity);
+	uint32 Count() const;
 
 	ITERATOR_DEF(T, std::forward_iterator_tag);
 	iterator begin()
@@ -35,6 +35,7 @@ private:
 
 	T* array;
 	uint32 size;
+	uint32 count;
 };
 
 #include "revArray.inl"
