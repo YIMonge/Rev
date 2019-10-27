@@ -6,6 +6,7 @@
 #include "VulkanDeviceContext.h"
 #include "VulkanSwapChain.h"
 #include "VulkanRenderInfo.h"
+#include "VulkanFrameBuffer.h"
 
 class VulkanRenderer : public IRenderer
 {
@@ -29,6 +30,7 @@ private:
 	VulkanDeviceContext context;
 	VulkanSwapChain swapChain;
 	VulkanRenderInfo renderInfo;
+	VulkanFrameBuffer frameBuffer;
 };
 
 #endif

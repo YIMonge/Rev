@@ -64,11 +64,6 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
 void VulkanSwapChain::Destroy(const VulkanDeviceContext& deviceContext)
 {
     const VkDevice& device = deviceContext.GetDevice();
-    for(int i = 0; i < length; ++i) {
-        vkDestroyFramebuffer(device, frameBuffers[i], nullptr);
-        vkDestroyImageView(device, views[i], nullptr);
-        vkDestroyImage(device, images[i], nullptr);
-    }
     vkDestroySwapchainKHR(device, swapChain, nullptr);
 }
 

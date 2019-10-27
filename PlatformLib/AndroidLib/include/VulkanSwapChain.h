@@ -16,16 +16,13 @@ public:
     void Destroy(const VulkanDeviceContext& deviceContext);
 
     VkFormat GetFormat() const { return format; }
+    VkSwapchainKHR  GetSwapChain() const { return swapChain; }
+    VkExtent2D GetDisplaySize() const { return displaySize; }
 private:
     VkSwapchainKHR swapChain;
     VkExtent2D displaySize;
     VkFormat format;
     uint32 length;
-
-    // FrameBuffers
-    revArray<VkImage> images;
-    revArray<VkImageView> views;
-    revArray<VkFramebuffer> frameBuffers;
 };
 
 

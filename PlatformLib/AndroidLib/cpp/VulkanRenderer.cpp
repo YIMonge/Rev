@@ -17,10 +17,12 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     context.Create(*window);
     swapChain.Create(context);
     renderInfo.Create(context, swapChain);
+    frameBuffer.Create(context, swapChain, renderInfo);
 }
 
 void VulkanRenderer::ShutDown()
 {
+    frameBuffer.Destroy(context);
     renderInfo.Destroy(context);
     swapChain.Destroy(context);
     context.Destroy();

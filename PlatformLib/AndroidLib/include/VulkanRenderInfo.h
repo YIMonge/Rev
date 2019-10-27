@@ -12,6 +12,7 @@ public:
     bool Create(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain);
     void Destroy(const VulkanDeviceContext& deviceContext);
 
+    const VkRenderPass& GetRenderPass() const { return renderPass; }
 private:
     VkRenderPass renderPass;
     VkCommandPool  cmdPool;
