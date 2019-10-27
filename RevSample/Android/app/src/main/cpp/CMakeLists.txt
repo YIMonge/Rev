@@ -51,13 +51,6 @@ target_include_directories(AndroidLib PRIVATE
         ${ANDROID_NDK}/sources/android/native_app_glue
         )
 
-#target_include_directories(AndroidLib PRIVATE
-#        ${CORELIB_DIR}/include
-#        ${ANDROIDLIB_DIR}/include
-#        ${PLATFORMLIB_DIR}/interface
-#        ${ANDROID_NDK}/sources/android/native_app_glue   #if use glse
-#        )
-
 message("Build AndroidLib Done")
 
 #------------------Build Rev-----------------------------
