@@ -83,4 +83,12 @@ lint/tmp/
 
 #VS files
 *.ipch
+*.idb
+*.pdb
+*.tlog
+*.obj
 .vs
+
+#lib
+*.lib
+
