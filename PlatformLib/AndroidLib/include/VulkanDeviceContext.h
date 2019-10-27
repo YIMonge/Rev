@@ -36,6 +36,11 @@ public:
     {
         return queueFamilyIndex;
     }
+
+    const uint32* GetQueueFamilyIndexPtr() const
+    {
+        return &queueFamilyIndex;
+    }
 private:
     VkInstance instance;
     VkDevice device;
