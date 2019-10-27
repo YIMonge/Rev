@@ -1,13 +1,5 @@
 apply plugin: 'com.android.application'
 
-task hoge  {
-    println "Hello"
-}
-
-task hoge1(dependsOn: hoge) {
-    println "gggg"
-}
-
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.0"
