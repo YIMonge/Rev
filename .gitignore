@@ -88,6 +88,8 @@ lint/tmp/
 *.tlog
 *.obj
 .vs
+*.exe
+*.ilk
 
 #lib
 *.lib
