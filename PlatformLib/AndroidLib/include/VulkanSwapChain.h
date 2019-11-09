@@ -18,6 +18,7 @@ public:
     VkFormat GetFormat() const { return format; }
     VkSwapchainKHR  GetSwapChain() const { return swapChain; }
     VkExtent2D GetDisplaySize() const { return displaySize; }
+    uint32 GetLength() const { return length; }
 private:
     VkSwapchainKHR swapChain;
     VkExtent2D displaySize;
