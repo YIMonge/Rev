@@ -44,7 +44,28 @@ bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const Vu
         .pDependencies = nullptr,
     };
 
-    return vkCreateRenderPass(deviceContext.GetDevice(), &renderPassCreateInfo, nullptr, &renderPass) == VK_SUCCESS;
+    VkDevice  device = deviceContext.GetDevice();
+    VkResult result = vkCreateRenderPass(device, &renderPassCreateInfo, nullptr, &renderPass);
+    if(result != VK_SUCCESS) return false;
+
+    // create fence and semaphore
+    VkFenceCreateInfo fenceCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+    };
+    result = vkCreateFence(device, &fenceCreateInfo, nullptr, &fence);
+    if(result != VK_SUCCESS) return false;
+
+    VkSemaphoreCreateInfo semaphoreCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+    };
+    result = vkCreateSemaphore(device, &semaphoreCreateInfo, nullptr, &semaphore);
+    if(result != VK_SUCCESS) return false;
+
+    return true;
 }
 
 void VulkanRenderInfo::Destroy(const VulkanDeviceContext& deviceContext)
