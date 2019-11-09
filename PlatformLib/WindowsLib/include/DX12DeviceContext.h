@@ -7,37 +7,36 @@
 
 #include <d3d12.h>
 #include <dxgi1_4.h>
-#pragma comment(lib, "d3d12.lib")
 
 class Window;
 
 class DX12DeviceContext : public IDeviceContext
 {
 public:
-	bool Create(Window* windw, const GraphicsDesc& desc);
+	bool Create(const GraphicsDesc& desc);
+	void Destroy();
 
-	ID3D12Device* GetDevice() const;
-	IDXGISwapChain* GetSwapChain() const;
+	ID3D12Device* GetDevice() const
+	{
+		return device;
+	}
+
+	ID3D12CommandQueue* GetCommandQueue() const
+	{
+		return commandQueue;
+	}
+
+	const GraphicsDesc& GetDesc() const
+	{
+		return desc;
+	}
+
 private:
 	ID3D12Device*				device;
-	IDXGISwapChain*				swap_chain;
-	IDXGIFactory1*				dxgi_factroy;
-	ID3D12CommandQueue*			command_queue;
-	ID3D12CommandAllocator*	command_allocator;
-	ID3D12Resource*				render_targets;
-
+	ID3D12CommandQueue*			commandQueue;
+	ID3D12CommandAllocator*	commandAllocator;
+	GraphicsDesc desc;
 };
-
-inline ID3D12Device* DX12DeviceContext::GetDevice() const
-{
-	return device;
-}
-	
-inline IDXGISwapChain* DX12DeviceContext::GetSwapChain() const
-{
-	return swap_chain; 
-}
-
 
 #endif
 
