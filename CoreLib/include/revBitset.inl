@@ -38,7 +38,7 @@ bool revBitset<T, size>::Test(T flag) const
 template<typename T, int size>
 bool revBitset<T, size>::Any() const
 {
-	for(int i = 0; i < size/CHAR_BIT + 1; ++i)
+	for(int32 i = 0; i < size/CHAR_BIT + 1; ++i)
 	{
 		if(buffer[i] != 0)
 		{
