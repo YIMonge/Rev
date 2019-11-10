@@ -24,7 +24,7 @@ bool DX11DeviceContext::Create(Window* window, const GraphicsDesc& desc)
 	DXGI_SWAP_CHAIN_DESC sd;
 	memset(&sd, 0, sizeof(sd));
 
-	switch (desc.buffer_type)
+	switch (desc.bufferType)
 	{
 	case GraphicsDesc::BUFFERTYPE::TRIPLE_BUFFER:
 		sd.BufferCount = 2;
@@ -34,16 +34,17 @@ bool DX11DeviceContext::Create(Window* window, const GraphicsDesc& desc)
 		break;
 	}
 
-	switch (desc.buffer_format)
+	switch (desc.bufferFormat)
 	{
 	case GraphicsDesc::BUFFERFORMAT::R8B8G8A8:
 		sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		break;
 
-	case GraphicsDesc::BUFFERFORMAT::R8B8G8A8_SRGB:
+	/*
+	case GraphicsDesc::BUFFERFORMAT::R8B8G8A8:
 		sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
 		break;
-
+	*/
 	default:
 		return false;
 		break;
@@ -62,7 +63,7 @@ bool DX11DeviceContext::Create(Window* window, const GraphicsDesc& desc)
 	sd.SampleDesc.Count = 1;
 	sd.SampleDesc.Quality = 0;
 
-	sd.Windowed = !desc.use_fullscreen;
+	sd.Windowed = !desc.useFullscreen;
 	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	D3D_FEATURE_LEVEL current_level;

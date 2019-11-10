@@ -15,13 +15,17 @@ struct GraphicsDesc
 	enum BUFFERFORMAT
 	{
 		R8B8G8A8,
-		R8B8G8A8_SRGB,
 		BUFFERFORMAT_MAX_NUM,
 	};
 
-	BUFFERTYPE		buffer_type;
-	BUFFERFORMAT	buffer_format;
-	bool			use_fullscreen;
+	BUFFERTYPE		bufferType;
+	BUFFERFORMAT	bufferFormat;
+	bool			useFullscreen;
+
+	uint32 GetBufferNum() const
+	{
+		return bufferType == BUFFERTYPE::DOUBLE_BUFFER ? 2 : 3;
+	}
 };
 
 class IDeviceContext

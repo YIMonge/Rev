@@ -3,6 +3,8 @@
 
 #include "../../interface/IRenderer.h"
 #include "DX12DeviceContext.h"
+#include "DX12SwapChain.h"
+#include "revArray.h"
 
 #if defined(_USE_DIRECTX12)
 
@@ -25,7 +27,15 @@ public:
 
 private:
 	Window* main_window;
-	DX12DeviceContext device_context;
+	DX12DeviceContext deviceContext;
+	DX12SwapChain swapChain;
+
+	revArray<ID3D12CommandAllocator*> commandAllocators;
+	revArray<ID3D12GraphicsCommandList*> commandLists;
+
+	D3D12_VIEWPORT viewport;
+	D3D12_RECT rectScissor;
+
 };
 
 #endif

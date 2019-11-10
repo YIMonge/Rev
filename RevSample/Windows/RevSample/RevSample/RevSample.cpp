@@ -41,9 +41,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	revMemory::Get().StartUp(ToMegaByte(256));
 	GraphicsDesc desc;
-	desc.buffer_format = GraphicsDesc::BUFFERFORMAT::R8B8G8A8;
-	desc.buffer_type = GraphicsDesc::BUFFERTYPE::DOUBLE_BUFFER;
-	desc.use_fullscreen = false;
+	desc.bufferFormat = GraphicsDesc::BUFFERFORMAT::R8B8G8A8;
+	desc.bufferType = GraphicsDesc::BUFFERTYPE::DOUBLE_BUFFER;
+	desc.useFullscreen = false;
 
 	Window* window = new revWindow();
 	window->Create("MainWindow", 1280, 780);

@@ -16,9 +16,9 @@ public:
 	virtual void Disp();
 	virtual void Hide();
 
-	HWND GetHWnd(){ return hwnd; }
-	unsigned int GetWidth();
-	unsigned int GetHeight();
+	HWND GetHWnd()const { return hwnd; }
+	unsigned int GetWidth() const { return width;  }
+	unsigned int GetHeight() const { return height; }
 
 	bool IsDestroyed() const
 	{
@@ -50,15 +50,5 @@ private:
 	unsigned int height;
 	bool destroyed;
 };
-
-inline unsigned int Window::GetWidth()
-{
-	return width;
-}
-
-inline unsigned int Window::GetHeight()
-{
-	return height;
-}
 
 #endif
