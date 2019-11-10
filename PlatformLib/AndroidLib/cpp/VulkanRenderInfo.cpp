@@ -71,11 +71,6 @@ bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const Vu
 void VulkanRenderInfo::Destroy(const VulkanDeviceContext& deviceContext)
 {
     VkDevice device = deviceContext.GetDevice();
-    if(cmdBuffer != nullptr) {
-        vkFreeCommandBuffers(device, cmdPool, cmdBufferLength, cmdBuffer);
-        delete[] cmdBuffer;
-    }
-    vkDestroyCommandPool(device, cmdPool, nullptr);
     vkDestroyRenderPass(device, renderPass, nullptr);
 }
 

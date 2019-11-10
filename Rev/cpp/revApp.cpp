@@ -28,12 +28,16 @@ revApp::revApp()
 
 void revApp::Run()
 {
+	if(!initialized) return;
+		revGraphics::Get().Clear(true, false, revColor::blue);
+
 	fixed_delta_time = 0.0f;
 	delta_time = 0.0f;
 	current_time = 0.0f;
 	last_time = 0.0f;
-	while (true){
-		
-	
-	}
+	//while (true){
+		revGraphics::Get().RenderBegin();
+
+		revGraphics::Get().RenderEnd();
+	//}
 }

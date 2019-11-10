@@ -13,12 +13,10 @@ public:
     void Destroy(const VulkanDeviceContext& deviceContext);
 
     const VkRenderPass& GetRenderPass() const { return renderPass; }
-    const VkCommandBuffer* GetCmdBuffer() const { return cmdBuffer; }
+    const VkSemaphore& GetSemaphore() const { return semaphore; }
+    const VkFence& GetFence() const { return fence; }
 private:
     VkRenderPass renderPass;
-    VkCommandPool  cmdPool;
-    VkCommandBuffer* cmdBuffer;
-    uint32 cmdBufferLength;
     VkSemaphore  semaphore;
     VkFence fence;
 };

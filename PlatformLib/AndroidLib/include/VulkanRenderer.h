@@ -36,6 +36,7 @@ private:
 	VulkanRenderInfo renderInfo;
 	VulkanFrameBuffer frameBuffer;
 
+	VkQueue queue;
 	VkCommandPool commandPool;
 	revArray<VkCommandBuffer> commandBuffers;
 

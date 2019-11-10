@@ -26,6 +26,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     renderInfo.Create(context, swapChain);
     frameBuffer.Create(context, swapChain, renderInfo);
 
+    vkGetDeviceQueue(context.GetDevice(), context.GetQueueFamilyIndex(), 0, &queue);
     CreateCommandPool();
 
 }
@@ -40,7 +41,46 @@ void VulkanRenderer::ShutDown()
 
 void VulkanRenderer::RenderBegin()
 {
+    uint32 index;
+    VkDevice device = context.GetDevice();
+    vkAcquireNextImageKHR(device,
+            swapChain.GetSwapChain(),
+            UINT64_MAX,
+            renderInfo.GetSemaphore(),
+            VK_NULL_HANDLE,
+            &index);
 
+    vkResetFences(device, 1, &renderInfo.GetFence());
+
+    VkPipelineStageFlags  waitStageMask =  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+
+    VkSubmitInfo submitInfo = {
+            .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+            .pNext = nullptr,
+            .waitSemaphoreCount = 1,
+            .pWaitSemaphores = &renderInfo.GetSemaphore(),
+            .pWaitDstStageMask = &waitStageMask,
+            .commandBufferCount = 1,
+            .pCommandBuffers = &commandBuffers[index],
+            .signalSemaphoreCount = 0,
+            .pSignalSemaphores = nullptr,
+    };
+    vkQueueSubmit(queue, 1, &submitInfo, renderInfo.GetFence());
+    vkWaitForFences(device, 1, &renderInfo.GetFence(), VK_TRUE, 100000000);
+
+    // TEST
+    VkResult result;
+    VkPresentInfoKHR presentInfo = {
+            .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+            .pNext = nullptr,
+            .swapchainCount = 1,
+            .pSwapchains = &swapChain.GetSwapChain(),
+            .pImageIndices = &index,
+            .waitSemaphoreCount = 0,
+            .pWaitSemaphores = nullptr,
+            .pResults = &result,
+    };
+    vkQueuePresentKHR(queue, &presentInfo);
 }
 
 void VulkanRenderer::RenderEnd()
@@ -108,7 +148,7 @@ bool VulkanRenderer::CreateCommandPool()
         if(result != VK_SUCCESS) return false;
 
         // Image Layout
-        setImageLayout(commandBuffers[i], frameBuffer.GetViews()[i],
+        setImageLayout(commandBuffers[i], frameBuffer.GetImages()[i],
                 VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
                 VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
@@ -130,9 +170,8 @@ bool VulkanRenderer::CreateCommandPool()
                 .clearValueCount = 1,
                 .pClearValues = &clearValue,
         };
-        auto cmdBuffer = renderInfo.GetCmdBuffer()[i];
+        auto cmdBuffer = commandBuffers[i];
         vkCmdBeginRenderPass(cmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-
         setImageLayout(cmdBuffer, frameBuffer.GetImages()[i],
                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
                 VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
