@@ -26,7 +26,7 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	}
 
 	// create viewport and scissor 
-	rectScissor = { 0, 0, window->GetWidth(), window->GetHeight() };
+	rectScissor = { 0, 0, static_cast<int32>(window->GetWidth()), static_cast<int32>(window->GetHeight()) };
 	viewport = { 0, 0, static_cast<float>(window->GetWidth()), static_cast<float>(window->GetHeight()), 0.0f, 1.0f, };
 
 
