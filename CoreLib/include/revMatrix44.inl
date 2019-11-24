@@ -1,5 +1,6 @@
 #ifndef __REVMATRIX44_INL__
 #define __REVMATRIX44_INL__
+#include "revTypedef.h"
 
 inline void revMatrix44::Multi( const revMatrix44& matrix )
 {
@@ -286,7 +287,7 @@ inline revVector4 revMatrix44::Vector4Transform(const revVector4& vec, const rev
 
 inline void revMatrix44::Set(float* num)
 {
-	for(int i = 0; i < 16; ++i){
+	for(int32 i = 0; i < 16; ++i){
 		data[i] = num[i];
 	}
 }

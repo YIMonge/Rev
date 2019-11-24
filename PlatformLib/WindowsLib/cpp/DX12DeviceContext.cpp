@@ -1,12 +1,10 @@
 #include "../include/DX12DeviceContext.h"
 #include "../include/Window.h"
 #include "revTypedef.h"
-#include "revSmartPointer.h"
-
 
 #if defined(_USE_DIRECTX12)
 
-bool DX12DeviceContext::Create(Window* window, const GraphicsDesc& desc)
+bool DX12DeviceContext::Create(const GraphicsDesc& desc)
 {
 #if defined(_DEBUG)
 	ID3D12Debug* debugController;
@@ -18,7 +16,7 @@ bool DX12DeviceContext::Create(Window* window, const GraphicsDesc& desc)
 	}
 #endif
 
-	//CreateDXGIFactory1(IID_PPV_ARGS(&dxgi_factroy));
+	this->desc = desc;
 
 	// Create the Direct3D 12 API device object
 	HRESULT hr = D3D12CreateDevice(
@@ -26,6 +24,7 @@ bool DX12DeviceContext::Create(Window* window, const GraphicsDesc& desc)
 		D3D_FEATURE_LEVEL_11_0,			// Minimum feature level this app can support.
 		IID_PPV_ARGS(&device)			// Returns the Direct3D device created.
 		);
+	if (hr != S_OK) return false;
 
 	// Create the command queue.
 	D3D12_COMMAND_QUEUE_DESC queueDesc;
@@ -34,23 +33,20 @@ bool DX12DeviceContext::Create(Window* window, const GraphicsDesc& desc)
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
-	device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&command_queue));
+	hr = device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue));
+	if (hr != S_OK) return false;
 
-
-	uint32 buffer_num = 2;
-	if (desc.buffer_type == GraphicsDesc::BUFFERTYPE::TRIPLE_BUFFER) {
-		buffer_num = 3;
-	}
-
-	device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&command_allocator));
-
-	// Create synchronization objects.
-	//device->CreateFence(m_fenceValues[m_currentFrame], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence));
-	//m_fenceValues[m_currentFrame]++;
-
-	//m_fenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
+	device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
 
 	return true;
+}
+
+void DX12DeviceContext::Destroy()
+{
+	if (device != nullptr) {
+		device->Release();
+		device = nullptr;
+	}
 }
 
 #endif

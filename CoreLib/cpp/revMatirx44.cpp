@@ -19,7 +19,7 @@ _41(m41), _42(m42), _43(m43), _44(m44)
 
 revMatrix44::revMatrix44(float *afNum)
 {
-	for(int i = 0; i < 16; ++i){
+	for(int32 i = 0; i < 16; ++i){
 		data[i] = afNum[i];
 	}
 }
