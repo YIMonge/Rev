@@ -4,13 +4,6 @@
 
 #ifdef _USE_VULKAN
 
-#define CALL_VK(func)                                                 \
-  if (VK_SUCCESS != (func)) {                                         \
-    __android_log_print(ANDROID_LOG_ERROR, "Rev ",                    \
-                        "Vulkan error. File[%s], line[%d]", __FILE__, \
-                        __LINE__);                                    \
-  }
-
 bool VulkanDeviceContext::Create(Window& window)
 {
     if(!InitVulkan())
@@ -44,7 +37,11 @@ bool VulkanDeviceContext::Create(Window& window)
         .enabledExtensionCount = numOfInstanceExt,      
         .ppEnabledExtensionNames = useInstanceExt,      
     };
-    CALL_VK(vkCreateInstance(&instanceInfo, nullptr, &instance));
+    VkResult result = vkCreateInstance(&instanceInfo, nullptr, &instance);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
 
     VkAndroidSurfaceCreateInfoKHR surfaceInfo{
         .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
@@ -52,12 +49,26 @@ bool VulkanDeviceContext::Create(Window& window)
         .flags = 0,
         .window = window.GetHandle(),
     };
-    CALL_VK(vkCreateAndroidSurfaceKHR(instance, &surfaceInfo, nullptr, &surface));
+    result = vkCreateAndroidSurfaceKHR(instance, &surfaceInfo, nullptr, &surface);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
 
     uint32 gpuCount = 0;
-    CALL_VK(vkEnumeratePhysicalDevices(instance, &gpuCount, nullptr));
+    result = vkEnumeratePhysicalDevices(instance, &gpuCount, nullptr);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
     VkPhysicalDevice tmpGpus[gpuCount];
-    CALL_VK(vkEnumeratePhysicalDevices(instance, &gpuCount, tmpGpus));
+    result = vkEnumeratePhysicalDevices(instance, &gpuCount, tmpGpus);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
     gpu = tmpGpus[0];
 
     VkPhysicalDeviceProperties gpuProperties;
@@ -95,8 +106,6 @@ bool VulkanDeviceContext::Create(Window& window)
       .pQueuePriorities = priorities,
     };
 
-    LOGI("Create Device");
-
     const uint32 numOfDeviceExt = 1;
     const char* useDeviceExt[numOfDeviceExt] = 
     {
@@ -114,7 +123,11 @@ bool VulkanDeviceContext::Create(Window& window)
         .ppEnabledExtensionNames = useDeviceExt,
         .pEnabledFeatures = nullptr,
     };
-    CALL_VK(vkCreateDevice(gpu, &deviceCreateInfo, nullptr, &device));
+    result = vkCreateDevice(gpu, &deviceCreateInfo, nullptr, &device);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
 
     return true;
 }
