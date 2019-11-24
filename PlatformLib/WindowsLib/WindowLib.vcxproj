@@ -161,6 +161,7 @@
     <ClInclude Include="include\DX11DeviceContext.h" />
     <ClInclude Include="include\DX11Renderer.h" />
     <ClInclude Include="include\DX12DeviceContext.h" />
+    <ClInclude Include="include\DX12FrameBuffer.h" />
     <ClInclude Include="include\DX12Renderer.h" />
     <ClInclude Include="include\DX12SwapChain.h" />
     <ClInclude Include="include\File.h" />
@@ -178,7 +179,9 @@
     <ClCompile Include="cpp\DX11DeviceContext.cpp" />
     <ClCompile Include="cpp\DX11Renderer.cpp" />
     <ClCompile Include="cpp\DX12DeviceContext.cpp" />
+    <ClCompile Include="cpp\DX12FrameBuffer.cpp" />
     <ClCompile Include="cpp\DX12Renderer.cpp" />
+    <ClCompile Include="cpp\DX12SwapChain.cpp" />
     <ClCompile Include="cpp\File.cpp" />
     <ClCompile Include="cpp\GLDeviceContext.cpp" />
     <ClCompile Include="cpp\GLRenderer.cpp" />
@@ -186,7 +189,6 @@
     <ClCompile Include="cpp\VKDeviceContext.cpp" />
     <ClCompile Include="cpp\VkRenderer.cpp" />
     <ClCompile Include="cpp\Window.cpp" />
-    <ClCompile Include="DX12SwapChain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -29,7 +29,7 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	rectScissor = { 0, 0, static_cast<int32>(window->GetWidth()), static_cast<int32>(window->GetHeight()) };
 	viewport = { 0, 0, static_cast<float>(window->GetWidth()), static_cast<float>(window->GetHeight()), 0.0f, 1.0f, };
 
-
+	window->Disp();
 }
 
 void DX12Renderer::ShutDown()
