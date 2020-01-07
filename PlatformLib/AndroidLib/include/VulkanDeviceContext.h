@@ -41,11 +41,18 @@ public:
     {
         return &queueFamilyIndex;
     }
+
+    const VkQueue& GetQueue() const
+    {
+        return queue;
+    }
+
 private:
     VkInstance instance;
     VkDevice device;
     VkSurfaceKHR surface;
     VkPhysicalDevice gpu;
+    VkQueue queue;
     uint32 queueFamilyIndex;
 };
 

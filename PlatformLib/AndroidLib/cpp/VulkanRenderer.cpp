@@ -68,17 +68,21 @@ void VulkanRenderer::RenderBegin()
             .signalSemaphoreCount = 0,
             .pSignalSemaphores = nullptr,
     };
-
-    result = vkQueueSubmit(queue, 1, &submitInfo, renderInfo.GetFence());
     NATIVE_LOGW("Progress!! File[%s], line[%d]", __FILE__,__LINE__);
+
+    result = vkQueueSubmit(context.GetQueue(), 1, &submitInfo, renderInfo.GetFence());
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
     }
+
+    NATIVE_LOGW("Progress!! File[%s], line[%d]", __FILE__,__LINE__);
 
     result = vkWaitForFences(device, 1, &renderInfo.GetFence(), VK_TRUE, 100000000);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
     }
+
+    NATIVE_LOGW("Progress!! File[%s], line[%d]", __FILE__,__LINE__);
 
     VkPresentInfoKHR presentInfo = {
             .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
@@ -93,7 +97,7 @@ void VulkanRenderer::RenderBegin()
 
     NATIVE_LOGW("Progress!! File[%s], line[%d]", __FILE__,__LINE__);
 
-    vkQueuePresentKHR(queue, &presentInfo);
+    vkQueuePresentKHR(context.GetQueue(), &presentInfo);
 }
 
 void VulkanRenderer::RenderEnd()

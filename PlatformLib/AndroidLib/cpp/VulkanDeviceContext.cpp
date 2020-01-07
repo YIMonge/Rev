@@ -130,6 +130,7 @@ bool VulkanDeviceContext::Create(Window& window)
         return false;
     }
 
+    vkGetDeviceQueue(device, queueFamilyIndex, 0, & queue);
     return true;
 }
 
