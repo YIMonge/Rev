@@ -1,5 +1,5 @@
 #include "VulkanFrameBuffer.h"
-
+#include "Log.h"
 #ifdef _USE_VULKAN
 
 VulkanFrameBuffer::VulkanFrameBuffer() :
@@ -48,7 +48,10 @@ bool VulkanFrameBuffer::Create(const VulkanDeviceContext &deviceContext, const V
                 .flags = 0,
         };
         VkResult result = vkCreateImageView(device, &viewCreateInfo, nullptr, &views[i]);
-        if(result != VK_SUCCESS) return false;
+        if(result != VK_SUCCESS){
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+            return false;
+        }
     }
 
     // create framebuffer
@@ -71,7 +74,10 @@ bool VulkanFrameBuffer::Create(const VulkanDeviceContext &deviceContext, const V
         };
 
         VkResult result = vkCreateFramebuffer(device, &framebufferCreateInfo, nullptr, &framebuffers[i]);
-        if(result != VK_SUCCESS) return false;
+        if(result != VK_SUCCESS) {
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+            return false;
+        }
     }
 
     return true;

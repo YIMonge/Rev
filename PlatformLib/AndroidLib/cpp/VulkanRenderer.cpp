@@ -1,5 +1,6 @@
 #include <revColor.h>
 #include "VulkanRenderer.h"
+#include "Log.h" // AndroidLib doesn't depend on rev
 #ifdef _USE_VULKAN
 
 
@@ -21,14 +22,10 @@ VulkanRenderer::~VulkanRenderer()
 
 void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
-    context.Create(*window);
-    swapChain.Create(context);
-    renderInfo.Create(context, swapChain);
-    frameBuffer.Create(context, swapChain, renderInfo);
-
-    vkGetDeviceQueue(context.GetDevice(), context.GetQueueFamilyIndex(), 0, &queue);
-    CreateCommandPool();
-
+    if(!context.Create(*window)) return;
+    if(!swapChain.Create(context)) return;
+    if(!renderInfo.Create(context, swapChain)) return;
+    if(!frameBuffer.Create(context, swapChain, renderInfo)) return;
 }
 
 void VulkanRenderer::ShutDown()

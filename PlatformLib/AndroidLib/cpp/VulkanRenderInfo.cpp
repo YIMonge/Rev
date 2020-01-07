@@ -1,5 +1,5 @@
 #include "VulkanRenderInfo.h"
-
+#include "Log.h"
 #ifdef _USE_VULKAN
 
 bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const VulkanSwapChain& swapChain)

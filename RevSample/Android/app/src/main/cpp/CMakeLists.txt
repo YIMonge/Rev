@@ -12,6 +12,11 @@ elseif(GLES)
     add_definitions(-D_USE_GLES)
 endif()
 
+add_definitions(
+        -D_DEBUG
+        -D_ENABLE_LOG
+)
+
 set(CORELIB_DIR  ../../../../../../CoreLib)
 set(PLATFORMLIB_DIR  ../../../../../../PlatformLib)
 set(ANDROIDLIB_DIR  ../../../../../../PlatformLib/AndroidLib)
