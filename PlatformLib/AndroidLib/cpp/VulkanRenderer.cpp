@@ -3,7 +3,6 @@
 #include "Log.h" // AndroidLib doesn't depend on rev
 #ifdef _USE_VULKAN
 
-
 VulkanRenderer::VulkanRenderer()
 {
     clearValue = {
@@ -40,14 +39,21 @@ void VulkanRenderer::RenderBegin()
 {
     uint32 index;
     VkDevice device = context.GetDevice();
-    vkAcquireNextImageKHR(device,
+    VkResult result;
+    result = vkAcquireNextImageKHR(device,
             swapChain.GetSwapChain(),
             UINT64_MAX,
             renderInfo.GetSemaphore(),
             VK_NULL_HANDLE,
             &index);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+    }
 
-    vkResetFences(device, 1, &renderInfo.GetFence());
+    result = vkResetFences(device, 1, &renderInfo.GetFence());
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+    }
 
     VkPipelineStageFlags  waitStageMask =  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 
@@ -62,11 +68,18 @@ void VulkanRenderer::RenderBegin()
             .signalSemaphoreCount = 0,
             .pSignalSemaphores = nullptr,
     };
-    vkQueueSubmit(queue, 1, &submitInfo, renderInfo.GetFence());
-    vkWaitForFences(device, 1, &renderInfo.GetFence(), VK_TRUE, 100000000);
 
-    // TEST
-    VkResult result;
+    result = vkQueueSubmit(queue, 1, &submitInfo, renderInfo.GetFence());
+    NATIVE_LOGW("Progress!! File[%s], line[%d]", __FILE__,__LINE__);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+    }
+
+    result = vkWaitForFences(device, 1, &renderInfo.GetFence(), VK_TRUE, 100000000);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+    }
+
     VkPresentInfoKHR presentInfo = {
             .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
             .pNext = nullptr,
@@ -77,6 +90,9 @@ void VulkanRenderer::RenderBegin()
             .pWaitSemaphores = nullptr,
             .pResults = &result,
     };
+
+    NATIVE_LOGW("Progress!! File[%s], line[%d]", __FILE__,__LINE__);
+
     vkQueuePresentKHR(queue, &presentInfo);
 }
 
@@ -121,7 +137,10 @@ bool VulkanRenderer::CreateCommandPool()
 
     VkDevice device = context.GetDevice();
     VkResult result = vkCreateCommandPool(device, &commandPoolCreateInfo, nullptr, &commandPool);
-    if(result != VK_SUCCESS) return false;
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
 
     commandBuffers.Resize(swapChain.GetLength());
     for(int i = 0; i < commandBuffers.Count(); ++i){
@@ -133,7 +152,10 @@ bool VulkanRenderer::CreateCommandPool()
                 .commandBufferCount = 1,
         };
         result = vkAllocateCommandBuffers(device, &commandBufferAllocateInfo, &commandBuffers[i]);
-        if(result != VK_SUCCESS) return false;
+        if(result != VK_SUCCESS) {
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+            return false;
+        }
 
         VkCommandBufferBeginInfo commandBufferBeginInfo = {
                 .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
@@ -142,7 +164,10 @@ bool VulkanRenderer::CreateCommandPool()
                 .pInheritanceInfo = nullptr,
         };
         result = vkBeginCommandBuffer(commandBuffers[i], &commandBufferBeginInfo);
-        if(result != VK_SUCCESS) return false;
+        if(result != VK_SUCCESS) {
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+            return false;
+        }
 
         // Image Layout
         setImageLayout(commandBuffers[i], frameBuffer.GetImages()[i],
