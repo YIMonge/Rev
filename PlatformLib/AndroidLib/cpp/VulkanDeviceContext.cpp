@@ -8,6 +8,7 @@ bool VulkanDeviceContext::Create(Window& window)
 {
     if(!InitVulkan())
     {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
 

@@ -1,5 +1,5 @@
 #include "VulkanRenderInfo.h"
-
+#include "Log.h"
 #ifdef _USE_VULKAN
 
 bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const VulkanSwapChain& swapChain)
@@ -44,7 +44,11 @@ bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const Vu
         .pDependencies = nullptr,
     };
 
-    return vkCreateRenderPass(deviceContext.GetDevice(), &renderPassCreateInfo, nullptr, &renderPass) == VK_SUCCESS;
+    if(vkCreateRenderPass(deviceContext.GetDevice(), &renderPassCreateInfo, nullptr, &renderPass) != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+    return true;
 }
 
 void VulkanRenderInfo::Destroy(const VulkanDeviceContext& deviceContext)

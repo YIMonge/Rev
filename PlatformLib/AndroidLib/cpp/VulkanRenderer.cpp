@@ -1,4 +1,5 @@
 #include "VulkanRenderer.h"
+#include "Log.h" // AndroidLib doesn't depend on rev
 #ifdef _USE_VULKAN
 
 
@@ -14,10 +15,10 @@ VulkanRenderer::~VulkanRenderer()
 
 void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
-    context.Create(*window);
-    swapChain.Create(context);
-    renderInfo.Create(context, swapChain);
-    frameBuffer.Create(context, swapChain, renderInfo);
+    if(!context.Create(*window)) return;
+    if(!swapChain.Create(context)) return;
+    if(!renderInfo.Create(context, swapChain)) return;
+    if(!frameBuffer.Create(context, swapChain, renderInfo)) return;
 }
 
 void VulkanRenderer::ShutDown()
@@ -30,6 +31,10 @@ void VulkanRenderer::ShutDown()
 
 void VulkanRenderer::RenderBegin()
 {
+    const VkDevice& device = context.GetDevice();
+    const VkSwapchainKHR swapchainKhr = swapChain.GetSwapChain();
+    // TEST code
+    //vkAcquireNextImageKHR(device, swapchainKhr, UINT64_MAX, )
 
 }
 
