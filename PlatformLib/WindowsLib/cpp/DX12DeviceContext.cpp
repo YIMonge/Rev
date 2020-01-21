@@ -24,7 +24,9 @@ bool DX12DeviceContext::Create(const GraphicsDesc& desc)
 		D3D_FEATURE_LEVEL_11_0,			// Minimum feature level this app can support.
 		IID_PPV_ARGS(&device)			// Returns the Direct3D device created.
 		);
-	if (hr != S_OK) return false;
+	if (FAILED(hr)) {
+		return false;
+	}
 
 	// Create the command queue.
 	D3D12_COMMAND_QUEUE_DESC queueDesc;
@@ -34,9 +36,9 @@ bool DX12DeviceContext::Create(const GraphicsDesc& desc)
 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
 	hr = device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue));
-	if (hr != S_OK) return false;
-
-	device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
+	if (FAILED(hr)) {
+		return false;
+	}
 
 	return true;
 }

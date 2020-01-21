@@ -4,6 +4,7 @@
 #if defined(_USE_DIRECTX12)
 #include "DX12DeviceContext.h"
 #include "Window.h"
+#include "revArray.h"
 
 class DX12SwapChain
 {
@@ -14,9 +15,20 @@ public:
 	bool Create(const DX12DeviceContext& deviceContext, const Window& window);
 	void Destroy();
 
-private:
-	IDXGISwapChain* swapChain;
+	int GetCurrentFrameIndex() const
+	{
+		return frameIndex;
+	}
 
+
+private:
+	IDXGISwapChain3* swapChain;
+	int frameIndex;
+
+	ID3D12DescriptorHeap* renderTargetViewHeap;
+	ID3D12DescriptorHeap* depthStencilViewHeap;
+	revArray<ID3D12Resource*> renderTarget;
+	ID3D12Resource* depthStencil;
 };
 
 #endif

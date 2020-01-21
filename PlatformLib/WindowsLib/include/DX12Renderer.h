@@ -16,7 +16,7 @@ public:
 	virtual void StartUp(Window* window, const GraphicsDesc& desc);
 	virtual void ShutDown();
 
-	virtual void RenderBegin() {}
+	virtual void RenderBegin();
 	virtual void RenderEnd() {}
 
 	virtual void Clear(bool clear_color, bool clear_depth, const revColor& fill_color) {}
@@ -26,16 +26,28 @@ public:
 	virtual void SetAlphaTest(ALPHA_TEST func, float value) {}
 
 private:
+	bool IntialzieForApp();
+
+private:
 	Window* main_window;
 	DX12DeviceContext deviceContext;
 	DX12SwapChain swapChain;
 
-	revArray<ID3D12CommandAllocator*> commandAllocators;
-	revArray<ID3D12GraphicsCommandList*> commandLists;
+	ID3D12CommandAllocator* commandAllocator;
+	ID3D12GraphicsCommandList* commandList;
+
+	ID3D12Fence* fence;
+	uint32 fenceValue;
+	HANDLE fenceEvent;
 
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT rectScissor;
 
+
+	// initalze for app 
+	ID3D12RootSignature* rootSignature;
+
+	ID3D12PipelineState* pipelineState;
 };
 
 #endif
