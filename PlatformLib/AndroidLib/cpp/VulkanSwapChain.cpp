@@ -1,6 +1,7 @@
 #include <string.h>
 #include "revArray.h"
 #include "VulkanSwapChain.h"
+#include "Log.h"
 
 #ifdef _USE_VULKAN
 
