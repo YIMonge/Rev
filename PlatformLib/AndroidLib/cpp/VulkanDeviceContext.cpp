@@ -34,7 +34,7 @@ bool VulkanDeviceContext::Create(Window& window)
         .pNext                 = nullptr,
         .pApplicationInfo      = &appInfo,
         .enabledLayerCount     = 0,
-        .ppEnabledLayerNames   = NULL,
+        .ppEnabledLayerNames   = nullptr,
         .enabledExtensionCount = numOfInstanceExt,      
         .ppEnabledExtensionNames = useInstanceExt,      
     };
@@ -75,8 +75,8 @@ bool VulkanDeviceContext::Create(Window& window)
     VkPhysicalDeviceProperties gpuProperties;
     vkGetPhysicalDeviceProperties(gpu, &gpuProperties);
 
-    VkSurfaceCapabilitiesKHR surfaceCapablities;  
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(gpu, surface, &surfaceCapablities);
+    //VkSurfaceCapabilitiesKHR surfaceCapablities;
+    //vkGetPhysicalDeviceSurfaceCapabilitiesKHR(gpu, surface, &surfaceCapablities);
 
     uint32 queueFamilyCount;
     vkGetPhysicalDeviceQueueFamilyProperties(gpu, &queueFamilyCount, nullptr);
@@ -90,6 +90,12 @@ bool VulkanDeviceContext::Create(Window& window)
             break;
         }
     }
+
+    if(queueFamilyIndex >= queueFamilyCount){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
 
     // for pQueuePriorities, it's an optional pointer but if it's null Vulkan will be crashed when creating device
     // by Vulkan Programing Guide, if set to null, priorities are same.
@@ -130,7 +136,7 @@ bool VulkanDeviceContext::Create(Window& window)
         return false;
     }
 
-    vkGetDeviceQueue(device, queueFamilyIndex, 0, & queue);
+    vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue);
     return true;
 }
 

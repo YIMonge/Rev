@@ -25,6 +25,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     if(!swapChain.Create(context)) return;
     if(!renderInfo.Create(context, swapChain)) return;
     if(!frameBuffer.Create(context, swapChain, renderInfo)) return;
+    if(!CreateCommandPool()) return;
 }
 
 void VulkanRenderer::ShutDown()
@@ -68,22 +69,15 @@ void VulkanRenderer::RenderBegin()
             .signalSemaphoreCount = 0,
             .pSignalSemaphores = nullptr,
     };
-    NATIVE_LOGW("Progress!! File[%s], line[%d]", __FILE__,__LINE__);
-
     result = vkQueueSubmit(context.GetQueue(), 1, &submitInfo, renderInfo.GetFence());
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
     }
 
-    NATIVE_LOGW("Progress!! File[%s], line[%d]", __FILE__,__LINE__);
-
     result = vkWaitForFences(device, 1, &renderInfo.GetFence(), VK_TRUE, 100000000);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
     }
-
-    NATIVE_LOGW("Progress!! File[%s], line[%d]", __FILE__,__LINE__);
-
     VkPresentInfoKHR presentInfo = {
             .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
             .pNext = nullptr,
@@ -94,9 +88,6 @@ void VulkanRenderer::RenderBegin()
             .pWaitSemaphores = nullptr,
             .pResults = &result,
     };
-
-    NATIVE_LOGW("Progress!! File[%s], line[%d]", __FILE__,__LINE__);
-
     vkQueuePresentKHR(context.GetQueue(), &presentInfo);
 }
 
@@ -139,7 +130,7 @@ bool VulkanRenderer::CreateCommandPool()
         .queueFamilyIndex = 0,
     };
 
-    VkDevice device = context.GetDevice();
+    const VkDevice& device = context.GetDevice();
     VkResult result = vkCreateCommandPool(device, &commandPoolCreateInfo, nullptr, &commandPool);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -196,14 +187,19 @@ bool VulkanRenderer::CreateCommandPool()
                 .clearValueCount = 1,
                 .pClearValues = &clearValue,
         };
-        auto cmdBuffer = commandBuffers[i];
-        vkCmdBeginRenderPass(cmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-        setImageLayout(cmdBuffer, frameBuffer.GetImages()[i],
+        vkCmdBeginRenderPass(commandBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+        vkCmdEndRenderPass(commandBuffers[i]);
+        setImageLayout(commandBuffers[i], frameBuffer.GetImages()[i],
                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
                 VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
                 VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                 VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
-        vkEndCommandBuffer(cmdBuffer);
+        result = vkEndCommandBuffer(commandBuffers[i]);
+        if(result != VK_SUCCESS) {
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+            return false;
+        }
     }
     return true;
 }
