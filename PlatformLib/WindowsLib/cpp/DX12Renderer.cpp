@@ -61,8 +61,17 @@ void DX12Renderer::ShutDown()
 
 void DX12Renderer::RenderBegin()
 {
-	commandAllocator->Reset();
-	//commandList->Reset(commandAllocator, pipelineState);
+	HRESULT hr = commandAllocator->Reset();
+	if (FAILED(hr)) {
+		return;
+	}
+	hr = commandList->Reset(commandAllocator, pipelineState);
+	if (FAILED(hr)) {
+		return;
+	}
+
+	//commandList->ResourceBarrier(1, &)
+
 	//commandList->SetDescriptorHeaps(1, heap)
 	//commandList->RSSetViewports(1, &viewport);
 	
