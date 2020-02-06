@@ -5,6 +5,9 @@
 
 #include "IDeviceContext.h"
 #include "../lib/vulkan_wrapper.h"
+#ifdef _DEBUG
+#include "revArray.h"
+#endif
 
 class Window;
 
@@ -54,6 +57,11 @@ private:
     VkPhysicalDevice gpu;
     VkQueue queue;
     uint32 queueFamilyIndex;
+
+#ifdef _DEBUG
+    void initializeDebugLayer();
+    revArray<const char*> debugLayers;
+#endif
 };
 
 #endif

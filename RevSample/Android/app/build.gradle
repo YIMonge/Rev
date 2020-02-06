@@ -16,7 +16,7 @@ android {
             }
         }
         ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86'
+            abiFilters 'arm64-v8a', 'x86'
         }
     }
     buildTypes {
@@ -29,6 +29,14 @@ android {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
             version "3.10.2"
+        }
+    }
+    def ndkDir = android.ndkDirectory
+    sourceSets {
+        main {
+            jniLibs {
+                srcDir "$ndkDir/sources/third_party/vulkan/src/build-android/jniLibs"
+            }
         }
     }
 }

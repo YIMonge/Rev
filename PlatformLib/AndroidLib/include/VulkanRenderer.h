@@ -25,11 +25,11 @@ public:
 
 	virtual void SetBlendFunc(BLEND_FUNC func);
 	virtual void SetAlphaTest(ALPHA_TEST func, float value);
-
 private:
 	bool CreateCommandPool();
 	void DestroyCommandPool();
     void setImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
+
 
 	VulkanDeviceContext context;
 	VulkanSwapChain swapChain;

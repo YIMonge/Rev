@@ -278,5 +278,4 @@ void VulkanRenderer::DestroyCommandPool()
 
 }
 
-
 #endif

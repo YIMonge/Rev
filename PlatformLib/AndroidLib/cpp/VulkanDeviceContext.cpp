@@ -1,7 +1,9 @@
 #include "VulkanDeviceContext.h"
 #include "Window.h"
 #include "Log.h"
-
+#ifdef _DEBUG
+#include <string.h>
+#endif
 #ifdef _USE_VULKAN
 
 bool VulkanDeviceContext::Create(Window& window)
@@ -11,7 +13,9 @@ bool VulkanDeviceContext::Create(Window& window)
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-
+#ifdef _DEBUG
+    initializeDebugLayer();
+#endif
     VkApplicationInfo appInfo = {
       .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
       .pNext = nullptr,
@@ -33,8 +37,13 @@ bool VulkanDeviceContext::Create(Window& window)
         .sType                 = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO, 
         .pNext                 = nullptr,
         .pApplicationInfo      = &appInfo,
+#ifdef _DEBUG
+        .enabledLayerCount     = debugLayers.Count(),
+        .ppEnabledLayerNames   = &debugLayers[0],
+#else
         .enabledLayerCount     = 0,
         .ppEnabledLayerNames   = nullptr,
+#endif
         .enabledExtensionCount = numOfInstanceExt,      
         .ppEnabledExtensionNames = useInstanceExt,      
     };
@@ -147,5 +156,36 @@ void VulkanDeviceContext::Destroy()
     vkDestroyDevice(device, nullptr);
     vkDestroyInstance(instance, nullptr);
 }
+
+#ifdef _DEBUG
+void VulkanDeviceContext::initializeDebugLayer()
+{
+    uint32 layerPropertyCount = 0;
+    vkEnumerateInstanceLayerProperties(&layerPropertyCount, nullptr);
+    VkLayerProperties props[layerPropertyCount];
+    vkEnumerateInstanceLayerProperties(&layerPropertyCount, props);
+
+    // for NDK r20
+    debugLayers.Resize(5);
+    debugLayers[0] = "VK_LAYER_GOOGLE_threading";
+    debugLayers[1] = "VK_LAYER_LUNARG_parameter_validation";
+    debugLayers[2] = "VK_LAYER_LUNARG_object_tracker";
+    debugLayers[3] = "VK_LAYER_LUNARG_core_validation";
+    debugLayers[4] = "VK_LAYER_GOOGLE_unique_objects";
+
+
+    for(uint32 i = 0; i < debugLayers.Count(); ++i){
+        bool found = false;
+        for(uint32 j = 0; j < layerPropertyCount; ++j){
+            if(strcmp(debugLayers[i], props[j].layerName) == 0){
+                found = true;
+            }
+        }
+        if(!found){
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        }
+    }
+}
+#endif
 
 #endif
