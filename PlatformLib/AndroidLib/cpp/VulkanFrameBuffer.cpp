@@ -1,5 +1,5 @@
 #include "VulkanFrameBuffer.h"
-
+#include "Log.h"
 #ifdef _USE_VULKAN
 
 VulkanFrameBuffer::VulkanFrameBuffer() :
@@ -17,13 +17,19 @@ bool VulkanFrameBuffer::Create(const VulkanDeviceContext &deviceContext, const V
     uint32 imageCount = 0;
     VkDevice device = deviceContext.GetDevice();
     VkSwapchainKHR  swapchain = swapChain.GetSwapChain();
-    vkGetSwapchainImagesKHR(device, swapchain, &imageCount, nullptr);
-    views.Resize(imageCount);
-    vkGetSwapchainImagesKHR(device, swapchain, &imageCount, &images[0]);
+    VkResult result = vkGetSwapchainImagesKHR(device, swapchain, &imageCount, nullptr);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
 
-    // create image view
-    images.Resize(imageCount);
-    for(uint i = 0; i < imageCount; ++i){
+    views.Resize(imageCount);
+    result = vkGetSwapchainImagesKHR(device, swapchain, &imageCount, &images[0]);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+    for(uint32 i = 0; i < imageCount; ++i){
         VkImageViewCreateInfo viewCreateInfo = {
                 .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
                 .pNext = nullptr,
@@ -47,13 +53,17 @@ bool VulkanFrameBuffer::Create(const VulkanDeviceContext &deviceContext, const V
                         },
                 .flags = 0,
         };
-        VkResult result = vkCreateImageView(device, &viewCreateInfo, nullptr, &views[i]);
-        if(result != VK_SUCCESS) return false;
+        result = vkCreateImageView(device, &viewCreateInfo, nullptr, &views[i]);
+        if(result != VK_SUCCESS){
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+            return false;
+        }
     }
 
     // create framebuffer
-    framebuffers.Resize(imageCount);
-    for(int i = 0; i < imageCount; ++i){
+    uint32 swapChainLength = swapChain.GetLength();
+    framebuffers.Resize(swapChainLength);
+    for(uint32 i = 0; i < swapChainLength; ++i){
         VkImageView  attachments[2] = {
                 views[i],
                 VK_NULL_HANDLE, // TODO: depth
@@ -64,14 +74,17 @@ bool VulkanFrameBuffer::Create(const VulkanDeviceContext &deviceContext, const V
             .pNext = nullptr,
             .renderPass = renderInfo.GetRenderPass(),
             .layers = 1,
-            .attachmentCount = 2, // if using depth set to 2
+            .attachmentCount = 1, // if using depth set to 2
             .pAttachments = attachments,
             .width = size.width,
             .height = size.height,
         };
 
         VkResult result = vkCreateFramebuffer(device, &framebufferCreateInfo, nullptr, &framebuffers[i]);
-        if(result != VK_SUCCESS) return false;
+        if(result != VK_SUCCESS) {
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+            return false;
+        }
     }
 
     return true;

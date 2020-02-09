@@ -1,23 +1,21 @@
 #include "VulkanDeviceContext.h"
 #include "Window.h"
 #include "Log.h"
-
+#ifdef _DEBUG
+#include <string.h>
+#endif
 #ifdef _USE_VULKAN
-
-#define CALL_VK(func)                                                 \
-  if (VK_SUCCESS != (func)) {                                         \
-    __android_log_print(ANDROID_LOG_ERROR, "Rev ",                    \
-                        "Vulkan error. File[%s], line[%d]", __FILE__, \
-                        __LINE__);                                    \
-  }
 
 bool VulkanDeviceContext::Create(Window& window)
 {
     if(!InitVulkan())
     {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-
+#ifdef _DEBUG
+    initializeDebugLayer();
+#endif
     VkApplicationInfo appInfo = {
       .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
       .pNext = nullptr,
@@ -39,12 +37,21 @@ bool VulkanDeviceContext::Create(Window& window)
         .sType                 = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO, 
         .pNext                 = nullptr,
         .pApplicationInfo      = &appInfo,
+#ifdef _DEBUG
+        .enabledLayerCount     = debugLayers.Count(),
+        .ppEnabledLayerNames   = &debugLayers[0],
+#else
         .enabledLayerCount     = 0,
-        .ppEnabledLayerNames   = NULL,
+        .ppEnabledLayerNames   = nullptr,
+#endif
         .enabledExtensionCount = numOfInstanceExt,      
         .ppEnabledExtensionNames = useInstanceExt,      
     };
-    CALL_VK(vkCreateInstance(&instanceInfo, nullptr, &instance));
+    VkResult result = vkCreateInstance(&instanceInfo, nullptr, &instance);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
 
     VkAndroidSurfaceCreateInfoKHR surfaceInfo{
         .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
@@ -52,19 +59,33 @@ bool VulkanDeviceContext::Create(Window& window)
         .flags = 0,
         .window = window.GetHandle(),
     };
-    CALL_VK(vkCreateAndroidSurfaceKHR(instance, &surfaceInfo, nullptr, &surface));
+    result = vkCreateAndroidSurfaceKHR(instance, &surfaceInfo, nullptr, &surface);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
 
     uint32 gpuCount = 0;
-    CALL_VK(vkEnumeratePhysicalDevices(instance, &gpuCount, nullptr));
+    result = vkEnumeratePhysicalDevices(instance, &gpuCount, nullptr);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
     VkPhysicalDevice tmpGpus[gpuCount];
-    CALL_VK(vkEnumeratePhysicalDevices(instance, &gpuCount, tmpGpus));
+    result = vkEnumeratePhysicalDevices(instance, &gpuCount, tmpGpus);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
     gpu = tmpGpus[0];
 
     VkPhysicalDeviceProperties gpuProperties;
     vkGetPhysicalDeviceProperties(gpu, &gpuProperties);
 
-    VkSurfaceCapabilitiesKHR surfaceCapablities;  
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(gpu, surface, &surfaceCapablities);
+    //VkSurfaceCapabilitiesKHR surfaceCapablities;
+    //vkGetPhysicalDeviceSurfaceCapabilitiesKHR(gpu, surface, &surfaceCapablities);
 
     uint32 queueFamilyCount;
     vkGetPhysicalDeviceQueueFamilyProperties(gpu, &queueFamilyCount, nullptr);
@@ -78,6 +99,12 @@ bool VulkanDeviceContext::Create(Window& window)
             break;
         }
     }
+
+    if(queueFamilyIndex >= queueFamilyCount){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
 
     // for pQueuePriorities, it's an optional pointer but if it's null Vulkan will be crashed when creating device
     // by Vulkan Programing Guide, if set to null, priorities are same.
@@ -94,8 +121,6 @@ bool VulkanDeviceContext::Create(Window& window)
       .queueFamilyIndex = queueFamilyIndex,
       .pQueuePriorities = priorities,
     };
-
-    LOGI("Create Device");
 
     const uint32 numOfDeviceExt = 1;
     const char* useDeviceExt[numOfDeviceExt] = 
@@ -114,8 +139,13 @@ bool VulkanDeviceContext::Create(Window& window)
         .ppEnabledExtensionNames = useDeviceExt,
         .pEnabledFeatures = nullptr,
     };
-    CALL_VK(vkCreateDevice(gpu, &deviceCreateInfo, nullptr, &device));
+    result = vkCreateDevice(gpu, &deviceCreateInfo, nullptr, &device);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
 
+    vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue);
     return true;
 }
 
@@ -126,5 +156,36 @@ void VulkanDeviceContext::Destroy()
     vkDestroyDevice(device, nullptr);
     vkDestroyInstance(instance, nullptr);
 }
+
+#ifdef _DEBUG
+void VulkanDeviceContext::initializeDebugLayer()
+{
+    uint32 layerPropertyCount = 0;
+    vkEnumerateInstanceLayerProperties(&layerPropertyCount, nullptr);
+    VkLayerProperties props[layerPropertyCount];
+    vkEnumerateInstanceLayerProperties(&layerPropertyCount, props);
+
+    // for NDK r20
+    debugLayers.Resize(5);
+    debugLayers[0] = "VK_LAYER_GOOGLE_threading";
+    debugLayers[1] = "VK_LAYER_LUNARG_parameter_validation";
+    debugLayers[2] = "VK_LAYER_LUNARG_object_tracker";
+    debugLayers[3] = "VK_LAYER_LUNARG_core_validation";
+    debugLayers[4] = "VK_LAYER_GOOGLE_unique_objects";
+
+
+    for(uint32 i = 0; i < debugLayers.Count(); ++i){
+        bool found = false;
+        for(uint32 j = 0; j < layerPropertyCount; ++j){
+            if(strcmp(debugLayers[i], props[j].layerName) == 0){
+                found = true;
+            }
+        }
+        if(!found){
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        }
+    }
+}
+#endif
 
 #endif

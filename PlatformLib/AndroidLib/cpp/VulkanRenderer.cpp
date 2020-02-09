@@ -1,7 +1,7 @@
 #include <revColor.h>
 #include "VulkanRenderer.h"
+#include "Log.h" // AndroidLib doesn't depend on rev
 #ifdef _USE_VULKAN
-
 
 VulkanRenderer::VulkanRenderer()
 {
@@ -21,14 +21,11 @@ VulkanRenderer::~VulkanRenderer()
 
 void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
-    context.Create(*window);
-    swapChain.Create(context);
-    renderInfo.Create(context, swapChain);
-    frameBuffer.Create(context, swapChain, renderInfo);
-
-    vkGetDeviceQueue(context.GetDevice(), context.GetQueueFamilyIndex(), 0, &queue);
-    CreateCommandPool();
-
+    if(!context.Create(*window)) return;
+    if(!swapChain.Create(context)) return;
+    if(!renderInfo.Create(context, swapChain)) return;
+    if(!frameBuffer.Create(context, swapChain, renderInfo)) return;
+    if(!CreateCommandPool()) return;
 }
 
 void VulkanRenderer::ShutDown()
@@ -43,14 +40,21 @@ void VulkanRenderer::RenderBegin()
 {
     uint32 index;
     VkDevice device = context.GetDevice();
-    vkAcquireNextImageKHR(device,
+    VkResult result;
+    result = vkAcquireNextImageKHR(device,
             swapChain.GetSwapChain(),
             UINT64_MAX,
             renderInfo.GetSemaphore(),
             VK_NULL_HANDLE,
             &index);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+    }
 
-    vkResetFences(device, 1, &renderInfo.GetFence());
+    result = vkResetFences(device, 1, &renderInfo.GetFence());
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+    }
 
     VkPipelineStageFlags  waitStageMask =  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 
@@ -65,11 +69,15 @@ void VulkanRenderer::RenderBegin()
             .signalSemaphoreCount = 0,
             .pSignalSemaphores = nullptr,
     };
-    vkQueueSubmit(queue, 1, &submitInfo, renderInfo.GetFence());
-    vkWaitForFences(device, 1, &renderInfo.GetFence(), VK_TRUE, 100000000);
+    result = vkQueueSubmit(context.GetQueue(), 1, &submitInfo, renderInfo.GetFence());
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+    }
 
-    // TEST
-    VkResult result;
+    result = vkWaitForFences(device, 1, &renderInfo.GetFence(), VK_TRUE, 100000000);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+    }
     VkPresentInfoKHR presentInfo = {
             .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
             .pNext = nullptr,
@@ -80,7 +88,7 @@ void VulkanRenderer::RenderBegin()
             .pWaitSemaphores = nullptr,
             .pResults = &result,
     };
-    vkQueuePresentKHR(queue, &presentInfo);
+    vkQueuePresentKHR(context.GetQueue(), &presentInfo);
 }
 
 void VulkanRenderer::RenderEnd()
@@ -122,9 +130,12 @@ bool VulkanRenderer::CreateCommandPool()
         .queueFamilyIndex = 0,
     };
 
-    VkDevice device = context.GetDevice();
+    const VkDevice& device = context.GetDevice();
     VkResult result = vkCreateCommandPool(device, &commandPoolCreateInfo, nullptr, &commandPool);
-    if(result != VK_SUCCESS) return false;
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
 
     commandBuffers.Resize(swapChain.GetLength());
     for(int i = 0; i < commandBuffers.Count(); ++i){
@@ -136,7 +147,10 @@ bool VulkanRenderer::CreateCommandPool()
                 .commandBufferCount = 1,
         };
         result = vkAllocateCommandBuffers(device, &commandBufferAllocateInfo, &commandBuffers[i]);
-        if(result != VK_SUCCESS) return false;
+        if(result != VK_SUCCESS) {
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+            return false;
+        }
 
         VkCommandBufferBeginInfo commandBufferBeginInfo = {
                 .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
@@ -145,7 +159,10 @@ bool VulkanRenderer::CreateCommandPool()
                 .pInheritanceInfo = nullptr,
         };
         result = vkBeginCommandBuffer(commandBuffers[i], &commandBufferBeginInfo);
-        if(result != VK_SUCCESS) return false;
+        if(result != VK_SUCCESS) {
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+            return false;
+        }
 
         // Image Layout
         setImageLayout(commandBuffers[i], frameBuffer.GetImages()[i],
@@ -170,14 +187,19 @@ bool VulkanRenderer::CreateCommandPool()
                 .clearValueCount = 1,
                 .pClearValues = &clearValue,
         };
-        auto cmdBuffer = commandBuffers[i];
-        vkCmdBeginRenderPass(cmdBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-        setImageLayout(cmdBuffer, frameBuffer.GetImages()[i],
+        vkCmdBeginRenderPass(commandBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+        vkCmdEndRenderPass(commandBuffers[i]);
+        setImageLayout(commandBuffers[i], frameBuffer.GetImages()[i],
                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
                 VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
                 VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                 VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
-        vkEndCommandBuffer(cmdBuffer);
+        result = vkEndCommandBuffer(commandBuffers[i]);
+        if(result != VK_SUCCESS) {
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+            return false;
+        }
     }
     return true;
 }
@@ -255,6 +277,5 @@ void VulkanRenderer::DestroyCommandPool()
 {
 
 }
-
 
 #endif
