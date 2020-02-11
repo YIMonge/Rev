@@ -17,14 +17,14 @@ public:
 	virtual void StartUp(Window* window, const GraphicsDesc& desc);
 	virtual void ShutDown();
 
-	virtual void RenderBegin();
-	virtual void RenderEnd();
+	void RenderBegin();
+	void RenderEnd();
 
-	virtual void Clear(bool clear_color, bool clear_depth, const revColor& fill_color);
-	virtual void SwapBuffers();
+	void Clear(bool clear_color, bool clear_depth, const revColor& fill_color);
+	void SwapBuffers();
 
-	virtual void SetBlendFunc(BLEND_FUNC func);
-	virtual void SetAlphaTest(ALPHA_TEST func, float value);
+	void SetBlendFunc(BLEND_FUNC func);
+	void SetAlphaTest(ALPHA_TEST func, float value);
 private:
 	bool CreateCommandPool();
 	void DestroyCommandPool();

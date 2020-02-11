@@ -2,10 +2,9 @@
 #define __VULKANBUFFER_H__
 
 #if _USE_VULKAN
-
 #include "VulkanDeviceContext.h"
-
-class VulkanBuffer
+#include "IGraphicsBuffer.h"
+class VulkanBuffer : public IGraphicsBuffer
 {
 public:
     VulkanBuffer(){}
@@ -16,6 +15,9 @@ public:
     bool Create(const VulkanDeviceContext& deviceContext, const revArray<float>& data);
     bool Create(const VulkanDeviceContext& deviceContext, const float* data, uint32 size);
     void Destroy(const VulkanDeviceContext& deviceContext);
+
+    virtual void Apply();
+
 private:
     bool MapMemoryTypeToIndex(const VulkanDeviceContext& deviceContext , uint32 typeBits, VkFlags mask, uint32* typeIndex);
 

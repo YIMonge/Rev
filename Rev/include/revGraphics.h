@@ -4,6 +4,7 @@
 #include "revSingleton.h"
 #include "IDeviceContext.h" 
 #include "revColor.h"
+#include "revDrawCommand.h"
 
 class Color;
 class Window;
@@ -17,13 +18,7 @@ public:
 
 	void ResizeWindow(int w, int h);
 
-	void RenderBegin();
-	void RenderEnd();
-
-	void Clear(bool clear_color, bool clear_depth, const revColor& fill_color);
-	void SwapBuffers();
-
-
+	void Draw();
 private:
 	GraphicsDesc desc;
 	IRenderer* renderer;
