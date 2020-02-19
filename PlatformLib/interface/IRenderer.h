@@ -30,8 +30,7 @@ public:
 	virtual void StartUp(Window* window, const GraphicsDesc& desc) = 0;
 	virtual void ShutDown() = 0;
 
-	virtual void RenderBegin() = 0;
-	virtual void RenderEnd() = 0;
+	virtual void Render() = 0;
 
 	virtual void Clear(bool clear_color, bool clear_depth, const revColor& fill_color) = 0;
 	virtual void SwapBuffers() = 0;

@@ -44,21 +44,42 @@ bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const Vu
         .pDependencies = nullptr,
     };
 
-    if(vkCreateRenderPass(deviceContext.GetDevice(), &renderPassCreateInfo, nullptr, &renderPass) != VK_SUCCESS){
+    VkDevice  device = deviceContext.GetDevice();
+    VkResult result = vkCreateRenderPass(device, &renderPassCreateInfo, nullptr, &renderPass);
+    if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
+
+    // create fence and semaphore
+    VkFenceCreateInfo fenceCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+    };
+    result = vkCreateFence(device, &fenceCreateInfo, nullptr, &fence);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    VkSemaphoreCreateInfo semaphoreCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+    };
+    result = vkCreateSemaphore(device, &semaphoreCreateInfo, nullptr, &semaphore);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
     return true;
 }
 
 void VulkanRenderInfo::Destroy(const VulkanDeviceContext& deviceContext)
 {
     VkDevice device = deviceContext.GetDevice();
-    if(cmdBuffer != nullptr) {
-        vkFreeCommandBuffers(device, cmdPool, cmdBufferLength, cmdBuffer);
-        delete[] cmdBuffer;
-    }
-    vkDestroyCommandPool(device, cmdPool, nullptr);
     vkDestroyRenderPass(device, renderPass, nullptr);
 }
 

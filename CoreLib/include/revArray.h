@@ -3,7 +3,12 @@
 
 #include "revTypedef.h"
 #include "revIterator.h"
+#include <vector>
 
+template<typename T>
+using revArray = std::vector<T>;
+
+/*
 template<typename T>
 class revArray
 {
@@ -20,6 +25,8 @@ public:
 
 	void Resize(uint32 capacity);
 	uint32 Count() const;
+	void Fill(const T& val);
+	void Fill(const T& val, uint32 size);
 
 	ITERATOR_DEF(T, std::forward_iterator_tag);
 	iterator begin()
@@ -40,5 +47,5 @@ private:
 };
 
 #include "revArray.inl"
-
+*/
 #endif

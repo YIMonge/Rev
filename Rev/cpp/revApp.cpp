@@ -32,10 +32,7 @@ void revApp::Run()
 	delta_time = 0.0f;
 	current_time = 0.0f;
 	last_time = 0.0f;
-
-	revGraphics::Get().RenderBegin();
-
-
-	revGraphics::Get().RenderEnd();
-
+	//while (true){
+		revGraphics::Get().Draw();
+	//}
 }

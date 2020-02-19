@@ -37,6 +37,10 @@ private:
         {
         }
 
+        virtual ~Worker()
+        {
+		}
+
 		void Init(const WorkerInfo& info)
 		{
 			job_queue = revQueue<Function>(info.max_work_num);

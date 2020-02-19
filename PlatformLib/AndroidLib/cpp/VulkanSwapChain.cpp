@@ -12,6 +12,7 @@ VulkanSwapChain::VulkanSwapChain()
 
 VulkanSwapChain::~VulkanSwapChain()
 {
+    memset(&swapChain, 0, sizeof(swapChain));
 }
 
 bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
@@ -23,12 +24,16 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
 
     uint32 count = 0;
     vkGetPhysicalDeviceSurfaceFormatsKHR(gpu, surface, &count, nullptr);
-    revArray<VkSurfaceFormatKHR> formats(count);
-    vkGetPhysicalDeviceSurfaceFormatsKHR(gpu, surface, &count, &formats[0]);
+    VkSurfaceFormatKHR formats[count];
+    vkGetPhysicalDeviceSurfaceFormatsKHR(gpu, surface, &count, formats);
 
     uint32 chosenIndex = 0;
     for(; chosenIndex < count; ++chosenIndex){
         if(formats[chosenIndex].format == VK_FORMAT_R8G8B8A8_UNORM) break;
+    }
+    if(chosenIndex >= count){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
     }
 
     displaySize = capabilities.currentExtent;
@@ -56,16 +61,22 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
     };
 
     const VkDevice& device = deviceContext.GetDevice();
-    vkCreateSwapchainKHR(device, &swapchainCreateInfo, nullptr, &swapChain);
-    vkGetSwapchainImagesKHR(device, swapChain, &length, nullptr);
-
+    VkResult result = vkCreateSwapchainKHR(device, &swapchainCreateInfo, nullptr, &swapChain);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+    result = vkGetSwapchainImagesKHR(device, swapChain, &length, nullptr);
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
     return true;
 }
 
 void VulkanSwapChain::Destroy(const VulkanDeviceContext& deviceContext)
 {
-    const VkDevice& device = deviceContext.GetDevice();
-    vkDestroySwapchainKHR(device, swapChain, nullptr);
+    vkDestroySwapchainKHR(deviceContext.GetDevice(), swapChain, nullptr);
 }
 
 #endif

@@ -7,6 +7,7 @@
 #include "VulkanSwapChain.h"
 #include "VulkanRenderInfo.h"
 #include "VulkanFrameBuffer.h"
+#include "VulkanBuffer.h"
 
 class VulkanRenderer : public IRenderer
 {
@@ -17,20 +18,33 @@ public:
 	virtual void StartUp(Window* window, const GraphicsDesc& desc);
 	virtual void ShutDown();
 
-	virtual void RenderBegin();
-	virtual void RenderEnd();
+	void Render();
 
-	virtual void Clear(bool clear_color, bool clear_depth, const revColor& fill_color);
-	virtual void SwapBuffers();
+	void Clear(bool clear_color, bool clear_depth, const revColor& fill_color);
+	void SwapBuffers();
 
-	virtual void SetBlendFunc(BLEND_FUNC func);
-	virtual void SetAlphaTest(ALPHA_TEST func, float value);
-
+	void SetBlendFunc(BLEND_FUNC func);
+	void SetAlphaTest(ALPHA_TEST func, float value);
 private:
+	bool CreateCommandPool();
+	void DestroyCommandPool();
+    void setImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
+
+
 	VulkanDeviceContext context;
 	VulkanSwapChain swapChain;
 	VulkanRenderInfo renderInfo;
 	VulkanFrameBuffer frameBuffer;
+
+	VkCommandPool commandPool;
+	revArray<VkCommandBuffer> commandBuffers;
+
+	// clear color
+	VkClearValue clearValue;
+
+	// TEST CODE
+	VulkanBuffer triangleVertexBuffer;
+
 };
 
 #endif

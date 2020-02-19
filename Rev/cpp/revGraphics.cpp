@@ -43,22 +43,7 @@ void revGraphics::ShutDown()
 	renderer = nullptr;
 }
 
-void revGraphics::RenderBegin()
+void revGraphics::Draw()
 {
-	renderer->RenderBegin();
-}
-
-void revGraphics::RenderEnd()
-{
-	renderer->RenderEnd();
-}
-
-void revGraphics::Clear(bool clear_color, bool clear_depth, const revColor& fill_color)
-{
-	renderer->Clear(clear_color, clear_depth, fill_color);
-}
-
-void revGraphics::SwapBuffers()
-{
-	renderer->SwapBuffers();
+	renderer->Render();
 }

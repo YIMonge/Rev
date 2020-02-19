@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-message("Build Start")
-
 # Choose Graphics system
 set(VULKAN 1)
 set(GLES 0)
+set(DEBUG 1)
 
 if(VULKAN)
     add_definitions(-D_USE_VULKAN)
@@ -12,10 +11,12 @@ elseif(GLES)
     add_definitions(-D_USE_GLES)
 endif()
 
-add_definitions(
-        -D_DEBUG
-        -D_ENABLE_LOG
-)
+if(DEBUG)
+    add_definitions(
+            -D_DEBUG
+            -D_ENABLE_LOG
+    )
+endif()
 
 set(CORELIB_DIR  ../../../../../../CoreLib)
 set(PLATFORMLIB_DIR  ../../../../../../PlatformLib)

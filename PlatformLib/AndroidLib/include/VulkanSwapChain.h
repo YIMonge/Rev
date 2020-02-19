@@ -15,9 +15,10 @@ public:
     bool Create(const VulkanDeviceContext& deviceContext);
     void Destroy(const VulkanDeviceContext& deviceContext);
 
-    VkFormat GetFormat() const { return format; }
-    VkSwapchainKHR  GetSwapChain() const { return swapChain; }
-    VkExtent2D GetDisplaySize() const { return displaySize; }
+    const VkFormat& GetFormat() const { return format; }
+    const VkSwapchainKHR&  GetSwapChain() const { return swapChain; }
+    const VkExtent2D& GetDisplaySize() const { return displaySize; }
+    uint32 GetLength() const { return length; }
 private:
     VkSwapchainKHR swapChain;
     VkExtent2D displaySize;
