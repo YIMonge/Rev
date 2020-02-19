@@ -107,4 +107,9 @@ void VulkanBuffer::Destroy(const VulkanDeviceContext& deviceContext)
     vkDestroyBuffer(deviceContext.GetDevice(), buffer, nullptr);
 }
 
+void VulkanBuffer::Apply()
+{
+
+}
+
 #endif

@@ -4,11 +4,13 @@
 #if _USE_VULKAN
 #include "VulkanDeviceContext.h"
 #include "IGraphicsBuffer.h"
+#include "revMath.h"
+
 class VulkanBuffer : public IGraphicsBuffer
 {
 public:
     VulkanBuffer(){}
-    ~VulkanBuffer(){}
+    virtual ~VulkanBuffer(){}
 
     bool Create(const VulkanDeviceContext& deviceContext, const revArray<revVector3>& data, GRAPHICS_BUFFER_FORMAT format);
     bool Create(const VulkanDeviceContext& deviceContext, const revArray<revVector4>& data, GRAPHICS_BUFFER_FORMAT format);
