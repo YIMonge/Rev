@@ -8,17 +8,17 @@
 
 bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<revVector3>& data, GRAPHICS_BUFFER_FORMAT format)
 {
-    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3) * data.Count(), format);
+    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3) * data.size(), format);
 }
 
 bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<revVector4>& data, GRAPHICS_BUFFER_FORMAT format)
 {
-    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4) * data.Count(), format);
+    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4) * data.size(), format);
 }
 
 bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<float>& data, GRAPHICS_BUFFER_FORMAT format)
 {
-    return Create(deviceContext, static_cast<const float*>(&data[0]), sizeof(float) * data.Count(), format);
+    return Create(deviceContext, static_cast<const float*>(&data[0]), sizeof(float) * data.size(), format);
 }
 
 bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format)

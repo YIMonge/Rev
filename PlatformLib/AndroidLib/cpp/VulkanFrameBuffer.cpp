@@ -23,7 +23,8 @@ bool VulkanFrameBuffer::Create(const VulkanDeviceContext &deviceContext, const V
         return false;
     }
 
-    views.Resize(imageCount);
+    views.resize(imageCount);
+    images.resize(imageCount);
     result = vkGetSwapchainImagesKHR(device, swapchain, &imageCount, &images[0]);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -62,7 +63,7 @@ bool VulkanFrameBuffer::Create(const VulkanDeviceContext &deviceContext, const V
 
     // create framebuffer
     uint32 swapChainLength = swapChain.GetLength();
-    framebuffers.Resize(swapChainLength);
+    framebuffers.resize(swapChainLength);
     for(uint32 i = 0; i < swapChainLength; ++i){
         VkImageView  attachments[2] = {
                 views[i],
@@ -93,7 +94,7 @@ bool VulkanFrameBuffer::Create(const VulkanDeviceContext &deviceContext, const V
 void VulkanFrameBuffer::Destroy(const VulkanDeviceContext& deviceContext)
 {
     VkDevice device =  deviceContext.GetDevice();
-    for(int i = 0; i < framebuffers.Count(); ++i){
+    for(int i = 0; i < framebuffers.size(); ++i){
         vkDestroyFramebuffer(device, framebuffers[i], nullptr);
         vkDestroyImageView(device, views[i], nullptr);
         vkDestroyImage(device, images[i], nullptr);

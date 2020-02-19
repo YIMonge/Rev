@@ -37,16 +37,17 @@ bool VulkanDeviceContext::Create(Window& window)
         .sType                 = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO, 
         .pNext                 = nullptr,
         .pApplicationInfo      = &appInfo,
-#ifdef _DEBUG
-        .enabledLayerCount     = debugLayers.Count(),
-        .ppEnabledLayerNames   = &debugLayers[0],
-#else
-        .enabledLayerCount     = 0,
-        .ppEnabledLayerNames   = nullptr,
-#endif
         .enabledExtensionCount = numOfInstanceExt,      
         .ppEnabledExtensionNames = useInstanceExt,      
     };
+#ifdef _DEBUG
+    instanceInfo.enabledLayerCount     = debugLayers.size();
+    instanceInfo.ppEnabledLayerNames   = &debugLayers[0];
+#else
+    instanceInfo.enabledLayerCount     = 0;
+    instanceInfo.ppEnabledLayerNames   = nullptr;
+#endif
+
     VkResult result = vkCreateInstance(&instanceInfo, nullptr, &instance);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -166,7 +167,7 @@ void VulkanDeviceContext::initializeDebugLayer()
     vkEnumerateInstanceLayerProperties(&layerPropertyCount, props);
 
     // for NDK r20
-    debugLayers.Resize(5);
+    debugLayers.resize(5);
     debugLayers[0] = "VK_LAYER_GOOGLE_threading";
     debugLayers[1] = "VK_LAYER_LUNARG_parameter_validation";
     debugLayers[2] = "VK_LAYER_LUNARG_object_tracker";
@@ -174,7 +175,7 @@ void VulkanDeviceContext::initializeDebugLayer()
     debugLayers[4] = "VK_LAYER_GOOGLE_unique_objects";
 
 
-    for(uint32 i = 0; i < debugLayers.Count(); ++i){
+    for(uint32 i = 0; i < debugLayers.size(); ++i){
         bool found = false;
         for(uint32 j = 0; j < layerPropertyCount; ++j){
             if(strcmp(debugLayers[i], props[j].layerName) == 0){

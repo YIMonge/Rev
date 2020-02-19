@@ -45,14 +45,5 @@ void revGraphics::ShutDown()
 
 void revGraphics::Draw()
 {
-	// TEST for draw command storage
-	revDrawCommand* a[512];
-	int n = rand() % 512;
-	for(int i = 0; i < n; ++i) {
-		a[i] = drawCommandStorage.Borrow();
-	}
-	for(int i = 0; i < n; ++i){
-		drawCommandStorage.Return(a[i]);
-	}
 	renderer->Render();
 }

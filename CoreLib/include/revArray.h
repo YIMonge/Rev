@@ -3,7 +3,12 @@
 
 #include "revTypedef.h"
 #include "revIterator.h"
+#include <vector>
 
+template<typename T>
+using revArray = std::vector<T>;
+
+/*
 template<typename T>
 class revArray
 {
@@ -42,5 +47,5 @@ private:
 };
 
 #include "revArray.inl"
-
+*/
 #endif

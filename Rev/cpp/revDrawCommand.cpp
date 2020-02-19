@@ -1,8 +1,8 @@
 #include "../include/revDrawCommand.h"
 revDrawCommandStorage::revDrawCommandStorage(uint32 capacity, uint32 threadNum)
 {
-    emptyBlock.Resize(threadNum);
-    emptyBlock.Fill(0);
+    emptyBlock.resize(threadNum);
+    emptyBlock.assign(threadNum, 0);
     storage = new revDrawCommand*[threadNum];
     for(int i = 0; i < threadNum; ++i){
         storage[i] = new revDrawCommand[capacity];

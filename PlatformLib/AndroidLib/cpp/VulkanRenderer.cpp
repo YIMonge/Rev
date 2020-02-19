@@ -132,8 +132,8 @@ bool VulkanRenderer::CreateCommandPool()
         return false;
     }
 
-    commandBuffers.Resize(swapChain.GetLength());
-    for(int i = 0; i < commandBuffers.Count(); ++i){
+    commandBuffers.resize(swapChain.GetLength());
+    for(int i = 0; i < commandBuffers.size(); ++i){
         VkCommandBufferAllocateInfo commandBufferAllocateInfo = {
                 .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
                 .pNext = nullptr,
