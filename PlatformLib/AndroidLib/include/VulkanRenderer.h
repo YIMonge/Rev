@@ -7,6 +7,7 @@
 #include "VulkanSwapChain.h"
 #include "VulkanRenderInfo.h"
 #include "VulkanFrameBuffer.h"
+#include "VulkanBuffer.h"
 
 class VulkanRenderer : public IRenderer
 {
@@ -41,7 +42,8 @@ private:
 	// clear color
 	VkClearValue clearValue;
 
-	// Draw Command
+	// TEST CODE
+	VulkanBuffer triangleVertexBuffer;
 
 };
 

@@ -26,6 +26,13 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     if(!renderInfo.Create(context, swapChain)) return;
     if(!frameBuffer.Create(context, swapChain, renderInfo)) return;
     if(!CreateCommandPool()) return;
+
+    // TEST CODE
+    const float triangleVertices[] = {
+            -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+    };
+    triangleVertexBuffer.Create(context, triangleVertices, 9, GRAPHICS_BUFFER_FORMAT_VERTEX);
+
 }
 
 void VulkanRenderer::ShutDown()
