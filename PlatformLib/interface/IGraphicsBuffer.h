@@ -3,19 +3,21 @@
 
 #include "revBitset.h"
 
+enum GRAPHICS_BUFFER_FORMAT
+{
+    GRAPHICS_BUFFER_FORMAT_VERTEX,
+    GRAPHICS_BUFFER_FORMAT_NORMAL,
+    GRAPHICS_BUFFER_FORMAT_TEXCOORD,
+    GRAPHICS_BUFFER_FORMAT_COLOR,
+    GRAPHICS_BUFFER_FORMAT_MAX_NUM,
+};
+
 class IGraphicsBuffer
 {
 public:
     IGraphicsBuffer(){}
     virtual ~IGraphicsBuffer(){}
-    enum GRAPHICS_BUFFER_FORMAT
-    {
-        GRAPHICS_BUFFER_FORMAT_VERTEX,
-        GRAPHICS_BUFFER_FORMAT_NORMAL,
-        GRAPHICS_BUFFER_FORMAT_TEXCOORD,
-        GRAPHICS_BUFFER_FORMAT_COLOR,
-        GRAPHICS_BUFFER_FORMAT_MAX_NUM,
-    };
+
     GRAPHICS_BUFFER_FORMAT getFormat() const
     {
         return format;
