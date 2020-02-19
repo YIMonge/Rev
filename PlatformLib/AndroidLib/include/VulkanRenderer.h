@@ -17,8 +17,7 @@ public:
 	virtual void StartUp(Window* window, const GraphicsDesc& desc);
 	virtual void ShutDown();
 
-	void RenderBegin();
-	void RenderEnd();
+	void Render();
 
 	void Clear(bool clear_color, bool clear_depth, const revColor& fill_color);
 	void SwapBuffers();
@@ -41,6 +40,9 @@ private:
 
 	// clear color
 	VkClearValue clearValue;
+
+	// Draw Command
+
 };
 
 #endif

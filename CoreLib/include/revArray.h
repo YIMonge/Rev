@@ -20,6 +20,8 @@ public:
 
 	void Resize(uint32 capacity);
 	uint32 Count() const;
+	void Fill(const T& val);
+	void Fill(const T& val, uint32 size);
 
 	ITERATOR_DEF(T, std::forward_iterator_tag);
 	iterator begin()

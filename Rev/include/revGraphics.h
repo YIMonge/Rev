@@ -10,6 +10,7 @@ class Color;
 class Window;
 class IRenderer;
 
+
 class revGraphics : public revSingleton<revGraphics>
 {
 public:
@@ -22,6 +23,7 @@ public:
 private:
 	GraphicsDesc desc;
 	IRenderer* renderer;
+    revDrawCommandStorage drawCommandStorage;
 };
 
 #endif

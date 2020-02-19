@@ -6,23 +6,24 @@
 #if _USE_VULKAN
 
 
-bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<revVector3>& data)
+bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<revVector3>& data, GRAPHICS_BUFFER_FORMAT format)
 {
-    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3) * data.Count());
+    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3) * data.Count(), format);
 }
 
-bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<revVector4>& data)
+bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<revVector4>& data, GRAPHICS_BUFFER_FORMAT format)
 {
-    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4) * data.Count());
+    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4) * data.Count(), format);
 }
 
-bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<float>& data)
+bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<float>& data, GRAPHICS_BUFFER_FORMAT format)
 {
-    return Create(deviceContext, static_cast<const float*>(&data[0]), sizeof(float) * data.Count());
+    return Create(deviceContext, static_cast<const float*>(&data[0]), sizeof(float) * data.Count(), format);
 }
 
-bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const float* data, uint32 size)
+bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format)
 {
+    SetFormat(format);
     VkDevice device = deviceContext.GetDevice();
     VkBufferCreateInfo bufferCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,

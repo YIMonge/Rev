@@ -77,6 +77,18 @@ uint32 revArray<T>::Count() const
 }
 
 template<typename T>
+void revArray<T>::Fill(const T& val)
+{
+	Fill(val, size);
+}
+
+template<typename T>
+void revArray<T>::Fill(const T& val, uint32 size)
+{
+	memset(array, val, size * sizeof(T));
+}
+
+template<typename T>
 void revArray<T>::GrowIfNeeded()
 {
 	if(size + 1 < count)

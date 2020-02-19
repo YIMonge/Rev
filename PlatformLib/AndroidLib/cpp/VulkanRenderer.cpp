@@ -36,7 +36,7 @@ void VulkanRenderer::ShutDown()
     context.Destroy();
 }
 
-void VulkanRenderer::RenderBegin()
+void VulkanRenderer::Render()
 {
     uint32 index;
     VkDevice device = context.GetDevice();
@@ -89,11 +89,6 @@ void VulkanRenderer::RenderBegin()
             .pResults = &result,
     };
     vkQueuePresentKHR(context.GetQueue(), &presentInfo);
-}
-
-void VulkanRenderer::RenderEnd()
-{
-
 }
 
 void VulkanRenderer::Clear(bool clear_color, bool clear_depth, const revColor& fill_color)

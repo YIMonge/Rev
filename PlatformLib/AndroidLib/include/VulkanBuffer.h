@@ -10,10 +10,10 @@ public:
     VulkanBuffer(){}
     ~VulkanBuffer(){}
 
-    bool Create(const VulkanDeviceContext& deviceContext, const revArray<revVector3>& data);
-    bool Create(const VulkanDeviceContext& deviceContext, const revArray<revVector4>& data);
-    bool Create(const VulkanDeviceContext& deviceContext, const revArray<float>& data);
-    bool Create(const VulkanDeviceContext& deviceContext, const float* data, uint32 size);
+    bool Create(const VulkanDeviceContext& deviceContext, const revArray<revVector3>& data, GRAPHICS_BUFFER_FORMAT format);
+    bool Create(const VulkanDeviceContext& deviceContext, const revArray<revVector4>& data, GRAPHICS_BUFFER_FORMAT format);
+    bool Create(const VulkanDeviceContext& deviceContext, const revArray<float>& data, GRAPHICS_BUFFER_FORMAT format);
+    bool Create(const VulkanDeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format);
     void Destroy(const VulkanDeviceContext& deviceContext);
 
     virtual void Apply();
