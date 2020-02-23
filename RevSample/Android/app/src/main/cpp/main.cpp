@@ -1,5 +1,8 @@
 #include <android_native_app_glue.h>
 #include "revApp.h"
+#include "AndroidContext.h"
+
+android_app* appContext = nullptr;
 
 void handle_cmd(android_app* app, int32_t cmd) {
     Window window(app->window);
@@ -19,6 +22,7 @@ void handle_cmd(android_app* app, int32_t cmd) {
 void android_main(struct android_app* state)
 {
     state->onAppCmd = handle_cmd;
+    appContext = state;
 
     revApp& app = revApp::Get();
     int events;
