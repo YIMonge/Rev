@@ -17,6 +17,7 @@ bool VulkanShader::LoadFromFile(const VulkanDeviceContext& deviceContext, const 
         return false;
     }
 
+    type = shaderType;
     uint32 length = file.GetFileSize();
     char* data = new char[length];
     file.GetData(data);
@@ -29,7 +30,7 @@ bool VulkanShader::LoadFromFile(const VulkanDeviceContext& deviceContext, const 
         .flags = 0
     };
     VkResult result = vkCreateShaderModule(deviceContext.GetDevice(), &shaderModuleCreateInfo,
-                                           nullptr, handle[static_cast<uint32>(shaderType)]);
+                                           nullptr, handle);
     delete[] data;
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);

@@ -7,7 +7,6 @@ enum class SHADER_TYPE : uint32
 {
     VERTX,
     FRAGMENT,
-    COMPUTE,
 };
 
 class VulkanShader
@@ -17,11 +16,21 @@ public:
     virtual ~VulkanShader(){}
 
     bool LoadFromFile(const VulkanDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType);
+    VkShaderModule* getShader(){
+        return handle;
+    }
 private:
-    static const uint32 SHADER_TYPE_MAX_NUM = 3;
     revString name;
-    VkShaderModule* handle[SHADER_TYPE_MAX_NUM];
+    SHADER_TYPE  type;
+    VkShaderModule* handle;
 };
+
+// TODO:
+class VulkanComputeShader
+{
+
+};
+
 
 #endif
 
