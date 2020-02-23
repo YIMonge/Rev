@@ -2,6 +2,13 @@
 #include "File.h"
 #include "Log.h"
 
+VulkanShader::VulkanShader() :
+name("")
+{
+}
+
+
+
 bool VulkanShader::LoadFromFile(const VulkanDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
 {
     File file;
@@ -22,7 +29,7 @@ bool VulkanShader::LoadFromFile(const VulkanDeviceContext& deviceContext, const 
         .flags = 0
     };
     VkResult result = vkCreateShaderModule(deviceContext.GetDevice(), &shaderModuleCreateInfo,
-                                           nullptr, handle);
+                                           nullptr, handle[static_cast<uint32>(shaderType)]);
     delete[] data;
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
