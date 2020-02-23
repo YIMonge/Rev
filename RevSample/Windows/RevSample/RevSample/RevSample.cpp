@@ -23,10 +23,7 @@ public:
 			r = 0.0f;
 		}
 
-		revGraphics::Get().RenderBegin();
-		revGraphics::Get().Clear(true, false, revColor(r, 0.0f, 0.0f, 1.0f));
-		revGraphics::Get().SwapBuffers();
-		revGraphics::Get().RenderEnd();
+		revGraphics::Get().Draw();
 		Sleep(1);
 		return false;
 	}

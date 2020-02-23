@@ -85,7 +85,7 @@ bool DX12SwapChain::Create(const DX12DeviceContext& deviceContext, const Window&
 	renderTargetDesc.Texture2D.MipSlice = 0;
 	renderTargetDesc.Texture2D.PlaneSlice = 0;
 
-	renderTarget.Resize(bufferNum);
+	renderTarget.resize(bufferNum);
 	for (uint32 i = 0; i < bufferNum; ++i) {
 		hr = swapChain->GetBuffer(i, IID_PPV_ARGS(&renderTarget[i]));
 		if (FAILED(hr)) {
@@ -149,7 +149,7 @@ bool DX12SwapChain::Create(const DX12DeviceContext& deviceContext, const Window&
 
 void DX12SwapChain::Destroy()
 {
-	for (uint32 i = 0; i < renderTarget.Count(); ++i) {
+	for (uint32 i = 0; i < renderTarget.size(); ++i) {
 		if (renderTarget[i] != nullptr) {
 			renderTarget[i]->Release();
 			renderTarget[i] = nullptr;

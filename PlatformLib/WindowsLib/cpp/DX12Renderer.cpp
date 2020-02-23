@@ -59,7 +59,7 @@ void DX12Renderer::ShutDown()
 	deviceContext.Destroy();
 }
 
-void DX12Renderer::RenderBegin()
+void DX12Renderer::Render()
 {
 	HRESULT hr = commandAllocator->Reset();
 	if (FAILED(hr)) {

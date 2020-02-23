@@ -28,7 +28,6 @@ public:
 
 	virtual void OnPaint()
 	{
-		revGraphics::Get().Clear(true, false, revColor(0.5f, 0.0f, 0.0f, 1.0f));
 	}
 	
 };

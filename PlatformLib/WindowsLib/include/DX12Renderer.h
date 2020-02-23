@@ -16,8 +16,7 @@ public:
 	virtual void StartUp(Window* window, const GraphicsDesc& desc);
 	virtual void ShutDown();
 
-	virtual void RenderBegin();
-	virtual void RenderEnd() {}
+	virtual void Render();
 
 	virtual void Clear(bool clear_color, bool clear_depth, const revColor& fill_color) {}
 	virtual void SwapBuffers() {}

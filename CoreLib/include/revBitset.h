@@ -1,6 +1,13 @@
 #ifndef __REVBITSET_H__
 #define __REVBITSET_H__
 
+#include <bitset>
+
+// TODO: allocator 
+template<int size>
+using revBitset = std::bitset<size>;
+
+/*
 template<typename T, int size>
 class revBitset
 {
@@ -18,6 +25,6 @@ public:
 };
 
 #include "revBitset.inl"
-
+*/
 
 #endif
