@@ -30,7 +30,7 @@ void File::Close()
     file = nullptr;
 }
 
-void File::GetData(uint8* data, uint32 length)
+void File::GetData(char* data, uint32 length)
 {
     length = length == 0 ? this->length : length;
     AAsset_read(file, data, length);

@@ -13,7 +13,7 @@ public:
 
     bool Open(const char* path, FileMode::Mode mode);
     void Close();
-    void GetData(uint8* data, uint32 length = 0);
+    void GetData(char* data, uint32 length = 0);
     uint32 GetFileSize();
 
 private:
