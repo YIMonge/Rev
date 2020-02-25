@@ -171,8 +171,6 @@
     <ClInclude Include="include\libs\GL\glxew.h" />
     <ClInclude Include="include\libs\GL\wglew.h" />
     <ClInclude Include="include\Thread.h" />
-    <ClInclude Include="include\VKDeviceContext.h" />
-    <ClInclude Include="include\VkRenderer.h" />
     <ClInclude Include="include\Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -186,8 +184,6 @@
     <ClCompile Include="cpp\GLDeviceContext.cpp" />
     <ClCompile Include="cpp\GLRenderer.cpp" />
     <ClCompile Include="cpp\Thread.cpp" />
-    <ClCompile Include="cpp\VKDeviceContext.cpp" />
-    <ClCompile Include="cpp\VkRenderer.cpp" />
     <ClCompile Include="cpp\Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

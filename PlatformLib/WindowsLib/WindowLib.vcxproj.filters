@@ -36,12 +36,6 @@
     <ClCompile Include="cpp\Thread.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\VKDeviceContext.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\VkRenderer.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\Window.cpp">
       <Filter>source</Filter>
     </ClCompile>
@@ -87,12 +81,6 @@
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="include\Thread.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VKDeviceContext.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VkRenderer.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="include\Window.h">
