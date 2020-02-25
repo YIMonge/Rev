@@ -36,13 +36,8 @@ private:
 	ID3D12GraphicsCommandList*	commandList;
 	ID3D12CommandQueue*			commandQueue;
 
-	ID3D12Fence* fence;
-	uint32 fenceValue;
-	HANDLE fenceEvent;
-
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT rectScissor;
-
 
 	// initalze for app 
 	ID3D12RootSignature* rootSignature;

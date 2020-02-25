@@ -145,6 +145,18 @@ bool DX12SwapChain::Create(const DX12DeviceContext& deviceContext, const Window&
 	device->CreateDepthStencilView(depthStencil, &depthStencilDesc, depthStencilViewHeap->GetCPUDescriptorHandleForHeapStart());
 
 	dxgiFactory->Release();
+
+	// create fence 
+	hr = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	if (FAILED(hr)) {
+		return false;
+	}
+	fenceValue = 1;
+	fenceEvent = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
+	if (fenceEvent == nullptr) {
+		return false;
+	}
+
 	return true;
 }
 
@@ -157,7 +169,7 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE DX12SwapChain::GetCPUDescriptorHandle() const
 	);
 }
 
-bool DX12SwapChain::WaitForPreviousFrame(ID3D12CommandQueue* queue, ID3D12Fence* fence, uint32& fenceValue, HANDLE fenceEvent)
+bool DX12SwapChain::WaitForPreviousFrame(ID3D12CommandQueue* queue)
 {
 	const uint64 tempFenceValue = fenceValue;
 	HRESULT hr = queue->Signal(fence, tempFenceValue);

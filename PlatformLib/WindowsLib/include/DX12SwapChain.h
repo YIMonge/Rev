@@ -31,7 +31,7 @@ public:
 	bool Present() const;
 
 	// TODO: swapchain should have fence, value, event. 
-	bool WaitForPreviousFrame(ID3D12CommandQueue* queue, ID3D12Fence* fence, uint32& fenceValue, HANDLE fenceEvent);
+	bool WaitForPreviousFrame(ID3D12CommandQueue* queue);
 
 private:
 	IDXGISwapChain3* swapChain;
@@ -42,6 +42,10 @@ private:
 	ID3D12DescriptorHeap* depthStencilViewHeap;
 	revArray<ID3D12Resource*> renderTarget;
 	ID3D12Resource* depthStencil;
+
+	ID3D12Fence* fence;
+	uint32 fenceValue;
+	HANDLE fenceEvent;
 };
 
 #endif

@@ -26,18 +26,6 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	}
 	commandList->Close();
 
-	// create fence 
-	hr = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
-	if (FAILED(hr)) {
-		return;
-	}
-	fenceValue = 1;
-	fenceEvent = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
-	if (fenceEvent == nullptr) {
-		return;
-	}
-
-
 	// create viewport and scissor 
 	rectScissor = { 0, 0, static_cast<LONG>(window->GetWidth()), static_cast<LONG>(window->GetHeight()) };
 	viewport = { 0, 0, static_cast<float>(window->GetWidth()), static_cast<float>(window->GetHeight()), 0.0f, 1.0f, };
@@ -93,7 +81,7 @@ void DX12Renderer::Render()
 	swapChain.Present();
 
 	// wait for current frame 
-	swapChain.WaitForPreviousFrame(commandQueue, fence, fenceValue, fenceEvent);	
+	swapChain.WaitForPreviousFrame(commandQueue);	
 }
 
 bool DX12Renderer::IntialzieForApp()
