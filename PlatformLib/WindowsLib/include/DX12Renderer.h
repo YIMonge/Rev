@@ -32,8 +32,9 @@ private:
 	DX12DeviceContext deviceContext;
 	DX12SwapChain swapChain;
 
-	ID3D12CommandAllocator* commandAllocator;
-	ID3D12GraphicsCommandList* commandList;
+	ID3D12CommandAllocator*		commandAllocator;
+	ID3D12GraphicsCommandList*	commandList;
+	ID3D12CommandQueue*			commandQueue;
 
 	ID3D12Fence* fence;
 	uint32 fenceValue;
@@ -45,7 +46,6 @@ private:
 
 	// initalze for app 
 	ID3D12RootSignature* rootSignature;
-
 	ID3D12PipelineState* pipelineState;
 };
 

@@ -1,12 +1,14 @@
 #ifndef __DX12DEVICECONTEXT_H__
 #define __DX12DEVICECONTEXT_H__
 
+#include "revTypedef.h"
 #include "../../interface/IDeviceContext.h"
 
 #if defined(_USE_DIRECTX12)
 
 #include <d3d12.h>
 #include <dxgi1_4.h>
+#include "libs/DX12/d3dx12.h"
 
 class Window;
 
@@ -32,8 +34,8 @@ public:
 	}
 
 private:
-	ID3D12Device*				device;
-	ID3D12CommandQueue*			commandQueue;
+	ID3D12Device* device;
+	ID3D12CommandQueue* commandQueue;
 	GraphicsDesc desc;
 };
 

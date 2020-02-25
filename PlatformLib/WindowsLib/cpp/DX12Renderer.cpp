@@ -69,12 +69,31 @@ void DX12Renderer::Render()
 	if (FAILED(hr)) {
 		return;
 	}
-
-	//commandList->ResourceBarrier(1, &)
-
-	//commandList->SetDescriptorHeaps(1, heap)
-	//commandList->RSSetViewports(1, &viewport);
 	
+	commandList->ResourceBarrier(1, 
+		&CD3DX12_RESOURCE_BARRIER::Transition(swapChain.GetCurrentRenderTarget(),
+			D3D12_RESOURCE_STATE_PRESENT,
+			D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE renderTargetViewHandle = swapChain.GetCPUDescriptorHandle();
+
+	const float clearColor[] = { 0.0f, 0.2f, 1.0f, 1.0f };
+	commandList->ClearRenderTargetView(renderTargetViewHandle, clearColor, 0, nullptr);
+	commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(swapChain.GetCurrentRenderTarget(),
+		D3D12_RESOURCE_STATE_PRESENT,
+		D3D12_RESOURCE_STATE_RENDER_TARGET));
+	hr = commandList->Close();	
+	if (FAILED(hr)) {
+		return;
+	}
+
+	ID3D12CommandList* commandLists[] = { commandList };
+	ID3D12CommandQueue* commandQueue = deviceContext.GetCommandQueue();
+	commandQueue->ExecuteCommandLists(1, commandLists);
+	swapChain.Present();
+
+	// wait for current frame 
+	swapChain.WaitForPreviousFrame(commandQueue, fence, fenceValue, fenceEvent);	
 }
 
 bool DX12Renderer::IntialzieForApp()

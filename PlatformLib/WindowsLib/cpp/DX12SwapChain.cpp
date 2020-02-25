@@ -86,13 +86,14 @@ bool DX12SwapChain::Create(const DX12DeviceContext& deviceContext, const Window&
 	renderTargetDesc.Texture2D.PlaneSlice = 0;
 
 	renderTarget.resize(bufferNum);
+	renderTargetViewDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	for (uint32 i = 0; i < bufferNum; ++i) {
 		hr = swapChain->GetBuffer(i, IID_PPV_ARGS(&renderTarget[i]));
 		if (FAILED(hr)) {
 			return false;
 		}
 		device->CreateRenderTargetView(renderTarget[i], &renderTargetDesc, handle);
-		handle.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+		handle.ptr += renderTargetViewDescriptorSize;
 	}
 
 	// create depth stencil view 
@@ -145,6 +146,41 @@ bool DX12SwapChain::Create(const DX12DeviceContext& deviceContext, const Window&
 
 	dxgiFactory->Release();
 	return true;
+}
+
+CD3DX12_CPU_DESCRIPTOR_HANDLE DX12SwapChain::GetCPUDescriptorHandle() const
+{
+	return CD3DX12_CPU_DESCRIPTOR_HANDLE(
+		renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart(),
+		frameIndex,
+		renderTargetViewDescriptorSize
+	);
+}
+
+bool DX12SwapChain::WaitForPreviousFrame(ID3D12CommandQueue* queue, ID3D12Fence* fence, uint32& fenceValue, HANDLE fenceEvent)
+{
+	const uint64 tempFenceValue = fenceValue;
+	HRESULT hr = queue->Signal(fence, tempFenceValue);
+	if (FAILED(hr)) {
+		return false;
+	}
+	fenceValue++;
+	if (fence->GetCompletedValue() < tempFenceValue) {
+		hr = fence->SetEventOnCompletion(tempFenceValue, fenceEvent);
+		if (FAILED(hr)) {
+			return false;
+		}
+		WaitForSingleObject(fenceEvent, INFINITE);
+	}
+	frameIndex = swapChain->GetCurrentBackBufferIndex();
+	return true;
+}
+
+
+bool DX12SwapChain::Present() const
+{
+	HRESULT hr = swapChain->Present(1, 0);
+	return (((HRESULT)(hr)) < 0);
 }
 
 void DX12SwapChain::Destroy()
