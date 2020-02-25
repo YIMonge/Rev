@@ -54,6 +54,9 @@
     <ClCompile Include="cpp\DX12Shader.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="cpp\DX12Buffer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CriticalSection.h">
@@ -104,20 +107,23 @@
     <ClInclude Include="..\interface\IDeviceContext.h">
       <Filter>interface</Filter>
     </ClInclude>
-    <ClInclude Include="include\libs\GL\glew.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\libs\GL\glxew.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\libs\GL\wglew.h">
-      <Filter>header</Filter>
-    </ClInclude>
     <ClInclude Include="include\DX12SwapChain.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="include\DX12Shader.h">
       <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12Buffer.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libs\GL\wglew.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libs\GL\glxew.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libs\GL\glew.h">
+      <Filter>lib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

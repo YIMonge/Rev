@@ -1,7 +1,7 @@
 #ifndef __DX12RENDERER_H__
 #define __DX12RENDERER_H__
 
-#include "../../interface/IRenderer.h"
+#include "IRenderer.h"
 #include "DX12DeviceContext.h"
 #include "DX12SwapChain.h"
 #include "revArray.h"

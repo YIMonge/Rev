@@ -160,6 +160,7 @@
     <ClInclude Include="include\CriticalSection.h" />
     <ClInclude Include="include\DX11DeviceContext.h" />
     <ClInclude Include="include\DX11Renderer.h" />
+    <ClInclude Include="include\DX12Buffer.h" />
     <ClInclude Include="include\DX12DeviceContext.h" />
     <ClInclude Include="include\DX12Renderer.h" />
     <ClInclude Include="include\DX12Shader.h" />
@@ -176,6 +177,7 @@
   <ItemGroup>
     <ClCompile Include="cpp\DX11DeviceContext.cpp" />
     <ClCompile Include="cpp\DX11Renderer.cpp" />
+    <ClCompile Include="cpp\DX12Buffer.cpp" />
     <ClCompile Include="cpp\DX12DeviceContext.cpp" />
     <ClCompile Include="cpp\DX12Renderer.cpp" />
     <ClCompile Include="cpp\DX12Shader.cpp" />

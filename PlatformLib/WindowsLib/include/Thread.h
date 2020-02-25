@@ -1,7 +1,7 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
-#include "../../interface/IThread.h"
+#include "IThread.h"
 #include <Windows.h>
 
 class Thread : IThread
