@@ -29,7 +29,7 @@ bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const float*
             .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
             .pNext = nullptr,
             .size = size,
-            .usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,     // TODO: decide by param
+            .usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,     // TODO: decide by param(= format)
             .flags = 0,
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
             .pQueueFamilyIndices = deviceContext.GetQueueFamilyIndexPtr(),
