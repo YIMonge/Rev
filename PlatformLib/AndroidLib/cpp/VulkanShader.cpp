@@ -2,6 +2,8 @@
 #include "File.h"
 #include "Log.h"
 
+#ifdef _USE_VULKAN
+
 VulkanShader::VulkanShader() :
 name("")
 {
@@ -30,7 +32,7 @@ bool VulkanShader::LoadFromFile(const VulkanDeviceContext& deviceContext, const 
         .flags = 0
     };
     VkResult result = vkCreateShaderModule(deviceContext.GetDevice(), &shaderModuleCreateInfo,
-                                           nullptr, handle);
+                                           nullptr, &handle);
     delete[] data;
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -38,3 +40,23 @@ bool VulkanShader::LoadFromFile(const VulkanDeviceContext& deviceContext, const 
     }
     return true;
 }
+
+VkPipelineShaderStageCreateInfo VulkanShader::getShaderStageCreateInfo() const
+{
+    VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo {
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+        .pNext = nullptr,
+        .module = handle,
+        .pSpecializationInfo = nullptr,
+        .flags = 0,
+        .pName = "main",
+    };
+    const VkShaderStageFlagBits SHADER_STAGE_FLAG[] = {
+            VK_SHADER_STAGE_VERTEX_BIT,
+            VK_SHADER_STAGE_FRAGMENT_BIT,
+    };
+    pipelineShaderStageCreateInfo.stage = SHADER_STAGE_FLAG[static_cast<int32>(type)];
+    return pipelineShaderStageCreateInfo;
+}
+
+#endif

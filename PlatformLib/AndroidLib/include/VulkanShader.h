@@ -3,6 +3,8 @@
 #include "VulkanDeviceContext.h"
 #include "revString.h"
 
+#ifdef _USE_VULKAN
+
 enum class SHADER_TYPE : uint32
 {
     VERTX,
@@ -16,13 +18,12 @@ public:
     virtual ~VulkanShader(){}
 
     bool LoadFromFile(const VulkanDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType);
-    VkShaderModule* getShader(){
-        return handle;
-    }
+    VkPipelineShaderStageCreateInfo getShaderStageCreateInfo() const;
+
 private:
     revString name;
     SHADER_TYPE  type;
-    VkShaderModule* handle;
+    VkShaderModule handle;
 };
 
 // TODO:
@@ -32,5 +33,6 @@ class VulkanComputeShader
 };
 
 
+#endif
 #endif
 

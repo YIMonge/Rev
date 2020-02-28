@@ -20,6 +20,7 @@ public:
 
     virtual void Apply();
 
+    const VkBuffer& GetHandle() const { return buffer; }
 private:
     bool MapMemoryTypeToIndex(const VulkanDeviceContext& deviceContext , uint32 typeBits, VkFlags mask, uint32* typeIndex);
 
