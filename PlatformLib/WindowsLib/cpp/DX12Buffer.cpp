@@ -45,7 +45,16 @@ bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const float* dat
 	}
 
 	CD3DX12_RANGE readRange(0, 0);
-	//hr = buffer->Map(0, readRange);
+	uint8* bufferBegin;
+	hr = buffer->Map(0, &readRange, reinterpret_cast<void**>(bufferBegin));
+	if (FAILED(hr)) {
+		return false;
+	}
+	memcpy(bufferBegin, data, size);
+	buffer->Unmap(0, nullptr);
+
+	
+
 
 	return true;
 }
@@ -57,5 +66,25 @@ void DX12Buffer::Destroy(const DX12DeviceContext& deviceContext)
 		buffer = nullptr;
 	}
 }
+
+
+DX12VertexBuffer::DX12VertexBuffer()
+{
+
+}
+
+DX12VertexBuffer::~DX12VertexBuffer()
+{
+}
+
+bool DX12VertexBuffer::Create(const DX12DeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format)
+{
+	DX12Buffer::Create(deviceContext, data, size, format);
+	view.BufferLocation = buffer->GetGPUVirtualAddress();
+	view.StrideInBytes = sizeof(revVector3);
+	view.SizeInBytes = size;
+	return true;
+}
+
 
 #endif

@@ -16,13 +16,25 @@ public:
 	bool Create(const DX12DeviceContext& deviceContext, const revArray<revVector3>& data, GRAPHICS_BUFFER_FORMAT format);
 	bool Create(const DX12DeviceContext& deviceContext, const revArray<revVector4>& data, GRAPHICS_BUFFER_FORMAT format);
 	bool Create(const DX12DeviceContext& deviceContext, const revArray<float>& data, GRAPHICS_BUFFER_FORMAT format);
-	bool Create(const DX12DeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format);
+	virtual bool Create(const DX12DeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format);
 	void Destroy(const DX12DeviceContext& deviceContext);
 
-private:
+protected:
 	ID3D12Resource* buffer;
 };
 
+class DX12VertexBuffer : public DX12Buffer
+{
+public:
+	DX12VertexBuffer();
+	virtual ~DX12VertexBuffer();
+
+	virtual bool Create(const DX12DeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format);
+
+private:
+
+	D3D12_VERTEX_BUFFER_VIEW view;
+};
 
 
 
