@@ -17,17 +17,17 @@ DX12Buffer::~DX12Buffer()
 
 bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const revArray<revVector3>& data, GRAPHICS_BUFFER_FORMAT format)
 {
-
+	return Create(deviceContext, &data[0].data[0], data.size() * sizeof(revVector3), format);
 }
 
 bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const revArray<revVector4>& data, GRAPHICS_BUFFER_FORMAT format)
 {
-
+	return Create(deviceContext, &data[0].data[0], data.size() * sizeof(revVector4), format);
 }
 
 bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const revArray<float>& data, GRAPHICS_BUFFER_FORMAT format)
 {
-
+	return Create(deviceContext, &data[0], data.size() * sizeof(float), format);
 }
 
 bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format)
@@ -45,7 +45,7 @@ bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const float* dat
 	}
 
 	CD3DX12_RANGE readRange(0, 0);
-	uint8* bufferBegin;
+	uint8* bufferBegin = nullptr;
 	hr = buffer->Map(0, &readRange, reinterpret_cast<void**>(bufferBegin));
 	if (FAILED(hr)) {
 		return false;

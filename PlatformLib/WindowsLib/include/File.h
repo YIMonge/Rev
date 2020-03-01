@@ -10,8 +10,9 @@ public:
 	File();
 	virtual ~File();
 
-	virtual void Open(const char* path, FileMode::Mode mode);
-	virtual void Close();
+	virtual bool Open(const char* path, FileMode::Mode mode);
+	virtual void Close() = 0;
+	virtual void GetData(char* data, uint32 length = 0);
 	virtual uint32 GetFileSize();
 private:
 	FileMode::Mode mode;

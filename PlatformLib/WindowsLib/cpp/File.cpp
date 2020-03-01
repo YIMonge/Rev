@@ -23,11 +23,13 @@ File::~File()
 {
 }
 	
-void File::Open(const char* path, FileMode::Mode mode)
+bool File::Open(const char* path, FileMode::Mode mode)
 {
 	this->mode = mode;
 	file = fopen(path, FileModeString[static_cast<int>(mode)]);
 	assert(file != nullptr);
+	return file != nullptr;
+
 }
 	
 void File::Close()
