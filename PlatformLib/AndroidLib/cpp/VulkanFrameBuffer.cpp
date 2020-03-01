@@ -15,7 +15,7 @@ bool VulkanFrameBuffer::Create(const VulkanDeviceContext &deviceContext, const V
 {
     foramt = swapChain.GetFormat();
     uint32 imageCount = 0;
-    VkDevice device = deviceContext.GetDevice();
+    const VkDevice& device = deviceContext.GetDevice();
     VkSwapchainKHR  swapchain = swapChain.GetSwapChain();
     VkResult result = vkGetSwapchainImagesKHR(device, swapchain, &imageCount, nullptr);
     if(result != VK_SUCCESS) {

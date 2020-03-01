@@ -6,10 +6,10 @@
 VulkanRenderer::VulkanRenderer()
 {
     clearValue = {
-            .color.float32[0] = revColor::white.r,
-            .color.float32[1] = revColor::white.g,
-            .color.float32[2] = revColor::white.b,
-            .color.float32[3] = revColor::white.a,
+            .color.float32[0] = 0.3f,
+            .color.float32[1] = 0.0f,
+            .color.float32[2] = 0.3f,
+            .color.float32[3] = 1.0f,
     };
 }
 
@@ -25,14 +25,21 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     if(!swapChain.Create(context)) return;
     if(!renderInfo.Create(context, swapChain)) return;
     if(!frameBuffer.Create(context, swapChain, renderInfo)) return;
-    if(!CreateCommandPool()) return;
-
+    //-----------------------------------------------------------------------------------------------
     // TEST CODE
     const float triangleVertices[] = {
             -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
     };
-    triangleVertexBuffer.Create(context, triangleVertices, 9, GRAPHICS_BUFFER_FORMAT_VERTEX);
+    triangleVertexBuffer.Create(context, triangleVertices, sizeof(triangleVertices), GRAPHICS_BUFFER_FORMAT_VERTEX);
 
+    VulkanShader shader[2];
+    shader[0].LoadFromFile(context, "shaders/first.vert.spv", SHADER_TYPE::VERTX);
+    shader[1].LoadFromFile(context, "shaders/first.frag.spv", SHADER_TYPE::FRAGMENT);
+
+    if(!renderInfo.CreatePipeline(context, swapChain, shader[0], shader[1])) return;
+
+    //-----------------------------------------------------------------------------------------------
+    if(!CreateCommandPool()) return;
 }
 
 void VulkanRenderer::ShutDown()
@@ -46,7 +53,7 @@ void VulkanRenderer::ShutDown()
 void VulkanRenderer::Render()
 {
     uint32 index;
-    VkDevice device = context.GetDevice();
+    const VkDevice& device = context.GetDevice();
     VkResult result;
     result = vkAcquireNextImageKHR(device,
             swapChain.GetSwapChain(),
@@ -168,10 +175,10 @@ bool VulkanRenderer::CreateCommandPool()
 
         // Image Layout
         setImageLayout(commandBuffers[i], frameBuffer.GetImages()[i],
-                VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-                VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-                VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-                VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+                       VK_IMAGE_LAYOUT_UNDEFINED,
+                       VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                       VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+                       VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
 
         VkRenderPassBeginInfo renderPassBeginInfo = {
                 .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
@@ -189,14 +196,16 @@ bool VulkanRenderer::CreateCommandPool()
                 .clearValueCount = 1,
                 .pClearValues = &clearValue,
         };
+
         vkCmdBeginRenderPass(commandBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
+        // TODO: is good in this position? should add command to the buffer by revDraw Command.
+        vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderInfo.GetPipeline());
+        VkDeviceSize offset = 0;
+        vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &triangleVertexBuffer.GetHandle(), &offset);
+        vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+
         vkCmdEndRenderPass(commandBuffers[i]);
-        setImageLayout(commandBuffers[i], frameBuffer.GetImages()[i],
-                VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-                VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-                VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-                VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
         result = vkEndCommandBuffer(commandBuffers[i]);
         if(result != VK_SUCCESS) {
             NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -225,7 +234,8 @@ void VulkanRenderer::setImageLayout(VkCommandBuffer commandBuffer, VkImage image
                     .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
                     .baseMipLevel = 0,
                     .levelCount = 1,
-
+                    .baseArrayLayer = 0,
+                    .layerCount = 1,
             }
     };
     switch (oldImageLayout) {
@@ -266,7 +276,9 @@ void VulkanRenderer::setImageLayout(VkCommandBuffer commandBuffer, VkImage image
             imageMemoryBarrier.dstAccessMask =
                     VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
             break;
-
+        case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
+            imageMemoryBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+            break;
         default:
             break;
     }

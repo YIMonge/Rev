@@ -16,9 +16,12 @@ namespace FileMode
 class IFile
 {
 public:
-	virtual void Open(const char* path, FileMode::Mode mode) = 0;
+	virtual ~IFile(){}
+
+	virtual bool Open(const char* path, FileMode::Mode mode) = 0;
 	virtual void Close() = 0;
 
-	virtual uint8* GetData() = 0;
+	// if length is 0, can get all size of data.
+	virtual void GetData(char* data, uint32 length = 0) = 0;
 	virtual uint32 GetFileSize() = 0;
 };
