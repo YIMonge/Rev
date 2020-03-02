@@ -55,6 +55,7 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
             .imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
             .queueFamilyIndexCount = 1,
             .pQueueFamilyIndices = &queueFamilyIndex,
+            .compositeAlpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR,
             .presentMode = VK_PRESENT_MODE_FIFO_KHR,
             .oldSwapchain = VK_NULL_HANDLE,
             .clipped = VK_FALSE,

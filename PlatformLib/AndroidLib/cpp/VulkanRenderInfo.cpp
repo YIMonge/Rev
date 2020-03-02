@@ -2,6 +2,18 @@
 #include "Log.h"
 #ifdef _USE_VULKAN
 
+VulkanRenderInfo::VulkanRenderInfo()
+{
+    memset(&pipelineLayout, 0, sizeof(pipelineLayout));
+    memset(&pipelineCache, 0, sizeof(pipelineCache));
+    memset(&pipeline, 0, sizeof(pipeline));
+}
+
+VulkanRenderInfo::~VulkanRenderInfo()
+{
+
+}
+
 bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const VulkanSwapChain& swapChain)
 {
     VkAttachmentDescription attachmentDescription {
@@ -81,10 +93,6 @@ bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const Vu
 // TODO: Material should have vertex/fragment shader, input assembler, blend and depth/stencil state. create pipeline by Material.
 bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader)
 {
-    memset(&pipelineLayout, 0, sizeof(pipelineLayout));
-    memset(&pipelineCache, 0, sizeof(pipelineCache));
-    memset(&pipeline, 0, sizeof(pipeline));
-
     const VkDevice& device = deviceContext.GetDevice();
     VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {
         .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
@@ -144,7 +152,8 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, 
 
     // color blend state
     VkPipelineColorBlendAttachmentState colorBlendAttachmentState = {
-            .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT,
+            .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
+                    VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT,
             .blendEnable = VK_FALSE,
     };
     VkPipelineColorBlendStateCreateInfo colorBlendStateCreateInfo = {
@@ -186,7 +195,7 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, 
     VkVertexInputAttributeDescription vertexInputAttributeDescription = {
             .binding = 0,
             .location = 0,
-            .format = VK_FORMAT_R32G32B32A32_SFLOAT,
+            .format = VK_FORMAT_R32G32B32_SFLOAT,
             .offset = 0,
     };
     VkPipelineVertexInputStateCreateInfo vertexInputStateCreateInfo = {

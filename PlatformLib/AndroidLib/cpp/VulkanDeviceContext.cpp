@@ -82,12 +82,6 @@ bool VulkanDeviceContext::Create(Window& window)
 
     gpu = tmpGpus[0];
 
-    VkPhysicalDeviceProperties gpuProperties;
-    vkGetPhysicalDeviceProperties(gpu, &gpuProperties);
-
-    //VkSurfaceCapabilitiesKHR surfaceCapablities;
-    //vkGetPhysicalDeviceSurfaceCapabilitiesKHR(gpu, surface, &surfaceCapablities);
-
     uint32 queueFamilyCount;
     vkGetPhysicalDeviceQueueFamilyProperties(gpu, &queueFamilyCount, nullptr);
     VkQueueFamilyProperties queueFamilyProperties[queueFamilyCount];
