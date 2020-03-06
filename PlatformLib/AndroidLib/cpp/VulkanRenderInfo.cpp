@@ -1,3 +1,4 @@
+#include <VulkanTexture.h>
 #include "VulkanRenderInfo.h"
 #include "Log.h"
 #ifdef _USE_VULKAN
@@ -94,16 +95,38 @@ bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const Vu
 bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader)
 {
     const VkDevice& device = deviceContext.GetDevice();
+
+    // Texture settings
+    VkDescriptorSetLayoutBinding descriptorSetLayoutBinding = {
+        .binding = 0,
+        .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        .descriptorCount = 1, // for test
+        .stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT,
+        .pImmutableSamplers = nullptr,
+    };
+    VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+        .pNext = nullptr,
+        .bindingCount = 1,
+        .pBindings = &descriptorSetLayoutBinding,
+    };
+    VkResult result = vkCreateDescriptorSetLayout(device, &descriptorSetLayoutCreateInfo, nullptr, &descriptorSetLayout);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    //---------------------------------------------------------------
     VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {
         .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
         .pNext = nullptr,
-        .setLayoutCount = 0,
-        .pSetLayouts = nullptr,
+        .setLayoutCount = 1,
+        .pSetLayouts = &descriptorSetLayout,
         .pushConstantRangeCount = 0,
         .pPushConstantRanges = nullptr,
     };
 
-    VkResult result = vkCreatePipelineLayout(device, &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
+    result = vkCreatePipelineLayout(device, &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -252,6 +275,47 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, 
     }
 
     return true;
+}
+
+// TODO: array of texture
+bool VulkanRenderInfo::CreateDescriptorSet(const VulkanDeviceContext& deviceContext, VulkanTexture& texture)
+{
+    const VkDevice& device = deviceContext.GetDevice();
+
+    VkDescriptorPoolSize descriptorPoolSize = {
+        .type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        .descriptorCount = 1, // if texture count higher than 2 the param should texture count.
+    };
+    VkDescriptorPoolCreateInfo descriptorPoolCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
+        .pNext = nullptr,
+        .maxSets = 1,
+        .poolSizeCount = 1,
+        .pPoolSizes = &descriptorPoolSize,
+    };
+    VkResult result = vkCreateDescriptorPool(device, &descriptorPoolCreateInfo, nullptr, &descriptorPool);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    VkDescriptorSetAllocateInfo descriptorSetAllocateInfo = {
+        .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
+        .pNext = nullptr,
+        .descriptorPool = descriptorPool,
+        .pSetLayouts = &descriptorSetLayout,
+    };
+    result = vkAllocateDescriptorSets(device, &descriptorSetAllocateInfo, &descriptorSet);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    // TODO: array of texture
+    VkDescriptorImageInfo descriptorImageInfo = texture.GetDescriptorImageInfo();
+
+
+
 }
 
 void VulkanRenderInfo::Destroy(const VulkanDeviceContext& deviceContext)

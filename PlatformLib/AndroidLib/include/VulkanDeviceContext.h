@@ -50,6 +50,9 @@ public:
         return queue;
     }
 
+    const VkPhysicalDeviceMemoryProperties& GetPhysicalDeviceMemoryProperties() const {
+        return physicalDeviceMemoryProperties;
+    }
 private:
     VkInstance instance;
     VkDevice device;
@@ -57,6 +60,7 @@ private:
     VkPhysicalDevice gpu;
     VkQueue queue;
     uint32 queueFamilyIndex;
+    VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
 
 #ifdef _DEBUG
     void initializeDebugLayer();

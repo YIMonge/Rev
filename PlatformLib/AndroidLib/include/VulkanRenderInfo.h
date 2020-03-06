@@ -23,6 +23,8 @@ public:
     const VkFence& GetFence() const { return fence; }
     const VkPipeline& GetPipeline() const { return pipeline; }
 private:
+    bool CreateDescriptorSet(const VulkanDeviceContext& deviceContext, VulkanTexture& texture);
+
     VkRenderPass renderPass;
     VkSemaphore  semaphore;
     VkFence fence;
@@ -31,6 +33,10 @@ private:
     VkPipelineLayout pipelineLayout;
     VkPipelineCache pipelineCache;
     VkPipeline  pipeline;
+
+    VkDescriptorPool descriptorPool;
+    VkDescriptorSet descriptorSet;
+    VkDescriptorSetLayout  descriptorSetLayout;
 
 };
 

@@ -3,6 +3,9 @@
 #include "Log.h" // AndroidLib doesn't depend on rev
 #ifdef _USE_VULKAN
 
+// TEST
+#include "VulkanTexture.h"
+
 VulkanRenderer::VulkanRenderer()
 {
     clearValue = {
@@ -35,6 +38,10 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     VulkanShader shader[2];
     shader[0].LoadFromFile(context, "shaders/first.vert.spv", SHADER_TYPE::VERTX);
     shader[1].LoadFromFile(context, "shaders/first.frag.spv", SHADER_TYPE::FRAGMENT);
+
+
+    VulkanTexture texture;
+    texture.LoadFromFile(context, "sample_tex.png");
 
     if(!renderInfo.CreatePipeline(context, swapChain, shader[0], shader[1])) return;
 
