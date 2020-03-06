@@ -4,14 +4,13 @@
 
 #ifdef _USE_VULKAN
 
-VulkanShader::VulkanShader() :
-name("")
+VulkanShader::VulkanShader()
 {
 }
 
 
 
-bool VulkanShader::LoadFromFile(const VulkanDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
+bool VulkanShader::LoadFromFile(const IDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
 {
     File file;
     if(!file.Open(path, FileMode::ReadText)){
@@ -34,6 +33,11 @@ bool VulkanShader::LoadFromFile(const VulkanDeviceContext& deviceContext, const 
     VkResult result = vkCreateShaderModule(deviceContext.GetDevice(), &shaderModuleCreateInfo,
                                            nullptr, &handle);
     delete[] data;
+
+
+    // TODO: load meta file that describe need data format like below.
+    dataFormat = REV_GRAPHICS_BUFFER_FOMAT_FLAG::VERTEX;
+
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
