@@ -10,6 +10,9 @@
 class VulkanRenderInfo
 {
 public:
+    VulkanRenderInfo();
+    ~VulkanRenderInfo();
+
     bool Create(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain);
     void Destroy(const VulkanDeviceContext& deviceContext);
 
