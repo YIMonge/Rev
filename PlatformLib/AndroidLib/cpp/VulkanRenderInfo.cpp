@@ -283,6 +283,85 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, 
 
 bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const IMaterial* material)
 {
+    if(!material) return false;
+
+    const revGraphicsDevice& device = deviceContext.GetDevice();
+
+    // Texture
+    auto textures = material->GetTextures();
+    VkDescriptorSetLayoutBinding descriptorSetLayoutBinding = {
+        .binding = 0,
+        .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        .stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT,
+        .pImmutableSamplers = nullptr,
+    };
+    descriptorSetLayoutBinding.descriptorCount = textures.size();
+
+    VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+            .pNext = nullptr,
+            .bindingCount = 1,
+            .pBindings = &descriptorSetLayoutBinding,
+    };
+    VkResult result = vkCreateDescriptorSetLayout(device, &descriptorSetLayoutCreateInfo, nullptr, &descriptorSetLayout);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+            .pNext = nullptr,
+            .setLayoutCount = 1,
+            .pSetLayouts = &descriptorSetLayout,
+            .pushConstantRangeCount = 0,
+            .pPushConstantRanges = nullptr,
+    };
+
+    result = vkCreatePipelineLayout(device, &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    // Viewport and Scissor
+    VkViewport viewport = {
+            .height = static_cast<float>(swapChain.GetDisplaySize().height),
+            .width = static_cast<float>(swapChain.GetDisplaySize().width),
+            .minDepth = 0.0f,
+            .maxDepth = 1.0f,
+            .x = 0,
+            .y = 0,
+    };
+    VkRect2D scissor = {
+            .extent = swapChain.GetDisplaySize(),
+            .offset = {
+                    .x = 0,
+                    .y = 0,
+            },
+    };
+    VkPipelineViewportStateCreateInfo pipelineViewportStateCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
+            .pNext = nullptr,
+            .viewportCount = 1,
+            .pViewports = &viewport,
+            .scissorCount = 1,
+            .pScissors = &scissor,
+    };
+
+    // Shader
+    const char* shaderEntry = "main";
+    VkPipelineShaderStageCreateInfo shaderStageCreateInfo[2];
+    for(uint32 i = 0; i < static_cast<uint32>(SHADER_TYPE::MAX_NUM); ++i) {
+        shaderStageCreateInfo[i].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+        shaderStageCreateInfo[i].pNext = nullptr;
+        shaderStageCreateInfo[i].module = material->GetShader(static_cast<SHADER_TYPE>(i))->GetHandle();
+        shaderStageCreateInfo[i].pSpecializationInfo = nullptr;
+        shaderStageCreateInfo[i].flags = 0;
+        shaderStageCreateInfo[i].pName = shaderEntry;
+    }
+
+    // Multi sample
 
     return true;
 }

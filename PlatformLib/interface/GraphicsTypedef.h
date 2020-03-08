@@ -52,23 +52,28 @@ using revGraphicsDevice = VkDevice;
 using revSwapChain = VkSwapchainKHR;
 using revShaderHandle = VkShaderModule;
 using revGraphicsResource = VkBuffer;
-using revGraphicsFormat = VkFormat;
-
-// Formats
-const revGraphicsFormat REV_GRAPHICS_FORMAT_R8G8B8A8_UNORM = VK_FORMAT_R8G8B8A8_UNORM;
-
 using revGraphicsCommandBuffer = VkCommandBuffer;
 using revGraphicsCommandQueue = VkQueue;
+using revTextureResourceView = VkImageView;
+using revTextureSampler = VkSampler;
+
+
+// Formats
+using revGraphicsFormat = VkFormat;
+const revGraphicsFormat REV_GRAPHICS_FORMAT_R8G8B8A8_UNORM = VK_FORMAT_R8G8B8A8_UNORM;
 
 #elif defined(_USE_DX12)
 using revGraphicsDevice = ID3D12Device;
 using revSwapChain = IDXGISwapChain3;
 using revShaderHandle = ID3DBlob;
 using revGraphicsResource = ID3D12Resource;
-using revGraphicsFormat = DXGI_FORMAT;
-
 using revGraphicsCommandBuffer = ID3D12GraphicsCommandList;
 using revGraphicsCommandQueue = ID3D12CommandQueue;
+
+using revTextureResourceView = // TODO:
+using revTextureSampler = // TODO:
+
+using revGraphicsFormat = DXGI_FORMAT;
 
 #endif
 

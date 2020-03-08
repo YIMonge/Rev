@@ -8,6 +8,7 @@ enum class SHADER_TYPE : uint32
 {
 	VERTX,
 	FRAGMENT,
+	MAX_NUM,
 };
 
 class IShader
@@ -18,9 +19,8 @@ public:
 	{
 	}
 	virtual ~IShader(){}
-
 	virtual bool LoadFromFile(const IDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType) = 0;
-
+	revShaderHandle GetHandle() const { return handle; }
 protected:
 	revString name;
     SHADER_TYPE type;
