@@ -20,12 +20,12 @@ public:
 
     virtual void Apply();
 
-    const revGraphicsResource& GetHandle() const { return buffer; }
+    const VkBuffer& GetHandle() const { return buffer; }
 private:
     bool MapMemoryTypeToIndex(const VulkanDeviceContext& deviceContext , uint32 typeBits, VkFlags mask, uint32* typeIndex);
 
 
-    revGraphicsResource buffer;
+    VkBuffer buffer;
 
 };
 

@@ -1,18 +1,29 @@
 #ifndef __VULKANSHADER_H__
 #define __VULKANSHADER_H__
+#include "VulkanDeviceContext.h"
 #include "revString.h"
-#include "IShader.h"
 
 #ifdef _USE_VULKAN
 
-class VulkanShader : public IShader
+enum class SHADER_TYPE : uint32
+{
+    VERTX,
+    FRAGMENT,
+};
+
+class VulkanShader
 {
 public:
     VulkanShader();
     virtual ~VulkanShader(){}
 
-    virtual bool LoadFromFile(const IDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType);
+    bool LoadFromFile(const VulkanDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType);
     VkPipelineShaderStageCreateInfo getShaderStageCreateInfo() const;
+
+private:
+    revString name;
+    SHADER_TYPE  type;
+    VkShaderModule handle;
 };
 
 // TODO:

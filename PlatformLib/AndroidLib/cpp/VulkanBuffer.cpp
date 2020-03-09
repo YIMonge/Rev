@@ -51,10 +51,10 @@ bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const float*
             .allocationSize = memoryRequirements.size,
             .memoryTypeIndex = 0,
     };
-    if(!MapMemoryTypeToIndex(deviceContext,
+    if(MapMemoryTypeToIndex(deviceContext,
             memoryRequirements.memoryTypeBits,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-            &memoryAllocateInfo.memoryTypeIndex)){
+            &memoryAllocateInfo.memoryTypeIndex) == false){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }

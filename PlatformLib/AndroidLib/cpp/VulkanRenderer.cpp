@@ -3,9 +3,6 @@
 #include "Log.h" // AndroidLib doesn't depend on rev
 #ifdef _USE_VULKAN
 
-// TEST
-#include "VulkanTexture.h"
-
 VulkanRenderer::VulkanRenderer()
 {
     clearValue = {
@@ -33,23 +30,13 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     const float triangleVertices[] = {
             -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
     };
-    const float triangleTexcoords[] = {
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            0.5f, 1.0f,
-    };
     triangleVertexBuffer.Create(context, triangleVertices, sizeof(triangleVertices), GRAPHICS_BUFFER_FORMAT_VERTEX);
-    triangleTexcoordBuffer.Create(context, triangleTexcoords, sizeof(triangleTexcoords), GRAPHICS_BUFFER_FORMAT_TEXCOORD);
 
     VulkanShader shader[2];
     shader[0].LoadFromFile(context, "shaders/first.vert.spv", SHADER_TYPE::VERTX);
     shader[1].LoadFromFile(context, "shaders/first.frag.spv", SHADER_TYPE::FRAGMENT);
 
-
-    VulkanTexture texture;
-    texture.LoadFromFile(context, "sample_tex.png");
     if(!renderInfo.CreatePipeline(context, swapChain, shader[0], shader[1])) return;
-    if(!renderInfo.CreateDescriptorSet(context, texture)) return;
 
     //-----------------------------------------------------------------------------------------------
     if(!CreateCommandPool()) return;
@@ -66,7 +53,7 @@ void VulkanRenderer::ShutDown()
 void VulkanRenderer::Render()
 {
     uint32 index;
-    const revGraphicsDevice& device = context.GetDevice();
+    const VkDevice& device = context.GetDevice();
     VkResult result;
     result = vkAcquireNextImageKHR(device,
             swapChain.GetSwapChain(),
@@ -152,7 +139,7 @@ bool VulkanRenderer::CreateCommandPool()
         .queueFamilyIndex = 0,
     };
 
-    const revGraphicsDevice& device = context.GetDevice();
+    const VkDevice& device = context.GetDevice();
     VkResult result = vkCreateCommandPool(device, &commandPoolCreateInfo, nullptr, &commandPool);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -216,7 +203,6 @@ bool VulkanRenderer::CreateCommandPool()
         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderInfo.GetPipeline());
         VkDeviceSize offset = 0;
         vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &triangleVertexBuffer.GetHandle(), &offset);
-        vkCmdBindVertexBuffers(commandBuffers[i], 1, 1, &triangleTexcoordBuffer.GetHandle(), &offset);
         vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
 
         vkCmdEndRenderPass(commandBuffers[i]);

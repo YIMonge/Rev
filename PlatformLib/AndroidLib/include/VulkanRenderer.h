@@ -37,14 +37,14 @@ private:
 	VulkanFrameBuffer frameBuffer;
 
 	VkCommandPool commandPool;
-	revArray<revGraphicsCommandBuffer> commandBuffers;
+	revArray<VkCommandBuffer> commandBuffers;
 
 	// clear color
 	VkClearValue clearValue;
 
 	// TEST CODE
 	VulkanBuffer triangleVertexBuffer;
-	VulkanBuffer triangleTexcoordBuffer;
+
 };
 
 #endif

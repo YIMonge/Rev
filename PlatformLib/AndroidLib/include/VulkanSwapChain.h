@@ -15,14 +15,14 @@ public:
     bool Create(const VulkanDeviceContext& deviceContext);
     void Destroy(const VulkanDeviceContext& deviceContext);
 
-    const revGraphicsFormat& GetFormat() const { return format; }
-    const revSwapChain&  GetSwapChain() const { return swapChain; }
+    const VkFormat& GetFormat() const { return format; }
+    const VkSwapchainKHR&  GetSwapChain() const { return swapChain; }
     const VkExtent2D& GetDisplaySize() const { return displaySize; }
     uint32 GetLength() const { return length; }
 private:
-    revSwapChain swapChain;
+    VkSwapchainKHR swapChain;
     VkExtent2D displaySize;
-    revGraphicsFormat format;
+    VkFormat format;
     uint32 length;
 };
 

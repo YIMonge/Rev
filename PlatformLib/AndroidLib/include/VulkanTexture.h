@@ -4,13 +4,12 @@
 #ifdef _USE_VULKAN
 
 #include "VulkanDeviceContext.h"
-#include "ITexture.h"
 
-class VulkanTexture : public ITexture
+class VulkanTexture
 {
 public:
     VulkanTexture();
-    virtual ~VulkanTexture();
+    ~VulkanTexture();
 
     bool LoadFromFile(const VulkanDeviceContext& deviceContext, const char* path);
     VkDescriptorImageInfo GetDescriptorImageInfo();
@@ -23,6 +22,8 @@ private:
     uint32 width;
     uint32 height;
 
+    VkSampler sampler;
+    VkImageView  imageView;
     VkImageLayout imageLayout;
 
 };

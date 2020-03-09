@@ -11,15 +11,14 @@ public:
     File();
     virtual ~File();
 
-    bool Open(const char* path, FileMode mode);
+    bool Open(const char* path, FileMode::Mode mode);
     void Close();
-    void ReadData(uint8* data, uint32 length = 0);
+    void GetData(char* data, uint32 length = 0);
     uint32 GetFileSize();
 
 private:
     AAsset* file;
     uint32 length;
-    FileMode mode;
 };
 
 #endif

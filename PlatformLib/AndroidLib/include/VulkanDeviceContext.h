@@ -4,6 +4,7 @@
 #ifdef _USE_VULKAN
 
 #include "IDeviceContext.h"
+#include "../lib/vulkan_wrapper.h"
 #ifdef _DEBUG
 #include "revArray.h"
 #endif
@@ -19,7 +20,10 @@ public:
     bool Create(Window& window);
     void Destroy();
 
-
+    const VkDevice& GetDevice() const
+    {
+        return device;
+    }
 
     const VkPhysicalDevice& GetGpuDevice() const
     {
@@ -41,15 +45,18 @@ public:
         return &queueFamilyIndex;
     }
 
-    const VkPhysicalDeviceMemoryProperties& GetPhysicalDeviceMemoryProperties() const {
-        return physicalDeviceMemoryProperties;
+    const VkQueue& GetQueue() const
+    {
+        return queue;
     }
+
 private:
     VkInstance instance;
+    VkDevice device;
     VkSurfaceKHR surface;
     VkPhysicalDevice gpu;
+    VkQueue queue;
     uint32 queueFamilyIndex;
-    VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
 
 #ifdef _DEBUG
     void initializeDebugLayer();

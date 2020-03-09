@@ -13,9 +13,8 @@ File::~File()
 }
 
 
-bool File::Open(const char* path, FileMode mode)
+bool File::Open(const char* path, FileMode::Mode mode)
 {
-    this->mode = mode;
     file = AAssetManager_open(appContext->activity->assetManager,
             path, AASSET_MODE_BUFFER);
     // TODO: assertion
@@ -31,7 +30,7 @@ void File::Close()
     file = nullptr;
 }
 
-void File::ReadData(uint8* data, uint32 length)
+void File::GetData(char* data, uint32 length)
 {
     length = length == 0 ? this->length : length;
     AAsset_read(file, data, length);

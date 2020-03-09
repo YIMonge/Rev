@@ -152,7 +152,7 @@ bool VulkanTexture::LoadFromFile(const VulkanDeviceContext &deviceContext, const
             .flags = 0,
     };
     imageViewCreateInfo.image = image;
-    result = vkCreateImageView(device, &imageViewCreateInfo, nullptr, &resourceView);
+    result = vkCreateImageView(device, &imageViewCreateInfo, nullptr, &imageView);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -180,7 +180,7 @@ VkDescriptorImageInfo VulkanTexture::GetDescriptorImageInfo()
 {
     VkDescriptorImageInfo descriptorImageInfo = {
         .sampler = sampler,
-        .imageView = resourceView,
+        .imageView = imageView,
         .imageLayout = imageLayout,
     };
     return descriptorImageInfo;
