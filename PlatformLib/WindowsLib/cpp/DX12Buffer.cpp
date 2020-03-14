@@ -77,7 +77,8 @@ bool DX12VertexBuffer::Create(const DX12DeviceContext& deviceContext, const floa
 {
 	DX12Buffer::Create(deviceContext, data, size, format);
 	view.BufferLocation = buffer->GetGPUVirtualAddress();
-	view.StrideInBytes = sizeof(revVector3);
+	// TODO: set stride 
+	view.StrideInBytes = sizeof(revVector4) * 2;
 	view.SizeInBytes = size;
 	return true;
 }
