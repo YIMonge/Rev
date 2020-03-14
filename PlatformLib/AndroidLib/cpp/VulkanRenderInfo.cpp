@@ -1,3 +1,4 @@
+#include <VulkanTexture.h>
 #include "VulkanRenderInfo.h"
 #include "Log.h"
 #ifdef _USE_VULKAN
@@ -89,21 +90,46 @@ bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const Vu
     return true;
 }
 
+// NOTICE: this is old function. it will be obsolete after wrote create from material.
 // TODO: determine each states by vertx and fragment shader. ex, input assembler is chosen by vertex shader, blend state is decided by fragment shader(material).
 // TODO: Material should have vertex/fragment shader, input assembler, blend and depth/stencil state. create pipeline by Material.
+// TODO: if use multiple vertex buffer, like first vertex last valying attributes must create multiple binding and attribute info.
 bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader)
 {
     const VkDevice& device = deviceContext.GetDevice();
+
+    // Texture settings
+    VkDescriptorSetLayoutBinding descriptorSetLayoutBinding = {
+        .binding = 0,
+        .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        .descriptorCount = 1, // for test
+        .stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT,
+        .pImmutableSamplers = nullptr,
+    };
+    VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+        .pNext = nullptr,
+        .bindingCount = 1,
+        .pBindings = &descriptorSetLayoutBinding,
+    };
+    VkResult result = vkCreateDescriptorSetLayout(device, &descriptorSetLayoutCreateInfo, nullptr, &descriptorSetLayout);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    //---------------------------------------------------------------
+    // TODO: cached pipeline and load pipeline if pilinecache has alredy existed.
     VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {
         .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
         .pNext = nullptr,
-        .setLayoutCount = 0,
-        .pSetLayouts = nullptr,
+        .setLayoutCount = 1,
+        .pSetLayouts = &descriptorSetLayout,
         .pushConstantRangeCount = 0,
         .pPushConstantRanges = nullptr,
     };
 
-    VkResult result = vkCreatePipelineLayout(device, &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
+    result = vkCreatePipelineLayout(device, &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -245,11 +271,211 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, 
             .basePipelineHandle = VK_NULL_HANDLE,
             .basePipelineIndex = 0,
     };
+
     result = vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &pipeline);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
+
+    return true;
+}
+
+
+bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const IMaterial* material)
+{
+    if(!material) return false;
+
+    const revGraphicsDevice& device = deviceContext.GetDevice();
+
+    // Texture
+    auto textures = material->GetTextures();
+    VkDescriptorSetLayoutBinding descriptorSetLayoutBinding = {
+        .binding = 0,
+        .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        .stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT,
+        .pImmutableSamplers = nullptr,
+    };
+    descriptorSetLayoutBinding.descriptorCount = textures.size();
+
+    VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+            .pNext = nullptr,
+            .bindingCount = 1,
+            .pBindings = &descriptorSetLayoutBinding,
+    };
+    VkResult result = vkCreateDescriptorSetLayout(device, &descriptorSetLayoutCreateInfo, nullptr, &descriptorSetLayout);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+            .pNext = nullptr,
+            .setLayoutCount = 1,
+            .pSetLayouts = &descriptorSetLayout,
+            .pushConstantRangeCount = 0,
+            .pPushConstantRanges = nullptr,
+    };
+
+    result = vkCreatePipelineLayout(device, &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    // Viewport and Scissor
+    VkViewport viewport = {
+            .height = static_cast<float>(swapChain.GetDisplaySize().height),
+            .width = static_cast<float>(swapChain.GetDisplaySize().width),
+            .minDepth = 0.0f,
+            .maxDepth = 1.0f,
+            .x = 0,
+            .y = 0,
+    };
+    VkRect2D scissor = {
+            .extent = swapChain.GetDisplaySize(),
+            .offset = {
+                    .x = 0,
+                    .y = 0,
+            },
+    };
+    VkPipelineViewportStateCreateInfo pipelineViewportStateCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
+            .pNext = nullptr,
+            .viewportCount = 1,
+            .pViewports = &viewport,
+            .scissorCount = 1,
+            .pScissors = &scissor,
+    };
+
+    // Shader
+    const char* shaderEntry = "main";
+    VkPipelineShaderStageCreateInfo shaderStageCreateInfo[2];
+    for(uint32 i = 0; i < static_cast<uint32>(SHADER_TYPE::MAX_NUM); ++i) {
+        shaderStageCreateInfo[i].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+        shaderStageCreateInfo[i].pNext = nullptr;
+        shaderStageCreateInfo[i].module = material->GetShader(static_cast<SHADER_TYPE>(i))->GetHandle();
+        shaderStageCreateInfo[i].pSpecializationInfo = nullptr;
+        shaderStageCreateInfo[i].flags = 0;
+        shaderStageCreateInfo[i].pName = shaderEntry;
+    }
+
+    // Multi sample
+    //VkSampleMask sampleMask = 0;
+    VkPipelineMultisampleStateCreateInfo pipelineMultisampleStateCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
+        .pNext = nullptr,
+        .rasterizationSamples = VK_SAMPLE_COUNT_1_BIT, // TODO: test other prams
+        .sampleShadingEnable = VK_FALSE,
+        .minSampleShading = 0,
+        .pSampleMask = nullptr,
+        .alphaToCoverageEnable = VK_FALSE,              // TODO: by material
+        .alphaToOneEnable = VK_FALSE,
+    };
+
+    // Blend state
+    auto blendState = material->GetBlendState();
+    VkPipelineColorBlendAttachmentState pipelineColorBlendAttachmentState;
+    pipelineColorBlendAttachmentState.colorWriteMask = static_cast<VkColorComponentFlags>(blendState.GetWriteColorMask());
+    pipelineColorBlendAttachmentState.blendEnable = static_cast<VkBool32>(blendState.isEnableBlend());
+    pipelineColorBlendAttachmentState.colorBlendOp = static_cast<VkBlendOp>(blendState.GetBlendOpColor());
+    pipelineColorBlendAttachmentState.srcColorBlendFactor = static_cast<VkBlendFactor>(blendState.GetBlendFactorSrcColor());
+    pipelineColorBlendAttachmentState.dstColorBlendFactor = static_cast<VkBlendFactor>(blendState.GetBlendFactorDstColor());
+    pipelineColorBlendAttachmentState.alphaBlendOp = static_cast<VkBlendOp>(blendState.GetBlendOpAlpha());;
+    pipelineColorBlendAttachmentState.srcAlphaBlendFactor = static_cast<VkBlendFactor>(blendState.GetBlendFactorSrcAlpha());
+    pipelineColorBlendAttachmentState.dstAlphaBlendFactor = static_cast<VkBlendFactor>(blendState.GetBlendFactorDstAlpha());
+    pipelineColorBlendAttachmentState.dstAlphaBlendFactor = static_cast<VkBlendFactor>(blendState.GetBlendFactorDstAlpha());
+
+    VkPipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
+        .pNext = nullptr,
+        .logicOpEnable = VK_FALSE,
+        .logicOp = VK_LOGIC_OP_COPY,
+        .attachmentCount = 1,
+        .pAttachments = &pipelineColorBlendAttachmentState,
+        .flags = 0,
+    };
+
+    // rasterization
+    auto rasterization = material->GetRasterization();
+    VkPipelineRasterizationStateCreateInfo pipelineRasterizationStateCreateInfo{
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
+        .pNext = nullptr,
+        .depthClampEnable = VK_FALSE,
+        .rasterizerDiscardEnable = VK_FALSE,
+        .polygonMode = static_cast<VkPolygonMode>(rasterization.GetPolygonMode()),
+        .cullMode = static_cast<VkCullModeFlagBits>(rasterization.GetCullMode()),
+        .frontFace = VK_FRONT_FACE_CLOCKWISE,
+        .depthBiasEnable = VK_FALSE,
+        .lineWidth = 1,
+    };
+
+    // input assembler
+    VkPipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
+        .pNext = nullptr,
+        .topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+        .primitiveRestartEnable = VK_FALSE,
+    };
+
+
+    return true;
+}
+
+
+
+// TODO: array of texture
+bool VulkanRenderInfo::CreateDescriptorSet(const VulkanDeviceContext& deviceContext, VulkanTexture& texture)
+{
+    const VkDevice& device = deviceContext.GetDevice();
+    VkDescriptorPoolSize descriptorPoolSize = {
+        .type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        .descriptorCount = 1, // if texture count higher than 2 the param should texture count.
+    };
+    VkDescriptorPoolCreateInfo descriptorPoolCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
+        .pNext = nullptr,
+        .maxSets = 1,
+        .poolSizeCount = 1,
+        .pPoolSizes = &descriptorPoolSize,
+    };
+    VkResult result = vkCreateDescriptorPool(device, &descriptorPoolCreateInfo, nullptr, &descriptorPool);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    VkDescriptorSetAllocateInfo descriptorSetAllocateInfo = {
+        .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+        .pNext = nullptr,
+        .descriptorPool = descriptorPool,
+        .descriptorSetCount = 1,
+        .pSetLayouts = &descriptorSetLayout,
+    };
+    result = vkAllocateDescriptorSets(device, &descriptorSetAllocateInfo, &descriptorSet);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    // TODO: array of texture
+    VkDescriptorImageInfo descriptorImageInfo = texture.GetDescriptorImageInfo();
+
+    VkWriteDescriptorSet writeDescriptorSet = {
+        .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+        .pNext = nullptr,
+        .dstSet = descriptorSet,
+        .dstBinding = 0,
+        .dstArrayElement = 0,
+        .descriptorCount = 1, // texture count
+        .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        .pImageInfo = &descriptorImageInfo, // if use multi textures, the param should be array
+        .pBufferInfo = nullptr,
+        .pTexelBufferView = nullptr,
+    };
+    vkUpdateDescriptorSets(device, 1, &writeDescriptorSet, 0, nullptr);
 
     return true;
 }

@@ -6,24 +6,25 @@
 #if _USE_VULKAN
 
 
-bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<revVector3>& data, GRAPHICS_BUFFER_FORMAT format)
+bool VulkanBuffer::Create(const IDeviceContext& deviceContext, const revArray<revVector3>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
     return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3) * data.size(), format);
 }
 
-bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<revVector4>& data, GRAPHICS_BUFFER_FORMAT format)
+bool VulkanBuffer::Create(const IDeviceContext& deviceContext, const revArray<revVector4>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
     return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4) * data.size(), format);
 }
 
-bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const revArray<float>& data, GRAPHICS_BUFFER_FORMAT format)
+bool VulkanBuffer::Create(const IDeviceContext& deviceContext, const revArray<float>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
     return Create(deviceContext, static_cast<const float*>(&data[0]), sizeof(float) * data.size(), format);
 }
 
-bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format)
+bool VulkanBuffer::Create(const IDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
-    SetFormat(format);
+    this->format = format;
+    const VulkanDeviceContext vulkanDeviceContext = static_cast<const VulkanDeviceContext&>(deviceContext);
     VkDevice device = deviceContext.GetDevice();
     VkBufferCreateInfo bufferCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
@@ -32,7 +33,7 @@ bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const float*
             .usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,     // TODO: decide by param(= format)
             .flags = 0,
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
-            .pQueueFamilyIndices = deviceContext.GetQueueFamilyIndexPtr(),
+            .pQueueFamilyIndices = vulkanDeviceContext.GetQueueFamilyIndexPtr(),
             .queueFamilyIndexCount = 1,
     };
 
@@ -51,7 +52,7 @@ bool VulkanBuffer::Create(const VulkanDeviceContext& deviceContext, const float*
             .allocationSize = memoryRequirements.size,
             .memoryTypeIndex = 0,
     };
-    if(!MapMemoryTypeToIndex(deviceContext,
+    if(!MapMemoryTypeToIndex(vulkanDeviceContext,
             memoryRequirements.memoryTypeBits,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
             &memoryAllocateInfo.memoryTypeIndex)){
@@ -102,7 +103,7 @@ bool VulkanBuffer::MapMemoryTypeToIndex(const VulkanDeviceContext& deviceContext
     return false;
 }
 
-void VulkanBuffer::Destroy(const VulkanDeviceContext& deviceContext)
+void VulkanBuffer::Destroy(const IDeviceContext& deviceContext)
 {
     vkDestroyBuffer(deviceContext.GetDevice(), buffer, nullptr);
 }

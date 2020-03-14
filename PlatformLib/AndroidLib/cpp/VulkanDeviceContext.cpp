@@ -140,6 +140,8 @@ bool VulkanDeviceContext::Create(Window& window)
         return false;
     }
 
+    vkGetPhysicalDeviceMemoryProperties(gpu, &physicalDeviceMemoryProperties);
+
     vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue);
     return true;
 }

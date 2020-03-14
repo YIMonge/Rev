@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "../include/revMemory.h"
 
-#define ONLY_MSPACES (1)
-#define MALLOC_ALIGNMENT (8) 
+//#define ONLY_MSPACES (1)
+//#define MALLOC_ALIGNMENT (8)
 
 #include <errno.h>
 
