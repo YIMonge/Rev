@@ -11,11 +11,11 @@ VulkanFrameBuffer::~VulkanFrameBuffer()
 {
 }
 
-bool VulkanFrameBuffer::Create(const VulkanDeviceContext &deviceContext, const VulkanSwapChain &swapChain, const VulkanRenderInfo& renderInfo)
+bool VulkanFrameBuffer::Create(const VulkanDeviceContext& deviceContext, const VulkanSwapChain &swapChain, const VulkanRenderInfo& renderInfo)
 {
     foramt = swapChain.GetFormat();
     uint32 imageCount = 0;
-    const VkDevice& device = deviceContext.GetDevice();
+    const revGraphicsDevice& device = deviceContext.GetDevice();
     VkSwapchainKHR  swapchain = swapChain.GetSwapChain();
     VkResult result = vkGetSwapchainImagesKHR(device, swapchain, &imageCount, nullptr);
     if(result != VK_SUCCESS) {

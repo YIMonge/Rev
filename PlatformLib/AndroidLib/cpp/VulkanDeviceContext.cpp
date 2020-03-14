@@ -82,12 +82,6 @@ bool VulkanDeviceContext::Create(Window& window)
 
     gpu = tmpGpus[0];
 
-    VkPhysicalDeviceProperties gpuProperties;
-    vkGetPhysicalDeviceProperties(gpu, &gpuProperties);
-
-    //VkSurfaceCapabilitiesKHR surfaceCapablities;
-    //vkGetPhysicalDeviceSurfaceCapabilitiesKHR(gpu, surface, &surfaceCapablities);
-
     uint32 queueFamilyCount;
     vkGetPhysicalDeviceQueueFamilyProperties(gpu, &queueFamilyCount, nullptr);
     VkQueueFamilyProperties queueFamilyProperties[queueFamilyCount];
@@ -145,6 +139,8 @@ bool VulkanDeviceContext::Create(Window& window)
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
+
+    vkGetPhysicalDeviceMemoryProperties(gpu, &physicalDeviceMemoryProperties);
 
     vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue);
     return true;

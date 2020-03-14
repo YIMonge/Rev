@@ -29,7 +29,7 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
 
     uint32 chosenIndex = 0;
     for(; chosenIndex < count; ++chosenIndex){
-        if(formats[chosenIndex].format == VK_FORMAT_R8G8B8A8_UNORM) break;
+        if(formats[chosenIndex].format == REV_GRAPHICS_FORMAT_R8G8B8A8_UNORM) break;
     }
     if(chosenIndex >= count){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -55,12 +55,13 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
             .imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
             .queueFamilyIndexCount = 1,
             .pQueueFamilyIndices = &queueFamilyIndex,
+            .compositeAlpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR,
             .presentMode = VK_PRESENT_MODE_FIFO_KHR,
             .oldSwapchain = VK_NULL_HANDLE,
             .clipped = VK_FALSE,
     };
 
-    const VkDevice& device = deviceContext.GetDevice();
+    const revGraphicsDevice& device = deviceContext.GetDevice();
     VkResult result = vkCreateSwapchainKHR(device, &swapchainCreateInfo, nullptr, &swapChain);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
