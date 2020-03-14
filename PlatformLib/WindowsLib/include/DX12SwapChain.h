@@ -1,7 +1,7 @@
 #ifndef __DX12SWAPCHAIN_H__
 #define __DX12SWAPCHAIN_H__
 
-#if defined(_USE_DIRECTX12)
+#ifdef _USE_DIRECTX12
 #include "DX12DeviceContext.h"
 #include "Window.h"
 #include "revArray.h"

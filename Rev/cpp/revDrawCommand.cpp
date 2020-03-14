@@ -4,9 +4,9 @@ revDrawCommandStorage::revDrawCommandStorage(uint32 capacity, uint32 threadNum)
     emptyBlock.resize(threadNum);
     emptyBlock.assign(threadNum, 0);
     storage = new revDrawCommand*[threadNum];
-    for(int i = 0; i < threadNum; ++i){
+    for(uint32 i = 0; i < threadNum; ++i){
         storage[i] = new revDrawCommand[capacity];
-        for(int j = 0; j < capacity; ++j){
+        for(uint32 j = 0; j < capacity; ++j){
             storage[i][j].next = j+1;
         }
     }

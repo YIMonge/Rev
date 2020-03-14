@@ -1,5 +1,5 @@
 #include "DX12SwapChain.h"
-#if defined(_USE_DIRECTX12)
+#ifdef _USE_DIRECTX12
 
 DX12SwapChain::DX12SwapChain() :
 swapChain(nullptr)

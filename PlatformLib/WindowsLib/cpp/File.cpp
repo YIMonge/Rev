@@ -39,6 +39,12 @@ void File::Close()
 	file = nullptr;
 }
 
+void File::GetData(char* data, uint32 length)
+{
+	if (length == 0) length = GetFileSize();
+	fread(data, 1, length, file);
+}
+
 uint32 File::GetFileSize()
 {
 	assert(file != nullptr);

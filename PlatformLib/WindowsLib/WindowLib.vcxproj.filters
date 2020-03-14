@@ -57,6 +57,9 @@
     <ClCompile Include="cpp\DX12Buffer.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="cpp\DX12RenderInfo.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CriticalSection.h">
@@ -124,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="include\libs\GL\glew.h">
       <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12RenderInfo.h">
+      <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

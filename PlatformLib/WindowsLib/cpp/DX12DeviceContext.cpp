@@ -2,7 +2,7 @@
 #include "../include/Window.h"
 #include "revTypedef.h"
 
-#if defined(_USE_DIRECTX12)
+#ifdef _USE_DIRECTX12
 
 bool DX12DeviceContext::Create(const GraphicsDesc& desc)
 {

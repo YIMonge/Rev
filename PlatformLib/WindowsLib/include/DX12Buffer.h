@@ -1,7 +1,7 @@
 #ifndef __DX12BUFFER_H__
 #define __DX12BUFFER_H__
 
-#if defined(_USE_DIRECTX12)
+#ifdef _USE_DIRECTX12
 #include "DX12DeviceContext.h"
 #include "IGraphicsBuffer.h"
 #include "revMath.h"
@@ -31,8 +31,9 @@ public:
 
 	virtual bool Create(const DX12DeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format);
 
-private:
+	const D3D12_VERTEX_BUFFER_VIEW* GetResourceView() const { return &view; }
 
+private:
 	D3D12_VERTEX_BUFFER_VIEW view;
 };
 

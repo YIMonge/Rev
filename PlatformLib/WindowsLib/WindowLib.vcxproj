@@ -163,6 +163,7 @@
     <ClInclude Include="include\DX12Buffer.h" />
     <ClInclude Include="include\DX12DeviceContext.h" />
     <ClInclude Include="include\DX12Renderer.h" />
+    <ClInclude Include="include\DX12RenderInfo.h" />
     <ClInclude Include="include\DX12Shader.h" />
     <ClInclude Include="include\DX12SwapChain.h" />
     <ClInclude Include="include\File.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="cpp\DX12Buffer.cpp" />
     <ClCompile Include="cpp\DX12DeviceContext.cpp" />
     <ClCompile Include="cpp\DX12Renderer.cpp" />
+    <ClCompile Include="cpp\DX12RenderInfo.cpp" />
     <ClCompile Include="cpp\DX12Shader.cpp" />
     <ClCompile Include="cpp\DX12SwapChain.cpp" />
     <ClCompile Include="cpp\File.cpp" />

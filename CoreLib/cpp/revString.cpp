@@ -1,3 +1,4 @@
+/*
 #include "../include/revString.h"
 #include <string.h>
 
@@ -57,3 +58,4 @@ revString& 	revString::operator += (const revString& rhs)
 	this->Append(rhs);
 	return *this;
 }
+*/

@@ -1,11 +1,10 @@
 #include "DX12Buffer.h"
 
-#if defined(_USE_DIRECTX12)
+#ifdef _USE_DIRECTX12
 
 DX12Buffer::DX12Buffer() :
 	buffer(nullptr)
 {
-
 }
 
 DX12Buffer::~DX12Buffer()
@@ -46,15 +45,12 @@ bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const float* dat
 
 	CD3DX12_RANGE readRange(0, 0);
 	uint8* bufferBegin = nullptr;
-	hr = buffer->Map(0, &readRange, reinterpret_cast<void**>(bufferBegin));
+	hr = buffer->Map(0, &readRange, reinterpret_cast<void**>(&bufferBegin));
 	if (FAILED(hr)) {
 		return false;
 	}
 	memcpy(bufferBegin, data, size);
 	buffer->Unmap(0, nullptr);
-
-	
-
 
 	return true;
 }

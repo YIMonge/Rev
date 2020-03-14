@@ -1,10 +1,9 @@
 #ifndef __DX12DEVICECONTEXT_H__
 #define __DX12DEVICECONTEXT_H__
 
-#include "revTypedef.h"
 #include "../../interface/IDeviceContext.h"
 
-#if defined(_USE_DIRECTX12)
+#ifdef _USE_DIRECTX12
 
 #include <d3d12.h>
 #include <dxgi1_4.h>

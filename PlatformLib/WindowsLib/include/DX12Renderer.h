@@ -4,9 +4,13 @@
 #include "IRenderer.h"
 #include "DX12DeviceContext.h"
 #include "DX12SwapChain.h"
+#include "DX12RenderInfo.h"
+#include "DX12Shader.h"
+#include "DX12Buffer.h"
 #include "revArray.h"
 
-#if defined(_USE_DIRECTX12)
+
+#ifdef _USE_DIRECTX12
 
 class Window;
 
@@ -31,6 +35,7 @@ private:
 	Window* main_window;
 	DX12DeviceContext deviceContext;
 	DX12SwapChain swapChain;
+	DX12RenderInfo renderInfo;
 
 	ID3D12CommandAllocator*		commandAllocator;
 	ID3D12GraphicsCommandList*	commandList;
@@ -39,9 +44,12 @@ private:
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT rectScissor;
 
-	// initalze for app 
-	ID3D12RootSignature* rootSignature;
-	ID3D12PipelineState* pipelineState;
+	// Shader for test 
+	DX12Shader vertexShader;
+	DX12Shader fragmentShader;
+
+	// vertex buffer for test
+	DX12VertexBuffer vertexBuffer;
 };
 
 #endif

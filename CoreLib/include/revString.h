@@ -2,8 +2,14 @@
 #define __REVSTRING_H__
 
 #include "revTypedef.h"
-#include "revMemory.h"
+#include <string>
 
+//TODO: set allocator 
+using revString = std::string;
+
+//#include "revMemory.h"
+
+/*
 class revString
 {
 //	MEM_DEFINE(revString, Memory::VATIAVLE_ARRAY);
@@ -24,5 +30,6 @@ public:
 private:	
 	char* buffer;
 };
+*/
 
 #endif
