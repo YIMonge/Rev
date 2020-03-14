@@ -23,7 +23,7 @@ File::~File()
 {
 }
 	
-bool File::Open(const char* path, FileMode::Mode mode)
+bool File::Open(const char* path, FileMode mode)
 {
 	this->mode = mode;
 	file = fopen(path, FileModeString[static_cast<int>(mode)]);

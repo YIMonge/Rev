@@ -53,12 +53,15 @@ using revSwapChain = VkSwapchainKHR;
 using revShaderHandle = VkShaderModule;
 using revGraphicsResource = VkBuffer;
 using revGraphicsFormat = VkFormat;
+using revGraphicsTextureResourceView = VkImageView;
 
 // Formats
 const revGraphicsFormat REV_GRAPHICS_FORMAT_R8G8B8A8_UNORM = VK_FORMAT_R8G8B8A8_UNORM;
 
 using revGraphicsCommandBuffer = VkCommandBuffer;
 using revGraphicsCommandQueue = VkQueue;
+
+
 
 #elif defined(_USE_DIRECTX12)
 #include <d3d12.h>
@@ -69,6 +72,10 @@ using revSwapChain = IDXGISwapChain3;
 using revShaderHandle = ID3DBlob;
 using revGraphicsResource = ID3D12Resource;
 using revGraphicsFormat = DXGI_FORMAT;
+using revGraphicsTextureResourceView = D3D12_CPU_DESCRIPTOR_HANDLE;
+
+// Formats
+const revGraphicsFormat REV_GRAPHICS_FORMAT_R8G8B8A8_UNORM = DXGI_FORMAT_B8G8R8A8_UNORM;
 
 using revGraphicsCommandBuffer = ID3D12GraphicsCommandList;
 using revGraphicsCommandQueue = ID3D12CommandQueue;
