@@ -11,16 +11,6 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 
 	auto device = deviceContext.GetDevice();	
 	HRESULT hr;
-	// create allocator and command list 
-	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
-	if (FAILED(hr)) {
-		return;
-	}
-	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, nullptr, IID_PPV_ARGS(&commandList));
-	if (FAILED(hr)) {
-		return;
-	}
-	commandList->Close();
 
 	// create viewport and scissor 
 	rectScissor = { 0, 0, static_cast<LONG>(window->GetWidth()), static_cast<LONG>(window->GetHeight()) };
@@ -28,7 +18,20 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 
 
 	IntialzieForApp();
-	 
+
+
+	renderInfo.Create(deviceContext, vertexShader, fragmentShader);
+
+	// create allocator and command list 
+	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
+	if (FAILED(hr)) {
+		return;
+	}
+	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, renderInfo.GetPipelineState(), IID_PPV_ARGS(&commandList));
+	if (FAILED(hr)) {
+		return;
+	}
+	commandList->Close();
 }
 
 void DX12Renderer::ShutDown()
@@ -79,9 +82,10 @@ void DX12Renderer::Render()
 	commandList->DrawInstanced(3, 1, 0, 0);
 
 
-	commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(swapChain.GetCurrentRenderTarget(),
-		D3D12_RESOURCE_STATE_PRESENT,
-		D3D12_RESOURCE_STATE_RENDER_TARGET));
+	commandList->ResourceBarrier(1,
+		&CD3DX12_RESOURCE_BARRIER::Transition(swapChain.GetCurrentRenderTarget(),
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_STATE_PRESENT));
 
 
 	hr = commandList->Close();	
@@ -106,19 +110,17 @@ bool DX12Renderer::IntialzieForApp()
 	vertexShader.LoadFromFile(deviceContext, "Resources\\shaders.hlsl", SHADER_TYPE::VERTX);
 	fragmentShader.LoadFromFile(deviceContext, "Resources\\shaders.hlsl", SHADER_TYPE::FRAGMENT);
 
-	renderInfo.Create(deviceContext, vertexShader, fragmentShader);
-
 	struct Vertex
 	{
-		revVector3 position;
+		revVector4 position;
 		revVector4 color;
 	};
 
 	Vertex triangleVertices[] =
 	{
-		{ {  0.0f,   0.25f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ {  0.25f, -0.25f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ { -0.25f, -0.25f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+		{ {  0.0f,   0.25f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ {  0.25f, -0.25f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ { -0.25f, -0.25f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
 	};
 
 	vertexBuffer.Create(deviceContext, &(triangleVertices[0].position.data[0]), sizeof(triangleVertices), GRAPHICS_BUFFER_FORMAT_VERTEX);
