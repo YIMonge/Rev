@@ -151,7 +151,12 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\interface\IASyncable.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\GraphicsTypedef.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IAsyncable.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IGraphicsBuffer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\ILocker.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IMaterial.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IShader.h" />
     <ClInclude Include="..\interface\IDeviceContext.h" />
     <ClInclude Include="..\interface\IFile.h" />
     <ClInclude Include="..\interface\IRenderer.h" />

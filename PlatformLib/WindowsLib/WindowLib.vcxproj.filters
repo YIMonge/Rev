@@ -101,9 +101,6 @@
     <ClInclude Include="..\interface\IThread.h">
       <Filter>interface</Filter>
     </ClInclude>
-    <ClInclude Include="..\interface\IASyncable.h">
-      <Filter>interface</Filter>
-    </ClInclude>
     <ClInclude Include="..\interface\IFile.h">
       <Filter>interface</Filter>
     </ClInclude>
@@ -130,6 +127,24 @@
     </ClInclude>
     <ClInclude Include="include\DX12RenderInfo.h">
       <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\GraphicsTypedef.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IAsyncable.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IGraphicsBuffer.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\ILocker.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IMaterial.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IShader.h">
+      <Filter>interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
