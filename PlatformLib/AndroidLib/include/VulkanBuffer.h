@@ -12,21 +12,16 @@ public:
     VulkanBuffer(){}
     virtual ~VulkanBuffer(){}
 
-    bool Create(const VulkanDeviceContext& deviceContext, const revArray<revVector3>& data, GRAPHICS_BUFFER_FORMAT format);
-    bool Create(const VulkanDeviceContext& deviceContext, const revArray<revVector4>& data, GRAPHICS_BUFFER_FORMAT format);
-    bool Create(const VulkanDeviceContext& deviceContext, const revArray<float>& data, GRAPHICS_BUFFER_FORMAT format);
-    bool Create(const VulkanDeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format);
-    void Destroy(const VulkanDeviceContext& deviceContext);
+    bool Create(const IDeviceContext& deviceContext, const revArray<revVector3>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
+    bool Create(const IDeviceContext& deviceContext, const revArray<revVector4>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
+    bool Create(const IDeviceContext& deviceContext, const revArray<float>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
+    bool Create(const IDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
+    void Destroy(const IDeviceContext& deviceContext);
 
     virtual void Apply();
 
-    const VkBuffer& GetHandle() const { return buffer; }
 private:
     bool MapMemoryTypeToIndex(const VulkanDeviceContext& deviceContext , uint32 typeBits, VkFlags mask, uint32* typeIndex);
-
-
-    VkBuffer buffer;
-
 };
 
 #endif
