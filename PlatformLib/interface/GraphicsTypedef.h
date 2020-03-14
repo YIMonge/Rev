@@ -60,8 +60,11 @@ const revGraphicsFormat REV_GRAPHICS_FORMAT_R8G8B8A8_UNORM = VK_FORMAT_R8G8B8A8_
 using revGraphicsCommandBuffer = VkCommandBuffer;
 using revGraphicsCommandQueue = VkQueue;
 
-#elif defined(_USE_DX12)
-using revGraphicsDevice = ID3D12Device;
+#elif defined(_USE_DIRECTX12)
+#include <d3d12.h>
+#include <dxgi1_4.h>
+#include "libs/DX12/d3dx12.h"
+using revGraphicsDevice = ID3D12Device*;
 using revSwapChain = IDXGISwapChain3;
 using revShaderHandle = ID3DBlob;
 using revGraphicsResource = ID3D12Resource;
