@@ -6,14 +6,14 @@
 class ITexture
 {
 public:
-	ITexture() {}
-	virtual ~ITexture() {}
+    ITexture(){}
+    virtual ~ITexture(){}
 
-	const revTextureSampler& GetSampler() const { return sampler; }
-	const revTextureResourceView& GetResourceView() const { return resourceView; }
+    const revTextureSampler& GetSampler() const { return sampler; }
+    const revTextureResourceView& GetResourceView() const { return resourceView; }
 protected:
-	revTextureSampler sampler;
-	revTextureResourceView  resourceView;
+    revTextureSampler sampler;
+    revTextureResourceView  resourceView;
 };
 
 #endif

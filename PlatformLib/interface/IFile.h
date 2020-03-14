@@ -2,7 +2,7 @@
 
 #include "revTypedef.h"
 
-enum class FileMode
+enum class FileMode : uint8
 {
 	WriteBinary = 0,
 	ReadBinary,

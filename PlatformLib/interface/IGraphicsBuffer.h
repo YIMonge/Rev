@@ -1,16 +1,9 @@
 #ifndef __IGRAPHICSBUFFER_H__
 #define __IGRAPHICSBUFFER_H__
 
-#include "revBitset.h"
-
-enum GRAPHICS_BUFFER_FORMAT
-{
-    GRAPHICS_BUFFER_FORMAT_VERTEX,
-    GRAPHICS_BUFFER_FORMAT_NORMAL,
-    GRAPHICS_BUFFER_FORMAT_TEXCOORD,
-    GRAPHICS_BUFFER_FORMAT_COLOR,
-    GRAPHICS_BUFFER_FORMAT_MAX_NUM,
-};
+#include "revMath.h"
+#include "revArray.h"
+#include "IDeviceContext.h"
 
 class IGraphicsBuffer
 {
@@ -18,17 +11,18 @@ public:
     IGraphicsBuffer(){}
     virtual ~IGraphicsBuffer(){}
 
-    GRAPHICS_BUFFER_FORMAT getFormat() const
-    {
-        return format;
-    }
+    virtual bool Create(const IDeviceContext& deviceContext, const revArray<revVector3>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format) = 0;
+    virtual bool Create(const IDeviceContext& deviceContext, const revArray<revVector4>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format) = 0;
+    virtual bool Create(const IDeviceContext& deviceContext, const revArray<float>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format) = 0;
+    virtual bool Create(const IDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format) = 0;
+    virtual void Destroy(const IDeviceContext& deviceContext) = 0;
+
+    REV_GRAPHICS_BUFFER_FOMAT_FLAG getFormat() const { return format;}
+    const revGraphicsResource& GetHandle() const { return buffer; }
+
 protected:
-    void SetFormat(GRAPHICS_BUFFER_FORMAT _format)
-    {
-        format = _format;
-    }
-private:
-    GRAPHICS_BUFFER_FORMAT format;
+    REV_GRAPHICS_BUFFER_FOMAT_FLAG format;
+    revGraphicsResource buffer;
 };
 
 #endif
