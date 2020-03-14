@@ -7,9 +7,9 @@
 
 #ifdef _USE_DIRECTX12
 
-DX12Shader::DX12Shader() :
-handle(nullptr)
+DX12Shader::DX12Shader()
 {
+	handle = nullptr;
 }
 
 DX12Shader::~DX12Shader()
@@ -27,7 +27,7 @@ std::wstring DX12Shader::utf8_decode(const std::string &str)
     return wstrTo;
 }
 
-bool DX12Shader::LoadFromFile(const DX12DeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
+bool DX12Shader::LoadFromFile(const IDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
 {	
 	type = shaderType;
 	std::wstring wstr = utf8_decode(path);

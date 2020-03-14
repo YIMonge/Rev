@@ -14,22 +14,22 @@ DX12Buffer::~DX12Buffer()
 	}
 }
 
-bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const revArray<revVector3>& data, GRAPHICS_BUFFER_FORMAT format)
+bool DX12Buffer::Create(const IDeviceContext& deviceContext, const revArray<revVector3>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
 	return Create(deviceContext, &data[0].data[0], data.size() * sizeof(revVector3), format);
 }
 
-bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const revArray<revVector4>& data, GRAPHICS_BUFFER_FORMAT format)
+bool DX12Buffer::Create(const IDeviceContext& deviceContext, const revArray<revVector4>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
 	return Create(deviceContext, &data[0].data[0], data.size() * sizeof(revVector4), format);
 }
 
-bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const revArray<float>& data, GRAPHICS_BUFFER_FORMAT format)
+bool DX12Buffer::Create(const IDeviceContext& deviceContext, const revArray<float>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
 	return Create(deviceContext, &data[0], data.size() * sizeof(float), format);
 }
 
-bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format)
+bool DX12Buffer::Create(const IDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
 	HRESULT hr = deviceContext.GetDevice()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
@@ -55,7 +55,7 @@ bool DX12Buffer::Create(const DX12DeviceContext& deviceContext, const float* dat
 	return true;
 }
 
-void DX12Buffer::Destroy(const DX12DeviceContext& deviceContext)
+void DX12Buffer::Destroy(const IDeviceContext& deviceContext)
 {
 	if (buffer != nullptr) {
 		buffer->Release();
@@ -73,7 +73,7 @@ DX12VertexBuffer::~DX12VertexBuffer()
 {
 }
 
-bool DX12VertexBuffer::Create(const DX12DeviceContext& deviceContext, const float* data, uint32 size, GRAPHICS_BUFFER_FORMAT format)
+bool DX12VertexBuffer::Create(const IDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
 	DX12Buffer::Create(deviceContext, data, size, format);
 	view.BufferLocation = buffer->GetGPUVirtualAddress();

@@ -155,18 +155,24 @@ enum class POLYGON_MODE
     POINT = VK_POLYGON_MODE_POINT,
 };
 
-#elif defined(_USE_DX12)
-using revGraphicsDevice = ID3D12Device;
-using revSwapChain = IDXGISwapChain3;
-using revShaderHandle = ID3DBlob;
-using revGraphicsResource = ID3D12Resource;
-using revGraphicsCommandBuffer = ID3D12GraphicsCommandList;
-using revGraphicsCommandQueue = ID3D12CommandQueue;
+#elif defined(_USE_DIRECTX12)
+#include <d3d12.h>
+#include <dxgi1_4.h>
+#include "libs/DX12/d3dx12.h"
 
-using revTextureResourceView = // TODO:
-using revTextureSampler = // TODO:
+using revGraphicsDevice = ID3D12Device*;
+using revSwapChain = IDXGISwapChain3*;
+using revShaderHandle = ID3DBlob*;
+using revGraphicsResource = ID3D12Resource*;
+using revGraphicsCommandBuffer = ID3D12GraphicsCommandList*;
+using revGraphicsCommandQueue = ID3D12CommandQueue*;
+
+using revTextureResourceView = D3D12_CPU_DESCRIPTOR_HANDLE;
+//using revTextureSampler = // TODO:
 
 using revGraphicsFormat = DXGI_FORMAT;
+
+const revGraphicsFormat REV_GRAPHICS_FORMAT_R8G8B8A8_UNORM = DXGI_FORMAT_B8G8R8A8_UNORM;
 
 #endif
 
