@@ -5,10 +5,6 @@
 
 #ifdef _USE_DIRECTX12
 
-#include <d3d12.h>
-#include <dxgi1_4.h>
-#include "libs/DX12/d3dx12.h"
-
 class Window;
 
 class DX12DeviceContext : public IDeviceContext
@@ -16,11 +12,6 @@ class DX12DeviceContext : public IDeviceContext
 public:
 	bool Create(const GraphicsDesc& desc);
 	void Destroy();
-
-	ID3D12Device* GetDevice() const
-	{
-		return device;
-	}
 
 	ID3D12CommandQueue* GetCommandQueue() const
 	{
@@ -33,7 +24,6 @@ public:
 	}
 
 private:
-	ID3D12Device* device;
 	ID3D12CommandQueue* commandQueue;
 	GraphicsDesc desc;
 };
