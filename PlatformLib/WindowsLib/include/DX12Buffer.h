@@ -13,6 +13,7 @@ public:
 	DX12Buffer();
 	virtual ~DX12Buffer();
 
+	// TODO: set stride for resource view 
 	bool Create(const DX12DeviceContext& deviceContext, const revArray<revVector3>& data, GRAPHICS_BUFFER_FORMAT format);
 	bool Create(const DX12DeviceContext& deviceContext, const revArray<revVector4>& data, GRAPHICS_BUFFER_FORMAT format);
 	bool Create(const DX12DeviceContext& deviceContext, const revArray<float>& data, GRAPHICS_BUFFER_FORMAT format);
