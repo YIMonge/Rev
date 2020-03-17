@@ -3,20 +3,20 @@
 
 #if _USE_VULKAN
 #include "VulkanDeviceContext.h"
-#include "IGraphicsBuffer.h"
+#include "revGraphicsBuffer.h"
 #include "revMath.h"
 
-class VulkanBuffer : public IGraphicsBuffer
+class VulkanBuffer : public revGraphicsBuffer
 {
 public:
     VulkanBuffer(){}
     virtual ~VulkanBuffer(){}
 
-    bool Create(const IDeviceContext& deviceContext, const revArray<revVector3>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
-    bool Create(const IDeviceContext& deviceContext, const revArray<revVector4>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
-    bool Create(const IDeviceContext& deviceContext, const revArray<float>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
-    bool Create(const IDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
-    void Destroy(const IDeviceContext& deviceContext);
+    bool Create(const revDeviceContext& deviceContext, const revArray<revVector3>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
+    bool Create(const revDeviceContext& deviceContext, const revArray<revVector4>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
+    bool Create(const revDeviceContext& deviceContext, const revArray<float>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
+    bool Create(const revDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
+    void Destroy(const revDeviceContext& deviceContext);
 
     virtual void Apply();
 

@@ -1,7 +1,7 @@
 #ifndef __DX12RENDERER_H__
 #define __DX12RENDERER_H__
 
-#include "IRenderer.h"
+#include "revRenderer.h"
 #include "DX12DeviceContext.h"
 #include "DX12SwapChain.h"
 #include "DX12RenderInfo.h"
@@ -14,7 +14,7 @@
 
 class Window;
 
-class DX12Renderer : public IRenderer
+class DX12Renderer : public revRenderer
 {
 public:
 	virtual void StartUp(Window* window, const GraphicsDesc& desc);

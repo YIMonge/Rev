@@ -22,31 +22,31 @@
     <ProjectGuid>{E5AF2F67-D077-42DB-8B85-56043AEE9350}</ProjectGuid>
     <RootNamespace>WindowLib</RootNamespace>
     <ProjectName>WindowsLib</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX11|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX12|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -67,22 +67,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)..\interface;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\common;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX11|Win32'">
-    <IncludePath>$(ProjectDir)..\interface;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\common;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX12|Win32'">
-    <IncludePath>$(ProjectDir)..\interface;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\common;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)..\interface;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\common;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -151,17 +151,16 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\GraphicsTypedef.h" />
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IAsyncable.h" />
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IGraphicsBuffer.h" />
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\ILocker.h" />
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IMaterial.h" />
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IShader.h" />
-    <ClInclude Include="..\interface\IDeviceContext.h" />
-    <ClInclude Include="..\interface\IFile.h" />
-    <ClInclude Include="..\interface\IRenderer.h" />
-    <ClInclude Include="..\interface\ITexture.h" />
-    <ClInclude Include="..\interface\IThread.h" />
+    <ClInclude Include="..\common\revAsyncable.h" />
+    <ClInclude Include="..\common\revDeviceContext.h" />
+    <ClInclude Include="..\common\revFile.h" />
+    <ClInclude Include="..\common\revGraphicsBuffer.h" />
+    <ClInclude Include="..\common\revGraphicsTypedef.h" />
+    <ClInclude Include="..\common\revLocker.h" />
+    <ClInclude Include="..\common\revRenderer.h" />
+    <ClInclude Include="..\common\revShader.h" />
+    <ClInclude Include="..\common\revTexture.h" />
+    <ClInclude Include="..\common\revThread.h" />
     <ClInclude Include="include\CriticalSection.h" />
     <ClInclude Include="include\DX11DeviceContext.h" />
     <ClInclude Include="include\DX11Renderer.h" />

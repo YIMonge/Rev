@@ -1,7 +1,7 @@
 #ifndef __GLESRENDERSTATE_H__
 #define __GLESRENDERSTATE_H__
 
-#include "../../interface/IRenderer.h"
+#include "revRenderer.h"
 #ifdef _USE_GLES
 
 

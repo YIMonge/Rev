@@ -5,23 +5,22 @@
 
 #if _USE_VULKAN
 
-
-bool VulkanBuffer::Create(const IDeviceContext& deviceContext, const revArray<revVector3>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
+bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const revArray<revVector3>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
     return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3) * data.size(), format);
 }
 
-bool VulkanBuffer::Create(const IDeviceContext& deviceContext, const revArray<revVector4>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
+bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const revArray<revVector4>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
     return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4) * data.size(), format);
 }
 
-bool VulkanBuffer::Create(const IDeviceContext& deviceContext, const revArray<float>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
+bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const revArray<float>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
     return Create(deviceContext, static_cast<const float*>(&data[0]), sizeof(float) * data.size(), format);
 }
 
-bool VulkanBuffer::Create(const IDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
+bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
 {
     this->format = format;
     const VulkanDeviceContext vulkanDeviceContext = static_cast<const VulkanDeviceContext&>(deviceContext);
@@ -103,7 +102,7 @@ bool VulkanBuffer::MapMemoryTypeToIndex(const VulkanDeviceContext& deviceContext
     return false;
 }
 
-void VulkanBuffer::Destroy(const IDeviceContext& deviceContext)
+void VulkanBuffer::Destroy(const revDeviceContext& deviceContext)
 {
     vkDestroyBuffer(deviceContext.GetDevice(), buffer, nullptr);
 }

@@ -1,21 +1,21 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
-#include "IThread.h"
+#include "revThread.h"
 #include <Windows.h>
 
-class Thread : IThread
+class Thread : revThread
 {
 public:
 	Thread();
 	virtual ~Thread();		
 
-	virtual void Create(uint32 priority, uint32 stack_size, IAsyncable* func);
+	virtual void Create(uint32 priority, uint32 stack_size, revAsyncable* func);
 	virtual void Destroy();
 	virtual void Suspend();
 	virtual void Resume();
 	virtual void Join();
-	virtual void SetFunc(IAsyncable* func);
+	virtual void SetFunc(revAsyncable* func);
 
 	protected:
 		static uint32 __stdcall ThreadFunc(void* thread);
@@ -25,7 +25,7 @@ public:
 		uint32 stack_size;
 		uint32 id;
 		uint32 priority;
-		IAsyncable* func;
+		revAsyncable* func;
 };
 
 

@@ -1,7 +1,7 @@
 #ifndef __DX11DEVICECONTEXT_H__
 #define __DX11DEVICECONTEXT_H__
 
-#include "../../interface/IDeviceContext.h"
+#include "revDeviceContext.h"
 
 #if defined(_USE_DIRECTX11)
 
@@ -10,7 +10,7 @@
 
 class Window;
 
-class DX11DeviceContext : public IDeviceContext
+class DX11DeviceContext : public revDeviceContext
 {
 public:
 	bool Create(Window* windw, const GraphicsDesc& desc);

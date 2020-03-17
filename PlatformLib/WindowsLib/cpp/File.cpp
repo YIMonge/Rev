@@ -19,6 +19,11 @@ File::File()
 {
 }
 
+File::File(const char* path, FileMode mode)
+{
+	Open(path, mode);
+}
+
 File::~File()
 {
 }
@@ -39,10 +44,23 @@ void File::Close()
 	file = nullptr;
 }
 
-void File::GetData(char* data, uint32 length)
+void File::ReadData(char* data, uint32 length)
 {
+	if (mode == FileMode::WriteBinary || mode == FileMode::WriteText) {
+		// TODO: assertion
+		return;
+	}
 	if (length == 0) length = GetFileSize();
 	fread(data, 1, length, file);
+}
+
+void File::WriteData(char* data, uint32 length)
+{
+	if (mode == FileMode::ReadBinary || mode == FileMode::ReadText) {
+		// TODO: assertion
+		return;
+	}
+	fwrite(data, 1, length, file);
 }
 
 uint32 File::GetFileSize()

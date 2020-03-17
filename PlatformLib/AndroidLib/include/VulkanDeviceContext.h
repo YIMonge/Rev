@@ -3,14 +3,14 @@
 
 #ifdef _USE_VULKAN
 
-#include "IDeviceContext.h"
+#include "revDeviceContext.h"
 #ifdef _DEBUG
 #include "revArray.h"
 #endif
 
 class Window;
 
-class VulkanDeviceContext : public IDeviceContext
+class VulkanDeviceContext : public revDeviceContext
 {
 public:
     VulkanDeviceContext(){}

@@ -55,7 +55,9 @@ add_library(AndroidLib STATIC
         )
 target_include_directories(AndroidLib PRIVATE
         ${CORELIB_DIR}/include
-        ${PLATFORMLIB_DIR}/interface
+        ${REV_DIR}/lib
+        ${REV_DIR}/include
+        ${PLATFORMLIB_DIR}/common
         ${ANDROIDLIB_DIR}/include
         ${ANDROID_NDK}/sources/android/native_app_glue
         )
@@ -68,11 +70,13 @@ add_library(Rev STATIC
         ${REVSOURCES})
 target_include_directories(Rev PRIVATE
         ${CORELIB_DIR}/include
-        ${PLATFORMLIB_DIR}/interface
+        ${PLATFORMLIB_DIR}/common
         ${ANDROIDLIB_DIR}/include
+        ${REV_DIR}/lib
         ${REV_DIR}/include
         )
 message("Build Rev Done")
+
 
 # now build app's shared lib
 set(CMAKE_SHARED_LINKER_FLAGS
@@ -83,7 +87,8 @@ add_library(native-activity SHARED main.cpp)
 target_include_directories(native-activity PRIVATE
         ${CORELIB_DIR}/include
         ${ANDROIDLIB_DIR}/include
-        ${PLATFORMLIB_DIR}/interface
+        ${PLATFORMLIB_DIR}/common
+        ${REV_DIR}/lib
         ${REV_DIR}/include
         ${ANDROID_NDK}/sources/android/native_app_glue)
 

@@ -3,6 +3,7 @@
 
 #include "DX12DeviceContext.h"
 #include "DX12Shader.h"
+#include "revMaterial.h"
 
 class DX12RenderInfo
 {

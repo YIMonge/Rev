@@ -2,7 +2,7 @@
 #define __GLESRENDERER_H__
 
 #include "GLESDeviceContext.h"
-#include "../../interface/IRenderer.h"
+#include "revRenderer.h"
 #include "../include/Window.h"
 
 #ifdef _USE_GLES
@@ -10,7 +10,7 @@
 #include <EGL/egl.h>
 #include <GLES/gl.h>
 
-class GLESRenderer : public IRenderer
+class GLESRenderer : public revRenderer
 {
 public:
     GLESRenderer();

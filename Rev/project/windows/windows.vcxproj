@@ -30,12 +30,12 @@
     <ClInclude Include="..\..\include\revCriticalSection.h" />
     <ClInclude Include="..\..\include\revDrawCommand.h" />
     <ClInclude Include="..\..\include\revGraphics.h" />
+    <ClInclude Include="..\..\include\revLogger.h" />
     <ClInclude Include="..\..\include\revMaterial.h" />
     <ClInclude Include="..\..\include\revMesh.h" />
     <ClInclude Include="..\..\include\revResource.h" />
-    <ClInclude Include="..\..\include\revShader.h" />
+    <ClInclude Include="..\..\include\revSerializer.h" />
     <ClInclude Include="..\..\include\revSystemBase.h" />
-    <ClInclude Include="..\..\include\revThread.h" />
     <ClInclude Include="..\..\include\revThreadPool.h" />
     <ClInclude Include="..\..\include\revWindow.h" />
   </ItemGroup>
@@ -43,31 +43,31 @@
     <ProjectGuid>{8FD6A8FD-E053-4C9A-8206-CA0063CEEE1C}</ProjectGuid>
     <RootNamespace>windows</RootNamespace>
     <ProjectName>Rev</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX11|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX12|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -88,16 +88,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\interface;$(ProjectDir)..\..\..\CoreLib\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX11|Win32'">
-    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\interface;$(ProjectDir)..\..\..\CoreLib\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX12|Win32'">
-    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\interface;$(ProjectDir)..\..\..\CoreLib\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\interface;$(ProjectDir)..\..\..\CoreLib\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

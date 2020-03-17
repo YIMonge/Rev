@@ -1,11 +1,11 @@
 #ifndef __FILE_H__
 #define __FILE_H__
 
-#include "IFile.h"
 #include "android/asset_manager.h"
 #include "revArray.h"
+#include "revFile.h"
 
-class File : public IFile
+class File : public revFile
 {
 public:
     File();

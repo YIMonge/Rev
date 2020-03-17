@@ -9,15 +9,15 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="interface">
-      <UniqueIdentifier>{f9846bfa-a7ba-4b90-9772-eeefc5907efd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="header">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="lib">
       <UniqueIdentifier>{4a2a4fec-9ade-4e0d-9e85-2630056d4903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{f9846bfa-a7ba-4b90-9772-eeefc5907efd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -92,21 +92,6 @@
     <ClInclude Include="include\Window.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="..\interface\IRenderer.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\interface\ITexture.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\interface\IThread.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\interface\IFile.h">
-      <Filter>interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\interface\IDeviceContext.h">
-      <Filter>interface</Filter>
-    </ClInclude>
     <ClInclude Include="include\DX12SwapChain.h">
       <Filter>header</Filter>
     </ClInclude>
@@ -128,23 +113,35 @@
     <ClInclude Include="include\DX12RenderInfo.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\GraphicsTypedef.h">
-      <Filter>interface</Filter>
+    <ClInclude Include="..\common\revLocker.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IAsyncable.h">
-      <Filter>interface</Filter>
+    <ClInclude Include="..\common\revRenderer.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IGraphicsBuffer.h">
-      <Filter>interface</Filter>
+    <ClInclude Include="..\common\revShader.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\ILocker.h">
-      <Filter>interface</Filter>
+    <ClInclude Include="..\common\revTexture.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IMaterial.h">
-      <Filter>interface</Filter>
+    <ClInclude Include="..\common\revThread.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\Rev-VK_initialize\Rev-VK_initialize\PlatformLib\interface\IShader.h">
-      <Filter>interface</Filter>
+    <ClInclude Include="..\common\revAsyncable.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\revDeviceContext.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\revFile.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\revGraphicsBuffer.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\revGraphicsTypedef.h">
+      <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

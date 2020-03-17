@@ -5,6 +5,7 @@
 #include "revQueue.h"
 #include "revThread.h"
 #include "revArray.h"
+#include "revAsyncable.h"
 
 class revThreadPool
 {
@@ -30,7 +31,7 @@ public:
 	void AddWork(Function work);	
 
 private:
-	class Worker : public IAsyncable
+	class Worker : public revAsyncable
 	{
 	public:
 		Worker()
@@ -52,7 +53,7 @@ private:
 		}
 
 	private:
-		revThread thread;
+		revThread* thread;
 		revQueue<Function> job_queue;
 	};
 

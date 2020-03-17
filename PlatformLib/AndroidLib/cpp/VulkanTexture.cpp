@@ -8,7 +8,7 @@
 //#define STBI_MALLOC(sz)           malloc(sz)
 //#define STBI_REALLOC(p,newsz)     realloc(p,newsz)
 //#define STBI_FREE(p)              free(p)
-#include "../lib/stb/stb_image.h"
+#include "stb/stb_image.h"
 
 VulkanTexture::VulkanTexture() :
 imageLayout(VK_IMAGE_LAYOUT_GENERAL)

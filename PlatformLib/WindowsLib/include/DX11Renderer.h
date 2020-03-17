@@ -1,14 +1,14 @@
 #ifndef __DX11RENDERER_H__
 #define __DX11RENDERER_H__
 
-#include "../../interface/IRenderer.h"
+#include "revRenderer.h"
 #include "DX11DeviceContext.h"
 
 #if defined(_USE_DIRECTX11)
 
 class Window;
 
-class DX11Renderer : public IRenderer
+class DX11Renderer : public revRenderer
 {
 public:
 	virtual void StartUp(Window* window, const GraphicsDesc& desc);

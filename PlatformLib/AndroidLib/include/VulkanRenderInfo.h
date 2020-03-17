@@ -7,7 +7,7 @@
 #include "VulkanSwapChain.h"
 #include "VulkanShader.h"
 #include "VulkanTexture.h"
-#include "IMaterial.h"
+#include "revMaterial.h"
 #include "revMap.h"
 
 class VulkanRenderInfo
@@ -20,7 +20,7 @@ public:
     void Destroy(const VulkanDeviceContext& deviceContext);
 
     bool CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader);
-    bool CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const IMaterial* material);
+    bool CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const revMaterial* material);
 
     bool CreateDescriptorSet(const VulkanDeviceContext& deviceContext, VulkanTexture& texture);
 

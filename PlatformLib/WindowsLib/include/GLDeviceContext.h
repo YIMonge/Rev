@@ -1,7 +1,7 @@
 #ifndef __GLDEVICECONTEXT_H__
 #define __GLDEVICECONTEXT_H__
 
-#include "../../interface/IDeviceContext.h"
+#include "revDeviceContext.h"
 
 #if defined(_USE_OPENGL)
 #include <windows.h>
@@ -14,7 +14,7 @@
 #pragma comment(lib, "glu32.lib")
 
 
-class GLDeviceContext : public IDeviceContext
+class GLDeviceContext : public revDeviceContext
 {
 public:
 	GLDeviceContext();

@@ -60,8 +60,8 @@ bool DX12RenderInfo::Create(const DX12DeviceContext& deviceContext, const DX12Sh
 	// TODO: vertex shader, pixel shader, vertex format 
 	// create pipeline state 
 	D3D12_RASTERIZER_DESC rasterizerDesc;
-	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+	rasterizerDesc.FillMode = static_cast<D3D12_FILL_MODE>(POLYGON_MODE::FILL);
+	rasterizerDesc.CullMode = static_cast<D3D12_CULL_MODE>(CULL_MODE_FLAG::BACK);
 	rasterizerDesc.FrontCounterClockwise = FALSE;
 	rasterizerDesc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
 	rasterizerDesc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;

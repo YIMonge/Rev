@@ -4,9 +4,9 @@
 #ifdef _USE_VULKAN
 
 #include "VulkanDeviceContext.h"
-#include "ITexture.h"
+#include "revTexture.h"
 
-class VulkanTexture : public ITexture
+class VulkanTexture : public revTexture
 {
 public:
     VulkanTexture();

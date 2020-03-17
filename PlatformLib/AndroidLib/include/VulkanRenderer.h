@@ -1,7 +1,7 @@
 #ifndef __VULKANRENDERER_H__
 #define __VULKANRENDERER_H__
 
-#include "IRenderer.h"
+#include "revRenderer.h"
 #ifdef _USE_VULKAN
 #include "VulkanDeviceContext.h"
 #include "VulkanSwapChain.h"
@@ -9,7 +9,7 @@
 #include "VulkanFrameBuffer.h"
 #include "VulkanBuffer.h"
 
-class VulkanRenderer : public IRenderer
+class VulkanRenderer : public revRenderer
 {
 public:
     VulkanRenderer();

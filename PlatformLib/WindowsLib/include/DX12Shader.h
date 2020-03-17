@@ -2,19 +2,19 @@
 #define __DX12SHADER_H__
 
 #include "DX12DeviceContext.h"
-#include "IShader.h"
+#include "revShader.h"
 #include <string>
 
 #ifdef _USE_DIRECTX12
 
-class DX12Shader : public IShader
+class DX12Shader : public revShader
 {
 public:
 	DX12Shader();
 	~DX12Shader();
 
 #ifdef _DEBUG
-	virtual bool LoadFromFile(const IDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType);
+	virtual bool LoadFromFile(const revDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType);
 #endif
 
 	void Release();

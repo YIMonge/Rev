@@ -1,11 +1,11 @@
-#ifndef __REVFRAWCOMMAND_H__
-#define __REVFRAWCOMMAND_H__
+#ifndef __REVDRAWCOMMAND_H__
+#define __REVDRAWCOMMAND_H__
 
 #include "revMatrix44.h"
 #include "revColor.h"
 #include "revTypedef.h"
-#include "IShader.h"
-#include "IGraphicsBuffer.h"
+#include "revShader.h"
+#include "revGraphicsBuffer.h"
 #include "revArray.h"
 
 class revMaterial;
@@ -28,8 +28,8 @@ struct revDrawCommand
         DRAW_COMMAND_TYPE type;                     // type of draw command
         uint32 next;                                // next index for storage
     };
-    IShader*                    program;            // shader
-    revArray<IGraphicsBuffer*>  buffers;            // shader resources
+    revShader*                    program;            // shader
+    revArray<revGraphicsBuffer*>  buffers;            // shader resources
     revMaterial*                material;           // material
 };
 

@@ -10,7 +10,7 @@ VulkanShader::VulkanShader()
 
 
 
-bool VulkanShader::LoadFromFile(const IDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
+bool VulkanShader::LoadFromFile(const revDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
 {
     File file;
     if(!file.Open(path, FileMode::ReadText)){

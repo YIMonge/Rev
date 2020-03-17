@@ -1,11 +1,11 @@
 #ifndef __GLESDEVICECONTEXT_H__
 #define __GLESDEVICECONTEXT_H__
 
-#include "../../interface/IDeviceContext.h"
+#include "revDeviceContext.h"
 
 #ifdef _USE_GLES
 
-class GLESDeviceContext : public IDeviceContext
+class GLESDeviceContext : public revDeviceContext
 {
 public:
 	GLESDeviceContext();

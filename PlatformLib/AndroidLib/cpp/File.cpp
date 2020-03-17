@@ -1,7 +1,7 @@
 #include <android_native_app_glue.h>
 #include "File.h"
 #include "AndroidContext.h"
-
+#include "Log.h"
 File::File() :
 file(nullptr),
 length(0)
@@ -18,8 +18,10 @@ bool File::Open(const char* path, FileMode mode)
     this->mode = mode;
     file = AAssetManager_open(appContext->activity->assetManager,
             path, AASSET_MODE_BUFFER);
-    // TODO: assertion
-    if(file == nullptr) return false;
+    if(file == nullptr) {
+        NATIVE_LOGE("file not found : %s", path);
+        return false;
+    }
     length = AAsset_getLength(file);
     return true;
 }

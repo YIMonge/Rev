@@ -2,13 +2,13 @@
 #define __GLRENDERER_H__
 
 #include "GLDeviceContext.h"
-#include "../../interface/IRenderer.h"
+#include "revRenderer.h"
 
 #if defined(_USE_OPENGL)
 
 class Window;
 
-class GLRenderer : public IRenderer
+class GLRenderer : public revRenderer
 {
 public:
 	virtual void StartUp(Window* window, const GraphicsDesc& desc);

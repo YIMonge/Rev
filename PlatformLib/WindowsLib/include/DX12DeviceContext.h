@@ -1,13 +1,13 @@
 #ifndef __DX12DEVICECONTEXT_H__
 #define __DX12DEVICECONTEXT_H__
 
-#include "../../interface/IDeviceContext.h"
+#include "revDeviceContext.h"
 
 #ifdef _USE_DIRECTX12
 
 class Window;
 
-class DX12DeviceContext : public IDeviceContext
+class DX12DeviceContext : public revDeviceContext
 {
 public:
 	bool Create(const GraphicsDesc& desc);
