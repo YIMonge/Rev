@@ -44,7 +44,7 @@ bool VulkanTexture::LoadFromFile(const VulkanDeviceContext &deviceContext, const
     file.Close();
 
     int n;
-    uint8* imageData = stbi_load_from_memory(data, fileLength, reinterpret_cast<int32*>(&width), reinterpret_cast<int32*>(&height), &n, 4);
+    uint8* imageData = stbi_load_from_memory(reinterpret_cast<uint8*>(data), fileLength, reinterpret_cast<int32*>(&width), reinterpret_cast<int32*>(&height), &n, 4);
 
     VkImageCreateInfo imageCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,

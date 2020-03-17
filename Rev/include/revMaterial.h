@@ -37,7 +37,7 @@ public:
         void SetBlendOpColor(BLEND_OP op){ blendOpColor = static_cast<uint8>(op); }
         void SetBlendFactorSrcColor(BLEND_FACTOR factor){ blendFactorSrcColor = static_cast<uint8>(factor); }
         void SetBlendFactorDstColor(BLEND_FACTOR factor){ blendFactorDstColor = static_cast<uint8>(factor); }
-        void SetBlendOpAlpha(BLEND_OP op) { blendOpAlpha; }
+        void SetBlendOpAlpha(BLEND_OP op) { blendOpAlpha = static_cast<uint8>(op); }
         void SetBlendFactorSrcAlpha(BLEND_FACTOR factor){ blendFactorSrcAlpha = static_cast<uint8>(factor); }
         void SetBlendFactorDstAlpha(BLEND_FACTOR factor){ blendFactorDstAlpha = static_cast<uint8>(factor); }
         void SetEnableBlend(bool flag) { enable = flag; }
