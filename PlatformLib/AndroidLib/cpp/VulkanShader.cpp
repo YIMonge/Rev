@@ -9,7 +9,6 @@ VulkanShader::VulkanShader()
 }
 
 
-
 bool VulkanShader::LoadFromFile(const revDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
 {
     File file;
@@ -20,7 +19,7 @@ bool VulkanShader::LoadFromFile(const revDeviceContext& deviceContext, const cha
 
     type = shaderType;
     uint32 length = file.GetFileSize();
-    uint8* data = new uint8[length];
+    char* data = new char[length];
     file.ReadData(data);
 
     VkShaderModuleCreateInfo shaderModuleCreateInfo {

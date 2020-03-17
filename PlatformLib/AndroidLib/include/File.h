@@ -9,12 +9,14 @@ class File : public revFile
 {
 public:
     File();
+    File(const char* path, FileMode mode);
     virtual ~File();
 
-    bool Open(const char* path, FileMode mode);
-    void Close();
-    void ReadData(uint8* data, uint32 length = 0);
-    uint32 GetFileSize();
+    virtual bool Open(const char* path, FileMode mode);
+    virtual void Close();
+    virtual void ReadData(char* data, uint32 length = 0);
+    virtual void WriteData(char* data, uint32 length);
+    virtual uint32 GetFileSize();
 
 private:
     AAsset* file;

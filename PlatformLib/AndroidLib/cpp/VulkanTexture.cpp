@@ -39,7 +39,7 @@ bool VulkanTexture::LoadFromFile(const VulkanDeviceContext &deviceContext, const
         return false;
     }
     uint32 fileLength = file.GetFileSize();
-    uint8* data = new uint8[fileLength];
+    char* data = new char[fileLength];
     file.ReadData(data);
     file.Close();
 

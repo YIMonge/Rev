@@ -2,16 +2,21 @@
 #include "File.h"
 #include "AndroidContext.h"
 #include "Log.h"
+
 File::File() :
 file(nullptr),
 length(0)
 {
 }
 
+File::File(const char* path, FileMode mode)
+{
+    Open(path, mode);
+}
+
 File::~File()
 {
 }
-
 
 bool File::Open(const char* path, FileMode mode)
 {
@@ -33,10 +38,15 @@ void File::Close()
     file = nullptr;
 }
 
-void File::ReadData(uint8* data, uint32 length)
+void File::ReadData(char* data, uint32 length)
 {
     length = length == 0 ? this->length : length;
     AAsset_read(file, data, length);
+}
+
+void File::WriteData(char* data, uint32 length)
+{
+    // TODO:
 }
 
 uint32 File::GetFileSize()
