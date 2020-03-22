@@ -1,5 +1,5 @@
-#ifndef __revGraphicsBuffer_H__
-#define __revGraphicsBuffer_H__
+#ifndef __REVGRAPHICSBUFFER_H__
+#define __REVGRAPHICSBUFFER_H__
 
 #include "revMath.h"
 #include "revArray.h"
