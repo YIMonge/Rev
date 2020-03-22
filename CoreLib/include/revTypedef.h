@@ -11,6 +11,8 @@
 	typedef signed int	 		int32;		
 	typedef signed long long	int64;		
 
+	using f32 = float;
+
 	typedef void(*Function)();
 
 	#define REV_INLINE __forceinline
