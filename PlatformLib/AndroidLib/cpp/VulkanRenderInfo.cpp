@@ -420,6 +420,16 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, 
         .primitiveRestartEnable = VK_FALSE,
     };
 
+    const revShader* vertexShader = material->GetShader(SHADER_TYPE::VERTX);
+    revArray<REV_GRAPHICS_BUFFER_FOMAT_FLAG > bufferFormats;
+    if(vertexShader) {
+        bufferFormats = vertexShader->GetFormats();
+    }
+    revArray<VkVertexInputAttributeDescription> vertexInputAttributes(bufferFormats.size());
+    for(uint32 i = 0; i < bufferFormats.size(); ++i){
+        //vertexInputAttributes[i].binding
+        // TODO: binding
+    }
 
 
     return true;
