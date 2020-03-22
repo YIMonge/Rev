@@ -12,6 +12,7 @@ public:
 	~DX12RenderInfo();
 
 	bool Create(const DX12DeviceContext& deviceContext, const DX12Shader& vertexShader, const DX12Shader& fragmentShader);
+	bool Create(const DX12DeviceContext& deviceContext, const revMaterial& material);
 
 	ID3D12PipelineState* GetPipelineState() const 
 	{

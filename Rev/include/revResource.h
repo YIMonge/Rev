@@ -1,16 +1,34 @@
 #ifndef __REVRESOURCE_H__
 #define __REVRESOURCE_H__
 
-namespace Resource
+#include "revSerializer.h"
+#include "revTypedef.h"
+#include "revArray.h"
+#include "revString.h"
+
+class revResource
 {
-	class revResource
-	{
-	public:
-		revResource();
-		virtual ~revResource();
-			
-	
-	};
+public:
+	revResource() {}
+	virtual ~revResource() {}			
+
+	const revString& GetName() const { return name; }
+private:
+	revString name;
+};
+
+struct DefaultMetaData
+{
+	uint32 guid;
+	revString userData;
+};
+
+SERIALIZE_FUNC_NON_INTRUSIVE(DefaultMetaData, meta)
+{
+	archive(REV_MAKE_NVP(guid, meta.guid), REV_MAKE_NVP(userData, meta.userData));
 }
+
+
+
 
 #endif

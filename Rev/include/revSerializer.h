@@ -13,6 +13,10 @@ using revStringStream = std::stringstream;
 #define SERIALIZE_FUNC() template<typename T>\
      void serialize(T& archive)
 
+#define SERIALIZE_FUNC_NON_INTRUSIVE(type, name) template<typename T>\
+     void serialize(T& archive, type& name)
+
+
 #define REV_MAKE_NVP(N, T) ::cereal::make_nvp(#N, T)
 #define REV_NVP(T) ::cereal::make_nvp(#T, T)
 
@@ -55,29 +59,24 @@ public:
 // Serialize Vector class
 //-----------------------------------------------------------------------
 #include "revMath.h"
-template<typename T>
-void serialize(T& archive, revVector2& v)
+
+SERIALIZE_FUNC_NON_INTRUSIVE(revVector2, v)
 {
     archive(REV_MAKE_NVP(x, v.x), REV_MAKE_NVP(y, v.y));
 }
 
-template<typename T>
-void serialize(T& archive, revVector3& v)
+SERIALIZE_FUNC_NON_INTRUSIVE(revVector3, v)
 {
     archive(REV_MAKE_NVP(x, v.x), REV_MAKE_NVP(y, v.y), REV_MAKE_NVP(z, v.z));
 }
 
-template<typename T>
-void serialize(T& archive, revVector4& v)
+SERIALIZE_FUNC_NON_INTRUSIVE(revVector4, v)
 {
     archive(REV_MAKE_NVP(x, v.x), REV_MAKE_NVP(y, v.y), REV_MAKE_NVP(z, v.z), REV_MAKE_NVP(w, v.w));
 }
 
 #include "revColor.h"
-
-
-template<typename T>
-void serialize(T& archive, revColor& c)
+SERIALIZE_FUNC_NON_INTRUSIVE(revColor, c)
 {
     archive(REV_MAKE_NVP(r, c.r), REV_MAKE_NVP(g, c.g), REV_MAKE_NVP(b, c.b), REV_MAKE_NVP(a, c.a));
 }

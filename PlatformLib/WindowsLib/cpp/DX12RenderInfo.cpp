@@ -72,13 +72,18 @@ bool DX12RenderInfo::Create(const DX12DeviceContext& deviceContext, const DX12Sh
 	rasterizerDesc.ForcedSampleCount = 0;
 	rasterizerDesc.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
 
-	D3D12_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc = {
-		false, false,
-		D3D12_BLEND_ONE, D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD,
-		D3D12_BLEND_ONE, D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD,
-		D3D12_LOGIC_OP_NOOP,
-		D3D12_COLOR_WRITE_ENABLE_ALL
-	};
+	D3D12_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc;
+	renderTargetBlendDesc.BlendEnable = false;
+	renderTargetBlendDesc.LogicOpEnable = false;
+	renderTargetBlendDesc.SrcBlend = D3D12_BLEND_ONE;
+	renderTargetBlendDesc.DestBlend = D3D12_BLEND_ZERO;
+	renderTargetBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+	renderTargetBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
+	renderTargetBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
+	renderTargetBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	renderTargetBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
+	renderTargetBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
 
 	D3D12_BLEND_DESC blendDesc;
 	blendDesc.AlphaToCoverageEnable = false;
@@ -122,9 +127,55 @@ bool DX12RenderInfo::Create(const DX12DeviceContext& deviceContext, const DX12Sh
 
 
 
+bool DX12RenderInfo::Create(const DX12DeviceContext& deviceContext, const revMaterial& material)
+{
+	D3D12_DESCRIPTOR_RANGE descriptorRange;
+	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+	descriptorRange.NumDescriptors = 1;
+	descriptorRange.BaseShaderRegister = 0;
+	descriptorRange.RegisterSpace = 0;
+	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	;
+	D3D12_ROOT_PARAMETER rootParam;
+	rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParam.DescriptorTable.NumDescriptorRanges = 1;
+	rootParam.DescriptorTable.pDescriptorRanges = &descriptorRange;
+
+	D3D12_ROOT_SIGNATURE_DESC signatureDesc;
+	signatureDesc.NumParameters = 1;
+	signatureDesc.pParameters = &rootParam;
+	signatureDesc.NumStaticSamplers = 0;
+	signatureDesc.pStaticSamplers = nullptr;
+	signatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
+		| D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS
+		| D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS
+		| D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS
+		| D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+
+	ID3DBlob* signature;
+	ID3DBlob* error;
+
+	HRESULT hr = D3D12SerializeRootSignature(&signatureDesc,
+		D3D_ROOT_SIGNATURE_VERSION_1_0,
+		&signature,
+		&error);
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	auto device = deviceContext.GetDevice();
+	hr = device->CreateRootSignature(0,
+		signature->GetBufferPointer(),
+		signature->GetBufferSize(),
+		IID_PPV_ARGS(&rootSignature));
+	if (FAILED(hr)) {
+		return false;
+	}
 
 
 
-
+	return true;
+}
 
 #endif

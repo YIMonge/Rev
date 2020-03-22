@@ -1,9 +1,8 @@
 #ifndef __revShader_H__
 #define __revShader_H__
 
-#include "revString.h"
-#include "revArray.h"
 #include "revDeviceContext.h"
+#include "revResource.h"
 
 enum class SHADER_TYPE : uint32
 {
@@ -12,7 +11,7 @@ enum class SHADER_TYPE : uint32
 	MAX_NUM,
 };
 
-class revShader
+class revShader : public revResource
 {
 public:
 	revShader() :
@@ -22,7 +21,7 @@ public:
 	virtual ~revShader(){}
 	virtual bool LoadFromFile(const revDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType) = 0;
 	revShaderHandle GetHandle() const { return handle; }
-
+	const revArray<REV_GRAPHICS_BUFFER_FOMAT_FLAG>& GetFormats() const { return dataFormat; }
 protected:
 	revString name;
     SHADER_TYPE type;

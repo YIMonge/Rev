@@ -1,12 +1,11 @@
 #ifndef __REVMATERIAL_H__
 #define __REVMATERIAL_H__
 
+#include "revResource.h"
 #include "revShader.h"
 #include "revTexture.h"
-#include "revArray.h"
-#include "revSerializer.h"
 
-class revMaterial
+class revMaterial : public revResource
 {
 public:
     revMaterial(){}
@@ -137,13 +136,14 @@ public:
     // TODO: auto generation 
     SERIALIZE_FUNC()
     {
-        archive(REV_NVP(blend),
+        archive(
+			REV_NVP(blend),
             REV_NVP(rasterization)
         );
     }
 
-
 protected:
+    DefaultMetaData metaData;
     revShader* shader[2];
     revArray<revTexture*> textures;
     BlendState blend;

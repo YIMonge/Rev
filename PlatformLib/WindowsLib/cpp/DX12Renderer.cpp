@@ -103,6 +103,7 @@ void DX12Renderer::Render()
 }
 
 #include "File.h"
+revMaterial mat;
 
 bool DX12Renderer::IntialzieForApp()
 {
@@ -124,6 +125,27 @@ bool DX12Renderer::IntialzieForApp()
 	};
 
 	vertexBuffer.Create(deviceContext, &(triangleVertices[0].position.data[0]), sizeof(triangleVertices), REV_GRAPHICS_BUFFER_FOMAT_FLAG::VERTEX);
+
+	//File file("Resources\\mat.meta", FileMode::ReadText);
+	// Test material make 
+/*
+	revMaterial::BlendState blend;
+	revMaterial::RasterizationState rasterizatin;
+
+	blend.SetEnableBlend(false);
+	blend.SetBlendFactorSrcColor(BLEND_FACTOR::ONE);
+	blend.SetBlendFactorDstColor(BLEND_FACTOR::ZERO);
+	blend.SetBlendOpColor(BLEND_OP::ADD);
+	blend.SetBlendFactorSrcAlpha(BLEND_FACTOR::ONE);
+	blend.SetBlendFactorDstAlpha(BLEND_FACTOR::ZERO);
+	blend.SetBlendOpAlpha(BLEND_OP::ADD);
+
+	rasterizatin.SetCullMode(CULL_MODE_FLAG::BACK);
+
+	revSerializer::Serialize("Resources\\material.mat", mat);
+*/
+//	revSerializer::Deserialize("Resources\\material.mat", mat);
+
 
 	return true;
 }
