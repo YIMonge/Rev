@@ -29,13 +29,15 @@ bool VulkanShader::LoadFromFile(const revDeviceContext& deviceContext, const cha
         .pCode = (const uint32*)data,
         .flags = 0
     };
-    VkResult result = vkCreateShaderModule(deviceContext.GetDevice(), &shaderModuleCreateInfo,
-                                           nullptr, &handle);
+    VkResult result = vkCreateShaderModule(deviceContext.GetDevice(), &shaderModuleCreateInfo, nullptr, &handle);
     delete[] data;
 
+    // load meta file
+    char metaPath[256];
+    makeMetaPath(metaPath, path);
+    // TODO: parse shader code for locations and bindings
+    // TODO: use glslc to compile spir-v from glsl
 
-    // TODO: load meta file that describe need data format like below.
-    //dataFormat = REV_GRAPHICS_BUFFER_FOMAT_FLAG::VERTEX;
 
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);

@@ -421,16 +421,20 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, 
     };
 
     const revShader* vertexShader = material->GetShader(SHADER_TYPE::VERTX);
-    revArray<REV_GRAPHICS_BUFFER_FOMAT_FLAG > bufferFormats;
+    revArray<revAttributeBinding> attributes;
     if(vertexShader) {
-        bufferFormats = vertexShader->GetFormats();
+        attributes = vertexShader->GetAttributes();
     }
-    revArray<VkVertexInputAttributeDescription> vertexInputAttributes(bufferFormats.size());
-    for(uint32 i = 0; i < bufferFormats.size(); ++i){
-        //vertexInputAttributes[i].binding
-        // TODO: binding
+    uint32 attributeLength = attributes.size();
+    revArray<VkVertexInputAttributeDescription> vertexInputAttributes(attributeLength);
+    for(uint32 i = 0; i < attributeLength; ++i){
+        vertexInputAttributes[i].binding  = attributes[i].GetBinding();
+        vertexInputAttributes[i].location = attributes[i].GetBinding();
+        vertexInputAttributes[i].format = ConvertToVKFormat(attributes[i].GetForamt());
+        vertexInputAttributes[i].offset = attributes[i].GetOffset();
     }
 
+    // TODO:
 
     return true;
 }

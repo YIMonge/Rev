@@ -68,25 +68,25 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SollutionDir)..\..\..\..\CoreLib\include;$(SollutionDir)..\..\..\..\Rev\include;$(ProjectDir)..\..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(SollutionDir)..\..\..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(SollutionDir)..\..\..\..\CoreLib\include;$(SollutionDir)..\..\..\..\Rev\include;$(ProjectDir)..\..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(SollutionDir)..\..\..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include\libs\GL;$(WindowsSdkDir)bin\x86;$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(WindowsSdkDir)Lib\10.0.10240.0\um\x86;$(WindowsSdkDir)Lib\10.0.10240.0\ucrt\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX11|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SollutionDir)..\..\..\..\CoreLib\include;$(SollutionDir)..\..\..\..\Rev\include;$(ProjectDir)..\..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(SollutionDir)..\..\..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(SollutionDir)..\..\..\..\CoreLib\include;$(SollutionDir)..\..\..\..\Rev\include;$(ProjectDir)..\..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(SollutionDir)..\..\..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include\libs\GL;$(WindowsSdkDir)bin\x86;$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(WindowsSdkDir)Lib\10.0.10240.0\um\x86;$(WindowsSdkDir)Lib\10.0.10240.0\ucrt\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX12|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SollutionDir)..\..\..\..\CoreLib\include;$(SollutionDir)..\..\..\..\Rev\include;$(ProjectDir)..\..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(SollutionDir)..\..\..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(SollutionDir)..\..\..\..\CoreLib\include;$(SollutionDir)..\..\..\..\Rev\include;$(ProjectDir)..\..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(SollutionDir)..\..\..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include\libs\GL;$(WindowsSdkDir)bin\x86;$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(WindowsSdkDir)Lib\10.0.10240.0\um\x86;$(WindowsSdkDir)Lib\10.0.10240.0\ucrt\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SollutionDir)..\..\..\..\CoreLib\include;$(SollutionDir)..\..\..\..\Rev\include;$(ProjectDir)..\..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(SollutionDir)..\..\..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(SollutionDir)..\..\..\..\CoreLib\include;$(SollutionDir)..\..\..\..\Rev\include;$(ProjectDir)..\..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(SollutionDir)..\..\..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ProjectDir)..\..\..\..\PlatformLib\WindowsLib\include\libs\GL;$(WindowsSdkDir)bin\x86;$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(WindowsSdkDir)Lib\10.0.10240.0\um\x86;$(WindowsSdkDir)Lib\10.0.10240.0\ucrt\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -95,7 +95,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
     </ClCompile>
@@ -110,7 +110,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);_USE_DIRECTX11</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);_USE_DIRECTX11</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>
@@ -127,7 +127,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);_USE_DIRECTX12</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);_USE_DIRECTX12</PreprocessorDefinitions>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>
@@ -146,7 +146,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
     </ClCompile>

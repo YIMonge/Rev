@@ -19,6 +19,12 @@
     <Filter Include="common">
       <UniqueIdentifier>{f9846bfa-a7ba-4b90-9772-eeefc5907efd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common\source">
+      <UniqueIdentifier>{a1d30045-793d-4e58-b07e-f96b2868944e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\header">
+      <UniqueIdentifier>{5c6060a5-2d27-4340-bc49-b2d51cb04415}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\DX12Renderer.cpp">
@@ -59,6 +65,12 @@
     </ClCompile>
     <ClCompile Include="cpp\DX12RenderInfo.cpp">
       <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12Texture.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\cpp\revTexture.cpp">
+      <Filter>common\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,35 +125,38 @@
     <ClInclude Include="include\DX12RenderInfo.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\revLocker.h">
-      <Filter>common</Filter>
+    <ClInclude Include="include\DX12Texture.h">
+      <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\revRenderer.h">
-      <Filter>common</Filter>
+    <ClInclude Include="..\common\include\revAsyncable.h">
+      <Filter>common\header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\revShader.h">
-      <Filter>common</Filter>
+    <ClInclude Include="..\common\include\revDeviceContext.h">
+      <Filter>common\header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\revTexture.h">
-      <Filter>common</Filter>
+    <ClInclude Include="..\common\include\revFile.h">
+      <Filter>common\header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\revThread.h">
-      <Filter>common</Filter>
+    <ClInclude Include="..\common\include\revGraphicsBuffer.h">
+      <Filter>common\header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\revAsyncable.h">
-      <Filter>common</Filter>
+    <ClInclude Include="..\common\include\revGraphicsTypedef.h">
+      <Filter>common\header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\revDeviceContext.h">
-      <Filter>common</Filter>
+    <ClInclude Include="..\common\include\revLocker.h">
+      <Filter>common\header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\revFile.h">
-      <Filter>common</Filter>
+    <ClInclude Include="..\common\include\revRenderer.h">
+      <Filter>common\header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\revGraphicsBuffer.h">
-      <Filter>common</Filter>
+    <ClInclude Include="..\common\include\revShader.h">
+      <Filter>common\header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\revGraphicsTypedef.h">
-      <Filter>common</Filter>
+    <ClInclude Include="..\common\include\revTexture.h">
+      <Filter>common\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revThread.h">
+      <Filter>common\header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

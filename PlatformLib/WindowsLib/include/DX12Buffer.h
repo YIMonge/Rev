@@ -14,10 +14,10 @@ public:
 	virtual ~DX12Buffer();
 
 	// TODO: set stride for resource view 
-	bool Create(const revDeviceContext& deviceContext, const revArray<revVector3>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
-	bool Create(const revDeviceContext& deviceContext, const revArray<revVector4>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
-	bool Create(const revDeviceContext& deviceContext, const revArray<float>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
-	virtual bool Create(const revDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
+	bool Create(const revDeviceContext& deviceContext, const revArray<revVector3>& data);
+	bool Create(const revDeviceContext& deviceContext, const revArray<revVector4>& data);
+	bool Create(const revDeviceContext& deviceContext, const revArray<float>& data);
+	virtual bool Create(const revDeviceContext& deviceContext, const float* data, uint32 size);
 	void Destroy(const revDeviceContext& deviceContext);
 
 protected:
@@ -30,7 +30,7 @@ public:
 	DX12VertexBuffer();
 	virtual ~DX12VertexBuffer();
 
-	virtual bool Create(const revDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format);
+	virtual bool Create(const revDeviceContext& deviceContext, const float* data, uint32 size);
 
 	const D3D12_VERTEX_BUFFER_VIEW* GetResourceView() const { return &view; }
 

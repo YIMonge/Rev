@@ -13,6 +13,11 @@ public:
 	virtual ~revResource() {}			
 
 	const revString& GetName() const { return name; }
+	void makeMetaPath(char* metaPath, const char* path)
+	{
+		strcpy(metaPath, path);
+		strcat(metaPath, ".meta");
+	}
 private:
 	revString name;
 };

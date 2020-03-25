@@ -124,7 +124,7 @@ bool DX12Renderer::IntialzieForApp()
 		{ { -0.25f, -0.25f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
 	};
 
-	vertexBuffer.Create(deviceContext, &(triangleVertices[0].position.data[0]), sizeof(triangleVertices), REV_GRAPHICS_BUFFER_FOMAT_FLAG::VERTEX);
+	vertexBuffer.Create(deviceContext, &(triangleVertices[0].position.data[0]), sizeof(triangleVertices));
 
 	//File file("Resources\\mat.meta", FileMode::ReadText);
 	// Test material make 

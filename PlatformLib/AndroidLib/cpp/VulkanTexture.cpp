@@ -1,14 +1,6 @@
 #ifdef _USE_VULKAN
 #include "VulkanTexture.h"
 #include "File.h"
-#include "Log.h"
-
-#define STB_IMAGE_IMPLEMENTATION
-// TODO: set memory allocation way
-//#define STBI_MALLOC(sz)           malloc(sz)
-//#define STBI_REALLOC(p,newsz)     realloc(p,newsz)
-//#define STBI_FREE(p)              free(p)
-#include "stb/stb_image.h"
 
 VulkanTexture::VulkanTexture() :
 imageLayout(VK_IMAGE_LAYOUT_GENERAL)
@@ -19,33 +11,21 @@ VulkanTexture::~VulkanTexture()
 {
 }
 
-bool VulkanTexture::LoadFromFile(const VulkanDeviceContext &deviceContext, const char *path)
+bool VulkanTexture::CreateTexture(const revDeviceContext& deviceContext, uint8* imageData)
 {
     const VkDevice& device = deviceContext.GetDevice();
     const VkFormat TEXTURE_FORMAT = VK_FORMAT_R8G8B8A8_UNORM;
     bool needBit = true;
     VkFormatProperties properties;
-    vkGetPhysicalDeviceFormatProperties(deviceContext.GetGpuDevice(), TEXTURE_FORMAT, &properties);
+    // up cast...
+    const VulkanDeviceContext vkDeviceContext = static_cast<const VulkanDeviceContext&>(deviceContext);
+    vkGetPhysicalDeviceFormatProperties(vkDeviceContext.GetGpuDevice(), TEXTURE_FORMAT, &properties);
     if(!((properties.linearTilingFeatures | properties.optimalTilingFeatures)& VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT)){
         return false;
     }
     if(properties.linearTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT) {
         needBit = false;
     }
-
-    // Load Texture Data
-    File file;
-    if(!file.Open(path, FileMode::ReadBinary)){
-        NATIVE_LOGE("file not found : %s", path);
-        return false;
-    }
-    uint32 fileLength = file.GetFileSize();
-    char* data = new char[fileLength];
-    file.ReadData(data);
-    file.Close();
-
-    int n;
-    uint8* imageData = stbi_load_from_memory(reinterpret_cast<uint8*>(data), fileLength, reinterpret_cast<int32*>(&width), reinterpret_cast<int32*>(&height), &n, 4);
 
     VkImageCreateInfo imageCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
@@ -60,7 +40,7 @@ bool VulkanTexture::LoadFromFile(const VulkanDeviceContext &deviceContext, const
             .usage = (needBit ? VK_IMAGE_USAGE_TRANSFER_SRC_BIT : VK_IMAGE_USAGE_SAMPLED_BIT),
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
             .queueFamilyIndexCount = 1,
-            .pQueueFamilyIndices = deviceContext.GetQueueFamilyIndexPtr(),
+            .pQueueFamilyIndices = vkDeviceContext.GetQueueFamilyIndexPtr(),
             .initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED,
             .flags = 0,
     };
@@ -71,8 +51,6 @@ bool VulkanTexture::LoadFromFile(const VulkanDeviceContext &deviceContext, const
             .memoryTypeIndex = 0,
     };
 
-
-
     VkMemoryRequirements memoryRequirements;
     VkResult result = vkCreateImage(device, &imageCreateInfo, nullptr, &image);
     if(result != VK_SUCCESS) {
@@ -82,7 +60,7 @@ bool VulkanTexture::LoadFromFile(const VulkanDeviceContext &deviceContext, const
     vkGetImageMemoryRequirements(device, image, &memoryRequirements);
     memoryAllocateInfo.allocationSize = memoryRequirements.size;
 
-    if(!AllocateMemoryTypeFromProperties(deviceContext,
+    if(!AllocateMemoryTypeFromProperties(vkDeviceContext,
             memoryRequirements.memoryTypeBits,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
             &memoryAllocateInfo.memoryTypeIndex)){
@@ -110,19 +88,6 @@ bool VulkanTexture::LoadFromFile(const VulkanDeviceContext &deviceContext, const
     }
     memcpy(buffer, imageData, width * height * 4);
     vkUnmapMemory(device, deviceMemory);
-    stbi_image_free(imageData);
-    delete[] data;
-
-    // Load Meta Data
-    std::string metaPath(path);
-    metaPath += ".meta";
-#ifdef _DEBUG
-    // if meta file is not found try to make default meta
-    File metaFile;
-    if(!metaFile.Open(metaPath.c_str(), FileMode ::ReadText)) revSerializer::Serialize(metaPath.c_str(), metaData);
-    else metaFile.Close();
-#endif
-    revSerializer::Deserialize(metaPath.c_str(), metaData);
 
     const SamplerDesc& samplerDesc = metaData.sampler;
     //-----------------------------------------`-----------------------
@@ -141,7 +106,7 @@ bool VulkanTexture::LoadFromFile(const VulkanDeviceContext &deviceContext, const
             .compareOp = ConverToVKComparisonFunc(samplerDesc.GetComparisonFunc()),
             .minLod = samplerDesc.GetMinLod(),
             .maxLod = samplerDesc.GetMaxLod(),
-            .borderColor = ConvertToVkBorderColor(samplerDesc.GetBorderColor()),
+            .borderColor = ConvertToVKBorderColor(samplerDesc.GetBorderColor()),
             .unnormalizedCoordinates = VK_FALSE,
     };
     result = vkCreateSampler(device, &samplerCreateInfo, nullptr, &sampler);

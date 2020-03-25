@@ -5,24 +5,23 @@
 
 #if _USE_VULKAN
 
-bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const revArray<revVector3>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
+bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const revArray<revVector3>& data)
 {
-    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3) * data.size(), format);
+    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3) * data.size());
 }
 
-bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const revArray<revVector4>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
+bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const revArray<revVector4>& data)
 {
-    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4) * data.size(), format);
+    return Create(deviceContext, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4) * data.size());
 }
 
-bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const revArray<float>& data, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
+bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const revArray<float>& data)
 {
-    return Create(deviceContext, static_cast<const float*>(&data[0]), sizeof(float) * data.size(), format);
+    return Create(deviceContext, static_cast<const float*>(&data[0]), sizeof(float) * data.size());
 }
 
-bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const float* data, uint32 size, REV_GRAPHICS_BUFFER_FOMAT_FLAG format)
+bool VulkanBuffer::Create(const revDeviceContext& deviceContext, const float* data, uint32 size)
 {
-    this->format = format;
     const VulkanDeviceContext vulkanDeviceContext = static_cast<const VulkanDeviceContext&>(deviceContext);
     VkDevice device = deviceContext.GetDevice();
     VkBufferCreateInfo bufferCreateInfo = {
@@ -105,11 +104,6 @@ bool VulkanBuffer::MapMemoryTypeToIndex(const VulkanDeviceContext& deviceContext
 void VulkanBuffer::Destroy(const revDeviceContext& deviceContext)
 {
     vkDestroyBuffer(deviceContext.GetDevice(), buffer, nullptr);
-}
-
-void VulkanBuffer::Apply()
-{
-
 }
 
 #endif

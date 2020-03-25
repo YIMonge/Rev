@@ -38,8 +38,8 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
             1.0f, 0.0f,
             0.5f, 1.0f,
     };
-    triangleVertexBuffer.Create(context, triangleVertices, sizeof(triangleVertices), REV_GRAPHICS_BUFFER_FOMAT_FLAG::VERTEX);
-    triangleTexcoordBuffer.Create(context, triangleTexcoords, sizeof(triangleTexcoords), REV_GRAPHICS_BUFFER_FOMAT_FLAG::TEXCOORD_0);
+    triangleVertexBuffer.Create(context, triangleVertices, sizeof(triangleVertices));
+    triangleTexcoordBuffer.Create(context, triangleTexcoords, sizeof(triangleTexcoords));
 
     VulkanShader shader[2];
     shader[0].LoadFromFile(context, "shaders/first.vert.spv", SHADER_TYPE::VERTX);

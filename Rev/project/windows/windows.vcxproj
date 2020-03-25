@@ -88,16 +88,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX11|Win32'">
-    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX12|Win32'">
-    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\common;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

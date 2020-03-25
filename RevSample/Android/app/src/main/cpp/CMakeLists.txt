@@ -5,8 +5,39 @@ set(VULKAN 1)
 set(GLES 0)
 set(DEBUG 1)
 
+#shader compile
+function (compile_shader SHADER)
+
+endfunction(compile_shader)
+
+function(compile_all_shader)
+    file(GLOB glslc-folders ${ANDROID_NDK}/shader-tools/*)
+    find_program(GLSLC glslc HINTS ${glslc-folders})
+
+    file(GLOB vertex-shaders ${ANDROID_ASSETS_DIRECTORIES}/shaders/*.vert)
+    file(GLOB fragment-shaders ${ANDROID_ASSETS_DIRECTORIES}/shaders/*.frag)
+    file(GLOB compute-shaders ${ANDROID_ASSETS_DIRECTORIES}/shaders/*.comp)
+
+    foreach(vertex-shader ${vertex-shaders})
+        get_filename_component(p ${vertex-shader} NAME)
+        compile_shader(${p})
+    endforeach(vertex-shader)
+
+    foreach(fragment-shader ${fragment-shaders})
+        get_filename_component(p ${fragment-shader} NAME)
+        compile_shader(${p})
+    endforeach(fragment-shader)
+
+    foreach(compute-shader ${compute-shaders})
+        get_filename_component(p ${compute-shader} NAME)
+        compile_shader(${p})
+    endforeach(compute-shader)
+
+endfunction(compile_all_shader)
+
 if(VULKAN)
     add_definitions(-D_USE_VULKAN)
+    compile_all_shader()
 elseif(GLES)
     add_definitions(-D_USE_GLES)
 endif()
@@ -49,15 +80,17 @@ message("Build CoreLib Done")
 
 #------------------Build AndroidLib-----------------------------
 file(GLOB ANDROIDLIBSOURCES ${ANDROIDLIB_DIR}/cpp/*.cpp)
+file(GLOB COMMONLIBSOURCES ${PLATFORMLIB_DIR}/common/cpp/*.cpp)
 add_library(AndroidLib STATIC
         ${ANDROIDLIBSOURCES}
+        ${COMMONLIBSOURCES}
         ${ANDROIDLIB_DIR}/lib/vulkan_wrapper.cpp
         )
 target_include_directories(AndroidLib PRIVATE
         ${CORELIB_DIR}/include
         ${REV_DIR}/lib
         ${REV_DIR}/include
-        ${PLATFORMLIB_DIR}/common
+        ${PLATFORMLIB_DIR}/common/include
         ${ANDROIDLIB_DIR}/include
         ${ANDROID_NDK}/sources/android/native_app_glue
         )
@@ -70,7 +103,7 @@ add_library(Rev STATIC
         ${REVSOURCES})
 target_include_directories(Rev PRIVATE
         ${CORELIB_DIR}/include
-        ${PLATFORMLIB_DIR}/common
+        ${PLATFORMLIB_DIR}/common/include
         ${ANDROIDLIB_DIR}/include
         ${REV_DIR}/lib
         ${REV_DIR}/include
@@ -87,7 +120,7 @@ add_library(native-activity SHARED main.cpp)
 target_include_directories(native-activity PRIVATE
         ${CORELIB_DIR}/include
         ${ANDROIDLIB_DIR}/include
-        ${PLATFORMLIB_DIR}/common
+        ${PLATFORMLIB_DIR}/common/include
         ${REV_DIR}/lib
         ${REV_DIR}/include
         ${ANDROID_NDK}/sources/android/native_app_glue)

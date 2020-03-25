@@ -3,14 +3,20 @@
 
 #include "revGraphicsTypedef.h"
 #include "revResource.h"
+#include "revDeviceContext.h"
+#include "Log.h"
 
 class revTexture : public revResource
 {
 public:
-    virtual ~revTexture(){}
+	virtual ~revTexture() {}
 
-    const revTextureSampler& GetSampler() const { return sampler; }
-    const revTextureResourceView& GetResourceView() const { return resourceView; }
+	const revTextureSampler& GetSampler() const { return sampler; }
+	const revTextureResourceView& GetResourceView() const { return resourceView; }
+	uint32 GetWidth() const { return width; }
+	uint32 GetHeight() const { return height; }
+
+	bool LoadFromFile(const revDeviceContext& deviceContext, const char* path);
 
     class SamplerDesc {
     public:
@@ -92,7 +98,11 @@ public:
 		SamplerDesc sampler;
     };
 
+
 protected:
+	virtual bool CreateTexture(const revDeviceContext& deviceContext, uint8* imageData) = 0;
+	uint32 width;
+	uint32 height;
 	TextureMetaData metaData;
     revTextureSampler sampler;
     revTextureResourceView  resourceView;

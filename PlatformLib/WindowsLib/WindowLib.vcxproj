@@ -67,22 +67,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)..\common;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX11|Win32'">
-    <IncludePath>$(ProjectDir)..\common;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDX12|Win32'">
-    <IncludePath>$(ProjectDir)..\common;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)..\common;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -91,7 +91,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_WINDOWS;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -106,7 +106,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_WINDOWS;%(PreprocessorDefinitions);_USE_DIRECTX11</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);_USE_DIRECTX11</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -121,7 +121,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_WINDOWS;%(PreprocessorDefinitions);_USE_DIRECTX12</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);_USE_DIRECTX12</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -138,7 +138,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_WINDOWS;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -151,16 +151,16 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\common\revAsyncable.h" />
-    <ClInclude Include="..\common\revDeviceContext.h" />
-    <ClInclude Include="..\common\revFile.h" />
-    <ClInclude Include="..\common\revGraphicsBuffer.h" />
-    <ClInclude Include="..\common\revGraphicsTypedef.h" />
-    <ClInclude Include="..\common\revLocker.h" />
-    <ClInclude Include="..\common\revRenderer.h" />
-    <ClInclude Include="..\common\revShader.h" />
-    <ClInclude Include="..\common\revTexture.h" />
-    <ClInclude Include="..\common\revThread.h" />
+    <ClInclude Include="..\common\include\revAsyncable.h" />
+    <ClInclude Include="..\common\include\revDeviceContext.h" />
+    <ClInclude Include="..\common\include\revFile.h" />
+    <ClInclude Include="..\common\include\revGraphicsBuffer.h" />
+    <ClInclude Include="..\common\include\revGraphicsTypedef.h" />
+    <ClInclude Include="..\common\include\revLocker.h" />
+    <ClInclude Include="..\common\include\revRenderer.h" />
+    <ClInclude Include="..\common\include\revShader.h" />
+    <ClInclude Include="..\common\include\revTexture.h" />
+    <ClInclude Include="..\common\include\revThread.h" />
     <ClInclude Include="include\CriticalSection.h" />
     <ClInclude Include="include\DX11DeviceContext.h" />
     <ClInclude Include="include\DX11Renderer.h" />
@@ -170,6 +170,7 @@
     <ClInclude Include="include\DX12RenderInfo.h" />
     <ClInclude Include="include\DX12Shader.h" />
     <ClInclude Include="include\DX12SwapChain.h" />
+    <ClInclude Include="include\DX12Texture.h" />
     <ClInclude Include="include\File.h" />
     <ClInclude Include="include\GLDeviceContext.h" />
     <ClInclude Include="include\GLRenderer.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="include\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\cpp\revTexture.cpp" />
     <ClCompile Include="cpp\DX11DeviceContext.cpp" />
     <ClCompile Include="cpp\DX11Renderer.cpp" />
     <ClCompile Include="cpp\DX12Buffer.cpp" />
@@ -188,6 +190,7 @@
     <ClCompile Include="cpp\DX12RenderInfo.cpp" />
     <ClCompile Include="cpp\DX12Shader.cpp" />
     <ClCompile Include="cpp\DX12SwapChain.cpp" />
+    <ClCompile Include="cpp\DX12Texture.cpp" />
     <ClCompile Include="cpp\File.cpp" />
     <ClCompile Include="cpp\GLDeviceContext.cpp" />
     <ClCompile Include="cpp\GLRenderer.cpp" />

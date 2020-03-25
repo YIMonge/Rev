@@ -29,7 +29,7 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
 
     uint32 chosenIndex = 0;
     for(; chosenIndex < count; ++chosenIndex){
-        if(formats[chosenIndex].format == REV_GRAPHICS_FORMAT_R8G8B8A8_UNORM) break;
+        if(formats[chosenIndex].format == VK_FORMAT_R8G8B8A8_UNORM) break;
     }
     if(chosenIndex >= count){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
