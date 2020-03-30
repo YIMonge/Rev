@@ -1,0 +1,21 @@
+{
+    "root": {
+        "guid": 0,
+        "format": 0,
+        "sampler": {
+            "magFilter": 1,
+            "minFilter": 1,
+            "mipFilter": 1,
+            "addressU": 0,
+            "addressV": 0,
+            "addressW": 0,
+            "mipLodBias": 0.0,
+            "maxAnisotropy": 1,
+            "comparisonFunc": 0,
+            "minLod": 0.0,
+            "maxLod": 1.0,
+            "borderColor": 1
+        },
+        "userData": ""
+    }
+}

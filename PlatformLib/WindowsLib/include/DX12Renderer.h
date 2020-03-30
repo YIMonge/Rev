@@ -7,6 +7,8 @@
 #include "DX12RenderInfo.h"
 #include "DX12Shader.h"
 #include "DX12Buffer.h"
+#include "DX12Texture.h"
+#include "DX12TextureView.h"
 #include "revArray.h"
 
 
@@ -37,10 +39,6 @@ private:
 	DX12SwapChain swapChain;
 	DX12RenderInfo renderInfo;
 
-	ID3D12CommandAllocator*		commandAllocator;
-	ID3D12GraphicsCommandList*	commandList;
-	ID3D12CommandQueue*			commandQueue;
-
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT rectScissor;
 
@@ -50,6 +48,8 @@ private:
 
 	// vertex buffer for test
 	DX12VertexBuffer vertexBuffer;
+	DX12Texture texture;
+	DX12TextureView textureView;
 };
 
 #endif

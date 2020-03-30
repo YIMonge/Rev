@@ -16,4 +16,5 @@
 	typedef void(*Function)();
 
 	#define REV_INLINE __forceinline
+
 #endif

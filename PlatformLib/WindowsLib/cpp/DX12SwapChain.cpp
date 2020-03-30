@@ -27,7 +27,7 @@ bool DX12SwapChain::Create(const DX12DeviceContext& deviceContext, const Window&
 	swapChainDesc.BufferCount = graphicsDesc.GetBufferNum();
 
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.BufferDesc.Format = REV_GRAPHICS_FORMAT_R8G8B8A8_UNORM;  // TODO: 
+	swapChainDesc.BufferDesc.Format = ConvertToDXFormat(GRAPHICS_FORMAT::R8G8B8A8_UNORM); // TODO: 
 	swapChainDesc.BufferDesc.Width = window.GetWidth();
 	swapChainDesc.BufferDesc.Height = window.GetHeight();
 	swapChainDesc.OutputWindow = window.GetHWnd();
@@ -38,7 +38,7 @@ bool DX12SwapChain::Create(const DX12DeviceContext& deviceContext, const Window&
 
 	IDXGISwapChain* tempSwapChain;
 	hr = dxgiFactory->CreateSwapChain(
-		deviceContext.GetCommandQueue(),
+		deviceContext.GetQueue(),
 		&swapChainDesc,
 		&tempSwapChain);
 	if (FAILED(hr)) {
@@ -76,7 +76,7 @@ bool DX12SwapChain::Create(const DX12DeviceContext& deviceContext, const Window&
 	auto handle = renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart();
 
 	D3D12_RENDER_TARGET_VIEW_DESC renderTargetDesc;
-	renderTargetDesc.Format = REV_GRAPHICS_FORMAT_R8G8B8A8_UNORM;
+	renderTargetDesc.Format = ConvertToDXFormat(GRAPHICS_FORMAT::R8G8B8A8_UNORM); // TODO: 
 	renderTargetDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 	renderTargetDesc.Texture2D.MipSlice = 0;
 	renderTargetDesc.Texture2D.PlaneSlice = 0;

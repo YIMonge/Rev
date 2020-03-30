@@ -1,0 +1,343 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="lib">
+      <UniqueIdentifier>{b4cfe814-a7eb-4422-937f-6da7789f6c17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cpp">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="lib\cereal">
+      <UniqueIdentifier>{31c8e96d-9b52-44fd-96a2-77f1ef73ea3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\stb">
+      <UniqueIdentifier>{467a90e9-20c1-4830-a1c5-e0e0c42d3ed3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\cpp\revApp.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cpp\revDrawCommand.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cpp\revGraphics.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cpp\revLogger.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cpp\revThreadPool.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\revApp.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revAsyncTaskWorker.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revCriticalSection.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revDrawCommand.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revGraphics.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revLogger.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revMaterial.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revMesh.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revResource.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revSerializer.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revSystemBase.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revThreadPool.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revWindow.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\stb\stb_image.h">
+      <Filter>lib\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\archives\adapters.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\archives\binary.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\archives\json.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\archives\portable_binary.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\archives\xml.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\details\helpers.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\details\polymorphic_impl.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\details\polymorphic_impl_fwd.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\details\static_object.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\details\traits.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\details\util.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\base64.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\allocators.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\cursorstreamwrapper.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\document.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\encodedstream.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\encodings.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\error\en.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\error\error.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\filereadstream.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\filewritestream.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\fwd.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\biginteger.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\diyfp.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\dtoa.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\ieee754.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\itoa.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\meta.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\pow10.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\regex.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\stack.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\strfunc.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\strtod.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\internal\swap.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\istreamwrapper.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\memorybuffer.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\memorystream.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\msinttypes\inttypes.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\msinttypes\stdint.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\ostreamwrapper.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\pointer.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\prettywriter.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\rapidjson.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\reader.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\schema.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\stream.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\stringbuffer.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidjson\writer.h">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidxml\rapidxml.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidxml\rapidxml_iterators.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidxml\rapidxml_print.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\external\rapidxml\rapidxml_utils.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\array.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\atomic.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\base_class.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\bitset.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\boost_variant.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\chrono.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\common.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\complex.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\concepts\pair_associative_container.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\deque.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\forward_list.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\functional.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\list.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\map.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\memory.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\optional.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\polymorphic.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\queue.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\set.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\stack.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\string.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\tuple.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\unordered_map.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\unordered_set.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\utility.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\valarray.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\variant.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\types\vector.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\access.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\cereal.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\macros.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\specialize.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\cereal\version.hpp">
+      <Filter>lib\cereal</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\lib\cereal\external\rapidxml\manual.html">
+      <Filter>lib\cereal</Filter>
+    </None>
+  </ItemGroup>
+</Project>

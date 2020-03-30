@@ -9,18 +9,14 @@ class revDeviceContext
 public:
 	virtual ~revDeviceContext(){}
 
-	const revGraphicsDevice& GetDevice() const
-	{
-		return device;
-	}
+	const revGraphicsDevice& GetDevice() const { return device; }
+	const revGraphicsCommandQueue& GetQueue() const { return queue; }
+	const GraphicsDesc& GetDesc() const { return desc; }
 
-	const revGraphicsCommandQueue& GetQueue() const
-	{
-		return queue;
-	}
 protected:
 	revGraphicsDevice device;
 	revGraphicsCommandQueue queue;
+	GraphicsDesc desc;
 };
 
 #endif

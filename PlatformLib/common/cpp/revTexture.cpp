@@ -10,8 +10,10 @@
 bool revTexture::LoadFromFile(const revDeviceContext& deviceContext, const char* path)
 {
     // Load Texture Data
+	revString resourcePath(RESOURCE_PATH);
+	resourcePath += path;
     File file;
-    if (!file.Open(path, FileMode::ReadBinary)) {
+    if (!file.Open(resourcePath.c_str(), FileMode::ReadBinary)) {
         return false;
     }
 

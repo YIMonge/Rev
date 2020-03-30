@@ -13,19 +13,14 @@ public:
 	bool Create(const GraphicsDesc& desc);
 	void Destroy();
 
-	ID3D12CommandQueue* GetCommandQueue() const
-	{
-		return commandQueue;
-	}
-
-	const GraphicsDesc& GetDesc() const
-	{
-		return desc;
-	}
+	bool CreateCommandList(ID3D12PipelineState* pipelineState);
+	ID3D12CommandAllocator* GetCommandAllocator() const { return commandAllocator; }
+	ID3D12GraphicsCommandList* GetCommandList() const { return commandList; }
 
 private:
-	ID3D12CommandQueue* commandQueue;
-	GraphicsDesc desc;
+	ID3D12CommandAllocator* commandAllocator;
+	ID3D12GraphicsCommandList* commandList;
+
 };
 
 #endif

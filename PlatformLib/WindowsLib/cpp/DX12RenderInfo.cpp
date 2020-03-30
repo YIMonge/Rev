@@ -10,45 +10,56 @@ DX12RenderInfo::~DX12RenderInfo()
 {
 }
 
-bool DX12RenderInfo::Create(const DX12DeviceContext& deviceContext, const DX12Shader& vertexShader, const DX12Shader& fragmentShader)
+
+bool DX12RenderInfo::CreateSignature(const DX12DeviceContext& deviceContext)
 {
+	auto device = deviceContext.GetDevice();
+	// TODO: create from material (by needed descriptors)
+
+	D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
+	featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+	if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData)))) {
+		featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+	}
+
 	// create root signature 
-	D3D12_DESCRIPTOR_RANGE descriptorRange;
-	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-	descriptorRange.NumDescriptors = 1;
-	descriptorRange.BaseShaderRegister = 0;
-	descriptorRange.RegisterSpace = 0;
-	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	CD3DX12_DESCRIPTOR_RANGE1 descriptorRange;
+	descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
 
-	D3D12_ROOT_PARAMETER rootParam;
-	rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParam.DescriptorTable.NumDescriptorRanges = 1;
-	rootParam.DescriptorTable.pDescriptorRanges = &descriptorRange;
+	CD3DX12_ROOT_PARAMETER1 rootParam;
+	rootParam.InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
 
-	D3D12_ROOT_SIGNATURE_DESC signatureDesc;
-	signatureDesc.NumParameters = 1;
-	signatureDesc.pParameters = &rootParam;
-	signatureDesc.NumStaticSamplers = 0;
-	signatureDesc.pStaticSamplers = nullptr;
-	signatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
-		| D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS
-		| D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS
-		| D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS
-		| D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+	D3D12_STATIC_SAMPLER_DESC sampler = {};
+	sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+	sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.MipLODBias = 0;
+	sampler.MaxAnisotropy = 0;
+	sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+	sampler.MinLOD = 0.0f;
+	sampler.MaxLOD = D3D12_FLOAT32_MAX;
+	sampler.ShaderRegister = 0;
+	sampler.RegisterSpace = 0;
+	sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+
+	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC signatureDesc; 
+	signatureDesc.Init_1_1(1, &rootParam, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
 
 	ID3DBlob* signature;
 	ID3DBlob* error;
 
-	HRESULT hr = D3D12SerializeRootSignature(&signatureDesc,
-		D3D_ROOT_SIGNATURE_VERSION_1_0,
+	HRESULT hr = D3DX12SerializeVersionedRootSignature(&signatureDesc,
+		featureData.HighestVersion,
 		&signature,
 		&error);
 	if (FAILED(hr)) {
 		return false;
 	}
 
-	auto device = deviceContext.GetDevice();
 	hr = device->CreateRootSignature(0,
 		signature->GetBufferPointer(),
 		signature->GetBufferSize(),
@@ -56,6 +67,12 @@ bool DX12RenderInfo::Create(const DX12DeviceContext& deviceContext, const DX12Sh
 	if (FAILED(hr)) {
 		return false;
 	}
+	return true;
+}
+
+bool DX12RenderInfo::CreatePipeline(const DX12DeviceContext& deviceContext, const DX12Shader& vertexShader, const DX12Shader& fragmentShader)
+{
+	CreateSignature(deviceContext);
 
 	// TODO: vertex shader, pixel shader, vertex format 
 	// create pipeline state 
@@ -92,10 +109,10 @@ bool DX12RenderInfo::Create(const DX12DeviceContext& deviceContext, const DX12Sh
 
 	//TODO: choose by material 
 	D3D12_INPUT_ELEMENT_DESC inputElements[] = {
-			{ "POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT,    0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 			//{ "NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-			//{ "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			//{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 	};
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineStateDesc;
@@ -115,11 +132,21 @@ bool DX12RenderInfo::Create(const DX12DeviceContext& deviceContext, const DX12Sh
 	pipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 	pipelineStateDesc.SampleDesc.Count = 1;
 
-	hr = device->CreateGraphicsPipelineState(&pipelineStateDesc, IID_PPV_ARGS(&pipelineState));
+	auto device = deviceContext.GetDevice();
+	HRESULT hr = device->CreateGraphicsPipelineState(&pipelineStateDesc, IID_PPV_ARGS(&pipelineState));
 	if (FAILED(hr)) {
 		return false;
 	}
 
+
+	D3D12_DESCRIPTOR_HEAP_DESC  descriptorHeapDesc = {};
+	descriptorHeapDesc.NumDescriptors = 1;
+	descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&resourceViewHeap));
+	if (FAILED(hr)) {
+		return false;
+	}
 
 	return true;
 }
@@ -127,51 +154,9 @@ bool DX12RenderInfo::Create(const DX12DeviceContext& deviceContext, const DX12Sh
 
 
 
-bool DX12RenderInfo::Create(const DX12DeviceContext& deviceContext, const revMaterial& material)
+bool DX12RenderInfo::CreatePipeline(const DX12DeviceContext& deviceContext, const revMaterial& material)
 {
-	D3D12_DESCRIPTOR_RANGE descriptorRange;
-	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-	descriptorRange.NumDescriptors = 1;
-	descriptorRange.BaseShaderRegister = 0;
-	descriptorRange.RegisterSpace = 0;
-	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-	;
-	D3D12_ROOT_PARAMETER rootParam;
-	rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParam.DescriptorTable.NumDescriptorRanges = 1;
-	rootParam.DescriptorTable.pDescriptorRanges = &descriptorRange;
 
-	D3D12_ROOT_SIGNATURE_DESC signatureDesc;
-	signatureDesc.NumParameters = 1;
-	signatureDesc.pParameters = &rootParam;
-	signatureDesc.NumStaticSamplers = 0;
-	signatureDesc.pStaticSamplers = nullptr;
-	signatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
-		| D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS
-		| D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS
-		| D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS
-		| D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
-
-	ID3DBlob* signature;
-	ID3DBlob* error;
-
-	HRESULT hr = D3D12SerializeRootSignature(&signatureDesc,
-		D3D_ROOT_SIGNATURE_VERSION_1_0,
-		&signature,
-		&error);
-	if (FAILED(hr)) {
-		return false;
-	}
-
-	auto device = deviceContext.GetDevice();
-	hr = device->CreateRootSignature(0,
-		signature->GetBufferPointer(),
-		signature->GetBufferSize(),
-		IID_PPV_ARGS(&rootSignature));
-	if (FAILED(hr)) {
-		return false;
-	}
 
 
 

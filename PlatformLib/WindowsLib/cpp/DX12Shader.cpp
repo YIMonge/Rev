@@ -29,8 +29,10 @@ std::wstring DX12Shader::utf8_decode(const std::string &str)
 
 bool DX12Shader::LoadFromFile(const revDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
 {	
+	std::string resourcePath(RESOURCE_PATH);
+	resourcePath += path;
 	type = shaderType;
-	std::wstring wstr = utf8_decode(path);
+	std::wstring wstr = utf8_decode(resourcePath.c_str());
 	HRESULT hr = D3DCompileFromFile(wstr.c_str(),
 		nullptr,
 		nullptr,

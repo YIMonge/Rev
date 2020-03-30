@@ -9,12 +9,15 @@
 class revTexture : public revResource
 {
 public:
+	revTexture() {}
 	virtual ~revTexture() {}
 
 	const revTextureSampler& GetSampler() const { return sampler; }
-	const revTextureResourceView& GetResourceView() const { return resourceView; }
+	GRAPHICS_FORMAT GetFormat() const { return static_cast<GRAPHICS_FORMAT>(metaData.format); }
 	uint32 GetWidth() const { return width; }
 	uint32 GetHeight() const { return height; }
+	revTextureHandle* GetHandle() const { return handle; }
+
 
 	bool LoadFromFile(const revDeviceContext& deviceContext, const char* path);
 
@@ -95,22 +98,25 @@ public:
 
     struct TextureMetaData : public DefaultMetaData
     {
+		uint32 format;
 		SamplerDesc sampler;
     };
 
 
 protected:
 	virtual bool CreateTexture(const revDeviceContext& deviceContext, uint8* imageData) = 0;
+
 	uint32 width;
 	uint32 height;
+	revTextureHandle* handle;
 	TextureMetaData metaData;
     revTextureSampler sampler;
-    revTextureResourceView  resourceView;
 };
  
 SERIALIZE_FUNC_NON_INTRUSIVE(revTexture::TextureMetaData, metaData)
 {
 	archive(REV_MAKE_NVP(guid, metaData.guid),
+		REV_MAKE_NVP(format, metaData.format),
 		REV_MAKE_NVP(sampler, metaData.sampler),
 		REV_MAKE_NVP(userData, metaData.userData));
 }

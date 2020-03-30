@@ -115,27 +115,6 @@ bool VulkanTexture::CreateTexture(const revDeviceContext& deviceContext, uint8* 
         return false;
     }
 
-    VkImageViewCreateInfo imageViewCreateInfo = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-            .pNext = nullptr,
-            .image = VK_NULL_HANDLE,
-            .viewType = VK_IMAGE_VIEW_TYPE_2D,
-            .format = TEXTURE_FORMAT,
-            .components =
-                    {
-                            VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G,
-                            VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A,
-                    },
-            .subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1},
-            .flags = 0,
-    };
-    imageViewCreateInfo.image = image;
-    result = vkCreateImageView(device, &imageViewCreateInfo, nullptr, &resourceView);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
-
     return true;
 }
 

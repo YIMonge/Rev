@@ -8,20 +8,54 @@ DX12Texture::~DX12Texture()
 {
 }
 
-bool DX12Texture::LoadFromFile(const DX12DeviceContext& deviceContext, const char* path)
+bool DX12Texture::CreateTexture(const revDeviceContext& deviceContext, uint8* imageData)
 {
-    /*
+    // TODO: serialize to meta data
     D3D12_RESOURCE_DESC textureDesc = {};
     textureDesc.MipLevels = 1;
     textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    textureDesc.Width = TextureWidth;
-    textureDesc.Height = TextureHeight;
+    textureDesc.Width = width;
+    textureDesc.Height = height;
     textureDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
     textureDesc.DepthOrArraySize = 1;
     textureDesc.SampleDesc.Count = 1;
     textureDesc.SampleDesc.Quality = 0;
     textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    */
 
+    auto device = deviceContext.GetDevice();
+
+    HRESULT hr = device->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+        D3D12_HEAP_FLAG_NONE,
+        &textureDesc,
+        D3D12_RESOURCE_STATE_COPY_DEST,
+        nullptr,
+        IID_PPV_ARGS(&handle));
+    if (FAILED(hr)) return false;
+
+    const uint64 bufferSize = GetRequiredIntermediateSize(handle, 0, 1);
+    ID3D12Resource* uploadHeap;
+    hr = device->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+        D3D12_HEAP_FLAG_NONE,
+        &CD3DX12_RESOURCE_DESC::Buffer(bufferSize),
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&uploadHeap)
+        );
+    if (FAILED(hr)) {
+        handle->Release();
+        return false;
+    }
+
+    D3D12_SUBRESOURCE_DATA textureData = {};
+    textureData.pData = imageData;
+    textureData.RowPitch = width * 4; // TODO:RGB texture use only 3
+    textureData.SlicePitch = textureData.RowPitch * height;
+
+    auto dxDeviceContext = static_cast<const DX12DeviceContext&>(deviceContext);
+    auto commandList = dxDeviceContext.GetCommandList();
+    UpdateSubresources(commandList, handle, uploadHeap, 0, 0, 1, &textureData);
+    commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(handle, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+
+    uploadHeap->Release();
     return true;
 }

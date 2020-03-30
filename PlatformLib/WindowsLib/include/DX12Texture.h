@@ -10,10 +10,10 @@ public:
 	DX12Texture();
 	virtual ~DX12Texture();
 
-	bool LoadFromFile(const DX12DeviceContext& deviceContext, const char* path);
+protected:
+	virtual bool CreateTexture(const revDeviceContext& deviceContext, uint8* imageData);
+
 private:
-	ID3D12Resource* handle;
-	
 };
 
 #endif

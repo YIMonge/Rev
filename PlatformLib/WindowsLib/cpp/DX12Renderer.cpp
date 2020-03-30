@@ -1,5 +1,5 @@
-#include "../include/DX12Renderer.h"
-#include "../include/Window.h"
+#include "DX12Renderer.h"
+#include "Window.h"
 
 
 #ifdef _USE_DIRECTX12
@@ -8,50 +8,28 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
 	if (!deviceContext.Create(desc)) return;		
 	if (!swapChain.Create(deviceContext, *window)) return;
-
-	auto device = deviceContext.GetDevice();	
-	HRESULT hr;
-
 	// create viewport and scissor 
 	rectScissor = { 0, 0, static_cast<LONG>(window->GetWidth()), static_cast<LONG>(window->GetHeight()) };
 	viewport = { 0, 0, static_cast<float>(window->GetWidth()), static_cast<float>(window->GetHeight()), 0.0f, 1.0f, };
 
-
 	IntialzieForApp();
+	renderInfo.CreatePipeline(deviceContext, vertexShader, fragmentShader);
+	if (!deviceContext.CreateCommandList(renderInfo.GetPipelineState())) return;
 
-
-	renderInfo.Create(deviceContext, vertexShader, fragmentShader);
-
-	// create allocator and command list 
-	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
-	if (FAILED(hr)) {
-		return;
-	}
-	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, renderInfo.GetPipelineState(), IID_PPV_ARGS(&commandList));
-	if (FAILED(hr)) {
-		return;
-	}
-	commandList->Close();
+	texture.LoadFromFile(deviceContext, "sample_tex.png");
+	textureView.Create(deviceContext, texture, renderInfo.GetResourceViewHeap());
 }
 
 void DX12Renderer::ShutDown()
 {
-	if (commandList != nullptr) {
-		commandList->Release();
-		commandList = nullptr;
-	}
-
-	if (commandAllocator != nullptr) {
-		commandAllocator->Release();
-		commandAllocator = nullptr;
-	}
-
 	swapChain.Destroy();
 	deviceContext.Destroy();
 }
 
 void DX12Renderer::Render()
 {
+	auto commandAllocator = deviceContext.GetCommandAllocator();;
+	auto commandList = deviceContext.GetCommandList();
 	HRESULT hr = commandAllocator->Reset();
 	if (FAILED(hr)) {
 		return;
@@ -62,6 +40,8 @@ void DX12Renderer::Render()
 	}
 	
 	commandList->SetGraphicsRootSignature(renderInfo.GetRootSignature());
+	auto heap = renderInfo.GetResourceViewHeap();
+	commandList->SetDescriptorHeaps(1, &heap);
 	commandList->RSSetViewports(1, &viewport);
 	commandList->RSSetScissorRects(1, &rectScissor);
 
@@ -94,7 +74,7 @@ void DX12Renderer::Render()
 	}
 
 	ID3D12CommandList* commandLists[] = { commandList };
-	ID3D12CommandQueue* commandQueue = deviceContext.GetCommandQueue();
+	ID3D12CommandQueue* commandQueue = deviceContext.GetQueue();
 	commandQueue->ExecuteCommandLists(1, commandLists);
 	swapChain.Present();
 
@@ -108,45 +88,24 @@ revMaterial mat;
 bool DX12Renderer::IntialzieForApp()
 {
 	// TODO: load shader 
-	vertexShader.LoadFromFile(deviceContext, "Resources\\shaders.hlsl", SHADER_TYPE::VERTX);
-	fragmentShader.LoadFromFile(deviceContext, "Resources\\shaders.hlsl", SHADER_TYPE::FRAGMENT);
+	vertexShader.LoadFromFile(deviceContext, "texture.hlsl", SHADER_TYPE::VERTX);
+	fragmentShader.LoadFromFile(deviceContext, "texture.hlsl", SHADER_TYPE::FRAGMENT);
 
 	struct Vertex
 	{
-		revVector4 position;
-		revVector4 color;
+		revVector3 position;
+		revVector2 color;
 	};
 
 	Vertex triangleVertices[] =
 	{
-		{ {  0.0f,   0.25f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ {  0.25f, -0.25f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ { -0.25f, -0.25f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+		{ {  0.0f,   0.25f, 0.0f }, { 0.5f, 0.0f } },
+		{ {  0.25f, -0.25f, 0.0f }, { 1.0f, 1.0f } },
+		{ { -0.25f, -0.25f, 0.0f }, { 0.0f, 1.0f } }
 	};
 
 	vertexBuffer.Create(deviceContext, &(triangleVertices[0].position.data[0]), sizeof(triangleVertices));
-
-	//File file("Resources\\mat.meta", FileMode::ReadText);
-	// Test material make 
-/*
-	revMaterial::BlendState blend;
-	revMaterial::RasterizationState rasterizatin;
-
-	blend.SetEnableBlend(false);
-	blend.SetBlendFactorSrcColor(BLEND_FACTOR::ONE);
-	blend.SetBlendFactorDstColor(BLEND_FACTOR::ZERO);
-	blend.SetBlendOpColor(BLEND_OP::ADD);
-	blend.SetBlendFactorSrcAlpha(BLEND_FACTOR::ONE);
-	blend.SetBlendFactorDstAlpha(BLEND_FACTOR::ZERO);
-	blend.SetBlendOpAlpha(BLEND_OP::ADD);
-
-	rasterizatin.SetCullMode(CULL_MODE_FLAG::BACK);
-
-	revSerializer::Serialize("Resources\\material.mat", mat);
-*/
-//	revSerializer::Deserialize("Resources\\material.mat", mat);
-
-
+	
 	return true;
 }
 

@@ -37,7 +37,7 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
     }
 
     displaySize = capabilities.currentExtent;
-    format = formats[chosenIndex].format;
+    format = GRAPHICS_FORMAT ::R8G8B8A8_UNORM;
 
     uint32 queueFamilyIndex = deviceContext.GetQueueFamilyIndex();
 
@@ -46,7 +46,7 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
             .pNext = nullptr,
             .surface = surface,
             .minImageCount = capabilities.minImageCount,
-            .imageFormat = format,
+            .imageFormat = ConvertToVKFormat(format),
             .imageColorSpace = formats[chosenIndex].colorSpace,
             .imageExtent = capabilities.currentExtent,
             .imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,

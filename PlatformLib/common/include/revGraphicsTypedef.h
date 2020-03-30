@@ -89,14 +89,9 @@ using revShaderHandle = VkShaderModule;
 using revGraphicsResource = VkBuffer;
 using revGraphicsCommandBuffer = VkCommandBuffer;
 using revGraphicsCommandQueue = VkQueue;
+using revTextureHandle = VkImage;
 using revTextureResourceView = VkImageView;
 using revTextureSampler = VkSampler;
-
-
-// Formats
-using revGraphicsFormat = VkFormat;
-
-
 
 enum class COLOR_COMPONENT_FRAG
 {
@@ -243,12 +238,11 @@ using revShaderHandle = ID3DBlob*;
 using revGraphicsResource = ID3D12Resource*;
 using revGraphicsCommandBuffer = ID3D12GraphicsCommandList*;
 using revGraphicsCommandQueue = ID3D12CommandQueue*;
+using revTextureHandle = ID3D12Resource;
 using revTextureResourceView = D3D12_CPU_DESCRIPTOR_HANDLE;
 using revTextureSampler = D3D12_GPU_DESCRIPTOR_HANDLE;
+using revGraphicsHeap = ID3D12DescriptorHeap;
 
-using revGraphicsFormat = DXGI_FORMAT;
-
-const revGraphicsFormat REV_GRAPHICS_FORMAT_R8G8B8A8_UNORM = DXGI_FORMAT_B8G8R8A8_UNORM;
 
 
 // TODO: DX12 
@@ -315,7 +309,7 @@ enum class POLYGON_MODE
 
 
 namespace {
-	D3D12_FILTER ConvertToDXFilter(FILTER_MODE minFilter, FILTER_MODE magFilter, MIP_FILTER_MODE mip, uint32 anisotorpy, bool compare)
+	REV_INLINE D3D12_FILTER ConvertToDXFilter(FILTER_MODE minFilter, FILTER_MODE magFilter, MIP_FILTER_MODE mip, uint32 anisotorpy, bool compare)
 	{
 		D3D12_FILTER_REDUCTION_TYPE reduction = D3D12_FILTER_REDUCTION_TYPE_STANDARD;
 		if (compare) reduction = D3D12_FILTER_REDUCTION_TYPE_COMPARISON;
@@ -326,7 +320,7 @@ namespace {
 			reduction);
 	}
 
-	D3D12_TEXTURE_ADDRESS_MODE ConverToDXTextureAddressMode(TEXTURE_ADDRESS_MODE mode)
+	REV_INLINE D3D12_TEXTURE_ADDRESS_MODE ConverToDXTextureAddressMode(TEXTURE_ADDRESS_MODE mode)
 	{
 		const D3D12_TEXTURE_ADDRESS_MODE table[] = {
 			D3D12_TEXTURE_ADDRESS_MODE_WRAP,
@@ -338,7 +332,7 @@ namespace {
 		return table[static_cast<uint32>(mode)];
 	}
 
-	D3D12_COMPARISON_FUNC ConvertToDXComparisonFunc(COMPARISON_FUNC comparison)
+	REV_INLINE D3D12_COMPARISON_FUNC ConvertToDXComparisonFunc(COMPARISON_FUNC comparison)
 	{
 		const D3D12_COMPARISON_FUNC table[] = {
 			D3D12_COMPARISON_FUNC_NEVER,
@@ -353,7 +347,7 @@ namespace {
 		return table[static_cast<uint32>(comparison)];
 	}
 
-	D3D12_STATIC_BORDER_COLOR ConvertToDXBorderColor(BORDER_COLOR_MODE mode)
+	REV_INLINE D3D12_STATIC_BORDER_COLOR ConvertToDXBorderColor(BORDER_COLOR_MODE mode)
 	{
 		const D3D12_STATIC_BORDER_COLOR table[] = {
 			D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK,
@@ -364,6 +358,15 @@ namespace {
 	}
 
 
+	REV_INLINE DXGI_FORMAT ConvertToDXFormat(GRAPHICS_FORMAT format)
+	{
+		const DXGI_FORMAT table[] = {
+			DXGI_FORMAT_R8G8B8A8_UNORM,
+			DXGI_FORMAT_R32G32_FLOAT,
+			DXGI_FORMAT_R32G32B32_FLOAT,
+		};
+		return table[static_cast<uint32>(format)];
+	}
 }
 
 
