@@ -24,10 +24,10 @@ VulkanRenderer::~VulkanRenderer()
 
 void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
-    if(!context.Create(*window)) return;
-    if(!swapChain.Create(context)) return;
-    if(!renderInfo.Create(context, swapChain)) return;
-    if(!frameBuffer.Create(context, swapChain, renderInfo)) return;
+    if(!device.Create(*window)) return;
+    if(!swapChain.Create(device)) return;
+    if(!renderInfo.Create(device, swapChain)) return;
+    if(!frameBuffer.Create(device, swapChain, renderInfo)) return;
     //-----------------------------------------------------------------------------------------------
     // TEST CODE
     const float triangleVertices[] = {
@@ -38,18 +38,18 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
             1.0f, 0.0f,
             0.5f, 1.0f,
     };
-    triangleVertexBuffer.Create(context, triangleVertices, sizeof(triangleVertices));
-    triangleTexcoordBuffer.Create(context, triangleTexcoords, sizeof(triangleTexcoords));
+    triangleVertexBuffer.Create(device, triangleVertices, sizeof(triangleVertices));
+    triangleTexcoordBuffer.Create(device, triangleTexcoords, sizeof(triangleTexcoords));
 
     VulkanShader shader[2];
-    shader[0].LoadFromFile(context, "shaders/first.vert.spv", SHADER_TYPE::VERTX);
-    shader[1].LoadFromFile(context, "shaders/first.frag.spv", SHADER_TYPE::FRAGMENT);
+    shader[0].LoadFromFile(device, "shaders/first.vert.spv", SHADER_TYPE::VERTX);
+    shader[1].LoadFromFile(device, "shaders/first.frag.spv", SHADER_TYPE::FRAGMENT);
 
 
     VulkanTexture texture;
-    texture.LoadFromFile(context, "sample_tex.png");
-    if(!renderInfo.CreatePipeline(context, swapChain, shader[0], shader[1])) return;
-    if(!renderInfo.CreateDescriptorSet(context, texture)) return;
+    texture.LoadFromFile(device, "sample_tex.png");
+    if(!renderInfo.CreatePipeline(device, swapChain, shader[0], shader[1])) return;
+    if(!renderInfo.CreateDescriptorSet(device, texture)) return;
 
     //-----------------------------------------------------------------------------------------------
     if(!CreateCommandPool()) return;
@@ -57,18 +57,18 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 
 void VulkanRenderer::ShutDown()
 {
-    frameBuffer.Destroy(context);
-    renderInfo.Destroy(context);
-    swapChain.Destroy(context);
-    context.Destroy();
+    frameBuffer.Destroy(device);
+    renderInfo.Destroy(device);
+    swapChain.Destroy(device);
+    device.Destroy();
 }
 
 void VulkanRenderer::Render()
 {
     uint32 index;
-    const revGraphicsDevice& device = context.GetDevice();
+    const revGraphicsDevice& revDevice = device.GetDevice();
     VkResult result;
-    result = vkAcquireNextImageKHR(device,
+    result = vkAcquireNextImageKHR(revDevice,
             swapChain.GetSwapChain(),
             UINT64_MAX,
             renderInfo.GetSemaphore(),
@@ -78,7 +78,7 @@ void VulkanRenderer::Render()
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
     }
 
-    result = vkResetFences(device, 1, &renderInfo.GetFence());
+    result = vkResetFences(revDevice, 1, &renderInfo.GetFence());
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
     }
@@ -96,12 +96,12 @@ void VulkanRenderer::Render()
             .signalSemaphoreCount = 0,
             .pSignalSemaphores = nullptr,
     };
-    result = vkQueueSubmit(context.GetQueue(), 1, &submitInfo, renderInfo.GetFence());
+    result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, renderInfo.GetFence());
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
     }
 
-    result = vkWaitForFences(device, 1, &renderInfo.GetFence(), VK_TRUE, 100000000);
+    result = vkWaitForFences(revDevice, 1, &renderInfo.GetFence(), VK_TRUE, 100000000);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
     }
@@ -115,7 +115,7 @@ void VulkanRenderer::Render()
             .pWaitSemaphores = nullptr,
             .pResults = &result,
     };
-    vkQueuePresentKHR(context.GetQueue(), &presentInfo);
+    vkQueuePresentKHR(device.GetQueue(), &presentInfo);
 }
 
 void VulkanRenderer::Clear(bool clear_color, bool clear_depth, const revColor& fill_color)
@@ -152,8 +152,8 @@ bool VulkanRenderer::CreateCommandPool()
         .queueFamilyIndex = 0,
     };
 
-    const revGraphicsDevice& device = context.GetDevice();
-    VkResult result = vkCreateCommandPool(device, &commandPoolCreateInfo, nullptr, &commandPool);
+    const revGraphicsDevice& revDevice = device.GetDevice();
+    VkResult result = vkCreateCommandPool(revDevice, &commandPoolCreateInfo, nullptr, &commandPool);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -168,7 +168,7 @@ bool VulkanRenderer::CreateCommandPool()
                 .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
                 .commandBufferCount = 1,
         };
-        result = vkAllocateCommandBuffers(device, &commandBufferAllocateInfo, &commandBuffers[i]);
+        result = vkAllocateCommandBuffers(revDevice, &commandBufferAllocateInfo, &commandBuffers[i]);
         if(result != VK_SUCCESS) {
             NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
             return false;

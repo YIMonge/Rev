@@ -7,7 +7,7 @@
 //#define STBI_FREE(p)              free(p)
 #include "stb/stb_image.h"
 
-bool revTexture::LoadFromFile(const revDeviceContext& deviceContext, const char* path)
+bool revTexture::LoadFromFile(const revDevice& deviceContext, const char* path)
 {
     // Load Texture Data
 	revString resourcePath(RESOURCE_PATH);

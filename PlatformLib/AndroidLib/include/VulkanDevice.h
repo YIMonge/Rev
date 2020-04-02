@@ -1,30 +1,23 @@
-#ifndef __VulkanDeviceContext_H__
-#define __VulkanDeviceContext_H__
+#ifndef __VULKANDEVICE_H__
+#define __VULKANDEVICE_H__
 
 #ifdef _USE_VULKAN
 
-#include "revDeviceContext.h"
+#include "revDevice.h"
 #ifdef _DEBUG
 #include "revArray.h"
 #endif
 
 class Window;
 
-class VulkanDeviceContext : public revDeviceContext
+class VulkanDevice : public revDevice
 {
 public:
-    VulkanDeviceContext(){}
-    virtual ~VulkanDeviceContext(){}
+    VulkanDevice(){}
+    virtual ~VulkanDevice(){}
 
     bool Create(Window& window);
     void Destroy();
-
-
-
-    const VkPhysicalDevice& GetGpuDevice() const
-    {
-        return gpu;
-    }
 
     const VkSurfaceKHR& GetSurface() const
     {
@@ -47,7 +40,6 @@ public:
 private:
     VkInstance instance;
     VkSurfaceKHR surface;
-    VkPhysicalDevice gpu;
     uint32 queueFamilyIndex;
     VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
 

@@ -1,13 +1,13 @@
-#ifndef __DX12DEVICECONTEXT_H__
-#define __DX12DEVICECONTEXT_H__
+#ifndef __DX12Device_H__
+#define __DX12Device_H__
 
-#include "revDeviceContext.h"
+#include "revDevice.h"
 
 #ifdef _USE_DIRECTX12
 
 class Window;
 
-class DX12DeviceContext : public revDeviceContext
+class DX12Device : public revDevice
 {
 public:
 	bool Create(const GraphicsDesc& desc);
@@ -15,12 +15,12 @@ public:
 
 	bool CreateCommandList(ID3D12PipelineState* pipelineState);
 	ID3D12CommandAllocator* GetCommandAllocator() const { return commandAllocator; }
-	ID3D12GraphicsCommandList* GetCommandList() const { return commandList; }
+	revGraphicsCommandBuffer GetCommandBuffer() const { return commandBuffer; }
+
 
 private:
 	ID3D12CommandAllocator* commandAllocator;
-	ID3D12GraphicsCommandList* commandList;
-
+	revGraphicsCommandBuffer commandBuffer;
 };
 
 #endif

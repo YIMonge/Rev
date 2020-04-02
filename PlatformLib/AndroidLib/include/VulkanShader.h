@@ -11,7 +11,7 @@ public:
     VulkanShader();
     virtual ~VulkanShader(){}
 
-    virtual bool LoadFromFile(const revDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType);
+    virtual bool LoadFromFile(const revDevice& device, const char* path, SHADER_TYPE shaderType);
     VkPipelineShaderStageCreateInfo getShaderStageCreateInfo() const;
 };
 

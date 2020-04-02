@@ -27,7 +27,7 @@ std::wstring DX12Shader::utf8_decode(const std::string &str)
     return wstrTo;
 }
 
-bool DX12Shader::LoadFromFile(const revDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
+bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, SHADER_TYPE shaderType)
 {	
 	std::string resourcePath(RESOURCE_PATH);
 	resourcePath += path;

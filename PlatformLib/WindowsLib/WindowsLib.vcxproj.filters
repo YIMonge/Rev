@@ -14,16 +14,7 @@
     <ClInclude Include="include\CriticalSection.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="include\DX11DeviceContext.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX11Renderer.h">
-      <Filter>header</Filter>
-    </ClInclude>
     <ClInclude Include="include\DX12Buffer.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12DeviceContext.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="include\DX12FrameBuffer.h">
@@ -62,9 +53,6 @@
     <ClInclude Include="..\common\include\revAsyncable.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\include\revDeviceContext.h">
-      <Filter>header</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\include\revFile.h">
       <Filter>header</Filter>
     </ClInclude>
@@ -92,12 +80,21 @@
     <ClInclude Include="..\common\include\revThread.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="include\DX12Device.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revDevice.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revGraphicsCommandList.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12CommandList.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\DX12Buffer.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12DeviceContext.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="cpp\DX12FrameBuffer.cpp">
@@ -131,6 +128,12 @@
       <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="..\common\cpp\revTexture.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12Device.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12CommandList.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
   </ItemGroup>

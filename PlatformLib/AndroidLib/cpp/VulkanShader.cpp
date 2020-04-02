@@ -9,7 +9,7 @@ VulkanShader::VulkanShader()
 }
 
 
-bool VulkanShader::LoadFromFile(const revDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
+bool VulkanShader::LoadFromFile(const revDevice& device, const char* path, SHADER_TYPE shaderType)
 {
     File file;
     if(!file.Open(path, FileMode::ReadText)){
@@ -29,7 +29,7 @@ bool VulkanShader::LoadFromFile(const revDeviceContext& deviceContext, const cha
         .pCode = (const uint32*)data,
         .flags = 0
     };
-    VkResult result = vkCreateShaderModule(deviceContext.GetDevice(), &shaderModuleCreateInfo, nullptr, &handle);
+    VkResult result = vkCreateShaderModule(device.GetDevice(), &shaderModuleCreateInfo, nullptr, &handle);
     delete[] data;
 
     // load meta file

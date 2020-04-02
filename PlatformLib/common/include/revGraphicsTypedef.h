@@ -1,5 +1,5 @@
-#ifndef __GRAPHICS_TYPEDEF_H__
-#define __GRAPHICS_TYPEDEF_H__
+#ifndef __REVGRAPHICSTYPEDEF_H__
+#define __REVGRAPHICSTYPEDEF_H__
 
 #include "revTypedef.h"
 #include "revMath.h"
@@ -84,6 +84,7 @@ enum class GRAPHICS_FORMAT
 #ifdef _USE_VULKAN
 #include "../lib/vulkan_wrapper.h"
 using revGraphicsDevice = VkDevice;
+using revGraphicsAdapter = VkPhysicalDevice;
 using revSwapChain = VkSwapchainKHR;
 using revShaderHandle = VkShaderModule;
 using revGraphicsResource = VkBuffer;
@@ -92,6 +93,7 @@ using revGraphicsCommandQueue = VkQueue;
 using revTextureHandle = VkImage;
 using revTextureResourceView = VkImageView;
 using revTextureSampler = VkSampler;
+using revGraphicsHeap = void;
 
 enum class COLOR_COMPONENT_FRAG
 {
@@ -233,6 +235,7 @@ namespace {
 #include "libs/DX12/d3dx12.h"
 
 using revGraphicsDevice = ID3D12Device*;
+using revGraphicsAdapter = IDXGIAdapter1*;
 using revSwapChain = IDXGISwapChain3*;
 using revShaderHandle = ID3DBlob*;
 using revGraphicsResource = ID3D12Resource*;
@@ -242,7 +245,6 @@ using revTextureHandle = ID3D12Resource;
 using revTextureResourceView = D3D12_CPU_DESCRIPTOR_HANDLE;
 using revTextureSampler = D3D12_GPU_DESCRIPTOR_HANDLE;
 using revGraphicsHeap = ID3D12DescriptorHeap;
-
 
 
 // TODO: DX12 

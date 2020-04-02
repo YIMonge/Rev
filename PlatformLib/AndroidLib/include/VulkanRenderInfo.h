@@ -3,7 +3,7 @@
 
 #ifdef _USE_VULKAN
 
-#include "VulkanDeviceContext.h"
+#include "VulkanDevice.h"
 #include "VulkanSwapChain.h"
 #include "VulkanShader.h"
 #include "VulkanTexture.h"
@@ -16,13 +16,13 @@ public:
     VulkanRenderInfo();
     ~VulkanRenderInfo();
 
-    bool Create(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain);
-    void Destroy(const VulkanDeviceContext& deviceContext);
+    bool Create(const VulkanDevice& device, const VulkanSwapChain& swapChain);
+    void Destroy(const VulkanDevice& device);
 
-    bool CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader);
-    bool CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const revMaterial* material);
+    bool CreatePipeline(const VulkanDevice& device, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader);
+    bool CreatePipeline(const VulkanDevice& device, const VulkanSwapChain& swapChain, const revMaterial* material);
 
-    bool CreateDescriptorSet(const VulkanDeviceContext& deviceContext, VulkanTexture& texture);
+    bool CreateDescriptorSet(const VulkanDevice& device, VulkanTexture& texture);
 
     const VkRenderPass& GetRenderPass() const { return renderPass; }
     const VkSemaphore& GetSemaphore() const { return semaphore; }

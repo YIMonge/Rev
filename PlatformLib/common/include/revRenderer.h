@@ -4,7 +4,7 @@
 class Window;
 
 #include "revTypedef.h"
-#include "revDeviceContext.h"
+#include "revDevice.h"
 
 class revColor;
 enum class BLEND_FUNC : uint8;

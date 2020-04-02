@@ -3,7 +3,7 @@
 
 #ifdef _USE_VULKAN
 
-#include "VulkanDeviceContext.h"
+#include "VulkanDevice.h"
 #include "revArray.h"
 
 class VulkanSwapChain
@@ -12,8 +12,8 @@ public:
     VulkanSwapChain();
     ~VulkanSwapChain();
 
-    bool Create(const VulkanDeviceContext& deviceContext);
-    void Destroy(const VulkanDeviceContext& deviceContext);
+    bool Create(const VulkanDevice& device);
+    void Destroy(const VulkanDevice& device);
 
     const GRAPHICS_FORMAT GetFormat() const { return format; }
     const revSwapChain&  GetSwapChain() const { return swapChain; }

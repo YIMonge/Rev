@@ -1,7 +1,7 @@
 #ifndef __REVSHADER_H__
 #define __REVSHADER_H__
 
-#include "revDeviceContext.h"
+#include "revDevice.h"
 #include "revResource.h"
 
 enum class SHADER_TYPE : uint32
@@ -39,7 +39,7 @@ public:
 	{
 	}
 	virtual ~revShader(){}
-	virtual bool LoadFromFile(const revDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType) = 0;
+	virtual bool LoadFromFile(const revDevice& deviceContext, const char* path, SHADER_TYPE shaderType) = 0;
 	revShaderHandle GetHandle() const { return handle; }
 	const revArray<revAttributeBinding>& GetAttributes() const { return attributes; }
 protected:

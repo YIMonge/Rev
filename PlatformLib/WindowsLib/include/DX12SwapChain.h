@@ -2,7 +2,7 @@
 #define __DX12SWAPCHAIN_H__
 
 #ifdef _USE_DIRECTX12
-#include "DX12DeviceContext.h"
+#include "DX12Device.h"
 #include "Window.h"
 #include "revArray.h"
 
@@ -12,7 +12,7 @@ public:
 	DX12SwapChain();
 	~DX12SwapChain();
 
-	bool Create(const DX12DeviceContext& deviceContext, const Window& window);
+	bool Create(const DX12Device& deviceContext, const Window& window);
 	void Destroy();
 
 	int32 GetCurrentFrameIndex() const

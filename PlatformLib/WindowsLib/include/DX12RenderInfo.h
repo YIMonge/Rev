@@ -1,7 +1,7 @@
 #ifndef __DX12RENDERINFO_H__
 #define __DX12RENDERINFO_H__
 
-#include "DX12DeviceContext.h"
+#include "DX12Device.h"
 #include "DX12Shader.h"
 #include "revMaterial.h"
 
@@ -11,11 +11,11 @@ public:
 	DX12RenderInfo();
 	~DX12RenderInfo();
 
-	bool CreateSignature(const DX12DeviceContext& deviceContext);
+	bool CreateSignature(const DX12Device& deviceContext);
 
 
-	bool CreatePipeline(const DX12DeviceContext& deviceContext, const DX12Shader& vertexShader, const DX12Shader& fragmentShader);
-	bool CreatePipeline(const DX12DeviceContext& deviceContext, const revMaterial& material);
+	bool CreatePipeline(const DX12Device& deviceContext, const DX12Shader& vertexShader, const DX12Shader& fragmentShader);
+	bool CreatePipeline(const DX12Device& deviceContext, const revMaterial& material);
 
 	ID3D12PipelineState* GetPipelineState() const {	return pipelineState; }
 	ID3D12RootSignature* GetRootSignature() const {	return rootSignature; }

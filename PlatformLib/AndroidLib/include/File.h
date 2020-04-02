@@ -5,6 +5,12 @@
 #include "revArray.h"
 #include "revFile.h"
 
+#ifdef  _DEBUG
+#define RESOURCE_PATH "Resources/"
+#elif defined(_RELEASE)
+#define RESOURCE_PATH "Resources/"
+#endif //  _DEBUG
+
 class File : public revFile
 {
 public:

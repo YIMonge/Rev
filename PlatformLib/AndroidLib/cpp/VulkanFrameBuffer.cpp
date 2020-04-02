@@ -11,9 +11,9 @@ VulkanFrameBuffer::~VulkanFrameBuffer()
 {
 }
 
-bool VulkanFrameBuffer::Create(const VulkanDeviceContext& deviceContext, const VulkanSwapChain &swapChain, const VulkanRenderInfo& renderInfo)
+bool VulkanFrameBuffer::Create(const VulkanDevice& deviceContext, const VulkanSwapChain &swapChain, const VulkanRenderInfo& renderInfo)
 {
-    foramt = swapChain.GetFormat();
+    foramt = ConvertToVKFormat(swapChain.GetFormat());
     uint32 imageCount = 0;
     const revGraphicsDevice& device = deviceContext.GetDevice();
     VkSwapchainKHR  swapchain = swapChain.GetSwapChain();
@@ -91,7 +91,7 @@ bool VulkanFrameBuffer::Create(const VulkanDeviceContext& deviceContext, const V
     return true;
 }
 
-void VulkanFrameBuffer::Destroy(const VulkanDeviceContext& deviceContext)
+void VulkanFrameBuffer::Destroy(const VulkanDevice& deviceContext)
 {
     VkDevice device =  deviceContext.GetDevice();
     for(int i = 0; i < framebuffers.size(); ++i){

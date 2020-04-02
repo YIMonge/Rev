@@ -3,7 +3,7 @@
 
 #include "revGraphicsTypedef.h"
 #include "revResource.h"
-#include "revDeviceContext.h"
+#include "revDevice.h"
 #include "Log.h"
 
 class revTexture : public revResource
@@ -19,7 +19,7 @@ public:
 	revTextureHandle* GetHandle() const { return handle; }
 
 
-	bool LoadFromFile(const revDeviceContext& deviceContext, const char* path);
+	bool LoadFromFile(const revDevice& deviceContext, const char* path);
 
     class SamplerDesc {
     public:
@@ -104,7 +104,7 @@ public:
 
 
 protected:
-	virtual bool CreateTexture(const revDeviceContext& deviceContext, uint8* imageData) = 0;
+	virtual bool CreateTexture(const revDevice& deviceContext, uint8* imageData) = 0;
 
 	uint32 width;
 	uint32 height;

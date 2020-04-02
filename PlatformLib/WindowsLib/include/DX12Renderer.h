@@ -2,7 +2,7 @@
 #define __DX12RENDERER_H__
 
 #include "revRenderer.h"
-#include "DX12DeviceContext.h"
+#include "DX12Device.h"
 #include "DX12SwapChain.h"
 #include "DX12RenderInfo.h"
 #include "DX12Shader.h"
@@ -35,7 +35,7 @@ private:
 
 private:
 	Window* main_window;
-	DX12DeviceContext deviceContext;
+	DX12Device deviceContext;
 	DX12SwapChain swapChain;
 	DX12RenderInfo renderInfo;
 

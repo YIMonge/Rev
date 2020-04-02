@@ -16,8 +16,17 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	renderInfo.CreatePipeline(deviceContext, vertexShader, fragmentShader);
 	if (!deviceContext.CreateCommandList(renderInfo.GetPipelineState())) return;
 
+	// Load resource 
 	texture.LoadFromFile(deviceContext, "sample_tex.png");
 	textureView.Create(deviceContext, texture, renderInfo.GetResourceViewHeap());
+
+	// execute initialization task 
+	auto commandList = deviceContext.GetCommandBuffer();
+	commandList->Close();
+	ID3D12CommandList* commandLists[] = { commandList };
+	ID3D12CommandQueue* commandQueue = deviceContext.GetQueue();
+	commandQueue->ExecuteCommandLists(1, commandLists);
+	swapChain.WaitForPreviousFrame(commandQueue);
 }
 
 void DX12Renderer::ShutDown()
@@ -29,7 +38,7 @@ void DX12Renderer::ShutDown()
 void DX12Renderer::Render()
 {
 	auto commandAllocator = deviceContext.GetCommandAllocator();;
-	auto commandList = deviceContext.GetCommandList();
+	auto commandList = deviceContext.GetCommandBuffer();
 	HRESULT hr = commandAllocator->Reset();
 	if (FAILED(hr)) {
 		return;
@@ -42,6 +51,8 @@ void DX12Renderer::Render()
 	commandList->SetGraphicsRootSignature(renderInfo.GetRootSignature());
 	auto heap = renderInfo.GetResourceViewHeap();
 	commandList->SetDescriptorHeaps(1, &heap);
+	commandList->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
+
 	commandList->RSSetViewports(1, &viewport);
 	commandList->RSSetScissorRects(1, &rectScissor);
 

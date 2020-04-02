@@ -11,7 +11,7 @@ public:
 	DX12FrameBuffer();
 	~DX12FrameBuffer();
 
-	bool Create(DX12DeviceContext& deviceContext, DX12SwapChain& swapChain);
+	bool Create(DX12Device& deviceContext, DX12SwapChain& swapChain);
 	void Destroy();
 
 

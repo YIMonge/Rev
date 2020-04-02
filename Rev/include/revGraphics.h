@@ -2,7 +2,7 @@
 #define __REVGRAPHICS_H__
 
 #include "revSingleton.h"
-#include "revDeviceContext.h"
+#include "revDevice.h"
 #include "revColor.h"
 #include "revDrawCommand.h"
 

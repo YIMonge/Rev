@@ -1,7 +1,7 @@
 #ifndef __DX12SHADER_H__
 #define __DX12SHADER_H__
 
-#include "DX12DeviceContext.h"
+#include "DX12Device.h"
 #include "revShader.h"
 #include <string>
 
@@ -14,7 +14,7 @@ public:
 	~DX12Shader();
 
 #ifdef _DEBUG
-	virtual bool LoadFromFile(const revDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType);
+	virtual bool LoadFromFile(const revDevice& deviceContext, const char* path, SHADER_TYPE shaderType);
 #endif
 
 	void Release();

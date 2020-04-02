@@ -15,11 +15,11 @@ VulkanSwapChain::~VulkanSwapChain()
     memset(&swapChain, 0, sizeof(swapChain));
 }
 
-bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
+bool VulkanSwapChain::Create(const VulkanDevice& device)
 {
     VkSurfaceCapabilitiesKHR  capabilities;
-    const VkPhysicalDevice& gpu = deviceContext.GetGpuDevice();
-    const VkSurfaceKHR& surface = deviceContext.GetSurface();
+    const VkPhysicalDevice& gpu = device.GetAdapter();
+    const VkSurfaceKHR& surface = device.GetSurface();
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR (gpu, surface, &capabilities);
 
     uint32 count = 0;
@@ -39,7 +39,7 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
     displaySize = capabilities.currentExtent;
     format = GRAPHICS_FORMAT ::R8G8B8A8_UNORM;
 
-    uint32 queueFamilyIndex = deviceContext.GetQueueFamilyIndex();
+    uint32 queueFamilyIndex = device.GetQueueFamilyIndex();
 
     VkSwapchainCreateInfoKHR swapchainCreateInfo{
             .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
@@ -61,13 +61,13 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
             .clipped = VK_FALSE,
     };
 
-    const revGraphicsDevice& device = deviceContext.GetDevice();
-    VkResult result = vkCreateSwapchainKHR(device, &swapchainCreateInfo, nullptr, &swapChain);
+    const revGraphicsDevice& revDevice = device.GetDevice();
+    VkResult result = vkCreateSwapchainKHR(revDevice, &swapchainCreateInfo, nullptr, &swapChain);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-    result = vkGetSwapchainImagesKHR(device, swapChain, &length, nullptr);
+    result = vkGetSwapchainImagesKHR(revDevice, swapChain, &length, nullptr);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -75,9 +75,9 @@ bool VulkanSwapChain::Create(const VulkanDeviceContext& deviceContext)
     return true;
 }
 
-void VulkanSwapChain::Destroy(const VulkanDeviceContext& deviceContext)
+void VulkanSwapChain::Destroy(const VulkanDevice& device)
 {
-    vkDestroySwapchainKHR(deviceContext.GetDevice(), swapChain, nullptr);
+    vkDestroySwapchainKHR(device.GetDevice(), swapChain, nullptr);
 }
 
 #endif

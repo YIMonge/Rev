@@ -10,10 +10,15 @@ DX12SwapChain::~DX12SwapChain()
 {
 }
 
-bool DX12SwapChain::Create(const DX12DeviceContext& deviceContext, const Window& window)
+bool DX12SwapChain::Create(const DX12Device& deviceContext, const Window& window)
 {
+	uint32 dxgiFlags = 0;
+#ifdef _DEBUG
+	dxgiFlags |= DXGI_CREATE_FACTORY_DEBUG;
+#endif
+
 	IDXGIFactory4* dxgiFactory;
-	HRESULT hr = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
+	HRESULT hr = CreateDXGIFactory2(dxgiFlags, IID_PPV_ARGS(&dxgiFactory));
 	if (FAILED(hr)) {
 		if (dxgiFactory != nullptr) dxgiFactory->Release();
 		return false;

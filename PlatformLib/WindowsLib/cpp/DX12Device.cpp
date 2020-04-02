@@ -1,10 +1,10 @@
-#include "../include/DX12DeviceContext.h"
+#include "../include/DX12Device.h"
 #include "../include/Window.h"
 #include "revTypedef.h"
 
 #ifdef _USE_DIRECTX12
 
-bool DX12DeviceContext::Create(const GraphicsDesc& desc)
+bool DX12Device::Create(const GraphicsDesc& desc)
 {
 #if defined(_DEBUG)
 	ID3D12Debug* debugController;
@@ -45,24 +45,30 @@ bool DX12DeviceContext::Create(const GraphicsDesc& desc)
 	if (FAILED(hr)) {
 		return false;
 	}
+
+	IDXGIFactory4* dxgiFactory;
+	hr = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
+	if (FAILED(hr)) {
+		if (dxgiFactory != nullptr) dxgiFactory->Release();
+		return false;
+	}
 	return true;
 }
 
-bool DX12DeviceContext::CreateCommandList(ID3D12PipelineState* pipelineState)
+bool DX12Device::CreateCommandList(ID3D12PipelineState* pipelineState)
 {
-	HRESULT hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, pipelineState, IID_PPV_ARGS(&commandList));
+	HRESULT hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, pipelineState, IID_PPV_ARGS(&commandBuffer));
 	if (FAILED(hr)) {
 		return false;
 	}
-	commandList->Close();
 	return true;
 }
 
-void DX12DeviceContext::Destroy()
+void DX12Device::Destroy()
 {
-	if (commandList != nullptr) {
-		commandList->Release();
-		commandList = nullptr;
+	if (commandBuffer != nullptr) {
+		commandBuffer->Release();
+		commandBuffer = nullptr;
 	}
 
 	if (commandAllocator != nullptr) {

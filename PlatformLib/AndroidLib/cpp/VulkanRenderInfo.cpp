@@ -1,5 +1,6 @@
 #include <VulkanTexture.h>
 #include "VulkanRenderInfo.h"
+#include "VulkanTextureView.h"
 #include "Log.h"
 #ifdef _USE_VULKAN
 
@@ -15,10 +16,10 @@ VulkanRenderInfo::~VulkanRenderInfo()
 
 }
 
-bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const VulkanSwapChain& swapChain)
+bool VulkanRenderInfo::Create(const VulkanDevice &deviceContext, const VulkanSwapChain& swapChain)
 {
     VkAttachmentDescription attachmentDescription {
-        .format = swapChain.GetFormat(),
+        .format = ConvertToVKFormat(swapChain.GetFormat()),
         .samples = VK_SAMPLE_COUNT_1_BIT,
         .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
         .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
@@ -94,7 +95,7 @@ bool VulkanRenderInfo::Create(const VulkanDeviceContext &deviceContext, const Vu
 // TODO: determine each states by vertx and fragment shader. ex, input assembler is chosen by vertex shader, blend state is decided by fragment shader(material).
 // TODO: Material should have vertex/fragment shader, input assembler, blend and depth/stencil state. create pipeline by Material.
 // TODO: if use multiple vertex buffer, like first vertex last valying attributes must create multiple binding and attribute info.
-bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader)
+bool VulkanRenderInfo::CreatePipeline(const VulkanDevice& deviceContext, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader)
 {
     const VkDevice& device = deviceContext.GetDevice();
 
@@ -282,7 +283,7 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, 
 }
 
 
-bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const revMaterial* material)
+bool VulkanRenderInfo::CreatePipeline(const VulkanDevice& deviceContext, const VulkanSwapChain& swapChain, const revMaterial* material)
 {
     if(!material) return false;
 
@@ -442,9 +443,9 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDeviceContext& deviceContext, 
 
 
 // TODO: array of texture
-bool VulkanRenderInfo::CreateDescriptorSet(const VulkanDeviceContext& deviceContext, VulkanTexture& texture)
+bool VulkanRenderInfo::CreateDescriptorSet(const VulkanDevice& vulkanDevice, VulkanTexture& texture)
 {
-    const VkDevice& device = deviceContext.GetDevice();
+    const VkDevice& device = vulkanDevice.GetDevice();
     VkDescriptorPoolSize descriptorPoolSize = {
         .type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
         .descriptorCount = 1, // if texture count higher than 2 the param should texture count.
@@ -476,7 +477,9 @@ bool VulkanRenderInfo::CreateDescriptorSet(const VulkanDeviceContext& deviceCont
     }
 
     // TODO: array of texture
-    VkDescriptorImageInfo descriptorImageInfo = texture.GetDescriptorImageInfo();
+    VulkanTextureView textureView;
+    textureView.Create(vulkanDevice, texture);
+    VkDescriptorImageInfo descriptorImageInfo = textureView.GetDescriptorImageInfo();
 
     VkWriteDescriptorSet writeDescriptorSet = {
         .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
@@ -495,7 +498,7 @@ bool VulkanRenderInfo::CreateDescriptorSet(const VulkanDeviceContext& deviceCont
     return true;
 }
 
-void VulkanRenderInfo::Destroy(const VulkanDeviceContext& deviceContext)
+void VulkanRenderInfo::Destroy(const VulkanDevice& deviceContext)
 {
     VkDevice device = deviceContext.GetDevice();
     vkDestroyRenderPass(device, renderPass, nullptr);

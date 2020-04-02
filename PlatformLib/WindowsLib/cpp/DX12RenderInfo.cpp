@@ -11,7 +11,7 @@ DX12RenderInfo::~DX12RenderInfo()
 }
 
 
-bool DX12RenderInfo::CreateSignature(const DX12DeviceContext& deviceContext)
+bool DX12RenderInfo::CreateSignature(const DX12Device& deviceContext)
 {
 	auto device = deviceContext.GetDevice();
 	// TODO: create from material (by needed descriptors)
@@ -70,7 +70,7 @@ bool DX12RenderInfo::CreateSignature(const DX12DeviceContext& deviceContext)
 	return true;
 }
 
-bool DX12RenderInfo::CreatePipeline(const DX12DeviceContext& deviceContext, const DX12Shader& vertexShader, const DX12Shader& fragmentShader)
+bool DX12RenderInfo::CreatePipeline(const DX12Device& deviceContext, const DX12Shader& vertexShader, const DX12Shader& fragmentShader)
 {
 	CreateSignature(deviceContext);
 
@@ -128,7 +128,7 @@ bool DX12RenderInfo::CreatePipeline(const DX12DeviceContext& deviceContext, cons
 	pipelineStateDesc.SampleMask = UINT_MAX;
 	pipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	pipelineStateDesc.NumRenderTargets = 1;
-	pipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_B8G8R8A8_UNORM;
+	pipelineStateDesc.RTVFormats[0] = ConvertToDXFormat(GRAPHICS_FORMAT::R8G8B8A8_UNORM);
 	pipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 	pipelineStateDesc.SampleDesc.Count = 1;
 
@@ -154,7 +154,7 @@ bool DX12RenderInfo::CreatePipeline(const DX12DeviceContext& deviceContext, cons
 
 
 
-bool DX12RenderInfo::CreatePipeline(const DX12DeviceContext& deviceContext, const revMaterial& material)
+bool DX12RenderInfo::CreatePipeline(const DX12Device& deviceContext, const revMaterial& material)
 {
 
 

@@ -2,8 +2,7 @@
 #include "VulkanTexture.h"
 #include "File.h"
 
-VulkanTexture::VulkanTexture() :
-imageLayout(VK_IMAGE_LAYOUT_GENERAL)
+VulkanTexture::VulkanTexture()
 {
 }
 
@@ -11,15 +10,15 @@ VulkanTexture::~VulkanTexture()
 {
 }
 
-bool VulkanTexture::CreateTexture(const revDeviceContext& deviceContext, uint8* imageData)
+bool VulkanTexture::CreateTexture(const revDevice& device, uint8* imageData)
 {
-    const VkDevice& device = deviceContext.GetDevice();
+    const VkDevice& revDevice = device.GetDevice();
     const VkFormat TEXTURE_FORMAT = VK_FORMAT_R8G8B8A8_UNORM;
     bool needBit = true;
     VkFormatProperties properties;
     // up cast...
-    const VulkanDeviceContext vkDeviceContext = static_cast<const VulkanDeviceContext&>(deviceContext);
-    vkGetPhysicalDeviceFormatProperties(vkDeviceContext.GetGpuDevice(), TEXTURE_FORMAT, &properties);
+    const VulkanDevice vkDeviceContext = static_cast<const VulkanDevice&>(device);
+    vkGetPhysicalDeviceFormatProperties(vkDeviceContext.GetAdapter(), TEXTURE_FORMAT, &properties);
     if(!((properties.linearTilingFeatures | properties.optimalTilingFeatures)& VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT)){
         return false;
     }
@@ -52,12 +51,12 @@ bool VulkanTexture::CreateTexture(const revDeviceContext& deviceContext, uint8* 
     };
 
     VkMemoryRequirements memoryRequirements;
-    VkResult result = vkCreateImage(device, &imageCreateInfo, nullptr, &image);
+    VkResult result = vkCreateImage(revDevice, &imageCreateInfo, nullptr, &image);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-    vkGetImageMemoryRequirements(device, image, &memoryRequirements);
+    vkGetImageMemoryRequirements(revDevice, image, &memoryRequirements);
     memoryAllocateInfo.allocationSize = memoryRequirements.size;
 
     if(!AllocateMemoryTypeFromProperties(vkDeviceContext,
@@ -67,12 +66,12 @@ bool VulkanTexture::CreateTexture(const revDeviceContext& deviceContext, uint8* 
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-    result = vkAllocateMemory(device, &memoryAllocateInfo, nullptr, &deviceMemory);
+    result = vkAllocateMemory(revDevice, &memoryAllocateInfo, nullptr, &deviceMemory);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-    result = vkBindImageMemory(device, image, deviceMemory, 0);
+    result = vkBindImageMemory(revDevice, image, deviceMemory, 0);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -81,13 +80,13 @@ bool VulkanTexture::CreateTexture(const revDeviceContext& deviceContext, uint8* 
     // TODO:need subresource?
 
     void* buffer;
-    result = vkMapMemory(device, deviceMemory, 0, memoryAllocateInfo.allocationSize, 0, &buffer);
+    result = vkMapMemory(revDevice, deviceMemory, 0, memoryAllocateInfo.allocationSize, 0, &buffer);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
     memcpy(buffer, imageData, width * height * 4);
-    vkUnmapMemory(device, deviceMemory);
+    vkUnmapMemory(revDevice, deviceMemory);
 
     const SamplerDesc& samplerDesc = metaData.sampler;
     //-----------------------------------------`-----------------------
@@ -109,7 +108,7 @@ bool VulkanTexture::CreateTexture(const revDeviceContext& deviceContext, uint8* 
             .borderColor = ConvertToVKBorderColor(samplerDesc.GetBorderColor()),
             .unnormalizedCoordinates = VK_FALSE,
     };
-    result = vkCreateSampler(device, &samplerCreateInfo, nullptr, &sampler);
+    result = vkCreateSampler(revDevice, &samplerCreateInfo, nullptr, &sampler);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -118,9 +117,9 @@ bool VulkanTexture::CreateTexture(const revDeviceContext& deviceContext, uint8* 
     return true;
 }
 
-bool VulkanTexture::AllocateMemoryTypeFromProperties(const VulkanDeviceContext& deviceContext, uint32 typeBits, VkFlags requimentMask, uint32* typeIndex)
+bool VulkanTexture::AllocateMemoryTypeFromProperties(const VulkanDevice& device, uint32 typeBits, VkFlags requimentMask, uint32* typeIndex)
 {
-    const VkPhysicalDeviceMemoryProperties& deviceMemoryProperties = deviceContext.GetPhysicalDeviceMemoryProperties();
+    const VkPhysicalDeviceMemoryProperties& deviceMemoryProperties = device.GetPhysicalDeviceMemoryProperties();
     for(uint32 i = 0; i < 32; ++i){
         if((typeBits & 1) == 1){
             if((deviceMemoryProperties.memoryTypes[i].propertyFlags & requimentMask) == requimentMask){
@@ -132,15 +131,4 @@ bool VulkanTexture::AllocateMemoryTypeFromProperties(const VulkanDeviceContext& 
     }
     return false;
 }
-
-VkDescriptorImageInfo VulkanTexture::GetDescriptorImageInfo()
-{
-    VkDescriptorImageInfo descriptorImageInfo = {
-        .sampler = sampler,
-        .imageView = resourceView,
-        .imageLayout = imageLayout,
-    };
-    return descriptorImageInfo;
-}
-
 #endif

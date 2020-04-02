@@ -1,6 +1,6 @@
 #include "VulkanTextureView.h"
 
-void VulkanTextureView::Create(const revDeviceContext& deviceContext, const revTexture& texture, revGraphicsHeap* heap)
+void VulkanTextureView::Create(const revDevice& device, const revTexture& texture, revGraphicsHeap* heap)
 {
     VkImageViewCreateInfo imageViewCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -17,15 +17,14 @@ void VulkanTextureView::Create(const revDeviceContext& deviceContext, const revT
     };
     imageViewCreateInfo.format = ConvertToVKFormat(texture.GetFormat());
     imageViewCreateInfo.image = *texture.GetHandle();
-    VkResult result = vkCreateImageView(deviceContext.GetDevice(), &imageViewCreateInfo, nullptr, &resourceView);
+    VkResult result = vkCreateImageView(device.GetDevice(), &imageViewCreateInfo, nullptr, &resourceView);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return;
     }
-    // TODO:
-    VkDescriptorImageInfo descriptorImageInfo = {
-            .sampler = sampler,
+    descriptorImageInfo = {
+            .sampler = texture.GetSampler(),
             .imageView = resourceView,
-            .imageLayout = imageLayout,
+            .imageLayout = VK_IMAGE_LAYOUT_GENERAL,
     };
 }

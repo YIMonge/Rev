@@ -14,22 +14,22 @@ DX12Buffer::~DX12Buffer()
 	}
 }
 
-bool DX12Buffer::Create(const revDeviceContext& deviceContext, const revArray<revVector3>& data)
+bool DX12Buffer::Create(const revDevice& deviceContext, const revArray<revVector3>& data)
 {
 	return Create(deviceContext, &data[0].data[0], data.size() * sizeof(revVector3));
 }
 
-bool DX12Buffer::Create(const revDeviceContext& deviceContext, const revArray<revVector4>& data)
+bool DX12Buffer::Create(const revDevice& deviceContext, const revArray<revVector4>& data)
 {
 	return Create(deviceContext, &data[0].data[0], data.size() * sizeof(revVector4));
 }
 
-bool DX12Buffer::Create(const revDeviceContext& deviceContext, const revArray<float>& data)
+bool DX12Buffer::Create(const revDevice& deviceContext, const revArray<float>& data)
 {
 	return Create(deviceContext, &data[0], data.size() * sizeof(float));
 }
 
-bool DX12Buffer::Create(const revDeviceContext& deviceContext, const float* data, uint32 size)
+bool DX12Buffer::Create(const revDevice& deviceContext, const float* data, uint32 size)
 {
 	HRESULT hr = deviceContext.GetDevice()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
@@ -55,7 +55,7 @@ bool DX12Buffer::Create(const revDeviceContext& deviceContext, const float* data
 	return true;
 }
 
-void DX12Buffer::Destroy(const revDeviceContext& deviceContext)
+void DX12Buffer::Destroy(const revDevice& deviceContext)
 {
 	if (buffer != nullptr) {
 		buffer->Release();
@@ -73,7 +73,7 @@ DX12VertexBuffer::~DX12VertexBuffer()
 {
 }
 
-bool DX12VertexBuffer::Create(const revDeviceContext& deviceContext, const float* data, uint32 size)
+bool DX12VertexBuffer::Create(const revDevice& deviceContext, const float* data, uint32 size)
 {
 	DX12Buffer::Create(deviceContext, data, size);
 	view.BufferLocation = buffer->GetGPUVirtualAddress();

@@ -9,7 +9,7 @@ DX12FrameBuffer::DX12FrameBuffer()
 DX12FrameBuffer::~DX12FrameBuffer()
 {}
 
-bool DX12FrameBuffer::Create(DX12DeviceContext& deviceContext, DX12SwapChain& swapChain)
+bool DX12FrameBuffer::Create(DX12Device& deviceContext, DX12SwapChain& swapChain)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC desc;
 	memset(&desc, 0, sizeof(D3D12_DESCRIPTOR_HEAP_DESC));

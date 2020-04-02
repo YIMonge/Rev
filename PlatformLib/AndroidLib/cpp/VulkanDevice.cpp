@@ -1,4 +1,4 @@
-#include "VulkanDeviceContext.h"
+#include "VulkanDevice.h"
 #include "Window.h"
 #include "Log.h"
 #ifdef _DEBUG
@@ -6,7 +6,7 @@
 #endif
 #ifdef _USE_VULKAN
 
-bool VulkanDeviceContext::Create(Window& window)
+bool VulkanDevice::Create(Window& window)
 {
     if(!InitVulkan())
     {
@@ -80,12 +80,12 @@ bool VulkanDeviceContext::Create(Window& window)
         return false;
     }
 
-    gpu = tmpGpus[0];
+    adapter = tmpGpus[0];
 
     uint32 queueFamilyCount;
-    vkGetPhysicalDeviceQueueFamilyProperties(gpu, &queueFamilyCount, nullptr);
+    vkGetPhysicalDeviceQueueFamilyProperties(adapter, &queueFamilyCount, nullptr);
     VkQueueFamilyProperties queueFamilyProperties[queueFamilyCount];
-    vkGetPhysicalDeviceQueueFamilyProperties(gpu, &queueFamilyCount, queueFamilyProperties);
+    vkGetPhysicalDeviceQueueFamilyProperties(adapter, &queueFamilyCount, queueFamilyProperties);
 
 
     // Find queue for graphics
@@ -134,20 +134,20 @@ bool VulkanDeviceContext::Create(Window& window)
         .ppEnabledExtensionNames = useDeviceExt,
         .pEnabledFeatures = nullptr,
     };
-    result = vkCreateDevice(gpu, &deviceCreateInfo, nullptr, &device);
+    result = vkCreateDevice(adapter, &deviceCreateInfo, nullptr, &device);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
 
-    vkGetPhysicalDeviceMemoryProperties(gpu, &physicalDeviceMemoryProperties);
+    vkGetPhysicalDeviceMemoryProperties(adapter, &physicalDeviceMemoryProperties);
 
     vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue);
     return true;
 }
 
 
-void VulkanDeviceContext::Destroy()
+void VulkanDevice::Destroy()
 {
     vkDestroySurfaceKHR(instance, surface, nullptr);
     vkDestroyDevice(device, nullptr);
@@ -155,7 +155,7 @@ void VulkanDeviceContext::Destroy()
 }
 
 #ifdef _DEBUG
-void VulkanDeviceContext::initializeDebugLayer()
+void VulkanDevice::initializeDebugLayer()
 {
     uint32 layerPropertyCount = 0;
     vkEnumerateInstanceLayerProperties(&layerPropertyCount, nullptr);
