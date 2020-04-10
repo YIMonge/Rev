@@ -7,9 +7,15 @@
 class revGraphicsCommandList
 {
 public:
+	virtual bool Create(revDevice* device, revGraphicsPipeline* pipeline) = 0;
+	virtual void Open(){}
+	virtual void Close(){}
 
-	virtual bool Create(const revDevice& device) = 0;
-public:
+	revGraphicsCommandAllocator& GetAllocator() { return commandAllocator;  };
+	revGraphicsCommandBuffer& GetList() { return commandBuffer; }
+protected:
+	revDevice* device;
+	revGraphicsCommandAllocator commandAllocator;
 	revGraphicsCommandBuffer commandBuffer;
 };
 

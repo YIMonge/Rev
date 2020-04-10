@@ -9,9 +9,12 @@ public:
 	DX12CommandList() {}
 	virtual ~DX12CommandList(){}
 
-	virtual bool Create(const revDevice& device);
+	virtual bool Create(revDevice* device, revGraphicsPipeline* pipeline);
+	virtual void Open();
+	virtual void Close();
+	void SetPipelineState(revGraphicsPipeline& pipeline);
 
-
+private:
 };
 
 #endif

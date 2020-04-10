@@ -78,6 +78,99 @@ enum class GRAPHICS_FORMAT
 	R8G8B8A8_UNORM,
 	R32G32_SFLOAT,
 	R32G32B32_SFLOAT,
+
+	MAX_NUM,
+};
+
+enum class BLEND_FACTOR
+{
+	ZERO,
+	ONE,
+	SRC_COLOR,
+	SRC_ALPHA,
+	DST_COLOR,
+	DST_ALPHA,
+	ONE_MINUS_SRC_COLOR,
+	ONE_MINUS_SRC_ALPHA,
+	ONE_MINUS_DST_COLOR,
+	ONE_MINUS_DST_ALPHA,
+	MAX_NUM,
+};
+
+enum class BLEND_OP
+{
+	ADD,
+	SUBTRACT,
+	REVERSE_SUBTRACT,
+	MIN,
+	MAX_NUM,
+};
+
+enum class LOGIC_OP
+{
+	CLEAR,
+	AND,
+	AND_REVERSE,
+	COPY,
+	AND_INVERTED,
+	NO_OP,
+	XOR,
+	OR,
+	NOR,
+	EQUIVALENT,
+	INVERT,
+	OR_REVERSE,
+	MAX_NUM,
+};
+
+enum class POLYGON_MODE
+{
+	FILL,
+	LINE,
+	MAX_NUM,
+};
+
+
+enum class CULL_MODE_FLAG
+{
+	NONE,
+	FRONT,
+	BACK,
+	FRONT_AND_BACK,
+	MAX_NUM,
+};
+
+enum class COLOR_COMPONENT_FRAG : uint8
+{
+	R = 1,
+	G = 2,
+	B = 4,
+	A = 8,
+	ALL = R | G | B | A
+};
+
+enum class INPUT_ELEMENT_TYPE
+{
+	POSITION,
+	NORMAL,
+	TANGENT,
+	TEXCOORD0,
+	TEXCOORD1,
+	TEXCOORD2,
+	TEXCOORD3,
+	COLOR0,
+	COLOR1,
+	COLOR2,
+	COLOR3,
+};
+
+enum class DESCRIPTOR_TYPE
+{
+	CONSTANT_BUFFER_VIEW,
+	UNORDERED_ACCESS_VIEW,
+	SHADER_RESOURCE_VIEW,
+	SAMPLER_VIEW,
+	MAX_NUM,
 };
 
 // belows are specific graphics lib arguments.
@@ -88,81 +181,17 @@ using revGraphicsAdapter = VkPhysicalDevice;
 using revSwapChain = VkSwapchainKHR;
 using revShaderHandle = VkShaderModule;
 using revGraphicsResource = VkBuffer;
+using revGraphicsCommandAllocator = void;
 using revGraphicsCommandBuffer = VkCommandBuffer;
 using revGraphicsCommandQueue = VkQueue;
+using revGraphicsPipeline = VkPipeline;
 using revTextureHandle = VkImage;
 using revTextureResourceView = VkImageView;
 using revTextureSampler = VkSampler;
 using revGraphicsHeap = void;
 
-enum class COLOR_COMPONENT_FRAG
-{
-    R = VK_COLOR_COMPONENT_R_BIT,
-    G = VK_COLOR_COMPONENT_G_BIT,
-    B = VK_COLOR_COMPONENT_B_BIT,
-    A = VK_COLOR_COMPONENT_A_BIT,
-    ALL = R | G| B | A
-};
-
-enum class LOGIC_OP
-{
-    CLEAR                       = VK_LOGIC_OP_CLEAR,
-    AND                         = VK_LOGIC_OP_AND,
-    AND_REVERSE                 = VK_LOGIC_OP_AND_REVERSE,
-    COPY                        = VK_LOGIC_OP_COPY,
-    AND_INVERTED                = VK_LOGIC_OP_AND_INVERTED,
-    NO_OP                       = VK_LOGIC_OP_NO_OP,
-    XOR                         = VK_LOGIC_OP_XOR,
-    OR                          = VK_LOGIC_OP_OR,
-    NOR                         = VK_LOGIC_OP_NOR,
-    EQUIVALENT                  = VK_LOGIC_OP_EQUIVALENT,
-    INVERT                      = VK_LOGIC_OP_INVERT,
-    OR_REVERSE                  = VK_LOGIC_OP_OR_REVERSE,
-    //VK_LOGIC_OP_COPY_INVERTED,
-    //VK_LOGIC_OP_OR_INVERTED,
-    //VK_LOGIC_OP_NAND,
-    //VK_LOGIC_OP_SET,
-};
-
-enum class BLEND_OP
-{
-	ADD					= VK_BLEND_OP_ADD,
-	SUBTRACT			= VK_BLEND_OP_SUBTRACT,
-	REVERSE_SUBTRACT	= VK_BLEND_OP_REVERSE_SUBTRACT,
-	MIN					= VK_BLEND_OP_MIN,
-};
-
-
-enum class BLEND_FACTOR
-{
-    ZERO = VK_BLEND_FACTOR_ZERO,
-    ONE = VK_BLEND_FACTOR_ONE,
-    SRC_COLOR = VK_BLEND_FACTOR_SRC_COLOR,
-    SRC_ALPHA = VK_BLEND_FACTOR_SRC_ALPHA,
-    DST_COLOR = VK_BLEND_FACTOR_DST_COLOR,
-    DST_ALPHA = VK_BLEND_FACTOR_DST_ALPHA,
-    ONE_MINUS_SRC_COLOR = VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR,
-    ONE_MINUS_SRC_ALPHA = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-    ONE_MINUS_DST_COLOR= VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR,
-    ONE_MINUS_DST_ALPHA= VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA,
-};
-
-enum class CULL_MODE_FLAG
-{
-    NONE = VK_CULL_MODE_NONE,
-    FRONT = VK_CULL_MODE_FRONT_BIT,
-    BACK = VK_CULL_MODE_BACK_BIT,
-    FRONT_AND_BACK = VK_CULL_MODE_FRONT_AND_BACK,
-};
-
-enum class POLYGON_MODE
-{
-    FILL = VK_POLYGON_MODE_FILL,
-    LINE = VK_POLYGON_MODE_LINE,
-};
-
 namespace {
-    VkFilter ConvertToVKFilter(FILTER_MODE filter)
+	VkFilter ConvertToVKFilter(FILTER_MODE filter)
     {
         const VkFilter table[] = {
             VK_FILTER_NEAREST,
@@ -171,7 +200,7 @@ namespace {
         return table[static_cast<uint32>(filter)];
     }
 
-    VkSamplerMipmapMode ConvertToVKMipFilterMode(MIP_FILTER_MODE mode)
+	VkSamplerMipmapMode ConvertToVKMipFilterMode(MIP_FILTER_MODE mode)
 	{
     	const VkSamplerMipmapMode table[] = {
 			VK_SAMPLER_MIPMAP_MODE_NEAREST,
@@ -227,6 +256,82 @@ namespace {
 		};
 		return table[static_cast<uint32>(format)];
 	}
+
+	VK_BLEND_FACTOR ConvertToVKBlendFactor(BLEND_FACTOR factor)
+	{
+		VK_BLEND_FACTOR table[] = {
+			VK_BLEND_FACTOR_ZERO,
+			VK_BLEND_FACTOR_ONE,
+			VK_BLEND_FACTOR_SRC_COLOR,
+			VK_BLEND_FACTOR_SRC_ALPHA,
+			VK_BLEND_FACTOR_DST_COLOR,
+			VK_BLEND_FACTOR_DST_ALPHA,
+			VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR,
+			VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+			VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR,
+			VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA,
+		};
+		return table[static_cast<uint32>(factor)];
+	}
+
+	VK_POLYGON_MODE ConvertToVKFillMode(POLYGON_MODE mode)
+	{
+		D3D12_FILL_MODE table[] = {
+			VK_POLYGON_MODE_FILL,
+			VK_POLYGON_MODE_LINE,
+		};
+		return table[static_cast<uint32>(mode)];
+	}
+		
+	D3D12_CULL_MODE ConvertToDXCullMode(VK_MODE_FLAG mode)
+	{
+		D3D12_CULL_MODE table[] = {
+			VK_CULL_MODE_NONE,
+			VK_CULL_MODE_FRONT,
+			VK_CULL_MODE_BACK,
+		};
+		return table[static_cast<uint32>(mode)];
+	}
+
+	VK_BLEND_OP ConvertToVKBlendOp(BLEND_OP op)
+	{
+		VK_BLEND_OP table[] = {
+			VK_BLEND_OP_ADD,
+			VK_BLEND_OP_SUBTRACT,
+			VK_BLEND_OP_REVERSE_SUBTRACT,
+			VK_BLEND_OP_MIN,
+		};
+		return table[static_cast<uint32>(op)];
+	}
+
+	VK_LOGIC_OP ConverToVKLogicOp(LOGIC_OP op)
+	{
+		VK_LOGIC_OP table[] = {
+			VK_LOGIC_OP_CLEAR,
+			VK_LOGIC_OP_AND,
+			VK_LOGIC_OP_AND_REVERSE,
+			VK_LOGIC_OP_COPY,
+			VK_LOGIC_OP_AND_INVERTED,
+			VK_LOGIC_OP_NO_OP,
+			VK_LOGIC_OP_XOR,
+			VK_LOGIC_OP_OR,
+			VK_LOGIC_OP_NOR,
+			VK_LOGIC_OP_EQUIVALENT,
+			VK_LOGIC_OP_INVERT,
+			VK_LOGIC_OP_OR_REVERSE,
+		};
+		return table[static_cast<uint32>(op)];
+	}
+
+	uint8 ConvertToVKColorComponent(uint32 component)
+	{
+		uint8 ret = 0;
+		if (component & static_cast<uint8>(COLOR_COMPONENT_FRAG::R)) ret |= VK_COLOR_COMPONENT_R_BIT;
+		if (component & static_cast<uint8>(COLOR_COMPONENT_FRAG::G)) ret |= VK_COLOR_COMPONENT_G_BIT;
+		if (component & static_cast<uint8>(COLOR_COMPONENT_FRAG::B)) ret |= VK_COLOR_COMPONENT_B_BIT;
+		if (component & static_cast<uint8>(COLOR_COMPONENT_FRAG::A)) ret |= VK_COLOR_COMPONENT_A_BIT;
+		return ret;
+	}
 }
 
 #elif defined(_USE_DIRECTX12)
@@ -239,76 +344,14 @@ using revGraphicsAdapter = IDXGIAdapter1*;
 using revSwapChain = IDXGISwapChain3*;
 using revShaderHandle = ID3DBlob*;
 using revGraphicsResource = ID3D12Resource*;
+using revGraphicsCommandAllocator = ID3D12CommandAllocator*;
 using revGraphicsCommandBuffer = ID3D12GraphicsCommandList*;
 using revGraphicsCommandQueue = ID3D12CommandQueue*;
+using revGraphicsPipeline = ID3D12PipelineState*;
 using revTextureHandle = ID3D12Resource;
 using revTextureResourceView = D3D12_CPU_DESCRIPTOR_HANDLE;
 using revTextureSampler = D3D12_GPU_DESCRIPTOR_HANDLE;
 using revGraphicsHeap = ID3D12DescriptorHeap;
-
-
-// TODO: DX12 
-enum class COLOR_COMPONENT_FRAG
-{
-    R = D3D12_COLOR_WRITE_ENABLE_RED,
-    G = D3D12_COLOR_WRITE_ENABLE_GREEN,
-    B = D3D12_COLOR_WRITE_ENABLE_BLUE,
-    A = D3D12_COLOR_WRITE_ENABLE_ALPHA,
-    ALL = D3D12_COLOR_WRITE_ENABLE_ALL,
-};
-
-enum class LOGIC_OP
-{
-    CLEAR           = D3D12_LOGIC_OP_CLEAR,
-    AND             = D3D12_LOGIC_OP_AND,
-    AND_REVERSE     = D3D12_LOGIC_OP_AND_REVERSE,
-    COPY            = D3D12_LOGIC_OP_COPY,
-    AND_INVERTED    = D3D12_LOGIC_OP_AND_INVERTED,
-    NO_OP           = D3D12_LOGIC_OP_NOOP,
-    XOR             = D3D12_LOGIC_OP_XOR,
-    OR              = D3D12_LOGIC_OP_OR,
-    NOR             = D3D12_LOGIC_OP_NOR,
-    EQUIVALENT      = D3D12_LOGIC_OP_EQUIV,
-    INVERT          = D3D12_LOGIC_OP_INVERT,
-    OR_REVERSE      = D3D12_LOGIC_OP_OR_REVERSE,
-};
-
-enum class BLEND_OP
-{
-	ADD					= D3D12_BLEND_OP_ADD,
-	SUBTRACT			= D3D12_BLEND_OP_SUBTRACT,
-	REVERSE_SUBTRACT	= D3D12_BLEND_OP_REV_SUBTRACT,
-	MIN					= D3D12_BLEND_OP_MIN,
-};
-
-enum class BLEND_FACTOR
-{
-    ZERO                = D3D12_BLEND_ZERO,
-    ONE                 = D3D12_BLEND_ONE,
-    SRC_COLOR           = D3D12_BLEND_SRC_COLOR,
-    SRC_ALPHA           = D3D12_BLEND_SRC_ALPHA,
-    DST_COLOR           = D3D12_BLEND_DEST_COLOR,
-    DST_ALPHA           = D3D12_BLEND_DEST_ALPHA,
-    ONE_MINUS_SRC_COLOR = D3D12_BLEND_INV_SRC_COLOR,
-    ONE_MINUS_SRC_ALPHA = D3D12_BLEND_INV_SRC_ALPHA,
-    ONE_MINUS_DST_COLOR = D3D12_BLEND_INV_DEST_COLOR,
-    ONE_MINUS_DST_ALPHA = D3D12_BLEND_INV_DEST_ALPHA,
-};
-
-enum class CULL_MODE_FLAG
-{
-    NONE    = D3D12_CULL_MODE_NONE,
-    FRONT   = D3D12_CULL_MODE_FRONT,
-    BACK    = D3D12_CULL_MODE_BACK,
-    FRONT_AND_BACK,
-};
-
-enum class POLYGON_MODE
-{
-    FILL = D3D12_FILL_MODE_SOLID,
-    LINE = D3D12_FILL_MODE_WIREFRAME,
-};
-
 
 namespace {
 	REV_INLINE D3D12_FILTER ConvertToDXFilter(FILTER_MODE minFilter, FILTER_MODE magFilter, MIP_FILTER_MODE mip, uint32 anisotorpy, bool compare)
@@ -368,6 +411,83 @@ namespace {
 			DXGI_FORMAT_R32G32B32_FLOAT,
 		};
 		return table[static_cast<uint32>(format)];
+	}
+
+	REV_INLINE D3D12_BLEND ConvertToDXBlendFactor(BLEND_FACTOR factor)
+	{
+		D3D12_BLEND table[] = {
+			D3D12_BLEND_ZERO,
+			D3D12_BLEND_ONE,
+			D3D12_BLEND_SRC_COLOR,
+			D3D12_BLEND_SRC_ALPHA,
+			D3D12_BLEND_DEST_COLOR,
+			D3D12_BLEND_DEST_ALPHA,
+			D3D12_BLEND_INV_SRC_COLOR,
+			D3D12_BLEND_INV_SRC_ALPHA,
+			D3D12_BLEND_INV_DEST_COLOR,
+			D3D12_BLEND_INV_DEST_ALPHA,
+		};
+		return table[static_cast<uint32>(factor)];
+	}
+
+
+	REV_INLINE D3D12_FILL_MODE ConvertToDXFillMode(POLYGON_MODE mode)
+	{
+		D3D12_FILL_MODE table[] = {
+			D3D12_FILL_MODE_SOLID,
+			D3D12_FILL_MODE_WIREFRAME,
+		};
+		return table[static_cast<uint32>(mode)];
+	}
+
+	REV_INLINE D3D12_CULL_MODE ConvertToDXCullMode(CULL_MODE_FLAG mode)
+	{
+		D3D12_CULL_MODE table[] = {
+			D3D12_CULL_MODE_NONE,
+			D3D12_CULL_MODE_FRONT,
+			D3D12_CULL_MODE_BACK,
+		};
+		return table[static_cast<uint32>(mode)];
+	}
+
+	REV_INLINE D3D12_BLEND_OP ConvertToDXBlendOp(BLEND_OP op)
+	{
+		D3D12_BLEND_OP table[] = {
+			D3D12_BLEND_OP_ADD,
+			D3D12_BLEND_OP_SUBTRACT,
+			D3D12_BLEND_OP_REV_SUBTRACT,
+			D3D12_BLEND_OP_MIN,
+		};
+		return table[static_cast<uint32>(op)];
+	}
+
+	REV_INLINE D3D12_LOGIC_OP ConvertToDXLogicOp(LOGIC_OP op)
+	{
+		D3D12_LOGIC_OP table[] = {
+			D3D12_LOGIC_OP_CLEAR,
+			D3D12_LOGIC_OP_AND,
+			D3D12_LOGIC_OP_AND_REVERSE,
+			D3D12_LOGIC_OP_COPY,
+			D3D12_LOGIC_OP_AND_INVERTED,
+			D3D12_LOGIC_OP_NOOP,
+			D3D12_LOGIC_OP_XOR,
+			D3D12_LOGIC_OP_OR,
+			D3D12_LOGIC_OP_NOR,
+			D3D12_LOGIC_OP_EQUIV,
+			D3D12_LOGIC_OP_INVERT,
+			D3D12_LOGIC_OP_OR_REVERSE,
+		};
+		return table[static_cast<uint32>(op)];
+	}
+
+	REV_INLINE uint8 ConvertToDXColorComponent(uint8 component)
+	{
+		uint8 ret = 0;
+		if (component & static_cast<uint8>(COLOR_COMPONENT_FRAG::R)) ret |= D3D12_COLOR_WRITE_ENABLE_RED;
+		if (component & static_cast<uint8>(COLOR_COMPONENT_FRAG::G)) ret |= D3D12_COLOR_WRITE_ENABLE_GREEN;
+		if (component & static_cast<uint8>(COLOR_COMPONENT_FRAG::B)) ret |= D3D12_COLOR_WRITE_ENABLE_BLUE;
+		if (component & static_cast<uint8>(COLOR_COMPONENT_FRAG::A)) ret |= D3D12_COLOR_WRITE_ENABLE_ALPHA;
+		return ret;
 	}
 }
 

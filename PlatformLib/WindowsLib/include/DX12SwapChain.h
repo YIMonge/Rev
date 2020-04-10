@@ -12,7 +12,7 @@ public:
 	DX12SwapChain();
 	~DX12SwapChain();
 
-	bool Create(const DX12Device& deviceContext, const Window& window);
+	bool Create(DX12Device* device, const Window& window);
 	void Destroy();
 
 	int32 GetCurrentFrameIndex() const
@@ -34,6 +34,8 @@ public:
 	bool WaitForPreviousFrame(ID3D12CommandQueue* queue);
 
 private:
+	DX12Device* device;
+
 	IDXGISwapChain3* swapChain;
 	int32 frameIndex;
 

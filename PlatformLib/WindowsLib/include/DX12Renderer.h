@@ -9,6 +9,8 @@
 #include "DX12Buffer.h"
 #include "DX12Texture.h"
 #include "DX12TextureView.h"
+#include "DX12RootSignature.h"
+#include "DX12CommandList.h"
 #include "revArray.h"
 
 
@@ -24,23 +26,24 @@ public:
 
 	virtual void Render();
 
-	virtual void Clear(bool clear_color, bool clear_depth, const revColor& fill_color) {}
-	virtual void SwapBuffers() {}
-
-	virtual void SetBlendFunc(BLEND_FUNC func) {}
-	virtual void SetAlphaTest(ALPHA_TEST func, float value) {}
-
 private:
 	bool IntialzieForApp();
 
+	void LoadAssets();
+	void LoadPipeline();
+
+
 private:
 	Window* main_window;
-	DX12Device deviceContext;
+	DX12Device device;
 	DX12SwapChain swapChain;
 	DX12RenderInfo renderInfo;
+	DX12RootSignature rootSiganture;
+
 
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT rectScissor;
+
 
 	// Shader for test 
 	DX12Shader vertexShader;

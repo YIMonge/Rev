@@ -20,12 +20,6 @@ public:
 	virtual void ShutDown() = 0;
 
 	virtual void Render() = 0;
-
-	virtual void Clear(bool clear_color, bool clear_depth, const revColor& fill_color) = 0;
-	virtual void SwapBuffers() = 0;
-
-	virtual void SetBlendFunc(BLEND_FUNC func) = 0;
-	virtual void SetAlphaTest(ALPHA_TEST func, float value) = 0;
 };
 
 enum class BLEND_FUNC : uint8

@@ -15,31 +15,37 @@ public:
     class BlendState
     {
     public:
-        BlendState() :
-        colorMask(static_cast<uint8>(COLOR_COMPONENT_FRAG::ALL)),
-        enable(false)
+		BlendState() :
+			colorMask(static_cast<uint8>(COLOR_COMPONENT_FRAG::ALL)),
+			enableLogicOp(false),
+			logicOp(static_cast<uint8>(LOGIC_OP::AND)),
+			enableBlend(false),
+			enableAlphaToCoverage(false)
         {}
 
-        COLOR_COMPONENT_FRAG  GetWriteColorMask() const
-        {
-            return static_cast<COLOR_COMPONENT_FRAG>(colorMask);
-        }
-
+		uint8  GetWriteColorMask() const { return colorMask; }
         BLEND_OP GetBlendOpColor() const { return static_cast<BLEND_OP >(blendOpColor); }
         BLEND_FACTOR GetBlendFactorSrcColor() const { return static_cast<BLEND_FACTOR>(blendFactorSrcColor); }
         BLEND_FACTOR GetBlendFactorDstColor() const { return static_cast<BLEND_FACTOR>(blendFactorDstColor); }
         BLEND_OP GetBlendOpAlpha() const { return static_cast<BLEND_OP >(blendOpAlpha); }
         BLEND_FACTOR GetBlendFactorSrcAlpha() const { return static_cast<BLEND_FACTOR>(blendFactorSrcAlpha); }
         BLEND_FACTOR GetBlendFactorDstAlpha() const { return static_cast<BLEND_FACTOR>(blendFactorDstAlpha); }
-        bool isEnableBlend() const { return enable; }
+		LOGIC_OP GetLogicOp() const { return static_cast<LOGIC_OP>(logicOp); }
+		bool isEnabledLogicOp() const { return enableLogicOp; }
+		bool isEnableBlend() const { return enableBlend; }
+		bool isEbaleAlphaToCoverage() const{ return enableAlphaToCoverage; }
 
+		void SetWriteColorMask(uint8 mask) { colorMask = mask; }
         void SetBlendOpColor(BLEND_OP op){ blendOpColor = static_cast<uint8>(op); }
         void SetBlendFactorSrcColor(BLEND_FACTOR factor){ blendFactorSrcColor = static_cast<uint8>(factor); }
         void SetBlendFactorDstColor(BLEND_FACTOR factor){ blendFactorDstColor = static_cast<uint8>(factor); }
         void SetBlendOpAlpha(BLEND_OP op) { blendOpAlpha = static_cast<uint8>(op); }
         void SetBlendFactorSrcAlpha(BLEND_FACTOR factor){ blendFactorSrcAlpha = static_cast<uint8>(factor); }
         void SetBlendFactorDstAlpha(BLEND_FACTOR factor){ blendFactorDstAlpha = static_cast<uint8>(factor); }
-        void SetEnableBlend(bool flag) { enable = flag; }
+		void SetLogicOp(LOGIC_OP op) { logicOp = static_cast<uint8>(op); }
+		void SetEnableLogicOp(bool flag) { enableLogicOp = flag; }
+        void SetEnableBlend(bool flag) { enableBlend = flag; }
+		void SetEnableAlphaToCoverage(bool flag) { enableAlphaToCoverage = flag; }
 
 
         SERIALIZE_FUNC()
@@ -51,7 +57,10 @@ public:
                 REV_NVP(blendOpAlpha),
                 REV_NVP(blendFactorSrcAlpha),
                 REV_NVP(blendFactorDstAlpha),
-                REV_NVP(enable)
+				REV_NVP(enableLogicOp),
+				REV_NVP(logicOp),
+                REV_NVP(enableBlend),
+				REV_NVP(enableAlphaToCoverage)
             );
         }
 
@@ -63,7 +72,10 @@ public:
         uint8 blendOpAlpha;
         uint8 blendFactorSrcAlpha;
         uint8 blendFactorDstAlpha;
-        bool enable;
+		bool  enableLogicOp;
+		uint8 logicOp;
+        bool  enableBlend;
+		bool  enableAlphaToCoverage;
     };
 
     class DepthStencilState
@@ -132,8 +144,9 @@ public:
         dirty = true;
     }
 
-    // for serialize 
-    // TODO: auto generation 
+	const revShader* const GetVertexShader() const { return shader[0]; }
+	const revShader* const GetPixelShader() const { return shader[1]; }
+
     SERIALIZE_FUNC()
     {
         archive(
@@ -145,7 +158,7 @@ public:
 protected:
     DefaultMetaData metaData;
     revShader* shader[2];
-    revArray<revTexture*> textures;
+    revArray<revTexture*> textures; // TODO: material batch
     BlendState blend;
     RasterizationState rasterization;
     bool dirty;

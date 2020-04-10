@@ -40,40 +40,16 @@ bool DX12Device::Create(const GraphicsDesc& desc)
 		return false;
 	}
 
-	// create allocator and command list 
-	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
-	if (FAILED(hr)) {
-		return false;
-	}
-
-	IDXGIFactory4* dxgiFactory;
-	hr = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
-	if (FAILED(hr)) {
-		if (dxgiFactory != nullptr) dxgiFactory->Release();
-		return false;
-	}
+	globalCommandList.Create(this, nullptr);
 	return true;
 }
 
-bool DX12Device::CreateCommandList(ID3D12PipelineState* pipelineState)
-{
-	HRESULT hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, pipelineState, IID_PPV_ARGS(&commandBuffer));
-	if (FAILED(hr)) {
-		return false;
-	}
-	return true;
-}
 
 void DX12Device::Destroy()
 {
-	if (commandBuffer != nullptr) {
-		commandBuffer->Release();
-		commandBuffer = nullptr;
-	}
-
-	if (commandAllocator != nullptr) {
-		commandAllocator->Release();
-		commandAllocator = nullptr;
+	if (queue != nullptr) {
+		queue->Release();
+		queue = nullptr;
 	}
 
 	if (device != nullptr) {

@@ -6,39 +6,45 @@
 
 void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
-	if (!deviceContext.Create(desc)) return;		
-	if (!swapChain.Create(deviceContext, *window)) return;
+	if (!device.Create(desc)) return;		
+	if (!swapChain.Create(&device, *window)) return;
+
+	IntialzieForApp();
+
+	renderInfo.CreatePipeline(device, vertexShader, fragmentShader);
+	rootSiganture.Create(&device);
+
+	// Load resource 
+	texture.LoadFromFile(device, "sample_tex.png");
+	textureView.Create(device, texture, renderInfo.GetResourceViewHeap());
+
 	// create viewport and scissor 
 	rectScissor = { 0, 0, static_cast<LONG>(window->GetWidth()), static_cast<LONG>(window->GetHeight()) };
 	viewport = { 0, 0, static_cast<float>(window->GetWidth()), static_cast<float>(window->GetHeight()), 0.0f, 1.0f, };
 
-	IntialzieForApp();
-	renderInfo.CreatePipeline(deviceContext, vertexShader, fragmentShader);
-	if (!deviceContext.CreateCommandList(renderInfo.GetPipelineState())) return;
-
-	// Load resource 
-	texture.LoadFromFile(deviceContext, "sample_tex.png");
-	textureView.Create(deviceContext, texture, renderInfo.GetResourceViewHeap());
 
 	// execute initialization task 
-	auto commandList = deviceContext.GetCommandBuffer();
-	commandList->Close();
-	ID3D12CommandList* commandLists[] = { commandList };
-	ID3D12CommandQueue* commandQueue = deviceContext.GetQueue();
-	commandQueue->ExecuteCommandLists(1, commandLists);
-	swapChain.WaitForPreviousFrame(commandQueue);
+	//commandList->Close();
+	//ID3D12CommandList* commandLists[] = { commandList };
+	//ID3D12CommandQueue* commandQueue = device.GetQueue();
+	//commandQueue->ExecuteCommandLists(1, commandLists);
+	//swapChain.WaitForPreviousFrame(commandQueue);
 }
 
 void DX12Renderer::ShutDown()
 {
 	swapChain.Destroy();
-	deviceContext.Destroy();
+	device.Destroy();
 }
 
 void DX12Renderer::Render()
 {
-	auto commandAllocator = deviceContext.GetCommandAllocator();;
-	auto commandList = deviceContext.GetCommandBuffer();
+	auto globalCommandList = device.GetGlobalCommandList();
+	globalCommandList.Open();
+
+	/*
+	auto commandAllocator = device.GetCommandAllocator();;
+	auto commandList = device.GetCommandBuffer();
 	HRESULT hr = commandAllocator->Reset();
 	if (FAILED(hr)) {
 		return;
@@ -47,8 +53,11 @@ void DX12Renderer::Render()
 	if (FAILED(hr)) {
 		return;
 	}
-	
-	commandList->SetGraphicsRootSignature(renderInfo.GetRootSignature());
+	*/
+	auto commandList = globalCommandList.GetList();
+
+	rootSiganture.Set(globalCommandList);
+
 	auto heap = renderInfo.GetResourceViewHeap();
 	commandList->SetDescriptorHeaps(1, &heap);
 	commandList->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
@@ -85,7 +94,7 @@ void DX12Renderer::Render()
 	}
 
 	ID3D12CommandList* commandLists[] = { commandList };
-	ID3D12CommandQueue* commandQueue = deviceContext.GetQueue();
+	ID3D12CommandQueue* commandQueue = device.GetQueue();
 	commandQueue->ExecuteCommandLists(1, commandLists);
 	swapChain.Present();
 
@@ -99,8 +108,8 @@ revMaterial mat;
 bool DX12Renderer::IntialzieForApp()
 {
 	// TODO: load shader 
-	vertexShader.LoadFromFile(deviceContext, "texture.hlsl", SHADER_TYPE::VERTX);
-	fragmentShader.LoadFromFile(deviceContext, "texture.hlsl", SHADER_TYPE::FRAGMENT);
+	vertexShader.LoadFromFile(device, "texture.hlsl", SHADER_TYPE::VERTX);
+	fragmentShader.LoadFromFile(device, "texture.hlsl", SHADER_TYPE::FRAGMENT);
 
 	struct Vertex
 	{
@@ -115,7 +124,7 @@ bool DX12Renderer::IntialzieForApp()
 		{ { -0.25f, -0.25f, 0.0f }, { 0.0f, 1.0f } }
 	};
 
-	vertexBuffer.Create(deviceContext, &(triangleVertices[0].position.data[0]), sizeof(triangleVertices));
+	vertexBuffer.Create(device, &(triangleVertices[0].position.data[0]), sizeof(triangleVertices));
 	
 	return true;
 }

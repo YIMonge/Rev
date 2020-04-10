@@ -39,7 +39,7 @@
     <ProjectGuid>{F8ACB8CC-9C79-416D-9571-5ACB1DE6B3D3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WindowsLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -71,26 +71,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -308,8 +308,10 @@
     <ClInclude Include="include\CriticalSection.h" />
     <ClInclude Include="include\DX12Buffer.h" />
     <ClInclude Include="include\DX12CommandList.h" />
+    <ClInclude Include="include\DX12RootSignature.h" />
     <ClInclude Include="include\DX12Device.h" />
     <ClInclude Include="include\DX12FrameBuffer.h" />
+    <ClInclude Include="include\DX12PipelineState.h" />
     <ClInclude Include="include\DX12Renderer.h" />
     <ClInclude Include="include\DX12RenderInfo.h" />
     <ClInclude Include="include\DX12Shader.h" />
@@ -325,8 +327,10 @@
     <ClCompile Include="..\common\cpp\revTexture.cpp" />
     <ClCompile Include="cpp\DX12Buffer.cpp" />
     <ClCompile Include="cpp\DX12CommandList.cpp" />
+    <ClCompile Include="cpp\DX12RootSignature.cpp" />
     <ClCompile Include="cpp\DX12Device.cpp" />
     <ClCompile Include="cpp\DX12FrameBuffer.cpp" />
+    <ClCompile Include="cpp\DX12PipelineState.cpp" />
     <ClCompile Include="cpp\DX12Renderer.cpp" />
     <ClCompile Include="cpp\DX12RenderInfo.cpp" />
     <ClCompile Include="cpp\DX12Shader.cpp" />

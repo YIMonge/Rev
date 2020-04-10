@@ -14,7 +14,6 @@ DX12RenderInfo::~DX12RenderInfo()
 bool DX12RenderInfo::CreateSignature(const DX12Device& deviceContext)
 {
 	auto device = deviceContext.GetDevice();
-	// TODO: create from material (by needed descriptors)
 
 	D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
 	featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
@@ -72,7 +71,7 @@ bool DX12RenderInfo::CreateSignature(const DX12Device& deviceContext)
 
 bool DX12RenderInfo::CreatePipeline(const DX12Device& deviceContext, const DX12Shader& vertexShader, const DX12Shader& fragmentShader)
 {
-	CreateSignature(deviceContext);
+	//CreateSignature(deviceContext);
 
 	// TODO: vertex shader, pixel shader, vertex format 
 	// create pipeline state 

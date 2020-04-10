@@ -1,7 +1,9 @@
-#ifndef __DX12Device_H__
-#define __DX12Device_H__
+#ifndef __DX12DEVICE_H__
+#define __DX12DEVICE_H__
 
 #include "revDevice.h"
+#include "revArray.h"
+#include "DX12CommandList.h"
 
 #ifdef _USE_DIRECTX12
 
@@ -13,14 +15,14 @@ public:
 	bool Create(const GraphicsDesc& desc);
 	void Destroy();
 
-	bool CreateCommandList(ID3D12PipelineState* pipelineState);
-	ID3D12CommandAllocator* GetCommandAllocator() const { return commandAllocator; }
-	revGraphicsCommandBuffer GetCommandBuffer() const { return commandBuffer; }
-
-
+	DX12CommandList& GetGlobalCommandList() { return globalCommandList; }
+	revArray<DX12CommandList>& GetCommandList() { return commandLists; }
 private:
-	ID3D12CommandAllocator* commandAllocator;
-	revGraphicsCommandBuffer commandBuffer;
+	// commandList for initialize(load asset, pipeline) 
+	DX12CommandList globalCommandList;
+	// commandList for each thread 
+	revArray<DX12CommandList> commandLists;
+
 };
 
 #endif

@@ -92,6 +92,12 @@
     <ClInclude Include="include\DX12CommandList.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="include\DX12PipelineState.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12RootSignature.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\DX12Buffer.cpp">
@@ -134,6 +140,12 @@
       <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="cpp\DX12CommandList.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12PipelineState.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12RootSignature.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
   </ItemGroup>
