@@ -11,6 +11,8 @@
 #include "DX12TextureView.h"
 #include "DX12RootSignature.h"
 #include "DX12CommandList.h"
+#include "DX12PipelineState.h"
+#include "revMaterial.h"
 #include "revArray.h"
 
 
@@ -39,17 +41,16 @@ private:
 	DX12SwapChain swapChain;
 	DX12RenderInfo renderInfo;
 	DX12RootSignature rootSiganture;
-
+	DX12PipelineState pipelineState;
 
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT rectScissor;
 
 
-	// Shader for test 
+	// resources for test
 	DX12Shader vertexShader;
 	DX12Shader fragmentShader;
-
-	// vertex buffer for test
+	revMaterial mat;
 	DX12VertexBuffer vertexBuffer;
 	DX12Texture texture;
 	DX12TextureView textureView;

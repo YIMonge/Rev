@@ -34,7 +34,7 @@ public:
 	
 	bool Create(revDevice* device);
 
-	void Set(revGraphicsCommandList& commandList, bool isGraphics = true);
+	void Apply(revGraphicsCommandList& commandList, bool isGraphics = true);
 	ID3D12RootSignature* Get() const { return rootSignature; }
 
 private:

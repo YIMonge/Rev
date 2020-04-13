@@ -5,17 +5,20 @@
 #include "revMaterial.h"
 #include "DX12RootSignature.h"
 
-class DX12PipelnieState
+class DX12PipelineState
 {
 public:
-	DX12PipelnieState(){}
-	virtual ~DX12PipelnieState(){}
+	DX12PipelineState() {}
+	virtual ~DX12PipelineState() {}
 
 	bool Create(revDevice* device, const revMaterial& material, const DX12RootSignature& rootSignature);
+	void Apply(DX12CommandList& commandList);
 
-
+	ID3D12DescriptorHeap* GetResourceViewHeap() { return resourceViewHeap; }
 private:
 	revDevice* device;
+	revGraphicsPipeline pipelineState;
+	ID3D12DescriptorHeap* resourceViewHeap;
 };
 
 

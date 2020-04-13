@@ -5,6 +5,7 @@
 #include "DX12Device.h"
 #include "Window.h"
 #include "revArray.h"
+#include "revColor.h"
 
 class DX12SwapChain
 {
@@ -25,8 +26,7 @@ public:
 		return renderTarget[frameIndex];
 	}
 
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle() const;
+	void Appply(DX12CommandList& commandList, const revColor& clearColor);
 
 	bool Present() const;
 
