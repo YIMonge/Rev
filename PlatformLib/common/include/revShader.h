@@ -44,6 +44,7 @@ private:
 };
 
 
+
 class revShader : public revResource
 {
 public:
@@ -54,34 +55,27 @@ public:
 	virtual ~revShader(){}
 	virtual bool LoadFromFile(const revDevice& deviceContext, const char* path, SHADER_TYPE shaderType) = 0;
 	revShaderHandle GetHandle() const { return handle; }
-	
+	const revArray<revAttributeBinding>& GetAttributes() const { return metaData.attributes; }
 
-	class MetaData : DefaultMetaData
+	struct ShaderMetaData
 	{
-	public:
-		MetaData() {}
-		virtual ~MetaData(){}
-
-		const revArray<revAttributeBinding>& GetAttributes() const { return attributes; }
-
-		SERIALIZE_FUNC()
-		{
-			archive(REV_NVP(attributes));
-		}
-	private:
+		DefaultMetaData data;
 		revArray<revAttributeBinding> attributes;
 	};
-
-	const MetaData& GetMetaData() const { return metaData; }
-
+	
 protected:
 	revString name;
     SHADER_TYPE type;
 	revShaderHandle handle;
-	MetaData metaData;
+	ShaderMetaData metaData;
     
 };
 
 
+SERIALIZE_FUNC_NON_INTRUSIVE(revShader::ShaderMetaData, metaData)
+{
+	archive(REV_MAKE_NVP(data, metaData.data),
+		REV_MAKE_NVP(attributes, metaData.attributes));
+}
 
 #endif
