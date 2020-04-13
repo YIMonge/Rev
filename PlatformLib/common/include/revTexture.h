@@ -19,7 +19,7 @@ public:
 	revTextureHandle* GetHandle() const { return handle; }
 
 
-	bool LoadFromFile(const revDevice& deviceContext, const char* path);
+	bool LoadFromFile(revDevice* device, const char* path);
 
     class SamplerDesc {
     public:
@@ -96,15 +96,16 @@ public:
         uint8 borderColor;
     };
 
-    struct TextureMetaData : public DefaultMetaData
+    struct TextureMetaData
     {
+		DefaultMetaData data;
 		uint32 format;
 		SamplerDesc sampler;
     };
-
-
+	
+	
 protected:
-	virtual bool CreateTexture(const revDevice& deviceContext, uint8* imageData) = 0;
+	virtual bool CreateTexture(revDevice* device, uint8* imageData) = 0;
 
 	uint32 width;
 	uint32 height;
@@ -113,12 +114,14 @@ protected:
     revTextureSampler sampler;
 };
  
+
 SERIALIZE_FUNC_NON_INTRUSIVE(revTexture::TextureMetaData, metaData)
 {
-	archive(REV_MAKE_NVP(guid, metaData.guid),
+	archive(REV_MAKE_NVP(data, metaData.data),
 		REV_MAKE_NVP(format, metaData.format),
-		REV_MAKE_NVP(sampler, metaData.sampler),
-		REV_MAKE_NVP(userData, metaData.userData));
+		REV_MAKE_NVP(sampler, metaData.sampler));
 }
+
+
 
 #endif

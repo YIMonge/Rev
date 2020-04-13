@@ -7,7 +7,7 @@
 //#define STBI_FREE(p)              free(p)
 #include "stb/stb_image.h"
 
-bool revTexture::LoadFromFile(const revDevice& deviceContext, const char* path)
+bool revTexture::LoadFromFile(revDevice* device, const char* path)
 {
     // Load Texture Data
 	revString resourcePath(RESOURCE_PATH);
@@ -19,14 +19,17 @@ bool revTexture::LoadFromFile(const revDevice& deviceContext, const char* path)
 
     // Load Meta Data
     char metaPath[256];
-    makeMetaPath(metaPath, path);
+    makeMetaPath(metaPath, resourcePath.c_str());
 #ifdef _DEBUG
     // if meta file is not found try to make default meta
     File metaFile;
-    if(!metaFile.Open(metaPath, FileMode ::ReadText)) revSerializer::Serialize(metaPath, metaData);
+    if (!metaFile.Open(metaPath, FileMode::ReadText)) {
+       revSerializer::Serialize(metaPath, metaData);
+    }
     else metaFile.Close();
 #endif
     revSerializer::Deserialize(metaPath, metaData);
+    
 
     // Load Texture Data
     uint32 fileLength = file.GetFileSize();
@@ -36,7 +39,7 @@ bool revTexture::LoadFromFile(const revDevice& deviceContext, const char* path)
 
     int n;
     uint8* imageData = stbi_load_from_memory(reinterpret_cast<uint8*>(data), fileLength, reinterpret_cast<int32*>(&width), reinterpret_cast<int32*>(&height), &n, 4);
-    if (!CreateTexture(deviceContext, imageData)) {
+    if (!CreateTexture(device, imageData)) {
         stbi_image_free(imageData);
         delete[] data;
         return false;
