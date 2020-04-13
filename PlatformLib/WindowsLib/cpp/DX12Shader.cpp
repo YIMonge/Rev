@@ -38,11 +38,7 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 		nullptr,
 		type == SHADER_TYPE::VERTX ? "VSMain" : "PSMain",
 		type == SHADER_TYPE::VERTX ? "vs_5_0" : "ps_5_0",
-#ifdef _DEBUG
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-#else
-		0,
-#endif
 		0,
 		&handle,
 		nullptr
@@ -52,6 +48,30 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 		return false;
 	}
 
+	char metaPath[256];
+	makeMetaPath(metaPath, resourcePath.c_str());
+
+#ifdef _DEBUG
+	File metaFile;
+	if (!metaFile.Open(metaPath, FileMode::ReadText)) {
+		// Shader reflection 
+		/*
+		ID3D12ShaderReflection* reflection = nullptr;
+		hr = D3DReflect(handle->GetBufferPointer(),
+			handle->GetBufferSize(), 
+			IID_ID3D12ShaderReflection, 
+			(void**)&reflection);		
+		if(FAILED(hr)) {
+			return false;
+		}
+		D3D12_SHADER_DESC shaderDesc;
+		reflection->GetDesc(&shaderDesc);
+		*/
+		revSerializer::Serialize(metaPath, metaData);
+	}
+	else metaFile.Close();
+#endif
+	revSerializer::Deserialize(metaPath, metaData);
 	return true;
 }
 #endif
