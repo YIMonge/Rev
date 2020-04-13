@@ -13,6 +13,8 @@ public:
 	virtual ~revResource() {}			
 
 	const revString& GetName() const { return name; }
+
+protected:
 	void makeMetaPath(char* metaPath, const char* path)
 	{
 		strcpy(metaPath, path);
@@ -28,12 +30,9 @@ struct DefaultMetaData
 	revString userData;
 };
 
-SERIALIZE_FUNC_NON_INTRUSIVE(DefaultMetaData, meta)
+SERIALIZE_FUNC_NON_INTRUSIVE(DefaultMetaData, data)
 {
-	archive(REV_MAKE_NVP(guid, meta.guid), REV_MAKE_NVP(userData, meta.userData));
+	archive(REV_MAKE_NVP(guid, data.guid),
+		REV_MAKE_NVP(userData, data.userData));
 }
-
-
-
-
 #endif
