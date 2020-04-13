@@ -23,13 +23,6 @@ File::File()
 File::File(const char* path, FileMode mode)
 {
 	// TODO: own file database management if I could do I dont need these path replacement. 
-	char windowsPath[256];
-	strcpy(windowsPath, path);
-	while (true) {
-		auto p = strchr(windowsPath, '/');
-		if (p == nullptr) break;
-		*p = '\\';
-	}
 	Open(path, mode);
 }
 
