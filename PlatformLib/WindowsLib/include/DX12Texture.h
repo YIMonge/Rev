@@ -9,11 +9,9 @@ class DX12Texture : public revTexture
 public:
 	DX12Texture();
 	virtual ~DX12Texture();
-protected:
-	virtual bool CreateTexture(const revDevice& deviceContext, uint8* imageData);
 
-private:
-	ID3D12Resource* uploadHeap;
+protected:
+	virtual bool CreateTexture(revDevice* device, uint8* imageData);
 };
 
 #endif
