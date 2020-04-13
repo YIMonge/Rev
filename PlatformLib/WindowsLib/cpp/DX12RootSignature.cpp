@@ -71,7 +71,7 @@ bool DX12RootSignature::Create(revDevice* device)
 	return true;
 }
 
-void DX12RootSignature::Set(revGraphicsCommandList& commandList, bool isGraphics)
+void DX12RootSignature::Apply(revGraphicsCommandList& commandList, bool isGraphics)
 {
 	if (isGraphics) commandList.GetList()->SetGraphicsRootSignature(rootSignature);
 	else commandList.GetList()->SetComputeRootSignature(rootSignature);

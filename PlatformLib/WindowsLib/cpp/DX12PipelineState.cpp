@@ -37,7 +37,7 @@ uint32 ConvertToDXSemanticIndex(INPUT_ELEMENT_TYPE type)
 }
 
 
-bool DX12PipelnieState::Create(revDevice* device, const revMaterial& material, const DX12RootSignature& rootSignature)
+bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, const DX12RootSignature& rootSignature)
 {
 	auto blendState = material.GetBlendState();
 	auto rasterizerState = material.GetRasterization();
@@ -77,7 +77,7 @@ bool DX12PipelnieState::Create(revDevice* device, const revMaterial& material, c
 	revArray<D3D12_INPUT_ELEMENT_DESC> inputElements;
 	auto vertexShader = material.GetVertexShader();
 	if (vertexShader != nullptr) {
-		auto vertexAttributes = vertexShader->GetMetaData().GetAttributes();
+		auto vertexAttributes = vertexShader->GetAttributes();
 		uint32 length = vertexAttributes.size();
 		for (uint32 i = 0; i < length; ++i) {
 			inputElements[i].SemanticName = ConvertToDXSemantic(vertexAttributes[i].GetInputElementType());
@@ -94,7 +94,7 @@ bool DX12PipelnieState::Create(revDevice* device, const revMaterial& material, c
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineStateDesc;
 	memset(&pipelineStateDesc, 0, sizeof(pipelineStateDesc));
-	pipelineStateDesc.InputLayout = { &inputElements[0], inputElements.size() };
+	pipelineStateDesc.InputLayout = { &inputElements[0], static_cast<uint32>(inputElements.size()) };
 	pipelineStateDesc.pRootSignature = rootSignature.Get();
 	pipelineStateDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader->GetHandle());
 	pipelineStateDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader->GetHandle());
@@ -109,5 +109,29 @@ bool DX12PipelnieState::Create(revDevice* device, const revMaterial& material, c
 	pipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 	pipelineStateDesc.SampleDesc.Count = 1;
 
+	auto dxDevice = device->GetDevice();
+	HRESULT hr = dxDevice->CreateGraphicsPipelineState(&pipelineStateDesc,
+			IID_PPV_ARGS(&pipelineState)
+		);
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	D3D12_DESCRIPTOR_HEAP_DESC  descriptorHeapDesc = {};
+	descriptorHeapDesc.NumDescriptors = 1;
+	descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	hr = dxDevice->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&resourceViewHeap));
+	if (FAILED(hr)) {
+		return false;
+	}
+
 	return true;
+}
+
+void DX12PipelineState::Apply(DX12CommandList& commandList)
+{
+	auto dxCommandList = commandList.GetList();
+	dxCommandList->SetDescriptorHeaps(1, &resourceViewHeap);
+	dxCommandList->SetGraphicsRootDescriptorTable(0, resourceViewHeap->GetGPUDescriptorHandleForHeapStart());
 }

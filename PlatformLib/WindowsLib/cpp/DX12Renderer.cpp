@@ -11,12 +11,13 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 
 	IntialzieForApp();
 
-	renderInfo.CreatePipeline(device, vertexShader, fragmentShader);
+	//renderInfo.CreatePipeline(device, vertexShader, fragmentShader);
 	rootSiganture.Create(&device);
+	pipelineState.Create(&device, mat, rootSiganture);
 
 	// Load resource 
-	texture.LoadFromFile(device, "sample_tex.png");
-	textureView.Create(device, texture, renderInfo.GetResourceViewHeap());
+	texture.LoadFromFile(&device, "sample_tex.png");
+	textureView.Create(device, texture, pipelineState.GetResourceViewHeap());
 
 	// create viewport and scissor 
 	rectScissor = { 0, 0, static_cast<LONG>(window->GetWidth()), static_cast<LONG>(window->GetHeight()) };
@@ -42,56 +43,29 @@ void DX12Renderer::Render()
 	auto globalCommandList = device.GetGlobalCommandList();
 	globalCommandList.Open();
 
-	/*
-	auto commandAllocator = device.GetCommandAllocator();;
-	auto commandList = device.GetCommandBuffer();
-	HRESULT hr = commandAllocator->Reset();
-	if (FAILED(hr)) {
-		return;
-	}
-	hr = commandList->Reset(commandAllocator, renderInfo.GetPipelineState());
-	if (FAILED(hr)) {
-		return;
-	}
-	*/
 	auto commandList = globalCommandList.GetList();
-
-	rootSiganture.Set(globalCommandList);
-
-	auto heap = renderInfo.GetResourceViewHeap();
-	commandList->SetDescriptorHeaps(1, &heap);
-	commandList->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
-
 	commandList->RSSetViewports(1, &viewport);
 	commandList->RSSetScissorRects(1, &rectScissor);
 
+	rootSiganture.Apply(globalCommandList);
+	pipelineState.Apply(globalCommandList);
 
-	commandList->ResourceBarrier(1, 
-		&CD3DX12_RESOURCE_BARRIER::Transition(swapChain.GetCurrentRenderTarget(),
-			D3D12_RESOURCE_STATE_PRESENT,
-			D3D12_RESOURCE_STATE_RENDER_TARGET));
+	globalCommandList.AddTransitionBarrier(swapChain.GetCurrentRenderTarget(),
+		D3D12_RESOURCE_STATE_PRESENT,
+		D3D12_RESOURCE_STATE_RENDER_TARGET
+	);
 
-	CD3DX12_CPU_DESCRIPTOR_HANDLE renderTargetViewHandle = swapChain.GetCPUDescriptorHandle();
 
-	commandList->OMSetRenderTargets(1, &renderTargetViewHandle, FALSE, nullptr);
-
-	const float clearColor[] = { 0.0f, 0.2f, 1.0f, 1.0f };
-	commandList->ClearRenderTargetView(renderTargetViewHandle, clearColor, 0, nullptr);
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	commandList->IASetVertexBuffers(0, 1, vertexBuffer.GetResourceView());
 	commandList->DrawInstanced(3, 1, 0, 0);
 
-
-	commandList->ResourceBarrier(1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(swapChain.GetCurrentRenderTarget(),
-			D3D12_RESOURCE_STATE_RENDER_TARGET,
-			D3D12_RESOURCE_STATE_PRESENT));
-
-
-	hr = commandList->Close();	
-	if (FAILED(hr)) {
-		return;
-	}
+	globalCommandList.AddTransitionBarrier(swapChain.GetCurrentRenderTarget(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_PRESENT
+	);
+		
+	globalCommandList.Close();
 
 	ID3D12CommandList* commandLists[] = { commandList };
 	ID3D12CommandQueue* commandQueue = device.GetQueue();
@@ -100,6 +74,7 @@ void DX12Renderer::Render()
 
 	// wait for current frame 
 	swapChain.WaitForPreviousFrame(commandQueue);	
+	globalCommandList.ReleaseResoucers();
 }
 
 #include "File.h"
@@ -110,6 +85,9 @@ bool DX12Renderer::IntialzieForApp()
 	// TODO: load shader 
 	vertexShader.LoadFromFile(device, "texture.hlsl", SHADER_TYPE::VERTX);
 	fragmentShader.LoadFromFile(device, "texture.hlsl", SHADER_TYPE::FRAGMENT);
+
+	mat.SetShader(SHADER_TYPE::VERTX, &vertexShader);
+	mat.SetShader(SHADER_TYPE::FRAGMENT, &fragmentShader);
 
 	struct Vertex
 	{
