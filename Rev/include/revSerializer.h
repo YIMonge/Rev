@@ -4,17 +4,19 @@
 #include "cereal/cereal.hpp"
 // TODO: only debug if build mode is relase should use binary
 #include "cereal/archives/json.hpp"
+#include "cereal/types/vector.hpp"
+#include "cereal/types/string.hpp"
 #include "File.h"
 #include "revString.h"
 #include <sstream>
 //TODO: set custom allocator
 using revStringStream = std::stringstream;
 
-#define SERIALIZE_FUNC() template<typename T>\
-     void serialize(T& archive)
+#define SERIALIZE_FUNC() template<class Archive>\
+     void serialize(Archive& archive)
 
-#define SERIALIZE_FUNC_NON_INTRUSIVE(type, name) template<typename T>\
-     void serialize(T& archive, type& name)
+#define SERIALIZE_FUNC_NON_INTRUSIVE(type, name) template<class Archive>\
+     void serialize(Archive& archive, type& name)
 
 
 #define REV_MAKE_NVP(N, T) ::cereal::make_nvp(#N, T)
