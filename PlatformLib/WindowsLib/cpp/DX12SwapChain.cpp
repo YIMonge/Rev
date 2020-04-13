@@ -163,14 +163,22 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	return true;
 }
 
-CD3DX12_CPU_DESCRIPTOR_HANDLE DX12SwapChain::GetCPUDescriptorHandle() const
+void DX12SwapChain::Appply(DX12CommandList& commandList, const revColor& clearColor)
 {
-	return CD3DX12_CPU_DESCRIPTOR_HANDLE(
+	CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorHandle(
 		renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart(),
 		frameIndex,
-		renderTargetViewDescriptorSize
-	);
+		renderTargetViewDescriptorSize);
+	auto dxCommandList = commandList.GetList();
+	dxCommandList->OMSetRenderTargets(1,
+		&descriptorHandle, 
+		FALSE, 
+		nullptr);
+
+	dxCommandList->ClearRenderTargetView(descriptorHandle, clearColor.data, 0, nullptr);
+
 }
+
 
 bool DX12SwapChain::WaitForPreviousFrame(ID3D12CommandQueue* queue)
 {
