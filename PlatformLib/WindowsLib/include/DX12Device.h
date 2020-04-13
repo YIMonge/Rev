@@ -16,7 +16,7 @@ public:
 	void Destroy();
 
 	DX12CommandList& GetGlobalCommandList() { return globalCommandList; }
-	revArray<DX12CommandList>& GetCommandList() { return commandLists; }
+	revArray<DX12CommandList>& GetCommandLists() { return commandLists; }
 private:
 	// commandList for initialize(load asset, pipeline) 
 	DX12CommandList globalCommandList;
