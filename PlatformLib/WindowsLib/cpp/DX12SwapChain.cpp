@@ -155,7 +155,7 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 		return false;
 	}
 	fenceValue = 1;
-	fenceEvent = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
+	fenceEvent = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
 	if (fenceEvent == nullptr) {
 		return false;
 	}
