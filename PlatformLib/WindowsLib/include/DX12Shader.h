@@ -22,6 +22,10 @@ public:
 	std::wstring utf8_decode(const std::string &str);
 
 private:
+#ifdef _DEBUG
+	void CreateMetaDataFromShader(const char* metaPath);
+#endif
+
 };
 
 #endif

@@ -4,6 +4,21 @@
             "guid": 0,
             "userData": ""
         },
-        "attributes": []
+        "attributes": [
+            {
+                "type": 11,
+                "binding": 0,
+                "location": 0,
+                "format": 13,
+                "offset": 0
+            },
+            {
+                "type": 3,
+                "binding": 1,
+                "location": 0,
+                "format": 6,
+                "offset": 0
+            }
+        ]
     }
 }

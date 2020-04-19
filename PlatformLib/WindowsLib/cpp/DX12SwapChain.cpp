@@ -165,18 +165,34 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 
 void DX12SwapChain::Appply(DX12CommandList& commandList, const revColor& clearColor)
 {
+	auto dxCommandList = commandList.GetList();
+
+	D3D12_RESOURCE_BARRIER barrier;
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.pResource = GetCurrentRenderTarget();
+
+	dxCommandList->ResourceBarrier(1, &barrier);
+
 	CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorHandle(
 		renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart(),
 		frameIndex,
 		renderTargetViewDescriptorSize);
-	auto dxCommandList = commandList.GetList();
+
 	dxCommandList->OMSetRenderTargets(1,
 		&descriptorHandle, 
 		FALSE, 
 		nullptr);
-
 	dxCommandList->ClearRenderTargetView(descriptorHandle, clearColor.data, 0, nullptr);
 
+	// for close
+	commandList.AddTransitionBarrier(GetCurrentRenderTarget(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_PRESENT
+		);
 }
 
 

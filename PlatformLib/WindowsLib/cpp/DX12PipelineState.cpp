@@ -1,42 +1,5 @@
 #include "DX12PipelineState.h"
 
-const char* ConvertToDXSemantic(INPUT_ELEMENT_TYPE type)
-{
-	const char* table[] = {
-		"POSITION",
-		"NORMAL",
-		"TANGENT",
-		"TEXCOORD0",
-		"TEXCOORD1",
-		"TEXCOORD2",
-		"TEXCOORD3",
-		"COLOR0",
-		"COLOR1",
-		"COLOR2",
-		"COLOR3",
-	};
-	return table[static_cast<uint32>(type)];
-}
-
-uint32 ConvertToDXSemanticIndex(INPUT_ELEMENT_TYPE type)
-{
-	uint32 table[] = {
-		0, // "POSITION"
-		0, // "NORMAL"
-		0, // "TANGENT"
-		0, // "TEXCOORD0"
-		1, // "TEXCOORD1"
-		2, // "TEXCOORD2"
-		3, // "TEXCOORD3"
-		0, // "COLOR0"
-		1, // "COLOR1"
-		2, // "COLOR2"
-		3, // "COLOR3"
-	};
-	return table[static_cast<uint32>(type)];
-}
-
-
 bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, const DX12RootSignature& rootSignature)
 {
 	auto blendState = material.GetBlendState();
@@ -79,11 +42,12 @@ bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, c
 	if (vertexShader != nullptr) {
 		auto vertexAttributes = vertexShader->GetAttributes();
 		uint32 length = vertexAttributes.size();
+		inputElements.resize(length);
 		for (uint32 i = 0; i < length; ++i) {
 			inputElements[i].SemanticName = ConvertToDXSemantic(vertexAttributes[i].GetInputElementType());
-			inputElements[i].SemanticIndex = ConvertToDXSemanticIndex(vertexAttributes[i].GetInputElementType());
+			inputElements[i].SemanticIndex = vertexAttributes[i].GetBinding();
 			inputElements[i].Format = ConvertToDXFormat(vertexAttributes[i].GetForamt());
-			inputElements[i].InputSlot = vertexAttributes[i].GetBinding();
+			inputElements[i].InputSlot = vertexAttributes[i].GetLocation();
 			inputElements[i].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 			inputElements[i].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
 			inputElements[i].InstanceDataStepRate = 0;
@@ -131,7 +95,8 @@ bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, c
 
 void DX12PipelineState::Apply(DX12CommandList& commandList)
 {
-	auto dxCommandList = commandList.GetList();
+	auto& dxCommandList = commandList.GetList();
+	dxCommandList->SetPipelineState(pipelineState);
 	dxCommandList->SetDescriptorHeaps(1, &resourceViewHeap);
 	dxCommandList->SetGraphicsRootDescriptorTable(0, resourceViewHeap->GetGPUDescriptorHandleForHeapStart());
 }

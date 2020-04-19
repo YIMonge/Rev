@@ -34,7 +34,8 @@ private:
 	void LoadAssets();
 	void LoadPipeline();
 
-
+	void ExecuteCommand(revArray<revGraphicsCommandList>& lists);
+	void ExecuteCommand(revGraphicsCommandList& list);
 private:
 	Window* main_window;
 	DX12Device device;

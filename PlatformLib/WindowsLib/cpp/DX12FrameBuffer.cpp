@@ -13,16 +13,9 @@ bool DX12FrameBuffer::Create(DX12Device& deviceContext, DX12SwapChain& swapChain
 {
 	D3D12_DESCRIPTOR_HEAP_DESC desc;
 	memset(&desc, 0, sizeof(D3D12_DESCRIPTOR_HEAP_DESC));
-	auto device = deviceContext.GetDevice();
+	auto& device = deviceContext.GetDevice();
 	desc.NumDescriptors = deviceContext.GetDesc().GetBufferNum();
-
-
-
 	descriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-
-
-
 
 	return true;
 }

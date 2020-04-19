@@ -44,7 +44,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{C74CF521-5547-46B3-8132-F82D51BEAA06}</ProjectGuid>
     <RootNamespace>RevSample</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -222,7 +222,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dxgi.lib;d3dcompiler.lib;CoreLib.lib;Rev.lib;WindowsLib.lib;%(AdditionalDependencies);d3d12.lib</AdditionalDependencies>
+      <AdditionalDependencies>dxgi.lib;dxguid.lib;d3dcompiler.lib;CoreLib.lib;Rev.lib;WindowsLib.lib;%(AdditionalDependencies);d3d12.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

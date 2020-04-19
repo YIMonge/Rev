@@ -5,7 +5,7 @@ bool DX12CommandList::Create(revDevice* device, revGraphicsPipeline* pipeline)
 	if (device == nullptr || device->GetDevice() == nullptr) return false;
 
 	this->device = device;
-	auto dxDevice = device->GetDevice();
+	auto& dxDevice = device->GetDevice();
 
 	// create allocator and command list 
 	HRESULT hr = dxDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
@@ -70,4 +70,5 @@ void DX12CommandList::ReleaseResoucers()
 	for (uint32 i = 0; i < length; ++i) {
 		needReleaseResources[i]->Release();
 	}
+	needReleaseResources.clear();
 }

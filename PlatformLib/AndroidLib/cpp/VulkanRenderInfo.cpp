@@ -430,7 +430,7 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDevice& deviceContext, const V
     revArray<VkVertexInputAttributeDescription> vertexInputAttributes(attributeLength);
     for(uint32 i = 0; i < attributeLength; ++i){
         vertexInputAttributes[i].binding  = attributes[i].GetBinding();
-        vertexInputAttributes[i].location = attributes[i].GetBinding();
+        vertexInputAttributes[i].location = attributes[i].GetLocation();
         vertexInputAttributes[i].format = ConvertToVKFormat(attributes[i].GetForamt());
         vertexInputAttributes[i].offset = attributes[i].GetOffset();
     }

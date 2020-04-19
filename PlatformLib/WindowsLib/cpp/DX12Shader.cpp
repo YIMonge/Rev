@@ -1,7 +1,7 @@
 #include "DX12Shader.h"
 
 #ifdef _DEBUG
-#include "d3dcompiler.h"
+#include <d3dcompiler.h>
 #include "revString.h"
 #endif
 
@@ -51,29 +51,53 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 	char metaPath[256];
 	makeMetaPath(metaPath, resourcePath.c_str());
 
+    CreateMetaDataFromShader(metaPath);
 #ifdef _DEBUG
 	File metaFile;
-	if (!metaFile.Open(metaPath, FileMode::ReadText)) {
-		// Shader reflection 
-		/*
-		ID3D12ShaderReflection* reflection = nullptr;
-		hr = D3DReflect(handle->GetBufferPointer(),
-			handle->GetBufferSize(), 
-			IID_ID3D12ShaderReflection, 
-			(void**)&reflection);		
-		if(FAILED(hr)) {
-			return false;
-		}
-		D3D12_SHADER_DESC shaderDesc;
-		reflection->GetDesc(&shaderDesc);
-		*/
-		revSerializer::Serialize(metaPath, metaData);
+	if (!metaFile.Open(metaPath, FileMode::ReadText) || true) {
+        CreateMetaDataFromShader(metaPath);
 	}
 	else metaFile.Close();
 #endif
 	revSerializer::Deserialize(metaPath, metaData);
 	return true;
 }
+
+
+
+void DX12Shader::CreateMetaDataFromShader(const char* metaPath)
+{
+    // Shader reflection for Input Assembler 
+    ID3D12ShaderReflection* reflection = nullptr;
+    HRESULT hr = D3DReflect(handle->GetBufferPointer(),
+        handle->GetBufferSize(),
+        IID_ID3D12ShaderReflection,
+        (void**)&reflection);
+    if (FAILED(hr)) {
+        return;
+    }
+    D3D12_SHADER_DESC shaderDesc;
+    reflection->GetDesc(&shaderDesc);
+
+    metaData.attributes.clear();
+    metaData.attributes.resize(shaderDesc.InputParameters);
+
+    revArray<D3D12_INPUT_ELEMENT_DESC> inputLayouts;
+    for (uint32 i = 0; i < shaderDesc.InputParameters; ++i) {
+        D3D12_SIGNATURE_PARAMETER_DESC signatureDesc;
+        reflection->GetInputParameterDesc(i, &signatureDesc);
+
+        INPUT_ELEMENT_TYPE elementType = ConvertToREVSemantic(signatureDesc.SemanticName);
+        metaData.attributes[i].SetInputElementType(elementType);
+        metaData.attributes[i].SetFormat(GRAPHICS_SEMANTICS[static_cast<uint32>(elementType)].format);
+        metaData.attributes[i].SetBinding(signatureDesc.SemanticIndex);
+        metaData.attributes[i].SetOffset(0);
+    }
+    revSerializer::Serialize(metaPath, metaData);
+
+    reflection->Release();
+}
+
 #endif
 
 void DX12Shader::Release()

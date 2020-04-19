@@ -14,6 +14,8 @@ bool DX12RootSignature::Create(revDevice* device)
 	this->device = device;
 	auto dxDevice = device->GetDevice();
 	RootSignatureParam param;
+	param.sizeInBytes = 0;
+	param.isLocal = false;
 
 
 	//-------------------------------------------------
@@ -26,6 +28,20 @@ bool DX12RootSignature::Create(revDevice* device)
 	rootParam.InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
 	param.rootParams.push_back(rootParam);
 
+	D3D12_STATIC_SAMPLER_DESC sampler = {};
+	sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+	sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.MipLODBias = 0;
+	sampler.MaxAnisotropy = 0;
+	sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+	sampler.MinLOD = 0.0f;
+	sampler.MaxLOD = D3D12_FLOAT32_MAX;
+	sampler.ShaderRegister = 0;
+	sampler.RegisterSpace = 0;
+	sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
 	//--------------------------------------------------
 
@@ -38,7 +54,7 @@ bool DX12RootSignature::Create(revDevice* device)
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC signatureDesc;
 	signatureDesc.Init_1_1(
 		param.rootParams.size(), param.rootParams.data(),	// D3D12_ROOT_PARAMETER1
-		0, nullptr,											// Static Sampler
+		1, &sampler,  //0, nullptr,											// Static Sampler
 		param.isLocal ? D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE : D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
 	);
 
@@ -66,14 +82,15 @@ bool DX12RootSignature::Create(revDevice* device)
 		return false;
 	}
 
-	signature->Release();
-	error->Release();
+	if(signature) signature->Release();
+	if( error) error->Release();
 	return true;
 }
 
 void DX12RootSignature::Apply(revGraphicsCommandList& commandList, bool isGraphics)
 {
-	if (isGraphics) commandList.GetList()->SetGraphicsRootSignature(rootSignature);
-	else commandList.GetList()->SetComputeRootSignature(rootSignature);
+	auto& dxCommandList = commandList.GetList();
+	if (isGraphics) dxCommandList->SetGraphicsRootSignature(rootSignature);
+	else dxCommandList->SetComputeRootSignature(rootSignature);
 }
 

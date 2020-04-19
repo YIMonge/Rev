@@ -4,8 +4,7 @@
 #include <stdarg.h>
 
 // TODO:
-#define NATIVE_LOGI(...)
-#define NATIVE_LOGW(...)
-#define NATIVE_LOGE(...)
-
+#define NATIVE_LOGI(...) 
+#define NATIVE_LOGW(...) 
+#define NATIVE_LOGE(...) 
 #endif

@@ -17,19 +17,31 @@ enum class SHADER_TYPE : uint32
 class revAttributeBinding
 {
 public:
-    revAttributeBinding(){}
+    revAttributeBinding():
+		type(0),
+		binding(0),
+		format(0),
+		offset(0)
+	{}
 
 	INPUT_ELEMENT_TYPE GetInputElementType() const { return static_cast<INPUT_ELEMENT_TYPE>(type); }
     uint8 GetBinding() const { return binding; }
-    uint8 GetLocation() const { return location; }
+    uint8 GetLocation() const { return static_cast<uint32>(type); }
     GRAPHICS_FORMAT GetForamt() const { return static_cast<GRAPHICS_FORMAT>(format); }
     uint8 GetOffset() const { return offset; }
+
+#ifdef _DEBUG
+	void SetInputElementType(INPUT_ELEMENT_TYPE _type) { type = static_cast<uint8>(_type); }
+	void SetBinding(uint8 _binding) { binding = _binding; }
+	void SetFormat(GRAPHICS_FORMAT _format) { format = static_cast<uint8>(_format); }
+	void SetOffset(uint8 _offset) { offset = _offset; }
+#endif
+
 
 	SERIALIZE_FUNC()
 	{
 		archive(REV_NVP(type),
 			REV_NVP(binding),
-			REV_NVP(location),
 			REV_NVP(format),
 			REV_NVP(offset)
 		);
@@ -38,7 +50,6 @@ public:
 private:
 	uint8 type;
     uint8 binding;
-    uint8 location;
     uint8 format;
     uint8 offset;
 };

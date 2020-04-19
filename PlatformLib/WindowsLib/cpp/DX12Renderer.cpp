@@ -23,13 +23,29 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	rectScissor = { 0, 0, static_cast<LONG>(window->GetWidth()), static_cast<LONG>(window->GetHeight()) };
 	viewport = { 0, 0, static_cast<float>(window->GetWidth()), static_cast<float>(window->GetHeight()), 0.0f, 1.0f, };
 
+	DX12CommandList& commandList = device.GetGlobalCommandList();
+	commandList.Close();
+	ExecuteCommand(commandList);
+	swapChain.WaitForPreviousFrame(device.GetQueue());
+	commandList.ReleaseResoucers();
+}
 
-	// execute initialization task 
-	//commandList->Close();
-	//ID3D12CommandList* commandLists[] = { commandList };
-	//ID3D12CommandQueue* commandQueue = device.GetQueue();
-	//commandQueue->ExecuteCommandLists(1, commandLists);
-	//swapChain.WaitForPreviousFrame(commandQueue);
+void DX12Renderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists)
+{
+	uint32 length = lists.size();
+	revArray<ID3D12CommandList*> commandlists(lists.size());
+	for (uint32 i = 0; i < length; ++i) {
+		commandlists[i] = lists[i].GetList();
+	}
+	ID3D12CommandQueue* commandQueue = device.GetQueue();
+	commandQueue->ExecuteCommandLists(length, commandlists.data());
+}
+
+void DX12Renderer::ExecuteCommand(revGraphicsCommandList& list)
+{
+	ID3D12CommandList* commandLists[] = { list.GetList() };
+	ID3D12CommandQueue* commandQueue = device.GetQueue();
+	commandQueue->ExecuteCommandLists(1, commandLists);
 }
 
 void DX12Renderer::ShutDown()
@@ -40,40 +56,25 @@ void DX12Renderer::ShutDown()
 
 void DX12Renderer::Render()
 {
-	auto globalCommandList = device.GetGlobalCommandList();
+	DX12CommandList& globalCommandList = device.GetGlobalCommandList();
 	globalCommandList.Open();
 
-	auto commandList = globalCommandList.GetList();
-	commandList->RSSetViewports(1, &viewport);
-	commandList->RSSetScissorRects(1, &rectScissor);
+	auto& commandList = globalCommandList.GetList();
 
 	rootSiganture.Apply(globalCommandList);
 	pipelineState.Apply(globalCommandList);
-
-	globalCommandList.AddTransitionBarrier(swapChain.GetCurrentRenderTarget(),
-		D3D12_RESOURCE_STATE_PRESENT,
-		D3D12_RESOURCE_STATE_RENDER_TARGET
-	);
-
+	commandList->RSSetViewports(1, &viewport);
+	commandList->RSSetScissorRects(1, &rectScissor);
+	swapChain.Appply(globalCommandList);
 
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	commandList->IASetVertexBuffers(0, 1, vertexBuffer.GetResourceView());
 	commandList->DrawInstanced(3, 1, 0, 0);
 
-	globalCommandList.AddTransitionBarrier(swapChain.GetCurrentRenderTarget(),
-		D3D12_RESOURCE_STATE_RENDER_TARGET,
-		D3D12_RESOURCE_STATE_PRESENT
-	);
-		
 	globalCommandList.Close();
-
-	ID3D12CommandList* commandLists[] = { commandList };
-	ID3D12CommandQueue* commandQueue = device.GetQueue();
-	commandQueue->ExecuteCommandLists(1, commandLists);
+	ExecuteCommand(globalCommandList);
 	swapChain.Present();
-
-	// wait for current frame 
-	swapChain.WaitForPreviousFrame(commandQueue);	
+	swapChain.WaitForPreviousFrame(device.GetQueue());
 	globalCommandList.ReleaseResoucers();
 }
 

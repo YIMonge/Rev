@@ -61,8 +61,8 @@ Global
 		{FCA6123C-15FC-417C-B3BF-32BDA3B497D4}.Debug_DX12|x86.Build.0 = Debug_DX12|Win32
 		{FCA6123C-15FC-417C-B3BF-32BDA3B497D4}.Release_DX12|x64.ActiveCfg = Release_DX12|x64
 		{FCA6123C-15FC-417C-B3BF-32BDA3B497D4}.Release_DX12|x64.Build.0 = Release_DX12|x64
-		{FCA6123C-15FC-417C-B3BF-32BDA3B497D4}.Release_DX12|x86.ActiveCfg = Release|Win32
-		{FCA6123C-15FC-417C-B3BF-32BDA3B497D4}.Release_DX12|x86.Build.0 = Release|Win32
+		{FCA6123C-15FC-417C-B3BF-32BDA3B497D4}.Release_DX12|x86.ActiveCfg = Release_DX12|Win32
+		{FCA6123C-15FC-417C-B3BF-32BDA3B497D4}.Release_DX12|x86.Build.0 = Release_DX12|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

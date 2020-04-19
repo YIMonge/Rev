@@ -26,7 +26,7 @@ public:
 		return renderTarget[frameIndex];
 	}
 
-	void Appply(DX12CommandList& commandList, const revColor& clearColor);
+	void Appply(DX12CommandList& commandList, const revColor& clearColor = revColor::white);
 
 	bool Present() const;
 
