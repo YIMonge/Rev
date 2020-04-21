@@ -328,6 +328,7 @@
     <ClInclude Include="include\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\cpp\revShader.cpp" />
     <ClCompile Include="..\common\cpp\revTexture.cpp" />
     <ClCompile Include="cpp\DX12Buffer.cpp" />
     <ClCompile Include="cpp\DX12CommandList.cpp" />

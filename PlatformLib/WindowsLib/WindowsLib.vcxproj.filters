@@ -151,5 +151,8 @@
     <ClCompile Include="cpp\Log.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\cpp\revShader.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

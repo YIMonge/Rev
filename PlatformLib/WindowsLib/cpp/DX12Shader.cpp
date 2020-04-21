@@ -30,7 +30,7 @@ std::wstring DX12Shader::utf8_decode(const std::string &str)
 
 bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, SHADER_TYPE shaderType)
 {	
-	std::string resourcePath(RESOURCE_PATH);
+	revString resourcePath(RESOURCE_PATH);
 	resourcePath += path;
 	type = shaderType;
 	std::wstring wstr = utf8_decode(resourcePath.c_str());
@@ -53,16 +53,17 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 		return false;
 	}
 
-	char metaPath[256];
-	makeMetaPath(metaPath, resourcePath.c_str());
-#ifdef _DEBUG
-	File metaFile;
-	if (!metaFile.Open(metaPath, FileMode::ReadText) || true) {
+    if (!LoadMetaData(resourcePath.c_str())) {
+#if _DEBUG
+        char metaPath[256];
+        makeMetaPath(metaPath, resourcePath.c_str());
         CreateMetaDataFromShader(metaPath);
-	}
-	else metaFile.Close();
+        LoadMetaData(resourcePath.c_str());
+#else
+        NATIVE_LOGE("could not find shader meta data");
+        return false;
 #endif
-	revSerializer::Deserialize(metaPath, metaData);
+    }
 
     if (error != nullptr) error->Release();
 	return true;

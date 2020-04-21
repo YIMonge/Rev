@@ -79,6 +79,8 @@ public:
 	};
 	
 protected:
+	bool LoadMetaData(const char* path);
+
 	revString name;
     SHADER_TYPE type;
 	revShaderHandle handle;

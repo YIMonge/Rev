@@ -6,6 +6,7 @@
 
 VulkanShader::VulkanShader()
 {
+    handle = VK_NULL_HANDLE;
 }
 
 
@@ -32,13 +33,7 @@ bool VulkanShader::LoadFromFile(const revDevice& device, const char* path, SHADE
     VkResult result = vkCreateShaderModule(device.GetDevice(), &shaderModuleCreateInfo, nullptr, &handle);
     delete[] data;
 
-    // load meta file
-    char metaPath[256];
-    makeMetaPath(metaPath, path);
-    // TODO: parse shader code for locations and bindings
-    // TODO: use glslc to compile spir-v from glsl
-
-
+    LoadMetaData(path);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
