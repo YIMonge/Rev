@@ -55,7 +55,7 @@ bool DX12RootSignature::Create(revDevice* device)
 	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC signatureDesc;
 	signatureDesc.Init_1_1(
 		param.rootParams.size(), param.rootParams.data(),	// D3D12_ROOT_PARAMETER1
-		1, &sampler,  //0, nullptr,											// Static Sampler
+		1, &sampler,  //0, nullptr,							// Static Sampler
 		param.isLocal ? D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE : D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
 	);
 

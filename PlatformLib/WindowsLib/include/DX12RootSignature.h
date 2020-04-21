@@ -4,7 +4,7 @@
 #include "DX12Device.h"
 
 
-class DescriptorLayoutDesc
+class DescriptorSetLayoutDesc
 {
 public:
 	struct Range
@@ -19,11 +19,39 @@ private:
 	revArray<Range> ranges;
 };
 
+struct RootDescriptorDesc
+{
+	DESCRIPTOR_TYPE type;
+	uint32 registerIndex;
+	uint32 spaceIndex;
+};
+
+
+class RootConstantsDesc
+{
+	uint32 registerIndex;
+	uint32 spaceIndex;
+	uint32 count;
+};
+
+
+class DX12DescriptorSetLayout
+{
+public:
+	DX12DescriptorSetLayout() {}
+	virtual ~DX12DescriptorSetLayout() {}
+
+	//bool Create(revDevice* device);
+
+};
+
 class RootSignatureDesc
 {
 
 private:
-	//revArray<
+	revArray<DescriptorSetLayoutDesc> descriptorSets;
+	revArray<RootDescriptorDesc> rootDescriptors;
+	revArray<RootConstantsDesc> rootConstants;
 };
 
 class DX12RootSignature
