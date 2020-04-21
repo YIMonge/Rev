@@ -94,3 +94,5 @@ lint/tmp/
 #lib
 *.lib
 
+RevSample/Projects/Windows/x64/Debug_DX12/RevSample.vcxproj.FileListAbsolute.txt
+RevSample/Projects/Windows/x64/Debug_DX12/RevSample.exp
