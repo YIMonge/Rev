@@ -12,9 +12,6 @@ public:
     virtual bool Create(revDevice* device, revGraphicsPipeline* pipeline, revGraphicsCommandAllocator* allocator = nullptr);
     virtual void Open();
     virtual void Close();
-
-private:
-    VkCommandPool commandPool;
 };
 
 #endif

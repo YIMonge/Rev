@@ -15,16 +15,19 @@ bool VulkanCommandList::Create(revDevice* device, revGraphicsPipeline* pipeline,
 
     const revGraphicsDevice& revDevice = device->GetDevice();
     VkResult result;
-    result = vkCreateCommandPool(revDevice, &commandPoolCreateInfo, nullptr, &commandPool);
-    if (result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
-        return false;
+    if(allocator == nullptr) {
+        result = vkCreateCommandPool(revDevice, &commandPoolCreateInfo, nullptr, &commandAllocator);
+        if (result != VK_SUCCESS) {
+            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+            return false;
+        }
     }
+    else commandAllocator = *allocator;
 
     VkCommandBufferAllocateInfo commandBufferAllocateInfo = {
                 .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
                 .pNext = nullptr,
-                .commandPool = commandPool,
+                .commandPool = commandAllocator,
                 .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
                 .commandBufferCount = 1,
                 };
