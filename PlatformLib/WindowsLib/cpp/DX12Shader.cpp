@@ -3,6 +3,7 @@
 #ifdef _DEBUG
 #include <d3dcompiler.h>
 #include "revString.h"
+#include "Log.h"
 #endif
 
 #ifdef _USE_DIRECTX12
@@ -33,6 +34,7 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 	resourcePath += path;
 	type = shaderType;
 	std::wstring wstr = utf8_decode(resourcePath.c_str());
+    ID3DBlob* error = nullptr;
 	HRESULT hr = D3DCompileFromFile(wstr.c_str(),
 		nullptr,
 		nullptr,
@@ -41,17 +43,18 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
 		0,
 		&handle,
-		nullptr
+		&error
 	);
 
 	if (FAILED(hr)) {
+        const char* errorMsg = reinterpret_cast<const char*>(error->GetBufferPointer());
+        NATIVE_LOGE("Shader compile error : %s", errorMsg);
+        if (error != nullptr) error->Release();
 		return false;
 	}
 
 	char metaPath[256];
 	makeMetaPath(metaPath, resourcePath.c_str());
-
-    CreateMetaDataFromShader(metaPath);
 #ifdef _DEBUG
 	File metaFile;
 	if (!metaFile.Open(metaPath, FileMode::ReadText) || true) {
@@ -60,6 +63,8 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 	else metaFile.Close();
 #endif
 	revSerializer::Deserialize(metaPath, metaData);
+
+    if (error != nullptr) error->Release();
 	return true;
 }
 
@@ -74,6 +79,7 @@ void DX12Shader::CreateMetaDataFromShader(const char* metaPath)
         IID_ID3D12ShaderReflection,
         (void**)&reflection);
     if (FAILED(hr)) {
+        NATIVE_LOGE("Could not get shader reflection");
         return;
     }
     D3D12_SHADER_DESC shaderDesc;

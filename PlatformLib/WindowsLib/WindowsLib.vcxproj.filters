@@ -148,5 +148,8 @@
     <ClCompile Include="cpp\DX12RootSignature.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="cpp\Log.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

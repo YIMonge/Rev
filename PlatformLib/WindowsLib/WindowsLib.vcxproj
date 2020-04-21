@@ -342,6 +342,7 @@
     <ClCompile Include="cpp\DX12Texture.cpp" />
     <ClCompile Include="cpp\DX12TextureView.cpp" />
     <ClCompile Include="cpp\File.cpp" />
+    <ClCompile Include="cpp\Log.cpp" />
     <ClCompile Include="cpp\Thread.cpp" />
     <ClCompile Include="cpp\Window.cpp" />
   </ItemGroup>
