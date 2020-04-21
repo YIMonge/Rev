@@ -1,4 +1,5 @@
 #include "DX12CommandList.h"
+#include "Log.h"
 
 bool DX12CommandList::Create(revDevice* device, revGraphicsPipeline* pipeline)
 {
@@ -10,6 +11,7 @@ bool DX12CommandList::Create(revDevice* device, revGraphicsPipeline* pipeline)
 	// create allocator and command list 
 	HRESULT hr = dxDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
 	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to create command allocator");
 		return false;
 	}
 
@@ -19,6 +21,7 @@ bool DX12CommandList::Create(revDevice* device, revGraphicsPipeline* pipeline)
 		pipeline == nullptr ? nullptr : *pipeline, 
 		IID_PPV_ARGS(&commandBuffer));
 	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to create command list");
 		return false;
 	}
 	return true;
@@ -28,9 +31,15 @@ void DX12CommandList::Open()
 {
 	needBarrierResources.clear();
 	HRESULT hr = commandAllocator->Reset();
-	if (FAILED(hr)) return;
+	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to reset command allocator");
+		return;
+	}
 	hr = commandBuffer->Reset(commandAllocator, nullptr);
-	if (FAILED(hr)) return;
+	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to reset command list");
+		return;
+	}
 }
 
 void DX12CommandList::Close()

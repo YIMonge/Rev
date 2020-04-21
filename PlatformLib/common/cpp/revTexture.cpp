@@ -14,6 +14,7 @@ bool revTexture::LoadFromFile(revDevice* device, const char* path)
 	resourcePath += path;
     File file;
     if (!file.Open(resourcePath.c_str(), FileMode::ReadBinary)) {
+        NATIVE_LOGE("failed to open texture : %s", resourcePath.c_str());
         return false;
     }
 
@@ -24,6 +25,7 @@ bool revTexture::LoadFromFile(revDevice* device, const char* path)
     // if meta file is not found try to make default meta
     File metaFile;
     if (!metaFile.Open(metaPath, FileMode::ReadText)) {
+        NATIVE_LOGI("meta file is not found. create new file : %s", metaPath);
        revSerializer::Serialize(metaPath, metaData);
     }
     else metaFile.Close();

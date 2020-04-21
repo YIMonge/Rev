@@ -1,4 +1,5 @@
 #include "DX12RootSignature.h"
+#include "Log.h"
 
 struct RootSignatureParam
 {
@@ -66,10 +67,12 @@ bool DX12RootSignature::Create(revDevice* device)
 		&signature,
 		&error);
 	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to serialize to root signature. detail is : ", reinterpret_cast<const char*>(error->GetBufferPointer()));
 		return false;
 	}
 	
 	if (param.sizeInBytes > sizeof(uint32) * D3D12_MAX_ROOT_COST) {
+		NATIVE_LOGE("size in bytes over root signature max cost");
 		return false;
 	}
 
@@ -79,6 +82,7 @@ bool DX12RootSignature::Create(revDevice* device)
 		IID_PPV_ARGS(&rootSignature)
 	);
 	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to create root signature");
 		return false;
 	}
 

@@ -1,4 +1,5 @@
 #include "DX12SwapChain.h"
+#include "Log.h"
 #ifdef _USE_DIRECTX12
 
 DX12SwapChain::DX12SwapChain() :
@@ -23,6 +24,7 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	HRESULT hr = CreateDXGIFactory2(dxgiFlags, IID_PPV_ARGS(&dxgiFactory));
 	if (FAILED(hr)) {
 		if (dxgiFactory != nullptr) dxgiFactory->Release();
+		NATIVE_LOGE("failed to create dxgi factory");
 		return false;
 	}
 
@@ -51,6 +53,7 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	if (FAILED(hr)) {
 		if (dxgiFactory != nullptr) dxgiFactory->Release();
 		if (tempSwapChain != nullptr) tempSwapChain->Release();
+		NATIVE_LOGE("failed to create swapchain");
 		return false;
 	}
 	// convert swapchian interface into IDXGISwapChain3 
@@ -69,6 +72,7 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	auto dxdevice = device->GetDevice();
 	hr = dxdevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&renderTargetViewHeap));
 	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to create descriptor heap for render target");
 		return false;
 	}
 
@@ -76,6 +80,7 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	hr = dxdevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&depthStencilViewHeap));
 	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to create descriptor heap for depth/stencil");
 		return false;
 	}
 
@@ -93,6 +98,7 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	for (uint32 i = 0; i < bufferNum; ++i) {
 		hr = swapChain->GetBuffer(i, IID_PPV_ARGS(&renderTarget[i]));
 		if (FAILED(hr)) {
+			NATIVE_LOGE("failed to get render target");
 			return false;
 		}
 		dxdevice->CreateRenderTargetView(renderTarget[i], &renderTargetDesc, handle);
@@ -136,6 +142,7 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 		&clearValue,
 		IID_PPV_ARGS(&depthStencil));
 	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to create depth/stencil");
 		return false;
 	}
 
@@ -152,11 +159,13 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	// create fence 
 	hr = dxdevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to create fence");
 		return false;
 	}
 	fenceValue = 1;
 	fenceEvent = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
 	if (fenceEvent == nullptr) {
+		NATIVE_LOGE("failed to create event for sync");
 		return false;
 	}
 
@@ -201,12 +210,14 @@ bool DX12SwapChain::WaitForPreviousFrame(ID3D12CommandQueue* queue)
 	const uint64 tempFenceValue = fenceValue;
 	HRESULT hr = queue->Signal(fence, tempFenceValue);
 	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to set fence to command queue");
 		return false;
 	}
 	fenceValue++;
 	if (fence->GetCompletedValue() < tempFenceValue) {
 		hr = fence->SetEventOnCompletion(tempFenceValue, fenceEvent);
 		if (FAILED(hr)) {
+			NATIVE_LOGE("failed to set event to fence");
 			return false;
 		}
 		WaitForSingleObject(fenceEvent, INFINITE);

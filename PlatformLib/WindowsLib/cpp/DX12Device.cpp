@@ -1,6 +1,7 @@
 #include "../include/DX12Device.h"
 #include "../include/Window.h"
 #include "revTypedef.h"
+#include "Log.h"
 
 #ifdef _USE_DIRECTX12
 
@@ -25,6 +26,7 @@ bool DX12Device::Create(const GraphicsDesc& desc)
 		IID_PPV_ARGS(&device)			// Returns the Direct3D device created.
 		);
 	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to create device");
 		return false;
 	}
 
@@ -37,6 +39,7 @@ bool DX12Device::Create(const GraphicsDesc& desc)
 
 	hr = device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&queue));
 	if (FAILED(hr)) {
+		NATIVE_LOGE("failed to create command queue");
 		return false;
 	}
 
