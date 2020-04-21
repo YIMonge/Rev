@@ -9,7 +9,10 @@
 class revTexture : public revResource
 {
 public:
-	revTexture() {}
+	revTexture()
+	{
+		metaData.format = static_cast<uint8>(GRAPHICS_FORMAT ::R8G8B8A8_UNORM);
+	}
 	virtual ~revTexture() {}
 
 	const revTextureSampler& GetSampler() const { return sampler; }

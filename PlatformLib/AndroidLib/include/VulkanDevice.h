@@ -7,6 +7,7 @@
 #ifdef _DEBUG
 #include "revArray.h"
 #endif
+#include "VulkanCommandList.h"
 
 class Window;
 
@@ -19,30 +20,22 @@ public:
     bool Create(Window& window);
     void Destroy();
 
-    const VkSurfaceKHR& GetSurface() const
-    {
-        return surface;
-    }
+    const VkSurfaceKHR& GetSurface() const { return surface; }
+    uint32 GetQueueFamilyIndex() const { return queueFamilyIndex; }
+    const uint32* GetQueueFamilyIndexPtr() const { return &queueFamilyIndex; }
+    const VkPhysicalDeviceMemoryProperties& GetPhysicalDeviceMemoryProperties() const { return physicalDeviceMemoryProperties; }
 
-    uint32 GetQueueFamilyIndex() const
-    {
-        return queueFamilyIndex;
-    }
-
-    const uint32* GetQueueFamilyIndexPtr() const
-    {
-        return &queueFamilyIndex;
-    }
-
-    const VkPhysicalDeviceMemoryProperties& GetPhysicalDeviceMemoryProperties() const {
-        return physicalDeviceMemoryProperties;
-    }
+    VulkanCommandList& GetGlobalCommandList() { return globalCommandList; }
+    revArray<VulkanCommandList>& GetCommandLists() { return commandLists; }
 private:
     VkInstance instance;
     VkSurfaceKHR surface;
     uint32 queueFamilyIndex;
     VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
 
+    VulkanCommandList globalCommandList;
+    // commandList for each thread
+    revArray<VulkanCommandList> commandLists;
 #ifdef _DEBUG
     void initializeDebugLayer();
     revArray<const char*> debugLayers;

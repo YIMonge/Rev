@@ -10,16 +10,14 @@ VulkanTexture::~VulkanTexture()
 {
 }
 
-bool VulkanTexture::CreateTexture(const revDevice& device, uint8* imageData)
+bool VulkanTexture::CreateTexture(revDevice* device, uint8* imageData)
 {
-    const VkDevice& revDevice = device.GetDevice();
-    const VkFormat TEXTURE_FORMAT = VK_FORMAT_R8G8B8A8_UNORM;
+    const VkDevice& revDevice = device->GetDevice();
+    const VkFormat TEXTURE_FORMAT = ConvertToVKFormat(GetFormat());
     bool needBit = true;
     VkFormatProperties properties;
-    // up cast...
-    const VulkanDevice vkDeviceContext = static_cast<const VulkanDevice&>(device);
-    vkGetPhysicalDeviceFormatProperties(vkDeviceContext.GetAdapter(), TEXTURE_FORMAT, &properties);
-    if(!((properties.linearTilingFeatures | properties.optimalTilingFeatures)& VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT)){
+    vkGetPhysicalDeviceFormatProperties(device->GetAdapter(), TEXTURE_FORMAT, &properties);
+    if(!((properties.linearTilingFeatures | properties.optimalTilingFeatures) & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT)){
         return false;
     }
     if(properties.linearTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT) {
@@ -39,7 +37,7 @@ bool VulkanTexture::CreateTexture(const revDevice& device, uint8* imageData)
             .usage = (needBit ? VK_IMAGE_USAGE_TRANSFER_SRC_BIT : VK_IMAGE_USAGE_SAMPLED_BIT),
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
             .queueFamilyIndexCount = 1,
-            .pQueueFamilyIndices = vkDeviceContext.GetQueueFamilyIndexPtr(),
+            .pQueueFamilyIndices = static_cast<VulkanDevice*>(device)->GetQueueFamilyIndexPtr(),
             .initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED,
             .flags = 0,
     };
@@ -59,7 +57,7 @@ bool VulkanTexture::CreateTexture(const revDevice& device, uint8* imageData)
     vkGetImageMemoryRequirements(revDevice, image, &memoryRequirements);
     memoryAllocateInfo.allocationSize = memoryRequirements.size;
 
-    if(!AllocateMemoryTypeFromProperties(vkDeviceContext,
+    if(!AllocateMemoryTypeFromProperties(static_cast<VulkanDevice*>(device),
             memoryRequirements.memoryTypeBits,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
             &memoryAllocateInfo.memoryTypeIndex)){
@@ -117,9 +115,9 @@ bool VulkanTexture::CreateTexture(const revDevice& device, uint8* imageData)
     return true;
 }
 
-bool VulkanTexture::AllocateMemoryTypeFromProperties(const VulkanDevice& device, uint32 typeBits, VkFlags requimentMask, uint32* typeIndex)
+bool VulkanTexture::AllocateMemoryTypeFromProperties(VulkanDevice* device, uint32 typeBits, VkFlags requimentMask, uint32* typeIndex)
 {
-    const VkPhysicalDeviceMemoryProperties& deviceMemoryProperties = device.GetPhysicalDeviceMemoryProperties();
+    const VkPhysicalDeviceMemoryProperties& deviceMemoryProperties = device->GetPhysicalDeviceMemoryProperties();
     for(uint32 i = 0; i < 32; ++i){
         if((typeBits & 1) == 1){
             if((deviceMemoryProperties.memoryTypes[i].propertyFlags & requimentMask) == requimentMask){

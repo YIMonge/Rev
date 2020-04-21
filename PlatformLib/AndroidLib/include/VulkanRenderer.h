@@ -19,25 +19,13 @@ public:
 	virtual void ShutDown();
 
 	void Render();
-
-	void Clear(bool clear_color, bool clear_depth, const revColor& fill_color);
 	void SwapBuffers();
-
-	void SetBlendFunc(BLEND_FUNC func);
-	void SetAlphaTest(ALPHA_TEST func, float value);
 private:
-	bool CreateCommandPool();
-	void DestroyCommandPool();
     void setImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
-
-
 	VulkanDevice device;
 	VulkanSwapChain swapChain;
 	VulkanRenderInfo renderInfo;
 	VulkanFrameBuffer frameBuffer;
-
-	VkCommandPool commandPool;
-	revArray<revGraphicsCommandBuffer> commandBuffers;
 
 	// clear color
 	VkClearValue clearValue;

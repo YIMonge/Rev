@@ -198,7 +198,7 @@ using revGraphicsAdapter = VkPhysicalDevice;
 using revSwapChain = VkSwapchainKHR;
 using revShaderHandle = VkShaderModule;
 using revGraphicsResource = VkBuffer;
-using revGraphicsCommandAllocator = void;
+using revGraphicsCommandAllocator = VkCommandPool;
 using revGraphicsCommandBuffer = VkCommandBuffer;
 using revGraphicsCommandQueue = VkQueue;
 using revGraphicsPipeline = VkPipeline;
@@ -284,9 +284,9 @@ namespace {
 		return table[static_cast<uint32>(format)];
 	}
 
-	VK_BLEND_FACTOR ConvertToVKBlendFactor(BLEND_FACTOR factor)
+	VkBlendFactor ConvertToVKBlendFactor(BLEND_FACTOR factor)
 	{
-		VK_BLEND_FACTOR table[] = {
+		VkBlendFactor table[] = {
 			VK_BLEND_FACTOR_ZERO,
 			VK_BLEND_FACTOR_ONE,
 			VK_BLEND_FACTOR_SRC_COLOR,
@@ -301,28 +301,28 @@ namespace {
 		return table[static_cast<uint32>(factor)];
 	}
 
-	VK_POLYGON_MODE ConvertToVKFillMode(POLYGON_MODE mode)
+	VkPolygonMode ConvertToVKFillMode(POLYGON_MODE mode)
 	{
-		D3D12_FILL_MODE table[] = {
+		VkPolygonMode table[] = {
 			VK_POLYGON_MODE_FILL,
 			VK_POLYGON_MODE_LINE,
 		};
 		return table[static_cast<uint32>(mode)];
 	}
-		
-	D3D12_CULL_MODE ConvertToDXCullMode(VK_MODE_FLAG mode)
+
+    VkCullModeFlagBits ConvertToDXCullMode(CULL_MODE_FLAG mode)
 	{
-		D3D12_CULL_MODE table[] = {
+		VkCullModeFlagBits table[] = {
 			VK_CULL_MODE_NONE,
-			VK_CULL_MODE_FRONT,
-			VK_CULL_MODE_BACK,
+            VK_CULL_MODE_FRONT_BIT,
+            VK_CULL_MODE_BACK_BIT,
 		};
 		return table[static_cast<uint32>(mode)];
 	}
 
-	VK_BLEND_OP ConvertToVKBlendOp(BLEND_OP op)
+	VkBlendOp ConvertToVKBlendOp(BLEND_OP op)
 	{
-		VK_BLEND_OP table[] = {
+		VkBlendOp table[] = {
 			VK_BLEND_OP_ADD,
 			VK_BLEND_OP_SUBTRACT,
 			VK_BLEND_OP_REVERSE_SUBTRACT,
@@ -331,9 +331,9 @@ namespace {
 		return table[static_cast<uint32>(op)];
 	}
 
-	VK_LOGIC_OP ConverToVKLogicOp(LOGIC_OP op)
+	VkLogicOp ConverToVKLogicOp(LOGIC_OP op)
 	{
-		VK_LOGIC_OP table[] = {
+		VkLogicOp table[] = {
 			VK_LOGIC_OP_CLEAR,
 			VK_LOGIC_OP_AND,
 			VK_LOGIC_OP_AND_REVERSE,

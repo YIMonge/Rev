@@ -139,10 +139,10 @@ bool VulkanDevice::Create(Window& window)
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-
     vkGetPhysicalDeviceMemoryProperties(adapter, &physicalDeviceMemoryProperties);
-
     vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue);
+
+    globalCommandList.Create(this, nullptr);
     return true;
 }
 

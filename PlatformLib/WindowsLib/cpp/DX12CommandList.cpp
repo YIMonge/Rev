@@ -1,19 +1,22 @@
 #include "DX12CommandList.h"
 #include "Log.h"
 
-bool DX12CommandList::Create(revDevice* device, revGraphicsPipeline* pipeline)
+bool DX12CommandList::Create(revDevice* device, revGraphicsPipeline* pipeline, revGraphicsCommandAllocator* allocator)
 {
 	if (device == nullptr || device->GetDevice() == nullptr) return false;
 
 	this->device = device;
 	auto& dxDevice = device->GetDevice();
 
-	// create allocator and command list 
-	HRESULT hr = dxDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
-	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to create command allocator");
-		return false;
+	HRESULT hr;
+	if (allocator == nullptr) {
+		hr = dxDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
+		if (FAILED(hr)) {
+			NATIVE_LOGE("failed to create command allocator");
+			return false;
+		}
 	}
+	else commandAllocator = *allocator;
 
 	hr = dxDevice->CreateCommandList(0, 
 		D3D12_COMMAND_LIST_TYPE_DIRECT, 

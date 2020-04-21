@@ -13,9 +13,12 @@ public:
     virtual ~VulkanTexture();
 
     VkDescriptorImageInfo GetDescriptorImageInfo();
+
+protected:
+    virtual bool CreateTexture(revDevice* device, uint8* imageData);
+
 private:
-    bool CreateTexture(const revDevice& device, uint8* imageData);
-    bool AllocateMemoryTypeFromProperties(const VulkanDevice& device, uint32 typeBits, VkFlags requimentMask, uint32* typeIndex);
+    bool AllocateMemoryTypeFromProperties(VulkanDevice* device, uint32 typeBits, VkFlags requimentMask, uint32* typeIndex);
 
     VkImage  image;
     VkDeviceMemory deviceMemory;
