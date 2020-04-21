@@ -21,6 +21,9 @@ public:
 	void Render();
 	void SwapBuffers();
 private:
+    void ExecuteCommand(revArray<revGraphicsCommandList>& lists);
+    void ExecuteCommand(revGraphicsCommandList& list);
+
     void setImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
 	VulkanDevice device;
 	VulkanSwapChain swapChain;
@@ -32,7 +35,6 @@ private:
 
 	// TEST CODE
 	VulkanBuffer triangleVertexBuffer;
-	VulkanBuffer triangleTexcoordBuffer;
 };
 
 #endif

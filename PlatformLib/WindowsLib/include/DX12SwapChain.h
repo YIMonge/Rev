@@ -31,7 +31,7 @@ public:
 	bool Present() const;
 
 	// TODO: swapchain should have fence, value, event. 
-	bool WaitForPreviousFrame(ID3D12CommandQueue* queue);
+	bool WaitForPreviousFrame();
 
 private:
 	DX12Device* device;

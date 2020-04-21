@@ -64,30 +64,6 @@ bool VulkanRenderInfo::Create(const VulkanDevice &deviceContext, const VulkanSwa
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-
-    // create fence and semaphore
-    VkFenceCreateInfo fenceCreateInfo = {
-            .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
-            .pNext = nullptr,
-            .flags = 0,
-    };
-    result = vkCreateFence(device, &fenceCreateInfo, nullptr, &fence);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
-
-    VkSemaphoreCreateInfo semaphoreCreateInfo = {
-            .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-            .pNext = nullptr,
-            .flags = 0,
-    };
-    result = vkCreateSemaphore(device, &semaphoreCreateInfo, nullptr, &semaphore);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
-
     return true;
 }
 

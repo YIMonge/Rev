@@ -15,11 +15,12 @@ VulkanSwapChain::~VulkanSwapChain()
     memset(&swapChain, 0, sizeof(swapChain));
 }
 
-bool VulkanSwapChain::Create(const VulkanDevice& device)
+bool VulkanSwapChain::Create(VulkanDevice* _device)
 {
+    device = _device;
     VkSurfaceCapabilitiesKHR  capabilities;
-    const VkPhysicalDevice& gpu = device.GetAdapter();
-    const VkSurfaceKHR& surface = device.GetSurface();
+    const VkPhysicalDevice& gpu = device->GetAdapter();
+    const VkSurfaceKHR& surface = device->GetSurface();
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR (gpu, surface, &capabilities);
 
     uint32 count = 0;
@@ -39,7 +40,7 @@ bool VulkanSwapChain::Create(const VulkanDevice& device)
     displaySize = capabilities.currentExtent;
     format = GRAPHICS_FORMAT ::R8G8B8A8_UNORM;
 
-    uint32 queueFamilyIndex = device.GetQueueFamilyIndex();
+    uint32 queueFamilyIndex = device->GetQueueFamilyIndex();
 
     VkSwapchainCreateInfoKHR swapchainCreateInfo{
             .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
@@ -61,7 +62,7 @@ bool VulkanSwapChain::Create(const VulkanDevice& device)
             .clipped = VK_FALSE,
     };
 
-    const revGraphicsDevice& revDevice = device.GetDevice();
+    const revGraphicsDevice& revDevice = device->GetDevice();
     VkResult result = vkCreateSwapchainKHR(revDevice, &swapchainCreateInfo, nullptr, &swapChain);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -72,12 +73,97 @@ bool VulkanSwapChain::Create(const VulkanDevice& device)
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
+    // create fence and semaphore
+    VkFenceCreateInfo fenceCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+    };
+    result = vkCreateFence(revDevice, &fenceCreateInfo, nullptr, &fence);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+    result = vkResetFences(revDevice, 1, &fence);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+    }
+
+    VkSemaphoreCreateInfo semaphoreCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+    };
+    result = vkCreateSemaphore(revDevice, &semaphoreCreateInfo, nullptr, &semaphore);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    result = vkAcquireNextImageKHR(revDevice,
+                                   swapChain,
+                                   UINT64_MAX,
+                                   semaphore,
+                                   VK_NULL_HANDLE,
+                                   &frameIndex);
+
+    if(result != VK_SUCCESS){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
     return true;
 }
 
-void VulkanSwapChain::Destroy(const VulkanDevice& device)
+void VulkanSwapChain::Destroy()
 {
-    vkDestroySwapchainKHR(device.GetDevice(), swapChain, nullptr);
+    vkDestroySwapchainKHR(device->GetDevice(), swapChain, nullptr);
+}
+
+bool VulkanSwapChain::Present() const
+{
+    VkResult result;
+    VkPresentInfoKHR presentInfo = {
+            .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+            .pNext = nullptr,
+            .swapchainCount = 1,
+            .pSwapchains = &swapChain,
+            .pImageIndices = &frameIndex,
+            .waitSemaphoreCount = 0,
+            .pWaitSemaphores = nullptr,
+            .pResults = &result,
+    };
+    vkQueuePresentKHR(device->GetQueue(), &presentInfo);
+    return result == VK_SUCCESS;
+}
+
+bool VulkanSwapChain::WaitForPreviousFrame()
+{
+    auto& revDevice = device->GetDevice();
+    VkResult result;
+    // wait for event
+    result = vkWaitForFences(revDevice, 1, &fence, VK_TRUE, 100000000);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    // update buffer index
+    result = vkAcquireNextImageKHR(revDevice,
+                                   swapChain,
+                                   UINT64_MAX,
+                                   semaphore,
+                                   VK_NULL_HANDLE,
+                                   &frameIndex);
+
+    // reset fence
+    result = vkResetFences(revDevice, 1, &fence);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    return true;
 }
 
 #endif

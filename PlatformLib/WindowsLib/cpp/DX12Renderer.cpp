@@ -26,7 +26,7 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	DX12CommandList& commandList = device.GetGlobalCommandList();
 	commandList.Close();
 	ExecuteCommand(commandList);
-	swapChain.WaitForPreviousFrame(device.GetQueue());
+	swapChain.WaitForPreviousFrame();
 	commandList.ReleaseResoucers();
 }
 
@@ -74,7 +74,7 @@ void DX12Renderer::Render()
 	globalCommandList.Close();
 	ExecuteCommand(globalCommandList);
 	swapChain.Present();
-	swapChain.WaitForPreviousFrame(device.GetQueue());
+	swapChain.WaitForPreviousFrame();
 	globalCommandList.ReleaseResoucers();
 }
 

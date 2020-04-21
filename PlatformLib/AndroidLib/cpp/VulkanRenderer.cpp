@@ -25,21 +25,18 @@ VulkanRenderer::~VulkanRenderer()
 void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
     if(!device.Create(*window)) return;
-    if(!swapChain.Create(device)) return;
+    if(!swapChain.Create(&device)) return;
     if(!renderInfo.Create(device, swapChain)) return;
     if(!frameBuffer.Create(device, swapChain, renderInfo)) return;
     //-----------------------------------------------------------------------------------------------
     // TEST CODE
     const float triangleVertices[] = {
-            -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-    };
-    const float triangleTexcoords[] = {
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            0.5f, 1.0f,
+            // vertex         , texcoord
+            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+             0.0f,  1.0f, 0.0f, 0.5f, 1.0f,
     };
     triangleVertexBuffer.Create(device, triangleVertices, sizeof(triangleVertices));
-    triangleTexcoordBuffer.Create(device, triangleTexcoords, sizeof(triangleTexcoords));
 
     VulkanShader shader[2];
     shader[0].LoadFromFile(device, "shaders/first.vert.spv", SHADER_TYPE::VERTX);
@@ -56,63 +53,14 @@ void VulkanRenderer::ShutDown()
 {
     frameBuffer.Destroy(device);
     renderInfo.Destroy(device);
-    swapChain.Destroy(device);
+    swapChain.Destroy();
     device.Destroy();
 }
 
 void VulkanRenderer::Render()
 {
-    uint32 index;
-    const revGraphicsDevice& revDevice = device.GetDevice();
-    VkResult result;
-    result = vkAcquireNextImageKHR(revDevice,
-            swapChain.GetSwapChain(),
-            UINT64_MAX,
-            renderInfo.GetSemaphore(),
-            VK_NULL_HANDLE,
-            &index);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-    }
-
-    result = vkResetFences(revDevice, 1, &renderInfo.GetFence());
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-    }
-
-    VkPipelineStageFlags  waitStageMask =  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-
-    VkSubmitInfo submitInfo = {
-            .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-            .pNext = nullptr,
-            .waitSemaphoreCount = 1,
-            .pWaitSemaphores = &renderInfo.GetSemaphore(),
-            .pWaitDstStageMask = &waitStageMask,
-            .commandBufferCount = 1,
-            .pCommandBuffers = commandBuffers[index],
-            .signalSemaphoreCount = 0,
-            .pSignalSemaphores = nullptr,
-    };
-    result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, renderInfo.GetFence());
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-    }
-
-    result = vkWaitForFences(revDevice, 1, &renderInfo.GetFence(), VK_TRUE, 100000000);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-    }
-    VkPresentInfoKHR presentInfo = {
-            .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
-            .pNext = nullptr,
-            .swapchainCount = 1,
-            .pSwapchains = &swapChain.GetSwapChain(),
-            .pImageIndices = &index,
-            .waitSemaphoreCount = 0,
-            .pWaitSemaphores = nullptr,
-            .pResults = &result,
-    };
-    vkQueuePresentKHR(device.GetQueue(), &presentInfo);
+    swapChain.WaitForPreviousFrame();
+    swapChain.Present();
 }
 
 void VulkanRenderer::setImageLayout(VkCommandBuffer commandBuffer, VkImage image,
@@ -186,5 +134,51 @@ void VulkanRenderer::setImageLayout(VkCommandBuffer commandBuffer, VkImage image
     vkCmdPipelineBarrier(commandBuffer, srcStages, destStages, 0, 0, nullptr, 0, nullptr, 1,
                          &imageMemoryBarrier);
 }
+
+void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists)
+{
+    uint32 length = lists.size();
+    revArray<revGraphicsCommandBuffer> commandlists(lists.size());
+    for (uint32 i = 0; i < length; ++i) {
+        commandlists[i] = lists[i].GetList();
+    }
+    VkPipelineStageFlags  waitStageMask =  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    VkSubmitInfo submitInfo = {
+            .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+            .pNext = nullptr,
+            .waitSemaphoreCount = 1,
+            .pWaitSemaphores = &swapChain.GetSemaphore(),
+            .pWaitDstStageMask = &waitStageMask,
+            .commandBufferCount = length,
+            .pCommandBuffers = commandlists.data(),
+            .signalSemaphoreCount = 0,
+            .pSignalSemaphores = nullptr,
+    };
+    VkResult result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, swapChain.GetFence());
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+    }
+}
+
+void VulkanRenderer::ExecuteCommand(revGraphicsCommandList& list)
+{
+    VkPipelineStageFlags  waitStageMask =  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    VkSubmitInfo submitInfo = {
+            .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+            .pNext = nullptr,
+            .waitSemaphoreCount = 1,
+            .pWaitSemaphores = &swapChain.GetSemaphore(),
+            .pWaitDstStageMask = &waitStageMask,
+            .commandBufferCount = 1,
+            .pCommandBuffers = &(list.GetList()),
+            .signalSemaphoreCount = 0,
+            .pSignalSemaphores = nullptr,
+    };
+    VkResult result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, swapChain.GetFence());
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+    }
+}
+
 
 #endif

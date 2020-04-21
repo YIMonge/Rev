@@ -205,8 +205,9 @@ void DX12SwapChain::Appply(DX12CommandList& commandList, const revColor& clearCo
 }
 
 
-bool DX12SwapChain::WaitForPreviousFrame(ID3D12CommandQueue* queue)
+bool DX12SwapChain::WaitForPreviousFrame()
 {
+    ID3D12CommandQueue* queue = device->GetQueue();
 	const uint64 tempFenceValue = fenceValue;
 	HRESULT hr = queue->Signal(fence, tempFenceValue);
 	if (FAILED(hr)) {

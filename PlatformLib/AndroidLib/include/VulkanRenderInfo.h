@@ -25,15 +25,10 @@ public:
     bool CreateDescriptorSet(const VulkanDevice& device, VulkanTexture& texture);
 
     const VkRenderPass& GetRenderPass() const { return renderPass; }
-    const VkSemaphore& GetSemaphore() const { return semaphore; }
-    const VkFence& GetFence() const { return fence; }
     const VkPipeline& GetPipeline() const { return pipeline; }
 private:
-
-
     VkRenderPass renderPass;
-    VkSemaphore  semaphore;
-    VkFence fence;
+
 
     // pipeline
     revUnorderedMap<uint32, VkPipelineCache> pipelineCaches;
