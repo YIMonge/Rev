@@ -45,10 +45,10 @@ bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, c
 		inputElements.resize(length);
 		for (uint32 i = 0; i < length; ++i) {
 			inputElements[i].SemanticName = ConvertToDXSemantic(vertexAttributes[i].GetInputElementType());
-			inputElements[i].SemanticIndex = vertexAttributes[i].GetBinding();
+			inputElements[i].SemanticIndex = ConvertToDXSemanticIndex(vertexAttributes[i].GetInputElementType());
 			inputElements[i].Format = ConvertToDXFormat(vertexAttributes[i].GetForamt());
-			inputElements[i].InputSlot = vertexAttributes[i].GetLocation();
-			inputElements[i].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+			inputElements[i].InputSlot = vertexAttributes[i].GetBinding();
+			inputElements[i].AlignedByteOffset = vertexAttributes[i].GetOffset();
 			inputElements[i].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
 			inputElements[i].InstanceDataStepRate = 0;
 		}

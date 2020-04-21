@@ -83,6 +83,7 @@ void DX12Shader::CreateMetaDataFromShader(const char* metaPath)
     metaData.attributes.resize(shaderDesc.InputParameters);
 
     revArray<D3D12_INPUT_ELEMENT_DESC> inputLayouts;
+    uint32 offset = 0;
     for (uint32 i = 0; i < shaderDesc.InputParameters; ++i) {
         D3D12_SIGNATURE_PARAMETER_DESC signatureDesc;
         reflection->GetInputParameterDesc(i, &signatureDesc);
@@ -91,7 +92,8 @@ void DX12Shader::CreateMetaDataFromShader(const char* metaPath)
         metaData.attributes[i].SetInputElementType(elementType);
         metaData.attributes[i].SetFormat(GRAPHICS_SEMANTICS[static_cast<uint32>(elementType)].format);
         metaData.attributes[i].SetBinding(signatureDesc.SemanticIndex);
-        metaData.attributes[i].SetOffset(0);
+        metaData.attributes[i].SetOffset(offset);
+        offset += GRAPHICS_SEMANTICS[static_cast<uint32>(elementType)].sizeOfBytes;
     }
     revSerializer::Serialize(metaPath, metaData);
 
