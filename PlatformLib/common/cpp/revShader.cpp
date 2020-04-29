@@ -6,7 +6,7 @@ bool revShader::LoadMetaData(const char* path)
 	makeMetaPath(metaPath, path);
 #ifdef _DEBUG
 	File metaFile;
-	// TODO: debug always recreate....
+	// TODO: debug always recreate.... should compare last modified 
 	if (!metaFile.Open(metaPath, FileMode::ReadText) || true) {
 		return false;
 	}
