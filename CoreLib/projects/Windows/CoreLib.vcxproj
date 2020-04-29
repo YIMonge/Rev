@@ -40,6 +40,7 @@
     <ClInclude Include="..\..\include\revMemory.h" />
     <ClInclude Include="..\..\include\revQuaternion.h" />
     <ClInclude Include="..\..\include\revQueue.h" />
+    <ClInclude Include="..\..\include\revRect.h" />
     <ClInclude Include="..\..\include\revSingleton.h" />
     <ClInclude Include="..\..\include\revSmartPointer.h" />
     <ClInclude Include="..\..\include\revStreamReader.h" />

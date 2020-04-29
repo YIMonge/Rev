@@ -94,6 +94,9 @@
     <ClInclude Include="..\..\include\revVector4.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\revRect.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\revArray.inl">
