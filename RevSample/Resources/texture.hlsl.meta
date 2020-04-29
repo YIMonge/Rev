@@ -19,6 +19,22 @@
                 "offset": 0,
                 "inputClass": 205
             }
+        ],
+        "cbuffers": [],
+        "textures": [
+            {
+                "registerIndex": 0,
+                "count": 1,
+                "space": 0,
+                "is3d": false
+            }
+        ],
+        "samplers": [
+            {
+                "registerIndex": 0,
+                "count": 1,
+                "space": 0
+            }
         ]
     }
 }

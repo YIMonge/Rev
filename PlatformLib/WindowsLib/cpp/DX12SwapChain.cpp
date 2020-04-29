@@ -70,39 +70,24 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	heapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
 	auto dxdevice = device->GetDevice();
-	hr = dxdevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&renderTargetViewHeap));
-	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to create descriptor heap for render target");
-		return false;
-	}
-
-	// create descriptorheap for depth stencil 
-	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	hr = dxdevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&depthStencilViewHeap));
-	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to create descriptor heap for depth/stencil");
-		return false;
-	}
-
-	// create render target view 
-	auto handle = renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart();
-
 	D3D12_RENDER_TARGET_VIEW_DESC renderTargetDesc;
 	renderTargetDesc.Format = ConvertToDXFormat(GRAPHICS_FORMAT::R8G8B8A8_UNORM); // TODO: 
 	renderTargetDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 	renderTargetDesc.Texture2D.MipSlice = 0;
 	renderTargetDesc.Texture2D.PlaneSlice = 0;
 
+	renderTargetHeap.Create(device, DESCRIPTOR_HEAP_TYPE::RENDER_TARGET, bufferNum, false);
+	depthStencilHeap.Create(device, DESCRIPTOR_HEAP_TYPE::DEPTH_STENCIL, bufferNum, false);
+
 	renderTarget.resize(bufferNum);
-	renderTargetViewDescriptorSize = dxdevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	auto chunkForRenderTarget = renderTargetHeap.Allocation(bufferNum);
 	for (uint32 i = 0; i < bufferNum; ++i) {
 		hr = swapChain->GetBuffer(i, IID_PPV_ARGS(&renderTarget[i]));
 		if (FAILED(hr)) {
 			NATIVE_LOGE("failed to get render target");
 			return false;
 		}
-		dxdevice->CreateRenderTargetView(renderTarget[i], &renderTargetDesc, handle);
-		handle.ptr += renderTargetViewDescriptorSize;
+		dxdevice->CreateRenderTargetView(renderTarget[i], &renderTargetDesc, chunkForRenderTarget.GetHandle(i));
 	}
 
 	// create depth stencil view 
@@ -152,7 +137,8 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
 
-	dxdevice->CreateDepthStencilView(depthStencil, &depthStencilDesc, depthStencilViewHeap->GetCPUDescriptorHandleForHeapStart());
+	auto chunkForDepthStencil = depthStencilHeap.Allocation(1);
+	dxdevice->CreateDepthStencilView(depthStencil, &depthStencilDesc, chunkForDepthStencil.GetHandle());
 
 	dxgiFactory->Release();
 
@@ -184,18 +170,13 @@ void DX12SwapChain::Appply(DX12CommandList& commandList, const revColor& clearCo
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.pResource = GetCurrentRenderTarget();
 
+	auto renderTargetHandle = renderTargetHeap.GetCPUHandle(frameIndex);
 	dxCommandList->ResourceBarrier(1, &barrier);
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorHandle(
-		renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart(),
-		frameIndex,
-		renderTargetViewDescriptorSize);
-
 	dxCommandList->OMSetRenderTargets(1,
-		&descriptorHandle, 
+		&renderTargetHandle,
 		FALSE, 
 		nullptr);
-	dxCommandList->ClearRenderTargetView(descriptorHandle, clearColor.data, 0, nullptr);
+	dxCommandList->ClearRenderTargetView(renderTargetHandle, clearColor.data, 0, nullptr);
 
 	// for close
 	commandList.AddTransitionBarrier(GetCurrentRenderTarget(),
@@ -242,6 +223,9 @@ void DX12SwapChain::Destroy()
 			renderTarget[i] = nullptr;
 		}
 	}
+
+	renderTargetHeap.Destroy();
+	depthStencilHeap.Destroy();
 
 	if (swapChain != nullptr) {
 		swapChain->Release();

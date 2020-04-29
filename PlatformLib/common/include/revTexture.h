@@ -5,6 +5,7 @@
 #include "revResource.h"
 #include "revDevice.h"
 #include "Log.h"
+#include "revMath.h"
 
 class revTexture : public revResource
 {
@@ -14,13 +15,6 @@ public:
 		metaData.format = static_cast<uint8>(GRAPHICS_FORMAT ::R8G8B8A8_UNORM);
 	}
 	virtual ~revTexture() {}
-
-	const revTextureSampler& GetSampler() const { return sampler; }
-	GRAPHICS_FORMAT GetFormat() const { return static_cast<GRAPHICS_FORMAT>(metaData.format); }
-	uint32 GetWidth() const { return width; }
-	uint32 GetHeight() const { return height; }
-	revTextureHandle* GetHandle() const { return handle; }
-
 
 	bool LoadFromFile(revDevice* device, const char* path);
 
@@ -67,7 +61,19 @@ public:
 		void SetMaxLod(f32 value) { maxLod = value; }
 		void SetBorderColor(BORDER_COLOR_MODE mode) { borderColor = static_cast<uint8>(mode); }
 
-
+		bool operator == (const SamplerDesc& desc) const {
+			return magFilter == desc.magFilter &&
+				minFilter == desc.minFilter &&
+				mipFilter == desc.mipFilter &&
+				addressU == desc.addressU &&
+				addressV == desc.addressV &&
+				addressW == desc.addressW &&
+				comparisonFunc == desc.comparisonFunc &&
+				borderColor == desc.borderColor &&
+				MathUtil::CmpFloat(mipLodBias, desc.mipLodBias) &&
+				MathUtil::CmpFloat(minLod, desc.minLod) &&
+				MathUtil::CmpFloat(maxLod, desc.maxLod);
+		}
 
         SERIALIZE_FUNC() {
             archive(REV_NVP(magFilter),
@@ -84,6 +90,7 @@ public:
                 REV_NVP(borderColor)
                 );
         }
+
     private:
         uint8 magFilter;
         uint8 minFilter;
@@ -106,7 +113,13 @@ public:
 		SamplerDesc sampler;
     };
 	
-	
+
+	GRAPHICS_FORMAT GetFormat() const { return static_cast<GRAPHICS_FORMAT>(metaData.format); }
+	uint32 GetWidth() const { return width; }
+	uint32 GetHeight() const { return height; }
+	revTextureHandle* GetHandle() const { return handle; }
+	const SamplerDesc& GetSamplerDesc() const { return metaData.sampler; }
+
 protected:
 	virtual bool CreateTexture(revDevice* device, uint8* imageData) = 0;
 
@@ -114,7 +127,6 @@ protected:
 	uint32 height;
 	revTextureHandle* handle;
 	TextureMetaData metaData;
-    revTextureSampler sampler;
 };
  
 

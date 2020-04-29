@@ -26,7 +26,7 @@ bool DX12Device::Create(const GraphicsDesc& desc)
 		IID_PPV_ARGS(&device)			// Returns the Direct3D device created.
 		);
 	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to create device");
+		NATIVE_LOGE("failed to create device. File[%s], line[%d]", __FILE__, __LINE__);
 		return false;
 	}
 
@@ -39,7 +39,7 @@ bool DX12Device::Create(const GraphicsDesc& desc)
 
 	hr = device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&queue));
 	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to create command queue");
+		NATIVE_LOGE("failed to create command queue. File[%s], line[%d]", __FILE__, __LINE__);
 		return false;
 	}
 

@@ -96,3 +96,5 @@ lint/tmp/
 
 RevSample/Projects/Windows/x64/Debug_DX12/RevSample.vcxproj.FileListAbsolute.txt
 RevSample/Projects/Windows/x64/Debug_DX12/RevSample.exp
+PlatformLib/WindowsLib/x64/Debug_DX12/WindowsLib.vcxproj.FileListAbsolute.txt
+Rev/project/windows/x64/Debug_DX12/Rev.vcxproj.FileListAbsolute.txt

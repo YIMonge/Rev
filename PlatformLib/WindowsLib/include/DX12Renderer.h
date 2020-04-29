@@ -12,6 +12,8 @@
 #include "DX12RootSignature.h"
 #include "DX12CommandList.h"
 #include "DX12PipelineState.h"
+#include "DX12DescriptorHeap.h"
+#include "DX12Sampler.h"
 #include "revMaterial.h"
 #include "revArray.h"
 
@@ -36,6 +38,7 @@ private:
 
 	void ExecuteCommand(revArray<revGraphicsCommandList>& lists);
 	void ExecuteCommand(revGraphicsCommandList& list);
+
 private:
 	Window* main_window;
 	DX12Device device;
@@ -47,6 +50,8 @@ private:
 	D3D12_VIEWPORT viewport;
 	D3D12_RECT rectScissor;
 
+	DX12DescriptorHeap resourceHeap;
+	DX12DescriptorHeap samplerHeap;
 
 	// resources for test
 	DX12Shader vertexShader;
@@ -55,6 +60,7 @@ private:
 	DX12VertexBuffer vertexBuffer;
 	DX12Texture texture;
 	DX12TextureView textureView;
+	DX12Sampler sampler;
 };
 
 #endif

@@ -12,7 +12,7 @@ bool DX12CommandList::Create(revDevice* device, revGraphicsPipeline* pipeline, r
 	if (allocator == nullptr) {
 		hr = dxDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
 		if (FAILED(hr)) {
-			NATIVE_LOGE("failed to create command allocator");
+			NATIVE_LOGE("failed to create command allocator. File[%s], line[%d]", __FILE__, __LINE__);
 			return false;
 		}
 	}
@@ -24,7 +24,7 @@ bool DX12CommandList::Create(revDevice* device, revGraphicsPipeline* pipeline, r
 		pipeline == nullptr ? nullptr : *pipeline, 
 		IID_PPV_ARGS(&commandBuffer));
 	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to create command list");
+		NATIVE_LOGE("failed to create command list. File[%s], line[%d]", __FILE__, __LINE__);
 		return false;
 	}
 	return true;
@@ -35,12 +35,12 @@ void DX12CommandList::Open()
 	needBarrierResources.clear();
 	HRESULT hr = commandAllocator->Reset();
 	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to reset command allocator");
+		NATIVE_LOGE("failed to reset command allocator. File[%s], line[%d]", __FILE__, __LINE__);
 		return;
 	}
 	hr = commandBuffer->Reset(commandAllocator, nullptr);
 	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to reset command list");
+		NATIVE_LOGE("failed to reset command list. File[%s], line[%d]", __FILE__, __LINE__);
 		return;
 	}
 }

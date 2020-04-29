@@ -81,15 +81,6 @@ bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, c
 		return false;
 	}
 
-	D3D12_DESCRIPTOR_HEAP_DESC  descriptorHeapDesc = {};
-	descriptorHeapDesc.NumDescriptors = 1;
-	descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	descriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	hr = dxDevice->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&resourceViewHeap));
-	if (FAILED(hr)) {
-		return false;
-	}
-
 	return true;
 }
 
@@ -97,6 +88,4 @@ void DX12PipelineState::Apply(DX12CommandList& commandList)
 {
 	auto& dxCommandList = commandList.GetList();
 	dxCommandList->SetPipelineState(pipelineState);
-	dxCommandList->SetDescriptorHeaps(1, &resourceViewHeap);
-	dxCommandList->SetGraphicsRootDescriptorTable(0, resourceViewHeap->GetGPUDescriptorHandleForHeapStart());
 }

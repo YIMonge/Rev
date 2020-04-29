@@ -58,24 +58,112 @@ private:
 	uint8 inputClass;
 };
 
+class revConstantBufferBinding
+{
+public:
+	SERIALIZE_FUNC()
+	{
+		archive(REV_NVP(registerIndex)
+		);
+	}
+private:
+	uint8 registerIndex;
+};
+
+class revTextureBinding
+{
+public:
+	revTextureBinding():
+		registerIndex(0),
+		count(0),
+		space(0),
+		is3d(false)
+	{}
+
+	SERIALIZE_FUNC()
+	{
+		archive(REV_NVP(registerIndex),
+			REV_NVP(count),
+			REV_NVP(space),
+			REV_NVP(is3d)
+		);
+	}
+
+	uint8 GetRegisterIndex() const { return registerIndex; }
+	uint8 GetCount() const { return count; }
+	uint8 GetSpace() const { return space; }
+	bool Is3d() const { return is3d; }
+#ifdef _DEBUG
+	void SetRegisterIndex(uint8 index) { registerIndex = index; }
+	void SetCount(uint8 count) { this->count = count; }
+	void SetSpace(uint8 space) { this->space = space; }
+	void Set3d(bool flag) { is3d = flag; }
+#endif
+
+private:
+	uint8 registerIndex;
+	uint8 count;
+	uint8 space;
+	bool is3d;
+};
+
+class revSamplerBinding
+{
+public:
+	revSamplerBinding() :
+		registerIndex(0),
+		count(0),
+		space(0)
+	{
+	}
+	uint8 GetRegisterIndex() const { return registerIndex; }
+	uint8 GetCount() const { return count; }
+	uint8 GetSpace() const { return space; }
+
+#ifdef _DEBUG
+	void SetRegisterIndex(uint8 index) { registerIndex = index; }
+	void SetCount(uint8 count) { this->count = count; }
+	void SetSpace(uint8 space) { this->space = space; }
+#endif
+
+	SERIALIZE_FUNC()
+	{
+		archive(REV_NVP(registerIndex),
+			REV_NVP(count),
+			REV_NVP(space)
+		);
+	}
+private:
+	uint8 registerIndex;
+	uint8 count;
+	uint8 space;
+	bool is3d;
+};
 
 
 class revShader : public revResource
 {
 public:
 	revShader() :
-	name("")
+		type(SHADER_TYPE::VERTX),
+		name("")
 	{
 	}
 	virtual ~revShader(){}
 	virtual bool LoadFromFile(const revDevice& deviceContext, const char* path, SHADER_TYPE shaderType) = 0;
 	revShaderHandle GetHandle() const { return handle; }
 	const revArray<revAttributeBinding>& GetAttributes() const { return metaData.attributes; }
+	const revArray<revConstantBufferBinding>& GetConstantBuffers() const { return metaData.cbuffers; }
+	const revArray<revTextureBinding>& GetTextureBindings() const { return metaData.textures; }
+	const revArray<revSamplerBinding>& GetSamplerBindings() const { return metaData.samplers; }
 
 	struct ShaderMetaData
 	{
 		DefaultMetaData data;
 		revArray<revAttributeBinding> attributes;
+		revArray<revConstantBufferBinding> cbuffers;
+		revArray<revTextureBinding> textures;
+		revArray<revSamplerBinding> samplers;
 	};
 	
 protected:
@@ -92,7 +180,11 @@ protected:
 SERIALIZE_FUNC_NON_INTRUSIVE(revShader::ShaderMetaData, metaData)
 {
 	archive(REV_MAKE_NVP(data, metaData.data),
-		REV_MAKE_NVP(attributes, metaData.attributes));
+		REV_MAKE_NVP(attributes, metaData.attributes),
+		REV_MAKE_NVP(cbuffers, metaData.cbuffers),
+		REV_MAKE_NVP(textures, metaData.textures),
+		REV_MAKE_NVP(samplers, metaData.samplers)	
+		);
 }
 
 #endif

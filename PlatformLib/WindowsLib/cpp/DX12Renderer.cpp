@@ -7,17 +7,27 @@
 void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
 	if (!device.Create(desc)) return;		
+	if (!resourceHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::RESOURCE, 1024)) return;
+	if (!samplerHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::SAMPLER, 128)) return;
 	if (!swapChain.Create(&device, *window)) return;
 
 	IntialzieForApp();
 
 	//renderInfo.CreatePipeline(device, vertexShader, fragmentShader);
-	rootSiganture.Create(&device);
+	//rootSiganture.Create(&device);
+	RootSignatureDesc rootSignatureDesc;
+	rootSignatureDesc.AddMaterial(mat);
+	rootSiganture.Create(&device, rootSignatureDesc);
 	pipelineState.Create(&device, mat, rootSiganture);
 
 	// Load resource 
 	texture.LoadFromFile(&device, "sample_tex.png");
-	textureView.Create(device, texture, pipelineState.GetResourceViewHeap());
+	DX12DescriptorHeap::Chunk resourceChunk = resourceHeap.Allocation(1);
+	auto resourceHandle = resourceChunk.GetHandle();
+	textureView.Create(&device, texture, &resourceHandle);
+	DX12DescriptorHeap::Chunk samplerChunk = samplerHeap.Allocation(1);
+	auto samplerHandle = samplerChunk.GetHandle();
+	sampler.Create(&device, texture, &samplerHandle);
 
 	// create viewport and scissor 
 	rectScissor = { 0, 0, static_cast<LONG>(window->GetWidth()), static_cast<LONG>(window->GetHeight()) };
@@ -32,7 +42,7 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 
 void DX12Renderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists)
 {
-	uint32 length = lists.size();
+	uint32 length = static_cast<uint32>(lists.size());
 	revArray<ID3D12CommandList*> commandlists(lists.size());
 	for (uint32 i = 0; i < length; ++i) {
 		commandlists[i] = lists[i].GetList();
@@ -63,6 +73,9 @@ void DX12Renderer::Render()
 
 	rootSiganture.Apply(globalCommandList);
 	pipelineState.Apply(globalCommandList);
+	// TODO: index detemine by what?
+	resourceHeap.Apply(globalCommandList, 0);
+	samplerHeap.Apply(globalCommandList, 1);
 	commandList->RSSetViewports(1, &viewport);
 	commandList->RSSetScissorRects(1, &rectScissor);
 	swapChain.Appply(globalCommandList);

@@ -86,9 +86,9 @@ void DX12Shader::CreateMetaDataFromShader(const char* metaPath)
     D3D12_SHADER_DESC shaderDesc;
     reflection->GetDesc(&shaderDesc);
 
+    // Input assembler 
     metaData.attributes.clear();
     metaData.attributes.resize(shaderDesc.InputParameters);
-
     revArray<D3D12_INPUT_ELEMENT_DESC> inputLayouts;
     uint32 offset = 0;
     for (uint32 i = 0; i < shaderDesc.InputParameters; ++i) {
@@ -102,6 +102,60 @@ void DX12Shader::CreateMetaDataFromShader(const char* metaPath)
         metaData.attributes[i].SetOffset(offset);
         offset += GRAPHICS_SEMANTICS[static_cast<uint32>(elementType)].sizeOfBytes;
     }
+
+    // cbuffer 
+    metaData.cbuffers.clear();
+    metaData.cbuffers.resize(shaderDesc.ConstantBuffers);
+    for (uint32 i = 0; i < shaderDesc.ConstantBuffers; ++i) {
+        auto cbuffer = reflection->GetConstantBufferByIndex(i);
+        D3D12_SHADER_BUFFER_DESC bufferDesc;
+        cbuffer->GetDesc(&bufferDesc);
+        for (uint32 j = 0; j < bufferDesc.Variables; ++j) {
+            auto variable = cbuffer->GetVariableByIndex(j);
+            D3D12_SHADER_VARIABLE_DESC variableDesc;
+            variable->GetDesc(&variableDesc);
+
+            int bb = 0;
+        }
+
+    }
+
+    // Resources 
+    metaData.textures.clear();    
+    metaData.samplers.clear();
+    for (uint32 i = 0; i < shaderDesc.BoundResources; ++i) {
+        D3D12_SHADER_INPUT_BIND_DESC bindDesc;
+        reflection->GetResourceBindingDesc(i, &bindDesc);
+        switch (bindDesc.Type) {
+        case D3D_SIT_SAMPLER: 
+        {
+            revSamplerBinding sampler;
+            sampler.SetRegisterIndex(bindDesc.BindPoint);
+            sampler.SetCount(bindDesc.BindCount);
+            sampler.SetSpace(bindDesc.Space);
+            metaData.samplers.push_back(sampler);
+        }
+            break;
+
+        case D3D_SIT_TEXTURE:
+        {  
+            revTextureBinding texture;
+            texture.SetRegisterIndex(bindDesc.BindPoint);
+            texture.SetCount(bindDesc.BindCount);
+            texture.SetSpace(bindDesc.Space);
+            texture.Set3d(bindDesc.Dimension == D3D10_1_SRV_DIMENSION_TEXTURE3D);
+            metaData.textures.push_back(texture);
+        }
+            break;
+        }
+    }
+
+    // Load sammpler
+    //metaData.samplers.clear();
+    //metaData.samplers.resize(shaderDesc.sa)
+
+
+
     revSerializer::Serialize(metaPath, metaData);
 
     reflection->Release();

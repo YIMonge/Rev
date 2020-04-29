@@ -11,9 +11,10 @@ public:
 	revTextureView(){}
 	virtual ~revTextureView(){}
 
-	virtual void Create(const revDevice& deviceContext, const revTexture& texture, revGraphicsHeap* heap = nullptr) = 0;
+	virtual void Create(revDevice* device, const revTexture& texture, revCPUDescriptorHandle* heap = nullptr) = 0;
+	virtual void Destroy() = 0;
 protected:
-	revTextureResourceView  resourceView;
+	revDevice* device;
 };
 
 #endif

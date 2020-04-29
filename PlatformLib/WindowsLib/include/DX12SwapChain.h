@@ -3,6 +3,7 @@
 
 #ifdef _USE_DIRECTX12
 #include "DX12Device.h"
+#include "DX12DescriptorHeap.h"
 #include "Window.h"
 #include "revArray.h"
 #include "revColor.h"
@@ -39,11 +40,12 @@ private:
 	IDXGISwapChain3* swapChain;
 	int32 frameIndex;
 
-	ID3D12DescriptorHeap* renderTargetViewHeap;
 	uint32 renderTargetViewDescriptorSize;
-	ID3D12DescriptorHeap* depthStencilViewHeap;
 	revArray<ID3D12Resource*> renderTarget;
 	ID3D12Resource* depthStencil;
+
+	DX12DescriptorHeap renderTargetHeap;
+	DX12DescriptorHeap depthStencilHeap;
 
 	ID3D12Fence* fence;
 	uint32 fenceValue;
