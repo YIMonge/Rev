@@ -1,6 +1,6 @@
 #include "DX12Sampler.h"
 
-bool DX12Sampler::Create(DX12Device* device, const revTexture& texture, revCPUDescriptorHandle* heap)
+bool DX12Sampler::Create(DX12Device* device, const revTexture& texture, D3D12_CPU_DESCRIPTOR_HANDLE* heap)
 {
 	this->device = device;
 	auto& dxDevice = device->GetDevice();

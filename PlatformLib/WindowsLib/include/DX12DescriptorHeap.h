@@ -5,7 +5,7 @@
 #include "DX12CommandList.h"
 #include "log.h"
 
-class DX12DescriptorHeap
+class DX12DescriptorHeap 
 {
 public:
 	DX12DescriptorHeap();

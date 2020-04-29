@@ -101,3 +101,5 @@ Rev/project/windows/x64/Debug_DX12/Rev.vcxproj.FileListAbsolute.txt
 RevSample/Projects/Windows/x64/
 RevSample/Projects/Android/app/src/main/assets
 
+CoreLib/projects/Windows/x64/Debug_DX12/CoreLib.vcxproj.FileListAbsolute.txt
+Rev/project/windows/x64/Debug_DX12/Rev.vcxproj.FileListAbsolute.txt

@@ -104,6 +104,12 @@
     <ClInclude Include="include\DX12Sampler.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\include\revSampler.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revDescriptorBindingDesc.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\DX12Buffer.cpp">
@@ -164,6 +170,9 @@
       <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="cpp\DX12Sampler.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\cpp\revDescriptorBindingDesc.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
   </ItemGroup>

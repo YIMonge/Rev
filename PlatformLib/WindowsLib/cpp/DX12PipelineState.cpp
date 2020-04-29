@@ -1,6 +1,6 @@
 #include "DX12PipelineState.h"
 
-bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, const DX12RootSignature& rootSignature)
+bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, const DX12RootSignature& rootSignature, const revRect& viewportRect, const revRect& scissorRect)
 {
 	auto blendState = material.GetBlendState();
 	auto rasterizerState = material.GetRasterization();
@@ -81,6 +81,9 @@ bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, c
 		return false;
 	}
 
+	viewport = { 0, 0, static_cast<float>(viewportRect.w), static_cast<float>(viewportRect.h), 0.0f, 1.0f, };
+	scissor = { 0, 0, static_cast<LONG>(scissorRect.w), static_cast<LONG>(scissorRect.h) };
+
 	return true;
 }
 
@@ -88,4 +91,6 @@ void DX12PipelineState::Apply(DX12CommandList& commandList)
 {
 	auto& dxCommandList = commandList.GetList();
 	dxCommandList->SetPipelineState(pipelineState);
+	dxCommandList->RSSetViewports(1, &viewport);
+	dxCommandList->RSSetScissorRects(1, &scissor);
 }

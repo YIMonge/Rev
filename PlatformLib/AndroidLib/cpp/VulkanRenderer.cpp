@@ -26,7 +26,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
     if(!device.Create(*window)) return;
     if(!swapChain.Create(&device)) return;
-    if(!renderInfo.Create(device, swapChain)) return;
+    if(!renderInfo.Create(&device, swapChain)) return;
     if(!frameBuffer.Create(device, swapChain, renderInfo)) return;
     //-----------------------------------------------------------------------------------------------
     // TEST CODE
@@ -45,14 +45,16 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 
     VulkanTexture texture;
     texture.LoadFromFile(&device, "sample_tex.png");
-    if(!renderInfo.CreatePipeline(device, swapChain, shader[0], shader[1])) return;
-    if(!renderInfo.CreateDescriptorSet(device, texture)) return;
+    textureView.Create(&device, texture);
+    sampler.Create(&device, texture);
+    if(!renderInfo.CreatePipeline(&device, swapChain, shader[0], shader[1])) return;
+    if(!renderInfo.CreateDescriptorSet(&device, texture)) return;
 }
 
 void VulkanRenderer::ShutDown()
 {
     frameBuffer.Destroy(device);
-    renderInfo.Destroy(device);
+    renderInfo.Destroy(&device);
     swapChain.Destroy();
     device.Destroy();
 }

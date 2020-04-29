@@ -50,3 +50,20 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
+
+task syncResources(type: Sync) {
+    from "../../../Resources"
+    into "src/main/assets"
+}
+task compileShaderFromHLSL2SPIRV {
+
+}
+
+project.afterEvaluate {
+    // copy from all projects resouce directory to android assets.
+    preBuild.dependsOn syncResources
+    // compile shader from HLSL to SPIR-V.
+    preBuild.dependsOn compileShaderFromHLSL2SPIRV
+    // compile after sync.
+    compileShaderFromHLSL2SPIRV.dependsOn syncResources
+}

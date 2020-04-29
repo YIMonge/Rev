@@ -8,6 +8,8 @@
 #include "VulkanRenderInfo.h"
 #include "VulkanFrameBuffer.h"
 #include "VulkanBuffer.h"
+#include "VulkanTextureView.h"
+#include "VulkanSampler.h"
 
 class VulkanRenderer : public revRenderer
 {
@@ -35,6 +37,9 @@ private:
 
 	// TEST CODE
 	VulkanBuffer triangleVertexBuffer;
+	VulkanTexture texture;
+	VulkanTextureView textureView;
+	VulkanSampler sampler;
 };
 
 #endif

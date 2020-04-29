@@ -247,9 +247,8 @@ using revGraphicsCommandBuffer = VkCommandBuffer;
 using revGraphicsCommandQueue = VkQueue;
 using revGraphicsPipeline = VkPipeline;
 using revTextureHandle = VkImage;
-using revTextureResourceView = VkImageView;
 using revTextureSampler = VkSampler;
-using revGraphicsHeap = void;
+using revDescriptorHeap = void;
 
 namespace {
 	VkFilter ConvertToVKFilter(FILTER_MODE filter)
@@ -403,6 +402,37 @@ namespace {
 		if (component & static_cast<uint8>(COLOR_COMPONENT_FRAG::A)) ret |= VK_COLOR_COMPONENT_A_BIT;
 		return ret;
 	}
+
+	VkShaderStageFlagBits ConvertToVKShaderVisibility(SHADER_VISIBILITY visibility)
+	{
+		VkShaderStageFlagBits table[] = {
+				VK_SHADER_STAGE_VERTEX_BIT,
+				VK_SHADER_STAGE_FRAGMENT_BIT,
+				VK_SHADER_STAGE_GEOMETRY_BIT,
+				VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
+				VK_SHADER_STAGE_ALL_GRAPHICS,
+		};
+		return table[static_cast<uint32>(visibility)];
+	}
+
+	VkDescriptorType ConvertToVKDescriptorType(DESCRIPTOR_TYPE type)
+	{
+		VkDescriptorType table[] = {
+				VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+
+                VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+                VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+                VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+                VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+
+				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+				VK_DESCRIPTOR_TYPE_SAMPLER,
+		};
+		return table[static_cast<uint32>(type)];
+	}
 }
 
 #elif defined(_USE_DIRECTX12)
@@ -422,8 +452,6 @@ using revGraphicsPipeline = ID3D12PipelineState*;
 using revTextureHandle = ID3D12Resource;
 using revTextureSampler = D3D12_GPU_DESCRIPTOR_HANDLE;
 using revDescriptorHeap = ID3D12DescriptorHeap;
-using revCPUDescriptorHandle = D3D12_CPU_DESCRIPTOR_HANDLE;
-using revGPUDescriptorHandle = D3D12_GPU_DESCRIPTOR_HANDLE;
 
 
 namespace {

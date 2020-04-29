@@ -15,10 +15,11 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 
 	//renderInfo.CreatePipeline(device, vertexShader, fragmentShader);
 	//rootSiganture.Create(&device);
-	RootSignatureDesc rootSignatureDesc;
+	revDescriptorBindingDesc rootSignatureDesc;
 	rootSignatureDesc.AddMaterial(mat);
 	rootSiganture.Create(&device, rootSignatureDesc);
-	pipelineState.Create(&device, mat, rootSiganture);
+	revRect windowSize(window->GetWidth(), window->GetHeight());
+	pipelineState.Create(&device, mat, rootSiganture, windowSize, windowSize);
 
 	// Load resource 
 	texture.LoadFromFile(&device, "sample_tex.png");
@@ -28,10 +29,6 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	DX12DescriptorHeap::Chunk samplerChunk = samplerHeap.Allocation(1);
 	auto samplerHandle = samplerChunk.GetHandle();
 	sampler.Create(&device, texture, &samplerHandle);
-
-	// create viewport and scissor 
-	rectScissor = { 0, 0, static_cast<LONG>(window->GetWidth()), static_cast<LONG>(window->GetHeight()) };
-	viewport = { 0, 0, static_cast<float>(window->GetWidth()), static_cast<float>(window->GetHeight()), 0.0f, 1.0f, };
 
 	DX12CommandList& commandList = device.GetGlobalCommandList();
 	commandList.Close();
@@ -76,8 +73,6 @@ void DX12Renderer::Render()
 	// TODO: index detemine by what?
 	resourceHeap.Apply(globalCommandList, 0);
 	samplerHeap.Apply(globalCommandList, 1);
-	commandList->RSSetViewports(1, &viewport);
-	commandList->RSSetScissorRects(1, &rectScissor);
 	swapChain.Appply(globalCommandList);
 
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

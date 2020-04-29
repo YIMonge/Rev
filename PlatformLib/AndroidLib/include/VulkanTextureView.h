@@ -9,10 +9,10 @@ public:
     VulkanTextureView(){}
     virtual ~VulkanTextureView(){}
 
-    virtual void Create(const revDevice& device, const revTexture& texture, revGraphicsHeap* heap = nullptr);
-
-    const VkDescriptorImageInfo& GetDescriptorImageInfo() const { return descriptorImageInfo; }
+    void Create(revDevice* device, const revTexture& texture);
+    virtual void Destroy();
 private:
+    VkImageView resourceView;
     VkDescriptorImageInfo descriptorImageInfo;
 };
 

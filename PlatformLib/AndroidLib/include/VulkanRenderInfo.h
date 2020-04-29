@@ -16,13 +16,13 @@ public:
     VulkanRenderInfo();
     ~VulkanRenderInfo();
 
-    bool Create(const VulkanDevice& device, const VulkanSwapChain& swapChain);
-    void Destroy(const VulkanDevice& device);
+    bool Create(VulkanDevice* device, const VulkanSwapChain& swapChain);
+    void Destroy(VulkanDevice* device);
 
-    bool CreatePipeline(const VulkanDevice& device, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader);
-    bool CreatePipeline(const VulkanDevice& device, const VulkanSwapChain& swapChain, const revMaterial* material);
+    bool CreatePipeline(VulkanDevice* device, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader);
+    bool CreatePipeline(VulkanDevice* device, const VulkanSwapChain& swapChain, const revMaterial* material);
 
-    bool CreateDescriptorSet(const VulkanDevice& device, VulkanTexture& texture);
+    bool CreateDescriptorSet(VulkanDevice* device, VulkanTexture& texture);
 
     const VkRenderPass& GetRenderPass() const { return renderPass; }
     const VkPipeline& GetPipeline() const { return pipeline; }

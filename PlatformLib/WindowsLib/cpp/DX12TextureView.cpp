@@ -1,7 +1,7 @@
 #include "DX12TextureView.h"
 
 
-void DX12TextureView::Create(revDevice* device, const revTexture& texture, revCPUDescriptorHandle* heap)
+void DX12TextureView::Create(revDevice* device, const revTexture& texture, D3D12_CPU_DESCRIPTOR_HANDLE* heap)
 {
     this->device = device;
     D3D12_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc = {};

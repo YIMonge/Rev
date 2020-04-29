@@ -16,7 +16,7 @@ VulkanRenderInfo::~VulkanRenderInfo()
 
 }
 
-bool VulkanRenderInfo::Create(const VulkanDevice &deviceContext, const VulkanSwapChain& swapChain)
+bool VulkanRenderInfo::Create(VulkanDevice* deviceContext, const VulkanSwapChain& swapChain)
 {
     VkAttachmentDescription attachmentDescription {
         .format = ConvertToVKFormat(swapChain.GetFormat()),
@@ -58,7 +58,7 @@ bool VulkanRenderInfo::Create(const VulkanDevice &deviceContext, const VulkanSwa
         .pDependencies = nullptr,
     };
 
-    const VkDevice&  device = deviceContext.GetDevice();
+    const VkDevice&  device = deviceContext->GetDevice();
     VkResult result = vkCreateRenderPass(device, &renderPassCreateInfo, nullptr, &renderPass);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -71,9 +71,9 @@ bool VulkanRenderInfo::Create(const VulkanDevice &deviceContext, const VulkanSwa
 // TODO: determine each states by vertx and fragment shader. ex, input assembler is chosen by vertex shader, blend state is decided by fragment shader(material).
 // TODO: Material should have vertex/fragment shader, input assembler, blend and depth/stencil state. create pipeline by Material.
 // TODO: if use multiple vertex buffer, like first vertex last valying attributes must create multiple binding and attribute info.
-bool VulkanRenderInfo::CreatePipeline(const VulkanDevice& deviceContext, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader)
+bool VulkanRenderInfo::CreatePipeline(VulkanDevice* deviceContext, const VulkanSwapChain& swapChain, const VulkanShader& vertexShader, const VulkanShader& fragmentShader)
 {
-    const VkDevice& device = deviceContext.GetDevice();
+    const VkDevice& device = deviceContext->GetDevice();
 
     // Texture settings
     VkDescriptorSetLayoutBinding descriptorSetLayoutBinding = {
@@ -259,11 +259,11 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDevice& deviceContext, const V
 }
 
 
-bool VulkanRenderInfo::CreatePipeline(const VulkanDevice& deviceContext, const VulkanSwapChain& swapChain, const revMaterial* material)
+bool VulkanRenderInfo::CreatePipeline(VulkanDevice* deviceContext, const VulkanSwapChain& swapChain, const revMaterial* material)
 {
     if(!material) return false;
 
-    const revGraphicsDevice& device = deviceContext.GetDevice();
+    const revGraphicsDevice& device = deviceContext->GetDevice();
 
     // Texture
     auto textures = material->GetTextures();
@@ -419,9 +419,9 @@ bool VulkanRenderInfo::CreatePipeline(const VulkanDevice& deviceContext, const V
 
 
 // TODO: array of texture
-bool VulkanRenderInfo::CreateDescriptorSet(const VulkanDevice& vulkanDevice, VulkanTexture& texture)
+bool VulkanRenderInfo::CreateDescriptorSet(VulkanDevice* vulkanDevice, VulkanTexture& texture)
 {
-    const VkDevice& device = vulkanDevice.GetDevice();
+    const VkDevice& device = vulkanDevice->GetDevice();
     VkDescriptorPoolSize descriptorPoolSize = {
         .type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
         .descriptorCount = 1, // if texture count higher than 2 the param should texture count.
@@ -455,7 +455,10 @@ bool VulkanRenderInfo::CreateDescriptorSet(const VulkanDevice& vulkanDevice, Vul
     // TODO: array of texture
     VulkanTextureView textureView;
     textureView.Create(vulkanDevice, texture);
-    VkDescriptorImageInfo descriptorImageInfo = textureView.GetDescriptorImageInfo();
+    VkDescriptorImageInfo descriptorImageInfo =
+            {
+                //.sampler =
+            };
 
     VkWriteDescriptorSet writeDescriptorSet = {
         .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
@@ -474,9 +477,9 @@ bool VulkanRenderInfo::CreateDescriptorSet(const VulkanDevice& vulkanDevice, Vul
     return true;
 }
 
-void VulkanRenderInfo::Destroy(const VulkanDevice& deviceContext)
+void VulkanRenderInfo::Destroy(VulkanDevice* deviceContext)
 {
-    VkDevice device = deviceContext.GetDevice();
+    VkDevice device = deviceContext->GetDevice();
     vkDestroyRenderPass(device, renderPass, nullptr);
 }
 

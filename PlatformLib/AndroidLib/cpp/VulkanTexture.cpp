@@ -85,33 +85,6 @@ bool VulkanTexture::CreateTexture(revDevice* device, uint8* imageData)
     }
     memcpy(buffer, imageData, width * height * 4);
     vkUnmapMemory(revDevice, deviceMemory);
-
-    const SamplerDesc& samplerDesc = metaData.sampler;
-    //-----------------------------------------`-----------------------
-    // sampler setting
-    VkSamplerCreateInfo samplerCreateInfo = {
-            .sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
-            .pNext = nullptr,
-            .magFilter = ConvertToVKFilter(samplerDesc.GetMagFilter()),
-            .minFilter = ConvertToVKFilter(samplerDesc.GetMinFilter()),
-            .mipmapMode = ConvertToVKMipFilterMode(samplerDesc.GetMipFilter()),
-            .addressModeU = ConvertToVKTextureAddressMode(samplerDesc.GetAddressModeU()),
-            .addressModeV = ConvertToVKTextureAddressMode(samplerDesc.GetAddressModeV()),
-            .addressModeW = ConvertToVKTextureAddressMode(samplerDesc.GetAddressModeW()),
-            .mipLodBias = samplerDesc.GetMipLodBias(),
-            .maxAnisotropy = static_cast<f32>(samplerDesc.GetMaxAnisotropy()),
-            .compareOp = ConverToVKComparisonFunc(samplerDesc.GetComparisonFunc()),
-            .minLod = samplerDesc.GetMinLod(),
-            .maxLod = samplerDesc.GetMaxLod(),
-            .borderColor = ConvertToVKBorderColor(samplerDesc.GetBorderColor()),
-            .unnormalizedCoordinates = VK_FALSE,
-    };
-    result = vkCreateSampler(revDevice, &samplerCreateInfo, nullptr, &sampler);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
-
     return true;
 }
 

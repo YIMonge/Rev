@@ -298,6 +298,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\common\include\revAsyncable.h" />
+    <ClInclude Include="..\common\include\revDescriptorBindingDesc.h" />
     <ClInclude Include="..\common\include\revDevice.h" />
     <ClInclude Include="..\common\include\revFile.h" />
     <ClInclude Include="..\common\include\revGraphicsBuffer.h" />
@@ -305,6 +306,7 @@
     <ClInclude Include="..\common\include\revGraphicsTypedef.h" />
     <ClInclude Include="..\common\include\revLocker.h" />
     <ClInclude Include="..\common\include\revRenderer.h" />
+    <ClInclude Include="..\common\include\revSampler.h" />
     <ClInclude Include="..\common\include\revShader.h" />
     <ClInclude Include="..\common\include\revTexture.h" />
     <ClInclude Include="..\common\include\revTextureView.h" />
@@ -330,6 +332,7 @@
     <ClInclude Include="include\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\cpp\revDescriptorBindingDesc.cpp" />
     <ClCompile Include="..\common\cpp\revShader.cpp" />
     <ClCompile Include="..\common\cpp\revTexture.cpp" />
     <ClCompile Include="cpp\DX12Buffer.cpp" />

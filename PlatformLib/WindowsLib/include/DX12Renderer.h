@@ -47,9 +47,6 @@ private:
 	DX12RootSignature rootSiganture;
 	DX12PipelineState pipelineState;
 
-	D3D12_VIEWPORT viewport;
-	D3D12_RECT rectScissor;
-
 	DX12DescriptorHeap resourceHeap;
 	DX12DescriptorHeap samplerHeap;
 
