@@ -5,13 +5,13 @@ Thread::Thread()
 	: handle(0)
 	, stack_size(1024 * 1024)
 	, priority(0)
-	, IThread()
+	, revThread()
 {}
 
 Thread::~Thread()
 {}
 
-void Thread::Create(uint32 priority, uint32 stack_size, IAsyncable* func)
+void Thread::Create(uint32 priority, uint32 stack_size, revAsyncable* func)
 {
 	this->priority = priority;
 	this->stack_size = stack_size;
@@ -52,7 +52,7 @@ void Thread::Join()
 
 }
 
-void Thread::SetFunc(IAsyncable* func)
+void Thread::SetFunc(revAsyncable* func)
 {
 	this->func = func;
 }

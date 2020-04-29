@@ -3,7 +3,7 @@
 
 #ifdef _USE_VULKAN
 
-#include "VulkanDeviceContext.h"
+#include "VulkanDevice.h"
 #include "revArray.h"
 
 class VulkanSwapChain
@@ -12,18 +12,29 @@ public:
     VulkanSwapChain();
     ~VulkanSwapChain();
 
-    bool Create(const VulkanDeviceContext& deviceContext);
-    void Destroy(const VulkanDeviceContext& deviceContext);
+    bool Create(VulkanDevice* _device);
+    void Destroy();
 
-    const VkFormat& GetFormat() const { return format; }
-    const VkSwapchainKHR&  GetSwapChain() const { return swapChain; }
+    const GRAPHICS_FORMAT GetFormat() const { return format; }
+    const revSwapChain&  GetSwapChain() const { return swapChain; }
     const VkExtent2D& GetDisplaySize() const { return displaySize; }
+
+    const VkSemaphore& GetSemaphore() const { return semaphore; }
+    const VkFence& GetFence() const { return fence; }
+
     uint32 GetLength() const { return length; }
+    bool Present() const;
+    bool WaitForPreviousFrame();
 private:
-    VkSwapchainKHR swapChain;
+    VulkanDevice* device;
+    revSwapChain swapChain;
     VkExtent2D displaySize;
-    VkFormat format;
+    GRAPHICS_FORMAT format;
     uint32 length;
+    uint32 frameIndex;
+
+    VkSemaphore  semaphore;
+    VkFence fence;
 };
 
 

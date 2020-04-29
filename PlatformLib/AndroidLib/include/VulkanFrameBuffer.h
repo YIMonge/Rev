@@ -11,8 +11,8 @@ public:
     VulkanFrameBuffer();
     ~VulkanFrameBuffer();
 
-    bool Create(const VulkanDeviceContext& deviceContext, const VulkanSwapChain& swapChain, const VulkanRenderInfo& renderInfo);
-    void Destroy(const VulkanDeviceContext& deviceContext);
+    bool Create(const VulkanDevice& device, const VulkanSwapChain& swapChain, const VulkanRenderInfo& renderInfo);
+    void Destroy(const VulkanDevice& device);
 
     const revArray<VkImage>& GetImages() const { return images; }
     const revArray<VkImageView>& GetViews() const { return views; }

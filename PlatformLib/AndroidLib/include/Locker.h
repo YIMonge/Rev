@@ -1,7 +1,7 @@
 #ifndef __LOCKER_H__
 #define __LOCKER_H__
 
-#include "../../interface/ILocker.h"
+#include "revLocker.h"
 #include <pthread.h>
 
 

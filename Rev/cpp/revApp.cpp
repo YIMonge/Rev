@@ -14,9 +14,8 @@ revApp::revApp()
 /* virtual */ void revApp::StartUp(Window* window)
 {
 	revMemory::Get().StartUp(ToMegaByte(128));
-	GraphicsDesc desc;
+	GraphicsDesc desc = {};
 	revGraphics::Get().StartUp(window, desc);
-
 	initialized = true;
 }
 

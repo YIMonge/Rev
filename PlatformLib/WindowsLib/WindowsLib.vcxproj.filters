@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="cpp">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\CriticalSection.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12Buffer.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12FrameBuffer.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12Renderer.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12RenderInfo.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12Shader.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12SwapChain.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12Texture.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12TextureView.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\File.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Log.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Thread.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Window.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revAsyncable.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revFile.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revGraphicsBuffer.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revGraphicsTypedef.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revLocker.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revRenderer.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revShader.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revTexture.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revTextureView.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revThread.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12Device.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revDevice.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revGraphicsCommandList.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12CommandList.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12PipelineState.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12RootSignature.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12DescriptorHeap.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DX12Sampler.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revSampler.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revDescriptorBindingDesc.h">
+      <Filter>header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cpp\DX12Buffer.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12FrameBuffer.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12Renderer.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12RenderInfo.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12Shader.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12SwapChain.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12Texture.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12TextureView.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\File.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\Thread.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\Window.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\cpp\revTexture.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12Device.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12CommandList.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12PipelineState.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12RootSignature.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\Log.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\cpp\revShader.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12DescriptorHeap.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX12Sampler.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\cpp\revDescriptorBindingDesc.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

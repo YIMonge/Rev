@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "../include/revMemory.h"
 
-#define ONLY_MSPACES (1)
-#define MALLOC_ALIGNMENT (8) 
+//#define ONLY_MSPACES (1)
+//#define MALLOC_ALIGNMENT (8)
 
 #include <errno.h>
 
@@ -50,7 +50,7 @@ void revMemory::ShutDown()
 	}
 }
 
-void* revMemory::Allocate(unsigned int size, HEAP_TYPE heap_type) 
+void* revMemory::Allocate(uint32 size, HEAP_TYPE heap_type) 
 {
 	return malloc(size);
 	// TODO: ASSERT
@@ -66,12 +66,12 @@ void revMemory::Free(void* pointer, HEAP_TYPE heap_type)
 
 void* operator new(size_t size)
 {
-	return revMemory::Get().Allocate(size, HEAP_TYPE::ORIGIN);
+	return revMemory::Get().Allocate(static_cast<uint32>(size), HEAP_TYPE::ORIGIN);
 }
 
 void* operator new[](size_t size)
 {
-	return revMemory::Get().Allocate(size, HEAP_TYPE::ORIGIN);
+	return revMemory::Get().Allocate(static_cast<uint32>(size), HEAP_TYPE::ORIGIN);
 }
 
 void operator delete(void* pv) noexcept

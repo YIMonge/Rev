@@ -4,17 +4,16 @@
 
 #ifdef _USE_VULKAN
 
-VulkanShader::VulkanShader() :
-name("")
+VulkanShader::VulkanShader()
 {
+    handle = VK_NULL_HANDLE;
 }
 
 
-
-bool VulkanShader::LoadFromFile(const VulkanDeviceContext& deviceContext, const char* path, SHADER_TYPE shaderType)
+bool VulkanShader::LoadFromFile(const revDevice& device, const char* path, SHADER_TYPE shaderType)
 {
     File file;
-    if(!file.Open(path, FileMode::Mode::ReadText)){
+    if(!file.Open(path, FileMode::ReadText)){
         NATIVE_LOGE("file not found : %s", path);
         return false;
     }
@@ -22,7 +21,7 @@ bool VulkanShader::LoadFromFile(const VulkanDeviceContext& deviceContext, const 
     type = shaderType;
     uint32 length = file.GetFileSize();
     char* data = new char[length];
-    file.GetData(data);
+    file.ReadData(data);
 
     VkShaderModuleCreateInfo shaderModuleCreateInfo {
         .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
@@ -31,9 +30,10 @@ bool VulkanShader::LoadFromFile(const VulkanDeviceContext& deviceContext, const 
         .pCode = (const uint32*)data,
         .flags = 0
     };
-    VkResult result = vkCreateShaderModule(deviceContext.GetDevice(), &shaderModuleCreateInfo,
-                                           nullptr, &handle);
+    VkResult result = vkCreateShaderModule(device.GetDevice(), &shaderModuleCreateInfo, nullptr, &handle);
     delete[] data;
+
+    LoadMetaData(path);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;

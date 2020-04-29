@@ -1,15 +1,17 @@
 #ifndef __VULKANRENDERER_H__
 #define __VULKANRENDERER_H__
 
-#include "IRenderer.h"
+#include "revRenderer.h"
 #ifdef _USE_VULKAN
-#include "VulkanDeviceContext.h"
+#include "VulkanDevice.h"
 #include "VulkanSwapChain.h"
 #include "VulkanRenderInfo.h"
 #include "VulkanFrameBuffer.h"
 #include "VulkanBuffer.h"
+#include "VulkanTextureView.h"
+#include "VulkanSampler.h"
 
-class VulkanRenderer : public IRenderer
+class VulkanRenderer : public revRenderer
 {
 public:
     VulkanRenderer();
@@ -19,32 +21,25 @@ public:
 	virtual void ShutDown();
 
 	void Render();
-
-	void Clear(bool clear_color, bool clear_depth, const revColor& fill_color);
 	void SwapBuffers();
-
-	void SetBlendFunc(BLEND_FUNC func);
-	void SetAlphaTest(ALPHA_TEST func, float value);
 private:
-	bool CreateCommandPool();
-	void DestroyCommandPool();
+    void ExecuteCommand(revArray<revGraphicsCommandList>& lists);
+    void ExecuteCommand(revGraphicsCommandList& list);
+
     void setImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
-
-
-	VulkanDeviceContext context;
+	VulkanDevice device;
 	VulkanSwapChain swapChain;
 	VulkanRenderInfo renderInfo;
 	VulkanFrameBuffer frameBuffer;
-
-	VkCommandPool commandPool;
-	revArray<VkCommandBuffer> commandBuffers;
 
 	// clear color
 	VkClearValue clearValue;
 
 	// TEST CODE
 	VulkanBuffer triangleVertexBuffer;
-
+	VulkanTexture texture;
+	VulkanTextureView textureView;
+	VulkanSampler sampler;
 };
 
 #endif

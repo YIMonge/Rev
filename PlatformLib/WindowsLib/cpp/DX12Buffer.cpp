@@ -1,0 +1,87 @@
+#include "DX12Buffer.h"
+
+#ifdef _USE_DIRECTX12
+
+DX12Buffer::DX12Buffer() :
+	buffer(nullptr)
+{
+}
+
+DX12Buffer::~DX12Buffer()
+{
+	if (buffer != nullptr) {
+		buffer->Release();
+	}
+}
+
+bool DX12Buffer::Create(const revDevice& deviceContext, const revArray<revVector3>& data)
+{
+	return Create(deviceContext, &data[0].data[0], data.size() * sizeof(revVector3));
+}
+
+bool DX12Buffer::Create(const revDevice& deviceContext, const revArray<revVector4>& data)
+{
+	return Create(deviceContext, &data[0].data[0], data.size() * sizeof(revVector4));
+}
+
+bool DX12Buffer::Create(const revDevice& deviceContext, const revArray<float>& data)
+{
+	return Create(deviceContext, &data[0], data.size() * sizeof(float));
+}
+
+bool DX12Buffer::Create(const revDevice& deviceContext, const float* data, uint32 size)
+{
+	HRESULT hr = deviceContext.GetDevice()->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer(size),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&buffer)
+	);
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	CD3DX12_RANGE readRange(0, 0);
+	uint8* bufferBegin = nullptr;
+	hr = buffer->Map(0, &readRange, reinterpret_cast<void**>(&bufferBegin));
+	if (FAILED(hr)) {
+		return false;
+	}
+	memcpy(bufferBegin, data, size);
+	buffer->Unmap(0, nullptr);
+
+	return true;
+}
+
+void DX12Buffer::Destroy(const revDevice& deviceContext)
+{
+	if (buffer != nullptr) {
+		buffer->Release();
+		buffer = nullptr;
+	}
+}
+
+
+DX12VertexBuffer::DX12VertexBuffer()
+{
+
+}
+
+DX12VertexBuffer::~DX12VertexBuffer()
+{
+}
+
+bool DX12VertexBuffer::Create(const revDevice& deviceContext, const float* data, uint32 size)
+{
+	DX12Buffer::Create(deviceContext, data, size);
+	view.BufferLocation = buffer->GetGPUVirtualAddress();
+	// TODO: set stride 
+	view.StrideInBytes = sizeof(revVector3) + sizeof(revVector2);
+	view.SizeInBytes = size;
+	return true;
+}
+
+
+#endif

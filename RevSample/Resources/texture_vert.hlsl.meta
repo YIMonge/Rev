@@ -1,0 +1,27 @@
+{
+    "root": {
+        "data": {
+            "guid": 0,
+            "userData": ""
+        },
+        "attributes": [
+            {
+                "type": 0,
+                "binding": 0,
+                "format": 9,
+                "offset": 0,
+                "inputClass": 205
+            },
+            {
+                "type": 3,
+                "binding": 0,
+                "format": 6,
+                "offset": 12,
+                "inputClass": 205
+            }
+        ],
+        "cbuffers": [],
+        "textures": [],
+        "samplers": []
+    }
+}

@@ -2,13 +2,13 @@
 #define __REVGRAPHICS_H__
 
 #include "revSingleton.h"
-#include "IDeviceContext.h" 
+#include "revDevice.h"
 #include "revColor.h"
 #include "revDrawCommand.h"
 
 class Color;
 class Window;
-class IRenderer;
+class revRenderer;
 
 
 class revGraphics : public revSingleton<revGraphics>
@@ -22,7 +22,7 @@ public:
 	void Draw();
 private:
 	GraphicsDesc desc;
-	IRenderer* renderer;
+	revRenderer* renderer;
     revDrawCommandStorage drawCommandStorage;
 };
 

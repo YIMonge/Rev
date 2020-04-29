@@ -1,0 +1,87 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.0"
+    defaultConfig {
+        applicationId "com.rev.revsample"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version "3.10.2"
+        }
+    }
+    def ndkDir = android.ndkDirectory
+    sourceSets {
+        main {
+            jniLibs {
+                srcDir "$ndkDir/sources/third_party/vulkan/src/build-android/jniLibs"
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.core:core-ktx:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+}
+
+// TODO: file cache system
+task syncResources(type: Sync) {
+    from "../../../Resources"
+    into "src/main/assets"
+    rename '(.*).hlsl.meta','$1.spv.meta' // shader meta file rename for spv
+}
+
+// TODO: Shader Cache
+task compileShaderFromHLSL2SPIRV(dependsOn: syncResources)  {
+    String assetPath = 'src\\main\\assets'
+    FileTree tree = fileTree(dir: assetPath).include('*.hlsl')
+    String glslc = projectDir.path + "\\buildTools\\glslc.exe"
+    doLast {
+        tree.visit {element ->
+            String outPath = element.file.getAbsolutePath()
+            outPath = outPath.replace('.hlsl', '.spv')
+            String stage = '-fshader-stage=vertex'
+            if (outPath.contains('_frag.spv')) {
+                stage = '-fshader-stage=fragment'
+            }
+
+            println element.file
+            println outPath
+            exec {
+                    commandLine 'cmd', '/c', glslc, stage, element.file, '-o', outPath
+            }
+        }
+        delete  fileTree(dir: 'src\\main\\assets', include: '*.hlsl')
+    }
+}
+
+project.afterEvaluate {
+    preBuild.dependsOn(syncResources, compileShaderFromHLSL2SPIRV)
+}

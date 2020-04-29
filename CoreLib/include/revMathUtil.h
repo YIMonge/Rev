@@ -2,6 +2,7 @@
 #define __REVMATHUTIL_H__
 
 #include <math.h>
+#include <float.h>
 
 #include "revVector3.h"
 #include "revVector4.h"
@@ -136,6 +137,11 @@ namespace MathUtil
 			}
 		}
 		return count;
+	}
+
+	inline bool CmpFloat(float a, float b)
+	{
+		return fabs(a - b) < FLT_EPSILON;
 	}
 };
 

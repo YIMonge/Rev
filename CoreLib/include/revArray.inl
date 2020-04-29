@@ -63,7 +63,7 @@ void revArray<T>::Resize(uint32 capacity)
 	size = capacity;
 	T* new_array = new T[capacity];
 	if(array != nullptr){
-		memcpy(new_array, array, count * sizeof(T));
+		memcpy(new_array, array, min(capacity, count) * sizeof(T));
 		delete[] array;
 	}
 	count = capacity;

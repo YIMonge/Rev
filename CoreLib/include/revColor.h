@@ -11,7 +11,13 @@ public:
 	static const revColor black;
 
 
-    revColor(float _r, float _g, float _b, float _a);
+    revColor(float _r, float _g, float _b, float _a):
+		r(_r),
+		g(_g),
+		b(_b),
+		a(_a)
+	{
+	}
     
   	union
 	{
@@ -27,13 +33,5 @@ public:
  
     
 };
-
-inline revColor::revColor(float _r, float _g, float _b, float _a) :
-r(_r),
-g(_g),
-b(_b),
-a(_a)
-{
-}
 
 #endif /* defined(__Rev__revColor__) */

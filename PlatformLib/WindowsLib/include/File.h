@@ -1,19 +1,28 @@
 #pragma once
 
-#include "../../interface/IFile.h"
+#include "revFile.h"
 #include <stdio.h>
 
+#ifdef  _DEBUG
+#define RESOURCE_PATH "../../Resources/"
+#elif defined(_RELEASE)
+#define RESOURCE_PATH "Resources/"
+#endif //  _DEBUG
 
-class File : public IFile
+class File : public revFile
 {
 public:
 	File();
+	File(const char* path, FileMode mode);
 	virtual ~File();
 
-	virtual void Open(const char* path, FileMode::Mode mode);
+	virtual bool Open(const char* path, FileMode mode);
 	virtual void Close();
+	virtual void ReadData(char* data, uint32 length = 0);
+	virtual void WriteData(char* data, uint32 length);
 	virtual uint32 GetFileSize();
+
 private:
-	FileMode::Mode mode;
+	FileMode mode;
 	FILE* file;
 };

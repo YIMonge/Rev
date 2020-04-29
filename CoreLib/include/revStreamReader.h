@@ -1,9 +1,9 @@
 #pragma once
-#include "../../PlatformLib/interface/IFile.h"
+#include "../../PlatformLib/interface/revFile.h"
 
 class revString;
 
-class revStreamReader : public IFile
+class revStreamReader : public revFile
 {
 public:
 	revStreamReader(const revString& path);
