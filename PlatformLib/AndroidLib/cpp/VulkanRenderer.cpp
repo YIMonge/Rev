@@ -39,8 +39,8 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     triangleVertexBuffer.Create(device, triangleVertices, sizeof(triangleVertices));
 
     VulkanShader shader[2];
-    shader[0].LoadFromFile(device, "shaders/first.vert.spv", SHADER_TYPE::VERTX);
-    shader[1].LoadFromFile(device, "shaders/first.frag.spv", SHADER_TYPE::FRAGMENT);
+    shader[0].LoadFromFile(device, "shaders/texture_vert.spv", SHADER_TYPE::VERTX);
+    shader[1].LoadFromFile(device, "shaders/texture_frag.spv", SHADER_TYPE::FRAGMENT);
 
 
     VulkanTexture texture;

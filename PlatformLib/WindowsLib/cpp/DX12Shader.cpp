@@ -38,7 +38,7 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 	HRESULT hr = D3DCompileFromFile(wstr.c_str(),
 		nullptr,
 		nullptr,
-		type == SHADER_TYPE::VERTX ? "VSMain" : "PSMain",
+		"main", //type == SHADER_TYPE::VERTX ? "VSMain" : "PSMain",
 		type == SHADER_TYPE::VERTX ? "vs_5_0" : "ps_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
 		0,
@@ -47,8 +47,11 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 	);
 
 	if (FAILED(hr)) {
-        const char* errorMsg = reinterpret_cast<const char*>(error->GetBufferPointer());
-        NATIVE_LOGE("Shader compile error : %s", errorMsg);
+        if (error != nullptr) {
+            const char* errorMsg = reinterpret_cast<const char*>(error->GetBufferPointer());
+            NATIVE_LOGE("Shader compile error : %s", errorMsg);
+        }
+        else NATIVE_LOGE("Shader file not found : ", path);
         if (error != nullptr) error->Release();
 		return false;
 	}

@@ -51,19 +51,37 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
 
+// TODO: file cache system
 task syncResources(type: Sync) {
     from "../../../Resources"
     into "src/main/assets"
+    rename '(.*).hlsl.meta','$1.spv.meta' // shader meta file rename for spv
 }
-task compileShaderFromHLSL2SPIRV {
 
+// TODO: Shader Cache
+task compileShaderFromHLSL2SPIRV(dependsOn: syncResources)  {
+    String assetPath = 'src\\main\\assets'
+    FileTree tree = fileTree(dir: assetPath).include('*.hlsl')
+    String glslc = projectDir.path + "\\buildTools\\glslc.exe"
+    doLast {
+        tree.visit {element ->
+            String outPath = element.file.getAbsolutePath()
+            outPath = outPath.replace('.hlsl', '.spv')
+            String stage = '-fshader-stage=vertex'
+            if (outPath.contains('_frag.spv')) {
+                stage = '-fshader-stage=fragment'
+            }
+
+            println element.file
+            println outPath
+            exec {
+                    commandLine 'cmd', '/c', glslc, stage, element.file, '-o', outPath
+            }
+        }
+        delete  fileTree(dir: 'src\\main\\assets', include: '*.hlsl')
+    }
 }
 
 project.afterEvaluate {
-    // copy from all projects resouce directory to android assets.
-    preBuild.dependsOn syncResources
-    // compile shader from HLSL to SPIR-V.
-    preBuild.dependsOn compileShaderFromHLSL2SPIRV
-    // compile after sync.
-    compileShaderFromHLSL2SPIRV.dependsOn syncResources
+    preBuild.dependsOn(syncResources, compileShaderFromHLSL2SPIRV)
 }

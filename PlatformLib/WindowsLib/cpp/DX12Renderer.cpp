@@ -92,8 +92,8 @@ revMaterial mat;
 bool DX12Renderer::IntialzieForApp()
 {
 	// TODO: load shader 
-	vertexShader.LoadFromFile(device, "texture.hlsl", SHADER_TYPE::VERTX);
-	fragmentShader.LoadFromFile(device, "texture.hlsl", SHADER_TYPE::FRAGMENT);
+	vertexShader.LoadFromFile(device, "texture_vert.hlsl", SHADER_TYPE::VERTX);
+	fragmentShader.LoadFromFile(device, "texture_frag.hlsl", SHADER_TYPE::FRAGMENT);
 
 	mat.SetShader(SHADER_TYPE::VERTX, &vertexShader);
 	mat.SetShader(SHADER_TYPE::FRAGMENT, &fragmentShader);
