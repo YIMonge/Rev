@@ -1,6 +1,6 @@
 #include "VulkanTextureView.h"
 
-void VulkanTextureView::Create(revDevice* device, const revTexture& texture)
+void VulkanTextureView::Create(revDevice* device, const revTexture& texture, const VulkanSampler& sampler, VulkanDescriptorSet* descriptorSet)
 {
     this->device = device;
 
@@ -24,13 +24,25 @@ void VulkanTextureView::Create(revDevice* device, const revTexture& texture)
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return;
     }
-    /*
+
     descriptorImageInfo = {
-            .sampler = texture.GetSampler(),
+            .sampler = sampler.GetHandle(),
             .imageView = resourceView,
             .imageLayout = VK_IMAGE_LAYOUT_GENERAL,
     };
-     */
+
+    VkWriteDescriptorSet writeDescriptorSet = {};
+    writeDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeDescriptorSet.pNext = nullptr;
+    writeDescriptorSet.dstSet = descriptorSet->GetHandle();
+    writeDescriptorSet.dstBinding = 0;
+    writeDescriptorSet.dstArrayElement = 0;
+    writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+    writeDescriptorSet.descriptorCount = 1;
+    writeDescriptorSet.pImageInfo = &descriptorImageInfo;
+    writeDescriptorSet.pBufferInfo = nullptr;
+    writeDescriptorSet.pTexelBufferView = nullptr;
+    vkUpdateDescriptorSets(device->GetDevice(), 1, &writeDescriptorSet, 0, nullptr);
 }
 
 void VulkanTextureView::Destroy()

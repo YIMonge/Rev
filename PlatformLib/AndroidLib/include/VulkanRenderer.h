@@ -10,6 +10,8 @@
 #include "VulkanBuffer.h"
 #include "VulkanTextureView.h"
 #include "VulkanSampler.h"
+#include "VulkanDescriptorSetLayout.h"
+#include "VulkanDescriptorSet.h"
 
 class VulkanRenderer : public revRenderer
 {
@@ -29,7 +31,7 @@ private:
     void setImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
 	VulkanDevice device;
 	VulkanSwapChain swapChain;
-	VulkanRenderInfo renderInfo;
+	//VulkanRenderInfo renderInfo;
 	VulkanFrameBuffer frameBuffer;
 
 	// clear color
@@ -40,6 +42,9 @@ private:
 	VulkanTexture texture;
 	VulkanTextureView textureView;
 	VulkanSampler sampler;
+	VulkanDescriptorSet descriptorSet[4];
+	VulkanDescriptorSetLayout descriptorSetLayout;
+	revMaterial mat;
 };
 
 #endif

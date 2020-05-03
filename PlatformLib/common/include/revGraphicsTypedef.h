@@ -174,6 +174,31 @@ enum class INPUT_ELEMENT_TYPE
 	MAX_NUM,
 };
 
+struct SemanticData
+{
+	const char* name;
+	uint32 index;
+	GRAPHICS_FORMAT format;
+	uint32 sizeOfBytes;
+};
+
+// TODO: split to cpp
+const SemanticData GRAPHICS_SEMANTICS[] =
+{
+		{"POSITION",	0,  GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
+		{"NORMAL",		0,  GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
+		{"TANGENT",		0,	GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
+		{"TEXCOORD",	0,	GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
+		{"TEXCOORD",	1,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
+		{"TEXCOORD",	2,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
+		{"TEXCOORD",	3,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
+		{"COLOR",		0,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
+		{"COLOR",		1,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
+		{"COLOR",		2,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
+		{"COLOR",		3,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
+		{"MAX_NUM",		0,  GRAPHICS_FORMAT::MAX_NUM,				0, },
+};
+
 enum class INPUT_CLASS
 {
 	PER_VERTEX,
@@ -233,6 +258,7 @@ enum class SHADER_INPUT_TYPE
 	UAV_RWSTRUCTURED_WITH_COUNTER,
 	MAX_NUM,
 };
+
 
 // belows are specific graphics lib arguments.
 #ifdef _USE_VULKAN
@@ -353,7 +379,7 @@ namespace {
 		return table[static_cast<uint32>(mode)];
 	}
 
-    VkCullModeFlagBits ConvertToDXCullMode(CULL_MODE_FLAG mode)
+    VkCullModeFlagBits ConvertToVKCullMode(CULL_MODE_FLAG mode)
 	{
 		VkCullModeFlagBits table[] = {
 			VK_CULL_MODE_NONE,
@@ -374,7 +400,7 @@ namespace {
 		return table[static_cast<uint32>(op)];
 	}
 
-	VkLogicOp ConverToVKLogicOp(LOGIC_OP op)
+	VkLogicOp ConvertToVKLogicOp(LOGIC_OP op)
 	{
 		VkLogicOp table[] = {
 			VK_LOGIC_OP_CLEAR,
@@ -433,6 +459,18 @@ namespace {
 		};
 		return table[static_cast<uint32>(type)];
 	}
+
+	VkDescriptorType ConvertToVKDescriptorHeapType(DESCRIPTOR_HEAP_TYPE type)
+	{
+		VkDescriptorType table[] = {
+				VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+				VK_DESCRIPTOR_TYPE_SAMPLER,
+				// TODO: RENDER_TARGET,
+				// TODO: DEPTH_STENCIL,
+		};
+		return table[static_cast<uint32>(type)];
+	}
+
 }
 
 #elif defined(_USE_DIRECTX12)
@@ -600,31 +638,6 @@ namespace {
 		if (component & static_cast<uint8>(COLOR_COMPONENT_FRAG::A)) ret |= D3D12_COLOR_WRITE_ENABLE_ALPHA;
 		return ret;
 	}
-
-	struct SemanticData
-	{
-		const char* name;
-		uint32 index;
-		GRAPHICS_FORMAT format;
-		uint32 sizeOfBytes;
-	};
-
-	const SemanticData GRAPHICS_SEMANTICS[] =
-	{
-		{"POSITION",	0,  GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
-		{"NORMAL",		0,  GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
-		{"TANGENT",		0,	GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
-		{"TEXCOORD",	0,	GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
-		{"TEXCOORD",	1,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
-		{"TEXCOORD",	2,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
-		{"TEXCOORD",	3,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
-		{"COLOR",		0,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
-		{"COLOR",		1,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
-		{"COLOR",		2,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
-		{"COLOR",		3,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
-		{"MAX_NUM",		0,  GRAPHICS_FORMAT::MAX_NUM,				0, },
-	};
-
 
 	INPUT_ELEMENT_TYPE ConvertToREVSemantic(const char* name)
 	{

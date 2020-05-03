@@ -12,6 +12,8 @@ public:
     {}
     virtual ~revSampler(){}
 
+    const revTextureSampler& GetHandle() const { return sampler; }
+
 protected:
     revDevice* device;
     revTextureSampler sampler;

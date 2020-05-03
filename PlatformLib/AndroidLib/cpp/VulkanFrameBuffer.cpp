@@ -1,3 +1,4 @@
+#include <VulkanSwapChain.h>
 #include "VulkanFrameBuffer.h"
 #include "Log.h"
 #ifdef _USE_VULKAN
@@ -11,13 +12,13 @@ VulkanFrameBuffer::~VulkanFrameBuffer()
 {
 }
 
-bool VulkanFrameBuffer::Create(const VulkanDevice& deviceContext, const VulkanSwapChain &swapChain, const VulkanRenderInfo& renderInfo)
+bool VulkanFrameBuffer::Create(revDevice* device, const VulkanSwapChain &swapChain, const VulkanPipelineState& pipelineState)
 {
+    this->device = device;
     foramt = ConvertToVKFormat(swapChain.GetFormat());
     uint32 imageCount = 0;
-    const revGraphicsDevice& device = deviceContext.GetDevice();
     VkSwapchainKHR  swapchain = swapChain.GetSwapChain();
-    VkResult result = vkGetSwapchainImagesKHR(device, swapchain, &imageCount, nullptr);
+    VkResult result = vkGetSwapchainImagesKHR(device->GetDevice(), swapchain, &imageCount, nullptr);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -25,7 +26,7 @@ bool VulkanFrameBuffer::Create(const VulkanDevice& deviceContext, const VulkanSw
 
     views.resize(imageCount);
     images.resize(imageCount);
-    result = vkGetSwapchainImagesKHR(device, swapchain, &imageCount, &images[0]);
+    result = vkGetSwapchainImagesKHR(device->GetDevice(), swapchain, &imageCount, &images[0]);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -54,7 +55,7 @@ bool VulkanFrameBuffer::Create(const VulkanDevice& deviceContext, const VulkanSw
                         },
                 .flags = 0,
         };
-        result = vkCreateImageView(device, &viewCreateInfo, nullptr, &views[i]);
+        result = vkCreateImageView(device->GetDevice(), &viewCreateInfo, nullptr, &views[i]);
         if(result != VK_SUCCESS){
             NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
             return false;
@@ -73,7 +74,7 @@ bool VulkanFrameBuffer::Create(const VulkanDevice& deviceContext, const VulkanSw
         VkFramebufferCreateInfo framebufferCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
             .pNext = nullptr,
-            .renderPass = renderInfo.GetRenderPass(),
+            .renderPass = pipelineState.GetRenderPass(),
             .layers = 1,
             .attachmentCount = 1, // if using depth set to 2
             .pAttachments = attachments,
@@ -81,7 +82,7 @@ bool VulkanFrameBuffer::Create(const VulkanDevice& deviceContext, const VulkanSw
             .height = size.height,
         };
 
-        VkResult result = vkCreateFramebuffer(device, &framebufferCreateInfo, nullptr, &framebuffers[i]);
+        VkResult result = vkCreateFramebuffer(device->GetDevice(), &framebufferCreateInfo, nullptr, &framebuffers[i]);
         if(result != VK_SUCCESS) {
             NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
             return false;
@@ -91,13 +92,13 @@ bool VulkanFrameBuffer::Create(const VulkanDevice& deviceContext, const VulkanSw
     return true;
 }
 
-void VulkanFrameBuffer::Destroy(const VulkanDevice& deviceContext)
+void VulkanFrameBuffer::Destroy()
 {
-    VkDevice device =  deviceContext.GetDevice();
+    VkDevice vkDevice =  device->GetDevice();
     for(int i = 0; i < framebuffers.size(); ++i){
-        vkDestroyFramebuffer(device, framebuffers[i], nullptr);
-        vkDestroyImageView(device, views[i], nullptr);
-        vkDestroyImage(device, images[i], nullptr);
+        vkDestroyFramebuffer(vkDevice, framebuffers[i], nullptr);
+        vkDestroyImageView(vkDevice, views[i], nullptr);
+        vkDestroyImage(vkDevice, images[i], nullptr);
     }
 }
 

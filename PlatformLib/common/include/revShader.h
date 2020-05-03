@@ -61,6 +61,11 @@ private:
 class revConstantBufferBinding
 {
 public:
+	uint8 GetRegisterIndex() const { return registerIndex; }
+#ifdef _DEBUG
+	void SetRegisterIndex(uint8 index) { registerIndex = index; }
+#endif
+
 	SERIALIZE_FUNC()
 	{
 		archive(REV_NVP(registerIndex)

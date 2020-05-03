@@ -2,9 +2,9 @@
 #include "VulkanRenderer.h"
 #include "Log.h" // AndroidLib doesn't depend on rev
 #ifdef _USE_VULKAN
-
 // TEST
 #include "VulkanTexture.h"
+#include "VulkanShader.h"
 
 VulkanRenderer::VulkanRenderer()
 {
@@ -26,8 +26,8 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
     if(!device.Create(*window)) return;
     if(!swapChain.Create(&device)) return;
-    if(!renderInfo.Create(&device, swapChain)) return;
-    if(!frameBuffer.Create(device, swapChain, renderInfo)) return;
+    //if(!renderInfo.Create(&device, swapChain)) return;
+    //if(!frameBuffer.Create(device, swapChain, renderInfo)) return;
     //-----------------------------------------------------------------------------------------------
     // TEST CODE
     const float triangleVertices[] = {
@@ -38,23 +38,34 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     };
     triangleVertexBuffer.Create(device, triangleVertices, sizeof(triangleVertices));
 
+    // Load shader and material
     VulkanShader shader[2];
     shader[0].LoadFromFile(device, "shaders/texture_vert.spv", SHADER_TYPE::VERTX);
     shader[1].LoadFromFile(device, "shaders/texture_frag.spv", SHADER_TYPE::FRAGMENT);
 
+    mat.SetShader(SHADER_TYPE::VERTX, &shader[0]);
+    mat.SetShader(SHADER_TYPE::FRAGMENT, &shader[1]);
 
     VulkanTexture texture;
     texture.LoadFromFile(&device, "sample_tex.png");
-    textureView.Create(&device, texture);
     sampler.Create(&device, texture);
-    if(!renderInfo.CreatePipeline(&device, swapChain, shader[0], shader[1])) return;
-    if(!renderInfo.CreateDescriptorSet(&device, texture)) return;
+
+    // create pipeline
+    revDescriptorBindingDesc descriptorBindingDesc;
+    descriptorBindingDesc.AddMaterial(mat);
+    descriptorSetLayout.Create(&device, descriptorBindingDesc);
+    descriptorSet[0].Create(&device, DESCRIPTOR_HEAP_TYPE::RESOURCE, descriptorSetLayout, 4, true);
+    descriptorSet[1].Create(&device, DESCRIPTOR_HEAP_TYPE::SAMPLER, descriptorSetLayout, 4, true);
+    textureView.Create(&device, texture, sampler, descriptorSet);
+
+    // create commadn
+    auto& commandList = device.GetGlobalCommandList();
+    commandList.Open();
+
 }
 
 void VulkanRenderer::ShutDown()
 {
-    frameBuffer.Destroy(device);
-    renderInfo.Destroy(&device);
     swapChain.Destroy();
     device.Destroy();
 }

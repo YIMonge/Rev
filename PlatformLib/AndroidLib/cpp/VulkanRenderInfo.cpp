@@ -4,6 +4,8 @@
 #include "Log.h"
 #ifdef _USE_VULKAN
 
+#if false
+
 VulkanRenderInfo::VulkanRenderInfo()
 {
     memset(&pipelineLayout, 0, sizeof(pipelineLayout));
@@ -281,7 +283,10 @@ bool VulkanRenderInfo::CreatePipeline(VulkanDevice* deviceContext, const VulkanS
             .bindingCount = 1,
             .pBindings = &descriptorSetLayoutBinding,
     };
-    VkResult result = vkCreateDescriptorSetLayout(device, &descriptorSetLayoutCreateInfo, nullptr, &descriptorSetLayout);
+    VkResult result = vkCreateDescriptorSetLayout(device,
+            &descriptorSetLayoutCreateInfo,
+            nullptr,
+            &descriptorSetLayout);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -483,4 +488,5 @@ void VulkanRenderInfo::Destroy(VulkanDevice* deviceContext)
     vkDestroyRenderPass(device, renderPass, nullptr);
 }
 
+#endif
 #endif

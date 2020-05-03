@@ -5,6 +5,7 @@
 
 #include "VulkanDevice.h"
 #include "revArray.h"
+#include "VulkanFrameBuffer.h"
 
 class VulkanSwapChain
 {
@@ -19,6 +20,7 @@ public:
     const revSwapChain&  GetSwapChain() const { return swapChain; }
     const VkExtent2D& GetDisplaySize() const { return displaySize; }
 
+    const VkFramebuffer GetCurrentFrameBuffer() const { return frameBuffers.GetFrameBuffer(frameIndex); }
     const VkSemaphore& GetSemaphore() const { return semaphore; }
     const VkFence& GetFence() const { return fence; }
 
@@ -32,6 +34,8 @@ private:
     GRAPHICS_FORMAT format;
     uint32 length;
     uint32 frameIndex;
+
+    VulkanFrameBuffer frameBuffers;
 
     VkSemaphore  semaphore;
     VkFence fence;

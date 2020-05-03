@@ -2,7 +2,7 @@
 #define __VULKANRENDERINFO_H__
 
 #ifdef _USE_VULKAN
-
+#if false
 #include "VulkanDevice.h"
 #include "VulkanSwapChain.h"
 #include "VulkanShader.h"
@@ -29,7 +29,6 @@ public:
 private:
     VkRenderPass renderPass;
 
-
     // pipeline
     revUnorderedMap<uint32, VkPipelineCache> pipelineCaches;
     VkPipelineLayout pipelineLayout;
@@ -42,5 +41,6 @@ private:
 
 };
 
+#endif
 #endif
 #endif
