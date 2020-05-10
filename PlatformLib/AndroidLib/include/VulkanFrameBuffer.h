@@ -3,8 +3,8 @@
 
 #ifdef _USE_VULKAN
 
-#include "VulkanSwapChain.h"
-#include "VulkanPipelineState.h"
+#include "VulkanDevice.h"
+#include "revRect.h"
 
 class VulkanFrameBuffer
 {
@@ -12,12 +12,15 @@ public:
     VulkanFrameBuffer();
     ~VulkanFrameBuffer();
 
-    bool Create(revDevice* device, const VulkanSwapChain& swapChain, const VulkanPipelineState& pipelineState);
+    bool Create(revDevice* device, const VkSwapchainKHR& swapchainKhr, GRAPHICS_FORMAT format, const revRect& rect, uint32 num, const VkRenderPass& renderPass);
     void Destroy();
 
-    const revArray<VkImage>& GetImages() const { return images; }
-    const revArray<VkImageView>& GetViews() const { return views; }
-    const revArray<VkFramebuffer>& GetFrameBuffers() const { return  framebuffers; }
+    const VkImage& GetFrameBufferImage(uint32 index) const { return images[index]; }
+    const VkFramebuffer& GetFrameBuffer(uint32 index) const { return  framebuffers[index]; }
+    uint32 GetFrameBufferCount() const { return static_cast<uint32>(framebuffers.size());}
+    void setImageLayout(VulkanCommandList& commandList, uint32 index,
+            VkImageLayout oldImageLayout, VkImageLayout newImageLayout,
+            VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
 private:
     revDevice* device;
     VkFormat foramt;

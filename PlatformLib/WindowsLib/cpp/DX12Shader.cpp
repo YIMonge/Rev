@@ -56,13 +56,14 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 		return false;
 	}
 
-    if (!LoadMetaData(resourcePath.c_str())) {
 #if _DEBUG
+    if (!LoadMetaData(resourcePath.c_str()) || true) {
         char metaPath[256];
         makeMetaPath(metaPath, resourcePath.c_str());
         CreateMetaDataFromShader(metaPath);
         LoadMetaData(resourcePath.c_str());
 #else
+    if (!LoadMetaData(resourcePath.c_str())) {
         NATIVE_LOGE("could not find shader meta data");
         return false;
 #endif
@@ -101,6 +102,7 @@ void DX12Shader::CreateMetaDataFromShader(const char* metaPath)
         INPUT_ELEMENT_TYPE elementType = ConvertToREVSemantic(signatureDesc.SemanticName);
         metaData.attributes[i].SetInputElementType(elementType);
         metaData.attributes[i].SetFormat(GRAPHICS_SEMANTICS[static_cast<uint32>(elementType)].format);
+        metaData.attributes[i].SetLocation(i);
         metaData.attributes[i].SetBinding(signatureDesc.SemanticIndex);
         metaData.attributes[i].SetOffset(offset);
         offset += GRAPHICS_SEMANTICS[static_cast<uint32>(elementType)].sizeOfBytes;

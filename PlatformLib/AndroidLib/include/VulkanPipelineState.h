@@ -23,7 +23,7 @@ public:
 
     bool Create(revDevice* device, const revMaterial& material, const VulkanDescriptorSetLayout& descriptorSetLayout, const revRect& viewportRect, const revRect& scissorRect);
     void Destroy();
-    void Apply(VulkanCommandList& commandList, const VulkanFrameBuffer& frameBuffer, const revColor& clearColor);
+    void Apply(VulkanCommandList& commandList, const VkFramebuffer& frameBuffer, const revColor& clearColor);
 
     const VkRenderPass& GetRenderPass() const { return renderPass; }
 

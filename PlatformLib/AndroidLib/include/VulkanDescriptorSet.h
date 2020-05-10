@@ -11,14 +11,13 @@ public:
     VulkanDescriptorSet(){}
     virtual ~VulkanDescriptorSet(){}
 
-    bool Create(revDevice* device, DESCRIPTOR_HEAP_TYPE type, const VulkanDescriptorSetLayout& layout, uint32 numDescriptors, bool shaderVisiblity);
+    bool Create(revDevice* device, const VulkanDescriptorSetLayout& layout, uint32 numDescriptors, bool shaderVisiblity);
     void Destroy();
 
     const VkDescriptorSet& GetHandle() const { return descriptorSet; }
 
 private:
     revDevice* device;
-    DESCRIPTOR_HEAP_TYPE type;
     uint32 maxDescriptors;
     VkDescriptorPool descriptorPool;
     VkDescriptorSet descriptorSet;

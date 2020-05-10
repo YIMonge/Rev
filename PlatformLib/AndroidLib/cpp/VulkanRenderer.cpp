@@ -8,12 +8,7 @@
 
 VulkanRenderer::VulkanRenderer()
 {
-    clearValue = {
-            .color.float32[0] = 0.3f,
-            .color.float32[1] = 0.0f,
-            .color.float32[2] = 0.3f,
-            .color.float32[3] = 1.0f,
-    };
+    clearValue = revColor::blue;
 }
 
 
@@ -26,8 +21,6 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
     if(!device.Create(*window)) return;
     if(!swapChain.Create(&device)) return;
-    //if(!renderInfo.Create(&device, swapChain)) return;
-    //if(!frameBuffer.Create(device, swapChain, renderInfo)) return;
     //-----------------------------------------------------------------------------------------------
     // TEST CODE
     const float triangleVertices[] = {
@@ -40,8 +33,8 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 
     // Load shader and material
     VulkanShader shader[2];
-    shader[0].LoadFromFile(device, "shaders/texture_vert.spv", SHADER_TYPE::VERTX);
-    shader[1].LoadFromFile(device, "shaders/texture_frag.spv", SHADER_TYPE::FRAGMENT);
+    shader[0].LoadFromFile(device, "texture_vert.spv", SHADER_TYPE::VERTX);
+    shader[1].LoadFromFile(device, "texture_frag.spv", SHADER_TYPE::FRAGMENT);
 
     mat.SetShader(SHADER_TYPE::VERTX, &shader[0]);
     mat.SetShader(SHADER_TYPE::FRAGMENT, &shader[1]);
@@ -54,98 +47,38 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     revDescriptorBindingDesc descriptorBindingDesc;
     descriptorBindingDesc.AddMaterial(mat);
     descriptorSetLayout.Create(&device, descriptorBindingDesc);
-    descriptorSet[0].Create(&device, DESCRIPTOR_HEAP_TYPE::RESOURCE, descriptorSetLayout, 4, true);
-    descriptorSet[1].Create(&device, DESCRIPTOR_HEAP_TYPE::SAMPLER, descriptorSetLayout, 4, true);
-    textureView.Create(&device, texture, sampler, descriptorSet);
+    descriptorSet.Create(&device, descriptorSetLayout, 4, true);
+    textureView.Create(&device, texture, sampler, &descriptorSet);
+    pipelineState.Create(&device, mat, descriptorSetLayout, swapChain.GetDisplaySize(), swapChain.GetDisplaySize());
+    swapChain.CreateFrameBuffer(pipelineState);
 
-    // create commadn
-    auto& commandList = device.GetGlobalCommandList();
-    commandList.Open();
-
+    // Make Draw commadn
 }
 
 void VulkanRenderer::ShutDown()
 {
+    descriptorSetLayout.Destroy();
+    descriptorSet.Destroy();
+    pipelineState.Destroy();
     swapChain.Destroy();
     device.Destroy();
 }
 
 void VulkanRenderer::Render()
 {
+    // TODO: bake command
+    auto& commandList = device.GetGlobalCommandList();
+    commandList.Open();
+    swapChain.PrepareRendering(commandList);
+    descriptorSetLayout.Apply(commandList);
+    pipelineState.Apply(commandList, swapChain.GetCurrentFrameBuffer(), clearValue);
+
+    swapChain.EndRendering(commandList);
+    commandList.Close();
+
+    ExecuteCommand(commandList);
     swapChain.WaitForPreviousFrame();
     swapChain.Present();
-}
-
-void VulkanRenderer::setImageLayout(VkCommandBuffer commandBuffer, VkImage image,
-                                    VkImageLayout oldImageLayout, VkImageLayout newImageLayout,
-                                    VkPipelineStageFlags srcStages,
-                                    VkPipelineStageFlags destStages)
-{
-    VkImageMemoryBarrier imageMemoryBarrier = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
-            .pNext = nullptr,
-            .srcAccessMask = 0,
-            .dstAccessMask = 0,
-            .oldLayout = oldImageLayout,
-            .newLayout = newImageLayout,
-            .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
-            .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
-            .image = image,
-            .subresourceRange = {
-                    .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-                    .baseMipLevel = 0,
-                    .levelCount = 1,
-                    .baseArrayLayer = 0,
-                    .layerCount = 1,
-            }
-    };
-    switch (oldImageLayout) {
-        case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
-            imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-            break;
-
-        case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
-            imageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-            break;
-
-        case VK_IMAGE_LAYOUT_PREINITIALIZED:
-            imageMemoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT;
-            break;
-
-        default:
-            break;
-    }
-
-    switch (newImageLayout) {
-        case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
-            imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-            break;
-
-        case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
-            imageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-            break;
-
-        case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
-            imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-            break;
-
-        case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
-            imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-            break;
-
-        case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
-            imageMemoryBarrier.dstAccessMask =
-                    VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-            break;
-        case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
-            imageMemoryBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-            break;
-        default:
-            break;
-    }
-
-    vkCmdPipelineBarrier(commandBuffer, srcStages, destStages, 0, 0, nullptr, 0, nullptr, 1,
-                         &imageMemoryBarrier);
 }
 
 void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists)
@@ -160,7 +93,7 @@ void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists)
             .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
             .pNext = nullptr,
             .waitSemaphoreCount = 1,
-            .pWaitSemaphores = &swapChain.GetSemaphore(),
+            .pWaitSemaphores = swapChain.GetSemaphore(),
             .pWaitDstStageMask = &waitStageMask,
             .commandBufferCount = length,
             .pCommandBuffers = commandlists.data(),
@@ -180,7 +113,7 @@ void VulkanRenderer::ExecuteCommand(revGraphicsCommandList& list)
             .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
             .pNext = nullptr,
             .waitSemaphoreCount = 1,
-            .pWaitSemaphores = &swapChain.GetSemaphore(),
+            .pWaitSemaphores = swapChain.GetSemaphore(),
             .pWaitDstStageMask = &waitStageMask,
             .commandBufferCount = 1,
             .pCommandBuffers = &(list.GetList()),

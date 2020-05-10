@@ -8,7 +8,7 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
     pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutCreateInfo.pNext = nullptr;
     pipelineLayoutCreateInfo.setLayoutCount = descriptorSetLayout.GetDescriptorSetCount();
-    pipelineLayoutCreateInfo.pSetLayouts = descriptorSetLayout.GetDescriptorSet();
+    pipelineLayoutCreateInfo.pSetLayouts = descriptorSetLayout.GetDescriptorSets();
     pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
     pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
 
@@ -51,6 +51,7 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
         pipelineShaderStageCreateInfo[i].pSpecializationInfo = nullptr;
         pipelineShaderStageCreateInfo[i].flags = 0;
         pipelineShaderStageCreateInfo[i].pName = shaderEntry;
+        pipelineShaderStageCreateInfo[i].stage = i == static_cast<uint32>(SHADER_TYPE::VERTX) ? VK_SHADER_STAGE_VERTEX_BIT : VK_SHADER_STAGE_FRAGMENT_BIT;
     }
 
     const auto& blendState = material.GetBlendState();
@@ -68,20 +69,20 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
 
     // TODO: multiple sampler setting
     VkPipelineColorBlendAttachmentState pipelineColorBlendAttachmentState;
-    pipelineColorBlendAttachmentState.colorWriteMask = static_cast<VkColorComponentFlags>(blendState.GetWriteColorMask());
+    pipelineColorBlendAttachmentState.colorWriteMask = ConvertToVKColorComponent(blendState.GetWriteColorMask());
     pipelineColorBlendAttachmentState.blendEnable = static_cast<VkBool32>(blendState.isEnableBlend());
-    pipelineColorBlendAttachmentState.colorBlendOp = static_cast<VkBlendOp>(blendState.GetBlendOpColor());
-    pipelineColorBlendAttachmentState.srcColorBlendFactor = static_cast<VkBlendFactor>(blendState.GetBlendFactorSrcColor());
-    pipelineColorBlendAttachmentState.dstColorBlendFactor = static_cast<VkBlendFactor>(blendState.GetBlendFactorDstColor());
-    pipelineColorBlendAttachmentState.alphaBlendOp = static_cast<VkBlendOp>(blendState.GetBlendOpAlpha());;
-    pipelineColorBlendAttachmentState.srcAlphaBlendFactor = static_cast<VkBlendFactor>(blendState.GetBlendFactorSrcAlpha());
-    pipelineColorBlendAttachmentState.dstAlphaBlendFactor = static_cast<VkBlendFactor>(blendState.GetBlendFactorDstAlpha());
-    pipelineColorBlendAttachmentState.dstAlphaBlendFactor = static_cast<VkBlendFactor>(blendState.GetBlendFactorDstAlpha());
+    pipelineColorBlendAttachmentState.colorBlendOp = ConvertToVKBlendOp(blendState.GetBlendOpColor());
+    pipelineColorBlendAttachmentState.srcColorBlendFactor = ConvertToVKBlendFactor(blendState.GetBlendFactorSrcColor());
+    pipelineColorBlendAttachmentState.dstColorBlendFactor = ConvertToVKBlendFactor(blendState.GetBlendFactorDstColor());
+    pipelineColorBlendAttachmentState.alphaBlendOp = ConvertToVKBlendOp(blendState.GetBlendOpAlpha());
+    pipelineColorBlendAttachmentState.srcAlphaBlendFactor = ConvertToVKBlendFactor(blendState.GetBlendFactorSrcAlpha());
+    pipelineColorBlendAttachmentState.dstAlphaBlendFactor = ConvertToVKBlendFactor(blendState.GetBlendFactorDstAlpha());
+    pipelineColorBlendAttachmentState.dstAlphaBlendFactor = ConvertToVKBlendFactor(blendState.GetBlendFactorDstAlpha());
 
     VkPipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfo = {};
     pipelineColorBlendStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     pipelineColorBlendStateCreateInfo.pNext = nullptr;
-    pipelineColorBlendStateCreateInfo.logicOpEnable = blendState.isEnabledLogicOp() ? VK_FALSE : VK_TRUE;
+    pipelineColorBlendStateCreateInfo.logicOpEnable = blendState.isEnabledLogicOp() ?  VK_TRUE : VK_FALSE;
     pipelineColorBlendStateCreateInfo.logicOp = ConvertToVKLogicOp(blendState.GetLogicOp());
     pipelineColorBlendStateCreateInfo.attachmentCount = 1;
     pipelineColorBlendStateCreateInfo.pAttachments = &pipelineColorBlendAttachmentState;
@@ -113,20 +114,29 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
     if(vertexShader != nullptr) {
         const auto& attributes = vertexShader->GetAttributes();
         uint32 attributeLength = attributes.size();
-
-        vertexInputBindings.resize(attributeLength);
         vertexInputAttributes.resize(attributeLength);
-
         uint32 offset = 0;
         for (uint32 i = 0; i < attributeLength; ++i) {
-            vertexInputBindings[i].binding = attributes[i].GetBinding();
-            vertexInputBindings[i].stride = GRAPHICS_SEMANTICS[static_cast<uint32>(attributes[i].GetInputElementType())].sizeOfBytes;
-            vertexInputBindings[i].inputRate = VK_VERTEX_INPUT_RATE_VERTEX,
-
-            vertexInputAttributes[i].binding = attributes[i].GetBinding();
+            uint32 binding = attributes[i].GetBinding();
+            vertexInputAttributes[i].binding = binding;
             vertexInputAttributes[i].location = attributes[i].GetLocation();
             vertexInputAttributes[i].format = ConvertToVKFormat(attributes[i].GetForamt());
             vertexInputAttributes[i].offset = attributes[i].GetOffset();
+
+            bool found = false;
+            for(uint32 i = 0; i < vertexInputBindings.size(); ++i){
+                if(vertexInputBindings[i].binding == binding){
+                    found = true;
+                    vertexInputBindings[i].stride += GRAPHICS_SEMANTICS[static_cast<uint32>(attributes[i].GetForamt())].sizeOfBytes;
+                }
+            }
+            if(!found) {
+                VkVertexInputBindingDescription bindingDescription;
+                bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+                bindingDescription.binding = binding;
+                bindingDescription.stride = GRAPHICS_SEMANTICS[static_cast<uint32>(attributes[i].GetForamt())].sizeOfBytes;
+                vertexInputBindings.push_back(bindingDescription);
+            }
         }
     }
 
@@ -159,16 +169,17 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
     subpassDescription.inputAttachmentCount = 0;
     subpassDescription.pInputAttachments = nullptr;
     subpassDescription.colorAttachmentCount = 1;
-    subpassDescription.pColorAttachments = nullptr;
+    subpassDescription.pColorAttachments = &attachmentReference;
     subpassDescription.pResolveAttachments = nullptr;
     subpassDescription.pDepthStencilAttachment = nullptr;
     subpassDescription.preserveAttachmentCount = 0;
     subpassDescription.pPreserveAttachments = nullptr;
 
-    VkRenderPassCreateInfo renderPassCreateInfo ={};
+    VkRenderPassCreateInfo renderPassCreateInfo = {};
     renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassCreateInfo.pNext = nullptr;
     renderPassCreateInfo.attachmentCount = 1;
+    renderPassCreateInfo.pAttachments = &attachmentDescription;
     renderPassCreateInfo.subpassCount = 1;
     renderPassCreateInfo.pSubpasses = &subpassDescription;
     renderPassCreateInfo.dependencyCount = 0;
@@ -225,13 +236,13 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
      return true;
 }
 
-void VulkanPipelineState::Apply(VulkanCommandList& commandList, const VulkanFrameBuffer& frameBuffer, const revColor& clearColor)
+void VulkanPipelineState::Apply(VulkanCommandList& commandList, const VkFramebuffer& frameBuffer, const revColor& clearColor)
 {
     // needs Image layout setting?
     VkRenderPassBeginInfo renderPassBeginInfo;
     renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassBeginInfo.pNext = nullptr;
-    renderPassBeginInfo.framebuffer = ;
+    renderPassBeginInfo.framebuffer = frameBuffer;
     renderPassBeginInfo.renderPass = renderPass;
 
     vkCmdBindPipeline(commandList.GetList(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineState);

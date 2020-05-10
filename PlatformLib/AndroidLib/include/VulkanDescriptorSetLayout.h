@@ -17,9 +17,11 @@ public:
     void Apply(VulkanCommandList& commandList);
 
     uint32 GetDescriptorSetCount() const { return static_cast<uint32>(descriptorSetLayouts.size()); }
-    const VkDescriptorSetLayout* GetDescriptorSet() const { return descriptorSetLayouts.data(); }
+    const DESCRIPTOR_HEAP_TYPE GetDescriptorHeapType(uint32 index) const { return descriptorHeapTypes[index];}
+    const VkDescriptorSetLayout* GetDescriptorSets() const { return descriptorSetLayouts.data(); }
 private:
     revDevice* device;
+    revArray<DESCRIPTOR_HEAP_TYPE> descriptorHeapTypes;
     revArray<VkDescriptorSetLayout> descriptorSetLayouts;
 };
 

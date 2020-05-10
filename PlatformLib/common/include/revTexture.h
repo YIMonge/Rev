@@ -117,7 +117,7 @@ public:
 	GRAPHICS_FORMAT GetFormat() const { return static_cast<GRAPHICS_FORMAT>(metaData.format); }
 	uint32 GetWidth() const { return width; }
 	uint32 GetHeight() const { return height; }
-	revTextureHandle* GetHandle() const { return handle; }
+	const revTextureHandle& GetHandle() const { return handle; }
 	const SamplerDesc& GetSamplerDesc() const { return metaData.sampler; }
 
 protected:
@@ -125,7 +125,7 @@ protected:
 
 	uint32 width;
 	uint32 height;
-	revTextureHandle* handle;
+	revTextureHandle handle;
 	TextureMetaData metaData;
 };
  

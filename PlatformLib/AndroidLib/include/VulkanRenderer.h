@@ -5,13 +5,13 @@
 #ifdef _USE_VULKAN
 #include "VulkanDevice.h"
 #include "VulkanSwapChain.h"
-#include "VulkanRenderInfo.h"
 #include "VulkanFrameBuffer.h"
 #include "VulkanBuffer.h"
 #include "VulkanTextureView.h"
 #include "VulkanSampler.h"
 #include "VulkanDescriptorSetLayout.h"
 #include "VulkanDescriptorSet.h"
+#include "VulkanPipelineState.h"
 
 class VulkanRenderer : public revRenderer
 {
@@ -31,19 +31,19 @@ private:
     void setImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
 	VulkanDevice device;
 	VulkanSwapChain swapChain;
-	//VulkanRenderInfo renderInfo;
 	VulkanFrameBuffer frameBuffer;
+	VulkanDescriptorSet descriptorSet;
+	VulkanDescriptorSetLayout descriptorSetLayout;
+	VulkanPipelineState pipelineState;
 
 	// clear color
-	VkClearValue clearValue;
+	revColor clearValue;
 
-	// TEST CODE
+	// TEST CODE(resource)
 	VulkanBuffer triangleVertexBuffer;
 	VulkanTexture texture;
 	VulkanTextureView textureView;
 	VulkanSampler sampler;
-	VulkanDescriptorSet descriptorSet[4];
-	VulkanDescriptorSetLayout descriptorSetLayout;
 	revMaterial mat;
 };
 

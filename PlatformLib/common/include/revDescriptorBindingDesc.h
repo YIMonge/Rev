@@ -8,26 +8,23 @@ class revDescriptorBindingDesc
 public:
 	class DescriptorSetLayoutDesc
 	{
+		friend class revDescriptorBindingDesc;
 	public:
 		struct Range
 		{
-			DESCRIPTOR_TYPE type;
+			//DESCRIPTOR_TYPE type;
 			uint32 registerIndex;
 			uint32 count;
 			uint32 space;
-
 		};
 
 		uint32 GetRangeCount() const { return static_cast<uint32>(ranges.size()); }
 		const Range& GetRange(uint32 index) const { return ranges[index]; }
 		SHADER_VISIBILITY GetShaderVisiblity() const { return visibility; }
-
-#ifdef _DEBUG
-		void AddRange(const Range& range) { ranges.push_back(range); }
-		void SetShaderVisiblity(SHADER_VISIBILITY v) { visibility = v; }
-#endif
+		DESCRIPTOR_TYPE GetDescriptorType() const { return type; }
 
 	private:
+		DESCRIPTOR_TYPE type;
 		revArray<Range> ranges;
 		SHADER_VISIBILITY visibility;
 	};

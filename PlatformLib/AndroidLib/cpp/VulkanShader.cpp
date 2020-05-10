@@ -12,8 +12,10 @@ VulkanShader::VulkanShader()
 
 bool VulkanShader::LoadFromFile(const revDevice& device, const char* path, SHADER_TYPE shaderType)
 {
+    revString resourcePath(RESOURCE_PATH);
+    resourcePath += path;
     File file;
-    if(!file.Open(path, FileMode::ReadText)){
+    if(!file.Open(resourcePath.c_str(), FileMode::ReadText)){
         NATIVE_LOGE("file not found : %s", path);
         return false;
     }
@@ -32,13 +34,11 @@ bool VulkanShader::LoadFromFile(const revDevice& device, const char* path, SHADE
     };
     VkResult result = vkCreateShaderModule(device.GetDevice(), &shaderModuleCreateInfo, nullptr, &handle);
     delete[] data;
-
-    LoadMetaData(path);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-    return true;
+    return LoadMetaData(resourcePath.c_str());
 }
 
 VkPipelineShaderStageCreateInfo VulkanShader::getShaderStageCreateInfo() const

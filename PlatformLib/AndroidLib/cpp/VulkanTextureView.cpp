@@ -7,7 +7,6 @@ void VulkanTextureView::Create(revDevice* device, const revTexture& texture, con
     VkImageViewCreateInfo imageViewCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
             .pNext = nullptr,
-            .image = VK_NULL_HANDLE,
             .viewType = VK_IMAGE_VIEW_TYPE_2D,
             .components =
                     {
@@ -18,7 +17,7 @@ void VulkanTextureView::Create(revDevice* device, const revTexture& texture, con
             .flags = 0,
     };
     imageViewCreateInfo.format = ConvertToVKFormat(texture.GetFormat());
-    imageViewCreateInfo.image = *texture.GetHandle();
+    imageViewCreateInfo.image = texture.GetHandle();
     VkResult result = vkCreateImageView(device->GetDevice(), &imageViewCreateInfo, nullptr, &resourceView);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -37,7 +36,7 @@ void VulkanTextureView::Create(revDevice* device, const revTexture& texture, con
     writeDescriptorSet.dstSet = descriptorSet->GetHandle();
     writeDescriptorSet.dstBinding = 0;
     writeDescriptorSet.dstArrayElement = 0;
-    writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+    writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     writeDescriptorSet.descriptorCount = 1;
     writeDescriptorSet.pImageInfo = &descriptorImageInfo;
     writeDescriptorSet.pBufferInfo = nullptr;

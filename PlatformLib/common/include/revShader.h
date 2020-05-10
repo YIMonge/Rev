@@ -26,7 +26,7 @@ public:
 
 	INPUT_ELEMENT_TYPE GetInputElementType() const { return static_cast<INPUT_ELEMENT_TYPE>(type); }
     uint8 GetBinding() const { return binding; }
-    uint8 GetLocation() const { return static_cast<uint32>(type); }
+    uint8 GetLocation() const { return location; }
     GRAPHICS_FORMAT GetForamt() const { return static_cast<GRAPHICS_FORMAT>(format); }
     uint8 GetOffset() const { return offset; }
 	INPUT_CLASS GetInputClass() const { return static_cast<INPUT_CLASS>(inputClass); }
@@ -35,6 +35,7 @@ public:
 	void SetInputElementType(INPUT_ELEMENT_TYPE _type) { type = static_cast<uint8>(_type); }
 	void SetBinding(uint8 _binding) { binding = _binding; }
 	void SetFormat(GRAPHICS_FORMAT _format) { format = static_cast<uint8>(_format); }
+	void SetLocation(uint8 _location) { location = _location; }
 	void SetOffset(uint8 _offset) { offset = _offset; }
 	void SetInputClass(INPUT_CLASS _class) { inputClass = static_cast<uint8>(_class); }
 #endif
@@ -44,6 +45,7 @@ public:
 	{
 		archive(REV_NVP(type),
 			REV_NVP(binding),
+			REV_NVP(location),
 			REV_NVP(format),
 			REV_NVP(offset),
 			REV_NVP(inputClass)
@@ -53,6 +55,7 @@ public:
 private:
 	uint8 type;
     uint8 binding;
+    uint8 location;
     uint8 format;
     uint8 offset;
 	uint8 inputClass;

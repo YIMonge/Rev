@@ -19,8 +19,6 @@ protected:
 
 private:
     bool AllocateMemoryTypeFromProperties(VulkanDevice* device, uint32 typeBits, VkFlags requimentMask, uint32* typeIndex);
-
-    VkImage  image;
     VkDeviceMemory deviceMemory;
 };
 

@@ -444,7 +444,7 @@ namespace {
 	VkDescriptorType ConvertToVKDescriptorType(DESCRIPTOR_TYPE type)
 	{
 		VkDescriptorType table[] = {
-				VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+                VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -463,7 +463,7 @@ namespace {
 	VkDescriptorType ConvertToVKDescriptorHeapType(DESCRIPTOR_HEAP_TYPE type)
 	{
 		VkDescriptorType table[] = {
-				VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+				VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 				VK_DESCRIPTOR_TYPE_SAMPLER,
 				// TODO: RENDER_TARGET,
 				// TODO: DEPTH_STENCIL,
@@ -487,7 +487,7 @@ using revGraphicsCommandAllocator = ID3D12CommandAllocator*;
 using revGraphicsCommandBuffer = ID3D12GraphicsCommandList*;
 using revGraphicsCommandQueue = ID3D12CommandQueue*;
 using revGraphicsPipeline = ID3D12PipelineState*;
-using revTextureHandle = ID3D12Resource;
+using revTextureHandle = ID3D12Resource*;
 using revTextureSampler = D3D12_GPU_DESCRIPTOR_HANDLE;
 using revDescriptorHeap = ID3D12DescriptorHeap;
 

@@ -14,7 +14,6 @@ public:
 	{}
 	virtual ~DX12RootSignature(){}
 	
-	bool Create(revDevice* device);
 	bool Create(revDevice* device, const revDescriptorBindingDesc& desc);
 
 	void Apply(revGraphicsCommandList& commandList, bool isGraphics = true);

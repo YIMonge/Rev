@@ -49,12 +49,12 @@ bool VulkanTexture::CreateTexture(revDevice* device, uint8* imageData)
     };
 
     VkMemoryRequirements memoryRequirements;
-    VkResult result = vkCreateImage(revDevice, &imageCreateInfo, nullptr, &image);
+    VkResult result = vkCreateImage(revDevice, &imageCreateInfo, nullptr, &handle);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-    vkGetImageMemoryRequirements(revDevice, image, &memoryRequirements);
+    vkGetImageMemoryRequirements(revDevice, handle, &memoryRequirements);
     memoryAllocateInfo.allocationSize = memoryRequirements.size;
 
     if(!AllocateMemoryTypeFromProperties(static_cast<VulkanDevice*>(device),
@@ -69,7 +69,7 @@ bool VulkanTexture::CreateTexture(revDevice* device, uint8* imageData)
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-    result = vkBindImageMemory(revDevice, image, deviceMemory, 0);
+    result = vkBindImageMemory(revDevice, handle, deviceMemory, 0);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;

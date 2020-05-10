@@ -37,7 +37,7 @@ bool VulkanSwapChain::Create(VulkanDevice* _device)
         return false;
     }
 
-    displaySize = capabilities.currentExtent;
+    displaySize = revRect(capabilities.currentExtent.width, capabilities.currentExtent.height);
     format = GRAPHICS_FORMAT ::R8G8B8A8_UNORM;
 
     uint32 queueFamilyIndex = device->GetQueueFamilyIndex();
@@ -100,7 +100,17 @@ bool VulkanSwapChain::Create(VulkanDevice* _device)
         return false;
     }
 
-    result = vkAcquireNextImageKHR(revDevice,
+    return true;
+}
+
+bool VulkanSwapChain::CreateFrameBuffer(const VulkanPipelineState& pipelineState)
+{
+    if(!frameBuffers.Create(device, swapChain, format, displaySize, length, pipelineState.GetRenderPass())){
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
+
+    VkResult result = vkAcquireNextImageKHR(device->GetDevice(),
                                    swapChain,
                                    UINT64_MAX,
                                    semaphore,
@@ -117,7 +127,22 @@ bool VulkanSwapChain::Create(VulkanDevice* _device)
 
 void VulkanSwapChain::Destroy()
 {
+    frameBuffers.Destroy();
     vkDestroySwapchainKHR(device->GetDevice(), swapChain, nullptr);
+}
+
+void VulkanSwapChain::PrepareRendering(VulkanCommandList& commandList)
+{
+    frameBuffers.setImageLayout(commandList, frameIndex,
+                                VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+}
+
+void VulkanSwapChain::EndRendering(VulkanCommandList& commandList)
+{
+    frameBuffers.setImageLayout(commandList, frameIndex,
+                                VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                                VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
 }
 
 bool VulkanSwapChain::Present() const

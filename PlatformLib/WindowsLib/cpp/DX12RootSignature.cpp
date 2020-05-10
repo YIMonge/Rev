@@ -1,86 +1,6 @@
 #include "DX12RootSignature.h"
 #include "Log.h"
 
-bool DX12RootSignature::Create(revDevice* device)
-{
-	struct  RootSignatureParam
-	{
-		revArray<revArray<D3D12_DESCRIPTOR_RANGE1>> ranges;
-		uint32 sizeInBytes;
-		revArray<uint32> offsets;
-		revArray<D3D12_ROOT_PARAMETER1> rootParams;
-		bool isLocal;
-	};
-
-	this->device = device;
-	auto dxDevice = device->GetDevice();
-	RootSignatureParam param;
-	param.sizeInBytes = 0;
-	param.isLocal = false;
-
-
-	//-------------------------------------------------
-	// TODO: desc to param
-	CD3DX12_DESCRIPTOR_RANGE1 descriptorRange, samplerRange;
-	descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
-	samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0, 0);
-	param.ranges.push_back(revArray<D3D12_DESCRIPTOR_RANGE1>(1, descriptorRange));
-	param.ranges.push_back(revArray<D3D12_DESCRIPTOR_RANGE1>(1, samplerRange));
-	
-	CD3DX12_ROOT_PARAMETER1 rootParam, samplerParam;
-	rootParam.InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
-	samplerParam.InitAsDescriptorTable(1, &samplerRange, D3D12_SHADER_VISIBILITY_PIXEL);
-	param.rootParams.push_back(rootParam);
-	param.rootParams.push_back(samplerParam);
-
-	//--------------------------------------------------
-
-	D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
-	featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
-	if (FAILED(dxDevice->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData)))) {
-		featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
-	}
-
-	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC signatureDesc;
-	signatureDesc.Init_1_1(
-		param.rootParams.size(), param.rootParams.data(),	// D3D12_ROOT_PARAMETER1
-		0, nullptr,							// Static Sampler
-		param.isLocal ? D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE : D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
-	);
-
-
-	ID3DBlob* signature;
-	ID3DBlob* error;
-	HRESULT hr = D3DX12SerializeVersionedRootSignature(&signatureDesc,
-		featureData.HighestVersion,
-		&signature,
-		&error);
-	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to serialize to root signature. detail is : %s. File[%s], line[%d]", reinterpret_cast<const char*>(error->GetBufferPointer()), __FILE__, __LINE__);
-		return false;
-	}
-	
-	if (param.sizeInBytes > sizeof(uint32) * D3D12_MAX_ROOT_COST) {
-		NATIVE_LOGE("size in bytes over root signature max cost. File[%s], line[%d]", __FILE__, __LINE__);
-		return false;
-	}
-
-	hr = dxDevice->CreateRootSignature(0,
-		signature->GetBufferPointer(), 
-		signature->GetBufferSize(),
-		IID_PPV_ARGS(&rootSignature)
-	);
-	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to create root signature. File[%s], line[%d]", __FILE__, __LINE__);
-		return false;
-	}
-
-	if(signature) signature->Release();
-	if( error) error->Release();
-	return true;
-}
-
-
 bool DX12RootSignature::Create(revDevice* device, const revDescriptorBindingDesc& desc)
 {
 	// setup root parameter 
@@ -105,7 +25,7 @@ bool DX12RootSignature::Create(revDevice* device, const revDescriptorBindingDesc
 			ranges[i][j].BaseShaderRegister = range.registerIndex;
 			ranges[i][j].NumDescriptors = range.count;
 			ranges[i][j].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-			ranges[i][j].RangeType = ConverToDXDescriptorType(range.type);
+			ranges[i][j].RangeType = ConverToDXDescriptorType(descriptorSetLayout.GetDescriptorType());
 			ranges[i][j].RegisterSpace = range.space;
 			ranges[i][j].Flags = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
 		}

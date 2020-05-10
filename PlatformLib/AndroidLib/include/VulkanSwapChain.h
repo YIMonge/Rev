@@ -6,6 +6,7 @@
 #include "VulkanDevice.h"
 #include "revArray.h"
 #include "VulkanFrameBuffer.h"
+#include "VulkanPipelineState.h"
 
 class VulkanSwapChain
 {
@@ -14,23 +15,27 @@ public:
     ~VulkanSwapChain();
 
     bool Create(VulkanDevice* _device);
+    bool CreateFrameBuffer(const VulkanPipelineState& pipelineState);
     void Destroy();
 
     const GRAPHICS_FORMAT GetFormat() const { return format; }
     const revSwapChain&  GetSwapChain() const { return swapChain; }
-    const VkExtent2D& GetDisplaySize() const { return displaySize; }
+    const revRect& GetDisplaySize() const { return displaySize; }
 
     const VkFramebuffer GetCurrentFrameBuffer() const { return frameBuffers.GetFrameBuffer(frameIndex); }
-    const VkSemaphore& GetSemaphore() const { return semaphore; }
+    VkSemaphore* GetSemaphore(){ return &semaphore; }
     const VkFence& GetFence() const { return fence; }
 
     uint32 GetLength() const { return length; }
+
+    void PrepareRendering(VulkanCommandList& commandList);
+    void EndRendering(VulkanCommandList& commandList);
     bool Present() const;
     bool WaitForPreviousFrame();
 private:
     VulkanDevice* device;
     revSwapChain swapChain;
-    VkExtent2D displaySize;
+    revRect displaySize;
     GRAPHICS_FORMAT format;
     uint32 length;
     uint32 frameIndex;
