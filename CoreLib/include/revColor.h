@@ -10,6 +10,14 @@ public:
 	static const revColor white;
 	static const revColor black;
 
+	revColor():
+		r(0),
+		g(0),
+		b(0),
+		a(0)
+	{
+	}
+
 
     revColor(float _r, float _g, float _b, float _a):
 		r(_r),
