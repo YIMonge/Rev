@@ -21,6 +21,7 @@ public:
 	virtual void ReadData(char* data, uint32 length = 0);
 	virtual void WriteData(char* data, uint32 length);
 	virtual uint32 GetFileSize();
+	static bool isExist(const char* path);
 
 private:
 	FileMode mode;

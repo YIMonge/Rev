@@ -72,3 +72,13 @@ uint32 File::GetFileSize()
 	fseek(file, 0, SEEK_SET);
 	return size;
 }
+
+bool File::isExist(const char* path)
+{
+	FILE* f = fopen(path, "rt");
+	if (f == nullptr) {
+		return false;
+	}
+	fclose(f);
+	return true;
+}
