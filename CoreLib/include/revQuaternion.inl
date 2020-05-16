@@ -9,7 +9,7 @@ w(0.0f)
 {
 }
 
-inline revQuaternion::revQuaternion( float wval, float xval, float yval, float zval ) :
+inline revQuaternion::revQuaternion( f32 wval, f32 xval, f32 yval, f32 zval ) :
 x(xval),
 y(yval),
 z(zval),
@@ -67,7 +67,7 @@ inline void revQuaternion::mult( const revQuaternion& quat )
 	w = leftrevQuat.w * quat.w - leftrevQuat.x * quat.x - leftrevQuat.y * quat.y - leftrevQuat.z * quat.z;
 }
 
-inline void revQuaternion::MultiScalar( float s )
+inline void revQuaternion::MultiScalar( f32 s )
 {
 	x *= s;
 	y *= s;
@@ -75,7 +75,7 @@ inline void revQuaternion::MultiScalar( float s )
 	w *= s;
 }
 
-inline void revQuaternion::DivScalar( float s )
+inline void revQuaternion::DivScalar( f32 s )
 {
 	x /= s;
 	y /= s;
@@ -83,33 +83,33 @@ inline void revQuaternion::DivScalar( float s )
 	w /= s;
 }
 
-inline void revQuaternion::CreateRotation(float Radius, float xval, float yval, float zval)
+inline void revQuaternion::CreateRotation(f32 Radius, f32 xval, f32 yval, f32 zval)
 {
-	float rad = Radius / 2.0f;
-	float sinval = sinf(rad);
+	f32 rad = Radius / 2.0f;
+	f32 sinval = sinf(rad);
 	w = cosf(rad);
 	x = xval * sinval;
 	y = yval * sinval;
 	z = zval * sinval;
 }
 
-inline void revQuaternion::CreateRotation(float Radius, revVector3& axis)
+inline void revQuaternion::CreateRotation(f32 Radius, revVector3& axis)
 {
-	float rad = Radius / 2.0f;
-	float sinval = sinf(rad);
+	f32 rad = Radius / 2.0f;
+	f32 sinval = sinf(rad);
 	w = cosf(rad);
 	x = axis.x * sinval;
 	y = axis.y * sinval;
 	z = axis.z * sinval;
 }
 
-inline float revQuaternion::GetSqrNorm()
+inline f32 revQuaternion::GetSqrNorm()
 {
 	return w * w + x * x + y * y + z * z;
 }
 
 
-inline float revQuaternion::GetNorm()
+inline f32 revQuaternion::GetNorm()
 {
 	return sqrtf( GetSqrNorm() );
 }

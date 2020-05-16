@@ -14,17 +14,17 @@ public:
 	{
 		struct
 		{
-			float x;
-			float y;
-			float z;
-			float w;
+			f32 x;
+			f32 y;
+			f32 z;
+			f32 w;
 		};
-		float data[4];
+		f32 data[4];
 	};
 
 public:
 	revQuaternion();
-	revQuaternion(float wval, float xval, float yval, float zval);
+	revQuaternion(f32 wval, f32 xval, f32 yval, f32 zval);
 	revQuaternion(const revVector3& revVector3);
 	revQuaternion(const revVector4& revVector4);
 
@@ -33,17 +33,17 @@ public:
 	void Add(const revQuaternion& quat);
 	void Sub(const revQuaternion& quat);
 	void mult(const revQuaternion& quat);
-	void MultiScalar(float s);
-	void DivScalar(float s);
+	void MultiScalar(f32 s);
+	void DivScalar(f32 s);
 
-	void CreateRotation(float Radius, float xval, float yval, float zval);
-	void CreateRotation(float Radius, revVector3& axis);
+	void CreateRotation(f32 Radius, f32 xval, f32 yval, f32 zval);
+	void CreateRotation(f32 Radius, revVector3& axis);
 
 
 	revMatrix44 CreateRotationMatrix();
 
-	float GetSqrNorm(void);
-	float GetNorm(void);
+	f32 GetSqrNorm(void);
+	f32 GetNorm(void);
 
 	revVector3	Vector3TransformCoord(const revVector3& vec);
 	static	revVector3	Vector3TransformCoord(const revVector3& vec, const revQuaternion& quat);
@@ -52,8 +52,8 @@ public:
 	revQuaternion operator - (const revQuaternion& q);
 
 	revQuaternion operator * (const revQuaternion& q);
-	revQuaternion operator * (float fs);
-	revQuaternion operator / (float fs);
+	revQuaternion operator * (f32 fs);
+	revQuaternion operator / (f32 fs);
 };
 
 #include "revQuaternion.inl"

@@ -4,17 +4,17 @@ const revQuaternion revQuaternion::ZERO = revQuaternion(0.0f, 0.0f, 0.0f, 0.0f);
 
 revMatrix44 revQuaternion::CreateRotationMatrix()
 {
-	float data[16];
+	f32 data[16];
 
-	float x2 = x * x * 2.0f;
-	float y2 = y * y * 2.0f;
-	float z2 = z * z * 2.0f;
-	float xy = x * y * 2.0f;
-	float yz = y * z * 2.0f;
-	float zx = z * x * 2.0f;
-	float xw = x * w * 2.0f;
-	float yw = y * w * 2.0f;
-	float zw = z * w * 2.0f;
+	f32 x2 = x * x * 2.0f;
+	f32 y2 = y * y * 2.0f;
+	f32 z2 = z * z * 2.0f;
+	f32 xy = x * y * 2.0f;
+	f32 yz = y * z * 2.0f;
+	f32 zx = z * x * 2.0f;
+	f32 xw = x * w * 2.0f;
+	f32 yw = y * w * 2.0f;
+	f32 zw = z * w * 2.0f;
 
 	data[ 0] = 1.0f - y2 - z2;
 	data[ 1] = xy + zw;

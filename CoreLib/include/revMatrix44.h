@@ -11,23 +11,23 @@ public:
 	{
 		struct
 		{
-			float _11, _12, _13, _14;
-			float _21, _22, _23, _24;
-			float _31, _32, _33, _34;
-			float _41, _42, _43, _44;
+			f32 _11, _12, _13, _14;
+			f32 _21, _22, _23, _24;
+			f32 _31, _32, _33, _34;
+			f32 _41, _42, _43, _44;
 		};
-		float m[4][4];
-		float data[16];
+		f32 m[4][4];
+		f32 data[16];
 	};
 
 public:
 	revMatrix44();
 	revMatrix44(
-		float m11, float m12, float m13, float m14,
-		float m21, float m22, float m23, float m24,
-		float m31, float m32, float m33, float m34,
-		float m41, float m42, float m43, float m44);
-	revMatrix44(float afNum[16]);
+		f32 m11, f32 m12, f32 m13, f32 m14,
+		f32 m21, f32 m22, f32 m23, f32 m24,
+		f32 m31, f32 m32, f32 m33, f32 m34,
+		f32 m41, f32 m42, f32 m43, f32 m44);
+	revMatrix44(f32 afNum[16]);
 	revMatrix44(const revMatrix44& m);
 	~revMatrix44();
 
@@ -36,39 +36,39 @@ public:
 			void		Multi( const revMatrix44& m );
 	static	revMatrix44	Multi(const revMatrix44& lhs, const revMatrix44& rhs);
 
-			void		MultiScalar( float s );
-			void		DivScalar( float s );
+			void		MultiScalar( f32 s );
+			void		DivScalar( f32 s );
 
 			void		Identity();
             revMatrix44	Inverse();
 
 			void		Scaling( const revVector3& vec );
-            void		Scaling( float x, float y, float z );
-            void		RotationX( float radian );
-            void		RotationY( float radian );
-            void		RotationZ( float radian );
+            void		Scaling( f32 x, f32 y, f32 z );
+            void		RotationX( f32 radian );
+            void		RotationY( f32 radian );
+            void		RotationZ( f32 radian );
             void		RotationXYZ( const revVector3& vec );
-            void		RotationXYZ( float x, float y, float z );
+            void		RotationXYZ( f32 x, f32 y, f32 z );
             void		RotationZYX( const revVector3& vec );
-            void		RotationZYX( float x, float y, float z );
+            void		RotationZYX( f32 x, f32 y, f32 z );
             void		Translation( const revVector3& vec );
     
-            void		Translation( float x, float y, float z );
+            void		Translation( f32 x, f32 y, f32 z );
 			void		CreateLookAtrevMatrixRH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec);
-			void		CreatePerspectiverevMatrixRH(float fov_radian, float aspect, float near, float far);
+			void		CreatePerspectiverevMatrixRH(f32 fov_radian, f32 aspect, f32 near, f32 far);
 			void		CreateViewPortrevMatrixRH(int Width, int height, int Near, int Far);
 
 			void		CreateLookAtrevMatrixLH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec);
-			void		CreatePerspectiverevMatrixLH(float fov_radian, float aspect, float near, float far);
+			void		CreatePerspectiverevMatrixLH(f32 fov_radian, f32 aspect, f32 near, f32 far);
 
 			void		Transpose();
 
-			void		Set(float m11, float m12, float m13, float m14,
-							float m21, float m22, float m23, float m24,
-							float m31, float m32, float m33, float m34,
-							float m41, float m42, float m43, float m44);
+			void		Set(f32 m11, f32 m12, f32 m13, f32 m14,
+							f32 m21, f32 m22, f32 m23, f32 m24,
+							f32 m31, f32 m32, f32 m33, f32 m34,
+							f32 m41, f32 m42, f32 m43, f32 m44);
 			void		Set(revVector4 a, revVector4 b, revVector4 c, revVector4 d);
-			void		Set(float* afNum);
+			void		Set(f32* afNum);
 
 			revVector4	Vector3Transform(const revVector3& vec);
 	static	revVector4	Vector3Transform(const revVector3& vec, const revMatrix44& matrix);

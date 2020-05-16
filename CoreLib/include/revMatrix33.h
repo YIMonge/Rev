@@ -10,20 +10,20 @@ public:
 	{
 		struct
 		{
-			float _11, _12, _13;
-			float _21, _22, _23;
-			float _31, _32, _33;
+			f32 _11, _12, _13;
+			f32 _21, _22, _23;
+			f32 _31, _32, _33;
 		};
-		float m[3][3];
-		float data[9];
+		f32 m[3][3];
+		f32 data[9];
 	};
 
 public:
 	revMatrix33();
 	revMatrix33(
-		float m11, float m12, float m13,
-		float m21, float m22, float m23,
-		float m31, float m32, float m33);
+		f32 m11, f32 m12, f32 m13,
+		f32 m21, f32 m22, f32 m23,
+		f32 m31, f32 m32, f32 m33);
 
 public:
 			void			Add( const revMatrix33 &m );
@@ -31,16 +31,16 @@ public:
 			void			Multi( const revMatrix33 &m );
 	static	revMatrix33		Multi(const revMatrix33& lhs, const revMatrix33& rhs);
 
-			void			MultiScalar( float s );
-			void			DivScalar( float s );
+			void			MultiScalar( f32 s );
+			void			DivScalar( f32 s );
 
 			void			Identity();
 			revMatrix33		Inverse();
 
 
 			void			Scaling( const revVector2& vec );
-			void			Scaling( float x, float y);
-			void			Rotation( float radian );
+			void			Scaling( f32 x, f32 y);
+			void			Rotation( f32 radian );
 			void			Transpose();
 
 			revVector2		Vector2Transform(const revVector2& vec);

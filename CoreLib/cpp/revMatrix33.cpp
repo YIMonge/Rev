@@ -6,9 +6,9 @@ revMatrix33::revMatrix33()
 }
 
 revMatrix33::revMatrix33(
-		float m11, float m12, float m13,
-		float m21, float m22, float m23,
-		float m31, float m32, float m33) :
+		f32 m11, f32 m12, f32 m13,
+		f32 m21, f32 m22, f32 m23,
+		f32 m31, f32 m32, f32 m33) :
 _11(m11), _12(m12), _13(m13),
 _21(m21), _22(m22), _23(m23), 
 _31(m31), _32(m32), _33(m33)
@@ -55,14 +55,14 @@ revMatrix33 revMatrix33::Multi(const revMatrix33& lhs, const revMatrix33& rhs)
 	return Mat;
 }
 
-inline void revMatrix33::MultiScalar( float s )
+inline void revMatrix33::MultiScalar( f32 s )
 {
 	for( int i=0; i<9; ++i ){
 		data[i] *= s;
 	}
 }
 
-void revMatrix33::DivScalar( float s )
+void revMatrix33::DivScalar( f32 s )
 {
 	for( int i=0; i<9; ++i ){
 		data[i] /= s;
@@ -100,7 +100,7 @@ void revMatrix33::Scaling( const revVector2& vec )
 	m[1][1] = vec.y;
 }
 
-void revMatrix33::Scaling( float x, float y )
+void revMatrix33::Scaling( f32 x, f32 y )
 {
 	this->Identity();
 
@@ -108,9 +108,9 @@ void revMatrix33::Scaling( float x, float y )
 	m[1][1] = y;
 }
 
-void revMatrix33::Rotation( float radian )
+void revMatrix33::Rotation( f32 radian )
 {
-	float val_sin, val_cos;
+	f32 val_sin, val_cos;
 
 	val_sin = sinf( radian );
 	val_cos = cosf( radian );

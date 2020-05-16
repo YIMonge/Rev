@@ -11,7 +11,7 @@ w(0)
 }
 
 
-inline revVector4::revVector4( float a, float b, float c, float d) : 
+inline revVector4::revVector4( f32 a, f32 b, f32 c, f32 d) : 
 x(a),
 y(b),
 z(c),
@@ -44,7 +44,7 @@ inline void revVector4::Sub( const revVector4 &v )
 	w -= v.w;
 }
 
-inline void revVector4::MultiScalar(float s)
+inline void revVector4::MultiScalar(f32 s)
 {
 	x *= s;
 	y *= s;
@@ -52,7 +52,7 @@ inline void revVector4::MultiScalar(float s)
 	w *= s;
 }
 
-inline void revVector4::DivScalar(float s)
+inline void revVector4::DivScalar(f32 s)
 {
 	x /= s;
 	y /= s;
@@ -62,13 +62,13 @@ inline void revVector4::DivScalar(float s)
 
 
 
-inline float revVector4::getNorm()
+inline f32 revVector4::getNorm()
 {
 	return sqrtf( x * x + y * y + z * z );
 }
 
 
-inline float revVector4::getSqrNorm()
+inline f32 revVector4::getSqrNorm()
 {
 	return x * x + y * y + z * z;
 }
@@ -76,7 +76,7 @@ inline float revVector4::getSqrNorm()
 
 inline void revVector4::normalize()
 {
-	float N = getSqrNorm();
+	f32 N = getSqrNorm();
 
 	x /= N;
 	y /= N;
@@ -105,7 +105,7 @@ inline revVector4& revVector4::operator -= (const revVector4& a)
 	return *this;
 }
 
-inline float& revVector4::operator [] (int id)
+inline f32& revVector4::operator [] (int id)
 {
 	return data[id];
 }
@@ -115,23 +115,23 @@ inline revVector4	operator -  (const revVector4& a, const revVector4& b)
 	return revVector4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 }
 
-inline revVector4 revVector4::operator * (float s)
+inline revVector4 revVector4::operator * (f32 s)
 {
 	return revVector4(x * s, y * s, z * s, w * s);
 }
 
-inline revVector4& revVector4::operator *= (float s)
+inline revVector4& revVector4::operator *= (f32 s)
 {
 	MultiScalar(s);
 	return *this;
 }
 
-inline revVector4 revVector4::operator / (float s)
+inline revVector4 revVector4::operator / (f32 s)
 {
 	return revVector4(x / s, y / s, z / s, w / s);
 }
 
-inline revVector4& revVector4::operator /= (float s)
+inline revVector4& revVector4::operator /= (f32 s)
 {
 	DivScalar(s);
 	return *this;

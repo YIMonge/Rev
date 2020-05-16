@@ -1,6 +1,7 @@
 #ifndef __REVVECTOR2_H__
 #define __REVVECTOR2_H__
 
+#include "revTypedef.h"
 #include "revMath.h"
 
 class revVector2
@@ -10,27 +11,27 @@ public:
 	{
 		struct
 		{
-			float x;
-			float y;
+			f32 x;
+			f32 y;
 		};
-		float data[2];
+		f32 data[2];
 	};
 
 public:
 	revVector2();
 	revVector2(const revVector2& src);
 	revVector2(revVector2&& src) noexcept;
-	revVector2(float a, float b);	
+	revVector2(f32 a, f32 b);	
 
 			void	Add( const revVector2 &v );
 			void	Sub( const revVector2 &v  );
-			void	MultiScalar( float s );
-			void	DivScalar( float s );
+			void	MultiScalar( f32 s );
+			void	DivScalar( f32 s );
 
-			float	dot( const revVector2 &v );
+			f32	dot( const revVector2 &v );
 
-			float	getNorm();
-			float	getSqrNorm();
+			f32	getNorm();
+			f32	getSqrNorm();
 
 			void	normalize();
 };

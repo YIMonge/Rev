@@ -1,6 +1,8 @@
 #ifndef __REVCOLOR_H__
 #define __REVCOLOR_H__
 
+#include "revTypedef.h"
+
 class revColor
 {
 public:
@@ -11,7 +13,7 @@ public:
 	static const revColor black;
 
 
-    revColor(float _r, float _g, float _b, float _a):
+    revColor(f32 _r, f32 _g, f32 _b, f32 _a):
 		r(_r),
 		g(_g),
 		b(_b),
@@ -23,12 +25,12 @@ public:
 	{
 		struct
 		{
-			float r;
-			float g;
-			float b;
-			float a;
+			f32 r;
+			f32 g;
+			f32 b;
+			f32 a;
 		};
-		float data[4];
+		f32 data[4];
 	};
  
     

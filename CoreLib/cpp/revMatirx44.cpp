@@ -6,10 +6,10 @@ revMatrix44::revMatrix44()
 }
 
 revMatrix44::revMatrix44(
-		float m11, float m12, float m13, float m14,
-		float m21, float m22, float m23, float m24,
-		float m31, float m32, float m33, float m34,
-		float m41, float m42, float m43, float m44) : 
+		f32 m11, f32 m12, f32 m13, f32 m14,
+		f32 m21, f32 m22, f32 m23, f32 m24,
+		f32 m31, f32 m32, f32 m33, f32 m34,
+		f32 m41, f32 m42, f32 m43, f32 m44) : 
 _11(m11), _12(m12), _13(m13), _14(m14), 
 _21(m21), _22(m22), _23(m23), _24(m24), 
 _31(m31), _32(m32), _33(m33), _34(m34), 
@@ -17,7 +17,7 @@ _41(m41), _42(m42), _43(m43), _44(m44)
 {
 }
 
-revMatrix44::revMatrix44(float *afNum)
+revMatrix44::revMatrix44(f32 *afNum)
 {
 	for(int32 i = 0; i < 16; ++i){
 		data[i] = afNum[i];
@@ -36,9 +36,9 @@ revMatrix44::~revMatrix44()
 revMatrix44 revMatrix44::Inverse()
 {
 	int i, j, k;
-	float lu[20], *plu[4], det;
-	float max, a;
-	float *t;
+	f32 lu[20], *plu[4], det;
+	f32 max, a;
+	f32 *t;
 	revMatrix44 s;
 	revMatrix44 matrix;
 	int count = 0;
@@ -167,10 +167,10 @@ void revMatrix44::CreateLookAtrevMatrixLH(const revVector3& eye, const revVector
 }
 
 
-void revMatrix44::CreatePerspectiverevMatrixRH( float fov_radian,  float aspect,  float near,  float far)
+void revMatrix44::CreatePerspectiverevMatrixRH( f32 fov_radian,  f32 aspect,  f32 near,  f32 far)
 {
 	Identity();
-	float fTemp = (1.0f / tanf(fov_radian / 2.0f));
+	f32 fTemp = (1.0f / tanf(fov_radian / 2.0f));
 
 	_11 = fTemp / aspect;
 	_22 = fTemp;
@@ -181,11 +181,11 @@ void revMatrix44::CreatePerspectiverevMatrixRH( float fov_radian,  float aspect,
 
 }
 
-void revMatrix44::CreatePerspectiverevMatrixLH( float fov_radian,  float aspect,  float near,  float far)
+void revMatrix44::CreatePerspectiverevMatrixLH( f32 fov_radian,  f32 aspect,  f32 near,  f32 far)
 {
 	Identity();
-	float fTemp = (1.0f / tanf(fov_radian / 2.0f));
-	float near_to_far = near - far;
+	f32 fTemp = (1.0f / tanf(fov_radian / 2.0f));
+	f32 near_to_far = near - far;
 
 	_11 = fTemp / aspect;
 	_22 = fTemp;
@@ -199,13 +199,13 @@ void revMatrix44::CreatePerspectiverevMatrixLH( float fov_radian,  float aspect,
 void revMatrix44::CreateViewPortrevMatrixRH(int width, int height, int near, int far)
 {
 	Identity();
-	_11 = (float)width/2;
+	_11 = (f32)width/2;
 	_41 = -_11;
 
-	_22 = -(float)height/2;
+	_22 = -(f32)height/2;
 	_42 = -_22;
 
-	_33 = (float)far - near;
-	_43 = (float)near;
+	_33 = (f32)far - near;
+	_43 = (f32)near;
 
 }

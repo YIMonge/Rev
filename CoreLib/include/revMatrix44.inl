@@ -29,14 +29,14 @@ inline revMatrix44 revMatrix44::Multi(const revMatrix44& lhs, const revMatrix44&
 	return mat;
 }
 
-inline void revMatrix44::MultiScalar( float s )
+inline void revMatrix44::MultiScalar( f32 s )
 {
 	for( int i=0; i<16; ++i ){
 		data[i] *= s;
 	}
 }
 
-inline void revMatrix44::DivScalar( float s )
+inline void revMatrix44::DivScalar( f32 s )
 {
 	for( int i=0; i<16; ++i ){
 		data[i] /= s;
@@ -67,7 +67,7 @@ inline void revMatrix44::Scaling( const revVector3& vec )
 	m[2][2] = vec.z;
 }
 
-inline void revMatrix44::Scaling( float x, float y, float z )
+inline void revMatrix44::Scaling( f32 x, f32 y, f32 z )
 {
 	Identity();
 
@@ -76,9 +76,9 @@ inline void revMatrix44::Scaling( float x, float y, float z )
 	m[2][2] = z;
 }
 
-inline void revMatrix44::RotationX( float radian )
+inline void revMatrix44::RotationX( f32 radian )
 {
-	float val_sin, val_cos;
+	f32 val_sin, val_cos;
 
 	val_sin = sinf( radian );
 	val_cos = cosf( radian );
@@ -91,9 +91,9 @@ inline void revMatrix44::RotationX( float radian )
 	m[2][2] =  val_cos;
 }
 
-inline void revMatrix44::RotationY( float radian )
+inline void revMatrix44::RotationY( f32 radian )
 {
-	float val_sin, val_cos;
+	f32 val_sin, val_cos;
 
 	val_sin = sinf( radian );
 	val_cos = cosf( radian );
@@ -106,9 +106,9 @@ inline void revMatrix44::RotationY( float radian )
 	m[2][2] =  val_cos;
 }
 
-inline void revMatrix44::RotationZ( float radian )
+inline void revMatrix44::RotationZ( f32 radian )
 {
-	float val_sin, val_cos;
+	f32 val_sin, val_cos;
 
 	val_sin = sinf( radian );
 	val_cos = cosf( radian );
@@ -133,7 +133,7 @@ inline void revMatrix44::RotationXYZ( const revVector3& vec )
 	Multi( rz );
 }
 
-inline void revMatrix44::RotationXYZ( float x, float y, float z )
+inline void revMatrix44::RotationXYZ( f32 x, f32 y, f32 z )
 {
 	revMatrix44 ry,rz;
 
@@ -157,7 +157,7 @@ inline void revMatrix44::RotationZYX( const revVector3& vec )
 	Multi( rx );
 }
 
-inline void revMatrix44::RotationZYX( float x, float y, float z )
+inline void revMatrix44::RotationZYX( f32 x, f32 y, f32 z )
 {
 	revMatrix44 ry,rx;
 
@@ -179,7 +179,7 @@ inline void revMatrix44::Translation( const revVector3& vec )
 	m[3][2] = vec.z;
 }
 
-inline void revMatrix44::Translation( float x, float y, float z )
+inline void revMatrix44::Translation( f32 x, f32 y, f32 z )
 {
 	Identity();
 
@@ -285,7 +285,7 @@ inline revVector4 revMatrix44::Vector4Transform(const revVector4& vec, const rev
 		);
 }
 
-inline void revMatrix44::Set(float* num)
+inline void revMatrix44::Set(f32* num)
 {
 	for(int32 i = 0; i < 16; ++i){
 		data[i] = num[i];

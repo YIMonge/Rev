@@ -10,16 +10,16 @@ public:
 	{
 		struct
 		{
-			float x;
-			float y;
-			float z;
+			f32 x;
+			f32 y;
+			f32 z;
 		};
-		float data[3];
+		f32 data[3];
 	};
 
 public:
 	revVector3();
-	revVector3(float a, float b, float c);
+	revVector3(f32 a, f32 b, f32 c);
 	revVector3(const revVector3& lhs);
 	revVector3(const revVector4& a);
 
@@ -27,14 +27,14 @@ public:
 	static	revVector3		Add(const revVector3 &lhs, const revVector3 &rhs);
 			void			Sub(const revVector3 &v);
 	static	revVector3		Sub(const revVector3 &lhs, const revVector3 &rhs);
-			void			MultiScalar(float s);
-			void			DivScalar(float s);
+			void			MultiScalar(f32 s);
+			void			DivScalar(f32 s);
 
-			float			dot(const revVector3 &v) const;
+			f32			dot(const revVector3 &v) const;
 			revVector3		cross(const revVector3 &v) const;
 
-			float			getNorm(void) const;
-			float			getSqrNorm(void) const;
+			f32			getNorm(void) const;
+			f32			getSqrNorm(void) const;
 
 			void			normalize(void);
 
@@ -42,17 +42,17 @@ public:
 			revVector3&		operator += (const revVector3& lhs);
 			revVector3		operator -  (const revVector3& lhs);
 			revVector3&		operator -= (const revVector3& lhs);
-			revVector3		operator *  (float s);
-			revVector3&		operator *= (float s);
-			revVector3		operator /  (float s);
-			revVector3&		operator /= (float s);
-			float&			operator [] (int id);
+			revVector3		operator *  (f32 s);
+			revVector3&		operator *= (f32 s);
+			revVector3		operator /  (f32 s);
+			revVector3&		operator /= (f32 s);
+			f32&			operator [] (int id);
 
 	friend	revVector3		operator +  (const revVector3& lhs, const revVector3& rhs);
 	friend	revVector3		operator -  (const revVector3& lhs, const revVector3& rhs);
-	friend	revVector3		operator *  (float s, const revVector3& lhs);
-	friend	revVector3		operator *  (const revVector3& lhs, float s);
-	friend	revVector3		operator /  (float s, const revVector3& lhs);
+	friend	revVector3		operator *  (f32 s, const revVector3& lhs);
+	friend	revVector3		operator *  (const revVector3& lhs, f32 s);
+	friend	revVector3		operator /  (f32 s, const revVector3& lhs);
 };
 
 #include "revVector3.inl"

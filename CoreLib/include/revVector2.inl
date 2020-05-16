@@ -21,7 +21,7 @@ inline revVector2::revVector2(revVector2&& src) noexcept
 }
 
 
-inline revVector2::revVector2( float a, float b ) 
+inline revVector2::revVector2( f32 a, f32 b ) 
 : x(a)
 , y(b) 
 {
@@ -40,33 +40,33 @@ inline void revVector2::Sub( const revVector2 &v )
 	y -= v.y;
 }
 
-inline void revVector2::MultiScalar(float s)
+inline void revVector2::MultiScalar(f32 s)
 {
 	x *= s;
 	y *= s;
 }
 
 
-inline void revVector2::DivScalar(float s)
+inline void revVector2::DivScalar(f32 s)
 {
 	x /= s;
 	y /= s;
 }
 
 
-inline float revVector2::dot( const revVector2 &v )
+inline f32 revVector2::dot( const revVector2 &v )
 {
 	return x * v.x + y * v.y;
 }
 
 
-inline float revVector2::getNorm()
+inline f32 revVector2::getNorm()
 {
 	return sqrtf( x * x + y * y );
 }
 
 
-inline float revVector2::getSqrNorm()
+inline f32 revVector2::getSqrNorm()
 {
 	return x * x + y * y;
 }
@@ -74,7 +74,7 @@ inline float revVector2::getSqrNorm()
 
 inline void revVector2::normalize()
 {
-	float N  =  1.0f /getNorm();
+	f32 N  =  1.0f /getNorm();
 	x *= N;
 	y *= N;
 }
