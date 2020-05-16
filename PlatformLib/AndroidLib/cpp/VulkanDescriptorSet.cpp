@@ -48,3 +48,13 @@ void VulkanDescriptorSet::Destroy()
 {
     vkDestroyDescriptorPool(device->GetDevice(), descriptorPool, nullptr);
 }
+
+void VulkanDescriptorSet::Apply(VulkanCommandList& commandList, const VkPipelineLayout& pipelineLayout)
+{
+    vkCmdBindDescriptorSets(commandList.GetList(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
+            // TODO: memory chunk
+            0,  // firstSet,
+            1,  // descriptorSetCount,
+            &descriptorSet,
+            0, nullptr);
+}

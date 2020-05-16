@@ -18,6 +18,7 @@ public:
     virtual ~VulkanDevice(){}
 
     bool Create(Window& window);
+    bool CreateCommandList(uint32 num);
     void Destroy();
 
     const VkSurfaceKHR& GetSurface() const { return surface; }
@@ -25,16 +26,12 @@ public:
     const uint32* GetQueueFamilyIndexPtr() const { return &queueFamilyIndex; }
     const VkPhysicalDeviceMemoryProperties& GetPhysicalDeviceMemoryProperties() const { return physicalDeviceMemoryProperties; }
 
-    VulkanCommandList& GetGlobalCommandList() { return globalCommandList; }
     revArray<VulkanCommandList>& GetCommandLists() { return commandLists; }
 private:
     VkInstance instance;
     VkSurfaceKHR surface;
     uint32 queueFamilyIndex;
     VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
-
-    VulkanCommandList globalCommandList;
-    // commandList for each thread
     revArray<VulkanCommandList> commandLists;
 #ifdef _DEBUG
     void initializeDebugLayer();

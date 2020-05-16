@@ -5,6 +5,7 @@
 bool VulkanCommandList::Create(revDevice* device, revGraphicsPipeline* pipeline, revGraphicsCommandAllocator* allocator)
 {
     (void)pipeline;
+    this->device = device;
 
     VkCommandPoolCreateInfo commandPoolCreateInfo = {
             .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
@@ -82,6 +83,11 @@ bool VulkanCommandList::Create(revDevice* device, revGraphicsPipeline* pipeline,
     }
          */
     return true;
+}
+
+void VulkanCommandList::Destroy()
+{
+    vkFreeCommandBuffers(device->GetDevice(), commandAllocator, 1, &commandBuffer);
 }
 
 void VulkanCommandList::Open()

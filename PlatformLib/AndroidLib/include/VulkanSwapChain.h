@@ -22,14 +22,15 @@ public:
     const revSwapChain&  GetSwapChain() const { return swapChain; }
     const revRect& GetDisplaySize() const { return displaySize; }
 
+    uint32 GetCurrentFrameIndex() const { return frameIndex; }
     const VkFramebuffer GetCurrentFrameBuffer() const { return frameBuffers.GetFrameBuffer(frameIndex); }
     VkSemaphore* GetSemaphore(){ return &semaphore; }
     const VkFence& GetFence() const { return fence; }
 
     uint32 GetLength() const { return length; }
 
-    void PrepareRendering(VulkanCommandList& commandList);
-    void EndRendering(VulkanCommandList& commandList);
+    void PrepareRendering(VulkanCommandList& commandList, uint32 index);
+    void EndRendering(VulkanCommandList& commandList, uint32 index);
     bool Present() const;
     bool WaitForPreviousFrame();
 private:

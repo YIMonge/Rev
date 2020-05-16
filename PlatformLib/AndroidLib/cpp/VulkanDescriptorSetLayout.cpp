@@ -65,8 +65,3 @@ void VulkanDescriptorSetLayout::Destroy()
     }
     descriptorSetLayouts.clear();
 }
-
-void VulkanDescriptorSetLayout::Apply(VulkanCommandList& commandList)
-{
-
-}

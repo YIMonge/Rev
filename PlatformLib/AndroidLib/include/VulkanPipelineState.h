@@ -23,9 +23,11 @@ public:
 
     bool Create(revDevice* device, const revMaterial& material, const VulkanDescriptorSetLayout& descriptorSetLayout, const revRect& viewportRect, const revRect& scissorRect);
     void Destroy();
-    void Apply(VulkanCommandList& commandList, const VkFramebuffer& frameBuffer, const revColor& clearColor);
+    void BeginRenderPass(VulkanCommandList& commandList, const VkFramebuffer& frameBuffer, const revColor& clearColor);
+    void EndRenderPass(VulkanCommandList& commandList);
 
     const VkRenderPass& GetRenderPass() const { return renderPass; }
+    const VkPipelineLayout& GetPipelineLayout() const { return pipelineLayout; }
 
 private:
     revDevice* device;
@@ -33,6 +35,8 @@ private:
     revGraphicsPipeline pipelineState;
     VkPipelineLayout pipelineLayout;
     VkRenderPass renderPass;
+    revRect viewportRect;
+    revRect scissorRect;
 };
 
 #endif

@@ -19,9 +19,21 @@ VulkanRenderer::~VulkanRenderer()
 
 void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
-    if(!device.Create(*window)) return;
-    if(!swapChain.Create(&device)) return;
-    //-----------------------------------------------------------------------------------------------
+    if(!device.Create(*window)) {
+        NATIVE_LOGE("Vulkan device create failed. file:%s, line:%d", __FILE__, __LINE__);
+        return;
+    }
+    if(!swapChain.Create(&device)) {
+        NATIVE_LOGE("Vulkan swapchain create failed. file:%s, line:%d", __FILE__, __LINE__);
+        return;
+    }
+    // create commandlist for each frame buffer.
+    if(!device.CreateCommandList(swapChain.GetLength())) {
+        NATIVE_LOGE("Vulkan command list create failed. file:%s, line:%d", __FILE__, __LINE__);
+        return;
+    }
+
+        //-----------------------------------------------------------------------------------------------
     // TEST CODE
     const float triangleVertices[] = {
             // vertex         , texcoord
@@ -29,7 +41,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
              1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
              0.0f,  1.0f, 0.0f, 0.5f, 1.0f,
     };
-    triangleVertexBuffer.Create(device, triangleVertices, sizeof(triangleVertices));
+    triangleVertexBuffer.Create(device, triangleVertices, sizeof(triangleVertices), 3);
 
     // Load shader and material
     VulkanShader shader[2];
@@ -53,6 +65,27 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     swapChain.CreateFrameBuffer(pipelineState);
 
     // Make Draw commadn
+    auto& commandLists = device.GetCommandLists();
+    for(uint32 i = 0; i < commandLists.size(); ++i){
+        auto& commandList = commandLists[i];
+        commandList.Open();
+        swapChain.PrepareRendering(commandList, i);
+
+        pipelineState.BeginRenderPass(commandList, swapChain.GetCurrentFrameBuffer(), clearValue);
+        descriptorSet.Apply(commandList, pipelineState.GetPipelineLayout());
+
+        triangleVertexBuffer.Apply(commandList);
+        vkCmdDraw(commandList.GetList(), 3, 1, 0, 0);
+
+        pipelineState.EndRenderPass(commandList);
+        swapChain.EndRendering(commandList, i);
+
+        commandList.Close();
+//        ExecuteCommand(commandList);
+ //       swapChain.WaitForPreviousFrame();
+  //      swapChain.Present();
+    }
+
 }
 
 void VulkanRenderer::ShutDown()
@@ -66,19 +99,10 @@ void VulkanRenderer::ShutDown()
 
 void VulkanRenderer::Render()
 {
-    // TODO: bake command
-    auto& commandList = device.GetGlobalCommandList();
-    commandList.Open();
-    swapChain.PrepareRendering(commandList);
-    descriptorSetLayout.Apply(commandList);
-    pipelineState.Apply(commandList, swapChain.GetCurrentFrameBuffer(), clearValue);
-
-    swapChain.EndRendering(commandList);
-    commandList.Close();
-
-    ExecuteCommand(commandList);
-    swapChain.WaitForPreviousFrame();
-    swapChain.Present();
+    auto& commandList = device.GetCommandLists()[swapChain.GetCurrentFrameIndex()];
+     ExecuteCommand(commandList);
+     swapChain.WaitForPreviousFrame();
+     swapChain.Present();
 }
 
 void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists)

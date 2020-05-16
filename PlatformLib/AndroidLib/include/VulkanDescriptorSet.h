@@ -14,6 +14,8 @@ public:
     bool Create(revDevice* device, const VulkanDescriptorSetLayout& layout, uint32 numDescriptors, bool shaderVisiblity);
     void Destroy();
 
+    void Apply(VulkanCommandList& commandList, const VkPipelineLayout& pipelineLayout);
+
     const VkDescriptorSet& GetHandle() const { return descriptorSet; }
 
 private:

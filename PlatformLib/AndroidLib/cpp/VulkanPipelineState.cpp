@@ -4,6 +4,9 @@
 bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material, const VulkanDescriptorSetLayout& descriptorSetLayout, const revRect& viewportRect, const revRect& scissorRect)
 {
     this->device = device;
+    this->viewportRect = viewportRect;
+    this->scissorRect = scissorRect;
+
     VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {};
     pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutCreateInfo.pNext = nullptr;
@@ -236,16 +239,33 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
      return true;
 }
 
-void VulkanPipelineState::Apply(VulkanCommandList& commandList, const VkFramebuffer& frameBuffer, const revColor& clearColor)
+void VulkanPipelineState::BeginRenderPass(VulkanCommandList& commandList, const VkFramebuffer& frameBuffer, const revColor& clearColor)
 {
     // needs Image layout setting?
-    VkRenderPassBeginInfo renderPassBeginInfo;
+    VkRenderPassBeginInfo renderPassBeginInfo = {};
     renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassBeginInfo.pNext = nullptr;
     renderPassBeginInfo.framebuffer = frameBuffer;
     renderPassBeginInfo.renderPass = renderPass;
+    renderPassBeginInfo.renderArea.offset.x = 0;
+    renderPassBeginInfo.renderArea.offset.y = 0;
+    renderPassBeginInfo.renderArea.extent.height = viewportRect.h;
+    renderPassBeginInfo.renderArea.extent.width = viewportRect.w;
+    renderPassBeginInfo.clearValueCount = 1;
+    VkClearValue clearValue;
+    clearValue.color.float32[0] = clearColor.data[0];
+    clearValue.color.float32[1] = clearColor.data[1];
+    clearValue.color.float32[2] = clearColor.data[2];
+    clearValue.color.float32[3] = clearColor.data[3];
+    renderPassBeginInfo.pClearValues = &clearValue;
 
+    vkCmdBeginRenderPass(commandList.GetList(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
     vkCmdBindPipeline(commandList.GetList(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineState);
+}
+
+void VulkanPipelineState::EndRenderPass(VulkanCommandList& commandList)
+{
+    vkCmdEndRenderPass(commandList.GetList());
 }
 
 void VulkanPipelineState::Destroy()

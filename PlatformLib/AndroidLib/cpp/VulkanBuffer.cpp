@@ -7,21 +7,24 @@
 
 bool VulkanBuffer::Create(const revDevice& device, const revArray<revVector3>& data)
 {
-    return Create(device, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3) * data.size());
+    return Create(device, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3), data.size());
 }
 
 bool VulkanBuffer::Create(const revDevice& device, const revArray<revVector4>& data)
 {
-    return Create(device, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4) * data.size());
+    return Create(device, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4), data.size());
 }
 
 bool VulkanBuffer::Create(const revDevice& device, const revArray<float>& data)
 {
-    return Create(device, static_cast<const float*>(&data[0]), sizeof(float) * data.size());
+    return Create(device, static_cast<const float*>(&data[0]), sizeof(float), data.size());
 }
 
-bool VulkanBuffer::Create(const revDevice& device, const float* data, uint32 size)
+bool VulkanBuffer::Create(const revDevice& device, const float* data, uint32 sizeOfBytes, uint32 length)
 {
+    this->length = length;
+    uint32 size = sizeOfBytes * length;
+
     const VulkanDevice vulkanDevice = static_cast<const VulkanDevice&>(device);
     VkDevice revDevice = vulkanDevice.GetDevice();
     VkBufferCreateInfo bufferCreateInfo = {
@@ -105,5 +108,12 @@ void VulkanBuffer::Destroy(const revDevice& deviceContext)
 {
     vkDestroyBuffer(deviceContext.GetDevice(), buffer, nullptr);
 }
+
+void VulkanBuffer::Apply(VulkanCommandList& commandList)
+{
+    VkDeviceSize offset = 0;
+    vkCmdBindVertexBuffers(commandList.GetList(), 0, 1, &buffer, &offset);
+}
+
 
 #endif

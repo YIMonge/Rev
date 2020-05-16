@@ -54,13 +54,13 @@ dependencies {
 // TODO: file cache system
 task syncResources(type: Sync) {
     from "../../../Resources"
-    into "src/main/assets"
+    into "src/main/assets/Resources"
     rename '(.*).hlsl.meta','$1.spv.meta' // shader meta file rename for spv
 }
 
 // TODO: Shader Cache
 task compileShaderFromHLSL2SPIRV(dependsOn: syncResources)  {
-    String assetPath = 'src\\main\\assets'
+    String assetPath = 'src\\main\\assets\\Resources'
     FileTree tree = fileTree(dir: assetPath).include('*.hlsl')
     String glslc = projectDir.path + "\\buildTools\\glslc.exe"
     doLast {
@@ -78,7 +78,7 @@ task compileShaderFromHLSL2SPIRV(dependsOn: syncResources)  {
                     commandLine 'cmd', '/c', glslc, stage, element.file, '-o', outPath
             }
         }
-        delete  fileTree(dir: 'src\\main\\assets', include: '*.hlsl')
+        delete  fileTree(dir: assetPath, include: '*.hlsl')
     }
 }
 

@@ -131,16 +131,17 @@ void VulkanSwapChain::Destroy()
     vkDestroySwapchainKHR(device->GetDevice(), swapChain, nullptr);
 }
 
-void VulkanSwapChain::PrepareRendering(VulkanCommandList& commandList)
+void VulkanSwapChain::PrepareRendering(VulkanCommandList& commandList, uint32 index)
 {
-    frameBuffers.setImageLayout(commandList, frameIndex,
+    frameBuffers.setImageLayout(commandList, index,
+                                //VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
                                 VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
                                 VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
 }
 
-void VulkanSwapChain::EndRendering(VulkanCommandList& commandList)
+void VulkanSwapChain::EndRendering(VulkanCommandList& commandList, uint32 index)
 {
-    frameBuffers.setImageLayout(commandList, frameIndex,
+    frameBuffers.setImageLayout(commandList, index,
                                 VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
                                 VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
 }

@@ -142,13 +142,25 @@ bool VulkanDevice::Create(Window& window)
     vkGetPhysicalDeviceMemoryProperties(adapter, &physicalDeviceMemoryProperties);
     vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue);
 
-    globalCommandList.Create(this, nullptr);
     return true;
 }
 
+bool VulkanDevice::CreateCommandList(uint32 num)
+{
+    commandLists.resize(num);
+    for(uint32 i = 0; i < num; ++i){
+        if(!commandLists[i].Create(this, nullptr)){
+            return false;
+        }
+    }
+    return true;
+}
 
 void VulkanDevice::Destroy()
 {
+    for(auto l : commandLists){
+        l.Destroy();
+    }
     vkDestroySurfaceKHR(instance, surface, nullptr);
     vkDestroyDevice(device, nullptr);
     vkDestroyInstance(instance, nullptr);

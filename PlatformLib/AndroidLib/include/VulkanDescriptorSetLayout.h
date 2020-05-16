@@ -13,9 +13,7 @@ public:
 
     bool Create(revDevice* device, const revDescriptorBindingDesc& desc);
     void Destroy();
-
-    void Apply(VulkanCommandList& commandList);
-
+    
     uint32 GetDescriptorSetCount() const { return static_cast<uint32>(descriptorSetLayouts.size()); }
     const DESCRIPTOR_HEAP_TYPE GetDescriptorHeapType(uint32 index) const { return descriptorHeapTypes[index];}
     const VkDescriptorSetLayout* GetDescriptorSets() const { return descriptorSetLayouts.data(); }

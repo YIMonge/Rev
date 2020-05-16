@@ -10,6 +10,7 @@ public:
     virtual ~VulkanCommandList(){}
 
     virtual bool Create(revDevice* device, revGraphicsPipeline* pipeline, revGraphicsCommandAllocator* allocator = nullptr);
+    virtual void Destroy();
     virtual void Open();
     virtual void Close();
 };
