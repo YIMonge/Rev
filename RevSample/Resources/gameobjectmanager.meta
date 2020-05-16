@@ -1,0 +1,390 @@
+{
+    "root": {
+        "metaData.groupInfos": {
+            "value0": {
+                "name": "SYSTEM"
+            },
+            "value1": {
+                "name": "PLAYER"
+            },
+            "value2": {
+                "name": "CAMERA"
+            },
+            "value3": {
+                "name": "GAMEOBJECT"
+            },
+            "value4": {
+                "name": "EFFECT"
+            },
+            "value5": {
+                "name": "BACKGROUND"
+            },
+            "value6": {
+                "name": ""
+            },
+            "value7": {
+                "name": ""
+            },
+            "value8": {
+                "name": ""
+            },
+            "value9": {
+                "name": ""
+            },
+            "value10": {
+                "name": ""
+            },
+            "value11": {
+                "name": ""
+            },
+            "value12": {
+                "name": ""
+            },
+            "value13": {
+                "name": ""
+            },
+            "value14": {
+                "name": ""
+            },
+            "value15": {
+                "name": ""
+            },
+            "value16": {
+                "name": ""
+            },
+            "value17": {
+                "name": ""
+            },
+            "value18": {
+                "name": ""
+            },
+            "value19": {
+                "name": ""
+            },
+            "value20": {
+                "name": ""
+            },
+            "value21": {
+                "name": ""
+            },
+            "value22": {
+                "name": ""
+            },
+            "value23": {
+                "name": ""
+            },
+            "value24": {
+                "name": ""
+            },
+            "value25": {
+                "name": ""
+            },
+            "value26": {
+                "name": ""
+            },
+            "value27": {
+                "name": ""
+            },
+            "value28": {
+                "name": ""
+            },
+            "value29": {
+                "name": ""
+            },
+            "value30": {
+                "name": ""
+            },
+            "value31": {
+                "name": ""
+            },
+            "value32": {
+                "name": ""
+            },
+            "value33": {
+                "name": ""
+            },
+            "value34": {
+                "name": ""
+            },
+            "value35": {
+                "name": ""
+            },
+            "value36": {
+                "name": ""
+            },
+            "value37": {
+                "name": ""
+            },
+            "value38": {
+                "name": ""
+            },
+            "value39": {
+                "name": ""
+            },
+            "value40": {
+                "name": ""
+            },
+            "value41": {
+                "name": ""
+            },
+            "value42": {
+                "name": ""
+            },
+            "value43": {
+                "name": ""
+            },
+            "value44": {
+                "name": ""
+            },
+            "value45": {
+                "name": ""
+            },
+            "value46": {
+                "name": ""
+            },
+            "value47": {
+                "name": ""
+            },
+            "value48": {
+                "name": ""
+            },
+            "value49": {
+                "name": ""
+            },
+            "value50": {
+                "name": ""
+            },
+            "value51": {
+                "name": ""
+            },
+            "value52": {
+                "name": ""
+            },
+            "value53": {
+                "name": ""
+            },
+            "value54": {
+                "name": ""
+            },
+            "value55": {
+                "name": ""
+            },
+            "value56": {
+                "name": ""
+            },
+            "value57": {
+                "name": ""
+            },
+            "value58": {
+                "name": ""
+            },
+            "value59": {
+                "name": ""
+            },
+            "value60": {
+                "name": ""
+            },
+            "value61": {
+                "name": ""
+            },
+            "value62": {
+                "name": ""
+            },
+            "value63": {
+                "name": ""
+            },
+            "value64": {
+                "name": ""
+            },
+            "value65": {
+                "name": ""
+            },
+            "value66": {
+                "name": ""
+            },
+            "value67": {
+                "name": ""
+            },
+            "value68": {
+                "name": ""
+            },
+            "value69": {
+                "name": ""
+            },
+            "value70": {
+                "name": ""
+            },
+            "value71": {
+                "name": ""
+            },
+            "value72": {
+                "name": ""
+            },
+            "value73": {
+                "name": ""
+            },
+            "value74": {
+                "name": ""
+            },
+            "value75": {
+                "name": ""
+            },
+            "value76": {
+                "name": ""
+            },
+            "value77": {
+                "name": ""
+            },
+            "value78": {
+                "name": ""
+            },
+            "value79": {
+                "name": ""
+            },
+            "value80": {
+                "name": ""
+            },
+            "value81": {
+                "name": ""
+            },
+            "value82": {
+                "name": ""
+            },
+            "value83": {
+                "name": ""
+            },
+            "value84": {
+                "name": ""
+            },
+            "value85": {
+                "name": ""
+            },
+            "value86": {
+                "name": ""
+            },
+            "value87": {
+                "name": ""
+            },
+            "value88": {
+                "name": ""
+            },
+            "value89": {
+                "name": ""
+            },
+            "value90": {
+                "name": ""
+            },
+            "value91": {
+                "name": ""
+            },
+            "value92": {
+                "name": ""
+            },
+            "value93": {
+                "name": ""
+            },
+            "value94": {
+                "name": ""
+            },
+            "value95": {
+                "name": ""
+            },
+            "value96": {
+                "name": ""
+            },
+            "value97": {
+                "name": ""
+            },
+            "value98": {
+                "name": ""
+            },
+            "value99": {
+                "name": ""
+            },
+            "value100": {
+                "name": ""
+            },
+            "value101": {
+                "name": ""
+            },
+            "value102": {
+                "name": ""
+            },
+            "value103": {
+                "name": ""
+            },
+            "value104": {
+                "name": ""
+            },
+            "value105": {
+                "name": ""
+            },
+            "value106": {
+                "name": ""
+            },
+            "value107": {
+                "name": ""
+            },
+            "value108": {
+                "name": ""
+            },
+            "value109": {
+                "name": ""
+            },
+            "value110": {
+                "name": ""
+            },
+            "value111": {
+                "name": ""
+            },
+            "value112": {
+                "name": ""
+            },
+            "value113": {
+                "name": ""
+            },
+            "value114": {
+                "name": ""
+            },
+            "value115": {
+                "name": ""
+            },
+            "value116": {
+                "name": ""
+            },
+            "value117": {
+                "name": ""
+            },
+            "value118": {
+                "name": ""
+            },
+            "value119": {
+                "name": ""
+            },
+            "value120": {
+                "name": ""
+            },
+            "value121": {
+                "name": ""
+            },
+            "value122": {
+                "name": ""
+            },
+            "value123": {
+                "name": ""
+            },
+            "value124": {
+                "name": ""
+            },
+            "value125": {
+                "name": ""
+            },
+            "value126": {
+                "name": ""
+            },
+            "value127": {
+                "name": ""
+            }
+        }
+    }
+}

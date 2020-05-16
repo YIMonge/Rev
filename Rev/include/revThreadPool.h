@@ -6,8 +6,9 @@
 #include "revThread.h"
 #include "revArray.h"
 #include "revAsyncable.h"
+#include "revSingleton.h"
 
-class revThreadPool
+class revThreadPool : public revSingleton<revThreadPool>
 {
 public:
 	struct WorkerInfo

@@ -1,6 +1,7 @@
 #include "revApp.h"
 #include "revMemory.h"
 #include "revGraphics.h"
+#include "revGameObjectManager.h"
 
 revApp::revApp()
 : fixed_delta_time(0.0f)
@@ -16,6 +17,7 @@ revApp::revApp()
 	revMemory::Get().StartUp(ToMegaByte(128));
 	GraphicsDesc desc = {};
 	revGraphics::Get().StartUp(window, desc);
+	revGameObjectManager::Get().StartUp();
 	initialized = true;
 }
 
@@ -31,7 +33,5 @@ void revApp::Run()
 	delta_time = 0.0f;
 	current_time = 0.0f;
 	last_time = 0.0f;
-	//while (true){
-		revGraphics::Get().Draw();
-	//}
+	revGraphics::Get().Draw();
 }
