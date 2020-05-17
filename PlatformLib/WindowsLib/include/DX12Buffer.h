@@ -17,7 +17,7 @@ public:
 	bool Create(const revDevice& deviceContext, const revArray<revVector3>& data);
 	bool Create(const revDevice& deviceContext, const revArray<revVector4>& data);
 	bool Create(const revDevice& deviceContext, const revArray<float>& data);
-	virtual bool Create(const revDevice& deviceContext, const float* data, uint32 size);
+	bool Create(const revDevice& deviceContext, const float* data, uint32 sizeOfBytes, uint32 length);
 	void Destroy(const revDevice& deviceContext);
 
 protected:
@@ -30,7 +30,7 @@ public:
 	DX12VertexBuffer();
 	virtual ~DX12VertexBuffer();
 
-	virtual bool Create(const revDevice& deviceContext, const float* data, uint32 size);
+	bool Create(const revDevice& deviceContext, const float* data, uint32 sizeOfBytes, uint32 length);
 
 	const D3D12_VERTEX_BUFFER_VIEW* GetResourceView() const { return &view; }
 

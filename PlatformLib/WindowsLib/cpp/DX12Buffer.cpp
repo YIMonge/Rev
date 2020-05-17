@@ -16,21 +16,22 @@ DX12Buffer::~DX12Buffer()
 
 bool DX12Buffer::Create(const revDevice& deviceContext, const revArray<revVector3>& data)
 {
-	return Create(deviceContext, &data[0].data[0], data.size() * sizeof(revVector3));
+	return Create(deviceContext, &data[0].data[0], sizeof(revVector3), data.size());
 }
 
 bool DX12Buffer::Create(const revDevice& deviceContext, const revArray<revVector4>& data)
 {
-	return Create(deviceContext, &data[0].data[0], data.size() * sizeof(revVector4));
+	return Create(deviceContext, &data[0].data[0], sizeof(revVector4), data.size());
 }
 
 bool DX12Buffer::Create(const revDevice& deviceContext, const revArray<float>& data)
 {
-	return Create(deviceContext, &data[0], data.size() * sizeof(float));
+	return Create(deviceContext, &data[0], sizeof(float), data.size());
 }
 
-bool DX12Buffer::Create(const revDevice& deviceContext, const float* data, uint32 size)
+bool DX12Buffer::Create(const revDevice& deviceContext, const float* data, uint32 sizeOfBytes, uint32 length)
 {
+	uint32 size = sizeOfBytes * length;
 	HRESULT hr = deviceContext.GetDevice()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
@@ -73,13 +74,13 @@ DX12VertexBuffer::~DX12VertexBuffer()
 {
 }
 
-bool DX12VertexBuffer::Create(const revDevice& deviceContext, const float* data, uint32 size)
+bool DX12VertexBuffer::Create(const revDevice& deviceContext, const float* data, uint32 sizeOfBytes, uint32 length)
 {
-	DX12Buffer::Create(deviceContext, data, size);
+	DX12Buffer::Create(deviceContext, data, sizeOfBytes, length);
 	view.BufferLocation = buffer->GetGPUVirtualAddress();
 	// TODO: set stride 
-	view.StrideInBytes = sizeof(revVector3) + sizeof(revVector2);
-	view.SizeInBytes = size;
+	view.StrideInBytes = sizeOfBytes; //sizeof(revVector3) + sizeof(revVector2);
+	view.SizeInBytes = sizeOfBytes * length;
 	return true;
 }
 

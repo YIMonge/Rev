@@ -9,8 +9,9 @@ class revGraphicsBuffer
 {
 public:
     revGraphicsBuffer():
-            length(0)
-            {}
+        buffer(NULL_HANDLE),
+        length(0)
+        {}
     virtual ~revGraphicsBuffer(){}
 
     virtual bool Create(const revDevice& deviceContext, const revArray<revVector3>& data) = 0;

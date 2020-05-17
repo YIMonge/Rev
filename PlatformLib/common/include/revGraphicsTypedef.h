@@ -275,6 +275,8 @@ using revGraphicsPipeline = VkPipeline;
 using revTextureHandle = VkImage;
 using revTextureSampler = VkSampler;
 using revDescriptorHeap = void;
+#define NULL_HANDLE VK_NULL_HANDLE
+
 
 namespace {
 	VkFilter ConvertToVKFilter(FILTER_MODE filter)
@@ -490,7 +492,7 @@ using revGraphicsPipeline = ID3D12PipelineState*;
 using revTextureHandle = ID3D12Resource*;
 using revTextureSampler = D3D12_GPU_DESCRIPTOR_HANDLE;
 using revDescriptorHeap = ID3D12DescriptorHeap;
-
+#define NULL_HANDLE nullptr
 
 namespace {
 	REV_INLINE D3D12_FILTER ConvertToDXFilter(FILTER_MODE minFilter, FILTER_MODE magFilter, MIP_FILTER_MODE mip, uint32 anisotorpy, bool compare)

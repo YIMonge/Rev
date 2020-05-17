@@ -111,7 +111,7 @@ bool DX12Renderer::IntialzieForApp()
 		{ { -0.25f, -0.25f, 0.0f }, { 0.0f, 1.0f } }
 	};
 
-	vertexBuffer.Create(device, &(triangleVertices[0].position.data[0]), sizeof(triangleVertices));
+	vertexBuffer.Create(device, &(triangleVertices[0].position.data[0]), sizeof(Vertex), 3);
 	
 	return true;
 }
