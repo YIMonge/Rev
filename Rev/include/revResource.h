@@ -27,12 +27,10 @@ private:
 struct DefaultMetaData
 {
 	uint32 guid;
-	revString userData;
 };
 
 SERIALIZE_FUNC_NON_INTRUSIVE(DefaultMetaData, data)
 {
-	archive(REV_MAKE_NVP(guid, data.guid),
-		REV_MAKE_NVP(userData, data.userData));
+	archive(REV_MAKE_NVP(guid, data.guid));
 }
 #endif

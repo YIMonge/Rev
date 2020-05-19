@@ -279,78 +279,92 @@ using revDescriptorHeap = void;
 
 
 namespace {
-	VkFilter ConvertToVKFilter(FILTER_MODE filter)
-    {
-        const VkFilter table[] = {
-            VK_FILTER_NEAREST,
-            VK_FILTER_LINEAR,
-        };
-        return table[static_cast<uint32>(filter)];
-    }
-
-	VkSamplerMipmapMode ConvertToVKMipFilterMode(MIP_FILTER_MODE mode)
-	{
-    	const VkSamplerMipmapMode table[] = {
-			VK_SAMPLER_MIPMAP_MODE_NEAREST,
-			VK_SAMPLER_MIPMAP_MODE_LINEAR,
-			VK_SAMPLER_MIPMAP_MODE_LINEAR,	// dummy
-    	};
-    	return table[static_cast<uint32>(mode)];
-	}
-
-	VkSamplerAddressMode ConvertToVKTextureAddressMode(TEXTURE_ADDRESS_MODE mode)
-	{
-    	const VkSamplerAddressMode table[] = {
-			VK_SAMPLER_ADDRESS_MODE_REPEAT,
-			VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
-			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
-			VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE,
+	VkFilter ConvertToVKFilter(FILTER_MODE filter) {
+		const VkFilter table[] = {
+				VK_FILTER_NEAREST,
+				VK_FILTER_LINEAR,
 		};
-    	return table[static_cast<uint32>(mode)];
+		return table[static_cast<uint32>(filter)];
 	}
 
-	VkCompareOp ConverToVKComparisonFunc(COMPARISON_FUNC comparisonFunc)
-	{
-    	const VkCompareOp table[] = {
-			VK_COMPARE_OP_NEVER,
-			VK_COMPARE_OP_LESS,
-			VK_COMPARE_OP_EQUAL,
-			VK_COMPARE_OP_LESS_OR_EQUAL,
-			VK_COMPARE_OP_GREATER,
-			VK_COMPARE_OP_NOT_EQUAL,
-			VK_COMPARE_OP_GREATER_OR_EQUAL,
-			VK_COMPARE_OP_ALWAYS,
-    	};
-    	return table[static_cast<uint32>(comparisonFunc)];
+	VkSamplerMipmapMode ConvertToVKMipFilterMode(MIP_FILTER_MODE mode) {
+		const VkSamplerMipmapMode table[] = {
+				VK_SAMPLER_MIPMAP_MODE_NEAREST,
+				VK_SAMPLER_MIPMAP_MODE_LINEAR,
+				VK_SAMPLER_MIPMAP_MODE_LINEAR,    // dummy
+		};
+		return table[static_cast<uint32>(mode)];
 	}
 
-	VkBorderColor ConvertToVKBorderColor(BORDER_COLOR_MODE mode)
-	{
-    	const VkBorderColor table[] = {
-			VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,
-			VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK,
-			VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE,
-    	};
-    	return table[static_cast<uint32>(mode)];
+	VkSamplerAddressMode ConvertToVKTextureAddressMode(TEXTURE_ADDRESS_MODE mode) {
+		const VkSamplerAddressMode table[] = {
+				VK_SAMPLER_ADDRESS_MODE_REPEAT,
+				VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
+				VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+				VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
+				VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE,
+		};
+		return table[static_cast<uint32>(mode)];
 	}
 
-	VkFormat ConvertToVKFormat(GRAPHICS_FORMAT format)
-	{
+	VkCompareOp ConverToVKComparisonFunc(COMPARISON_FUNC comparisonFunc) {
+		const VkCompareOp table[] = {
+				VK_COMPARE_OP_NEVER,
+				VK_COMPARE_OP_LESS,
+				VK_COMPARE_OP_EQUAL,
+				VK_COMPARE_OP_LESS_OR_EQUAL,
+				VK_COMPARE_OP_GREATER,
+				VK_COMPARE_OP_NOT_EQUAL,
+				VK_COMPARE_OP_GREATER_OR_EQUAL,
+				VK_COMPARE_OP_ALWAYS,
+		};
+		return table[static_cast<uint32>(comparisonFunc)];
+	}
+
+	VkBorderColor ConvertToVKBorderColor(BORDER_COLOR_MODE mode) {
+		const VkBorderColor table[] = {
+				VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,
+				VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK,
+				VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE,
+		};
+		return table[static_cast<uint32>(mode)];
+	}
+
+	VkFormat ConvertToVKFormat(GRAPHICS_FORMAT format) {
 		const VkFormat table[] = {
-			VK_FORMAT_R8G8B8A8_UNORM,
-			VK_FORMAT_R32_UINT,
-			VK_FORMAT_R32_SINT,
-			VK_FORMAT_R32_SFLOAT,
-			VK_FORMAT_R32G32_UINT,
-			VK_FORMAT_R32G32_SINT,
-			VK_FORMAT_R32G32_SFLOAT,
-			VK_FORMAT_R32G32B32_UINT,
-			VK_FORMAT_R32G32B32_SINT,
-			VK_FORMAT_R32G32B32_SFLOAT,
-			VK_FORMAT_R32G32B32A32_UINT,
-			VK_FORMAT_R32G32B32A32_SINT,
-			VK_FORMAT_R32G32B32A32_SFLOAT,
+				VK_FORMAT_R8G8B8A8_UNORM,
+				VK_FORMAT_R32_UINT,
+				VK_FORMAT_R32_SINT,
+				VK_FORMAT_R32_SFLOAT,
+				VK_FORMAT_R32G32_UINT,
+				VK_FORMAT_R32G32_SINT,
+				VK_FORMAT_R32G32_SFLOAT,
+				VK_FORMAT_R32G32B32_UINT,
+				VK_FORMAT_R32G32B32_SINT,
+				VK_FORMAT_R32G32B32_SFLOAT,
+				VK_FORMAT_R32G32B32A32_UINT,
+				VK_FORMAT_R32G32B32A32_SINT,
+				VK_FORMAT_R32G32B32A32_SFLOAT,
+		};
+		return table[static_cast<uint32>(format)];
+	}
+
+	uint32 ConvertToVKSizeOfBytes(GRAPHICS_FORMAT format)
+	{
+		const uint32 table[] = {
+				sizeof(uint32),
+				sizeof(uint32),
+				sizeof(int32),
+				sizeof(f32),
+				sizeof(uint32) * 2,
+				sizeof(int32) * 2,
+				sizeof(f32) * 2,
+				sizeof(uint32) * 3,
+				sizeof(int32) * 3,
+				sizeof(f32) * 3,
+				sizeof(uint32) * 4,
+				sizeof(int32) * 4,
+				sizeof(f32) * 4,
 		};
 		return table[static_cast<uint32>(format)];
 	}

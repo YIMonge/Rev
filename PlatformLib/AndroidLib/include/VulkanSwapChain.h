@@ -15,7 +15,7 @@ public:
     ~VulkanSwapChain();
 
     bool Create(VulkanDevice* _device);
-    bool CreateFrameBuffer(const VulkanPipelineState& pipelineState);
+    bool CreateFrameBuffer(const VulkanRenderPass& renderPass);
     void Destroy();
 
     const GRAPHICS_FORMAT GetFormat() const { return format; }
@@ -23,15 +23,13 @@ public:
     const revRect& GetDisplaySize() const { return displaySize; }
 
     uint32 GetCurrentFrameIndex() const { return frameIndex; }
-    const VkFramebuffer GetCurrentFrameBuffer() const { return frameBuffers.GetFrameBuffer(frameIndex); }
+    const VulkanFrameBuffer& GetFrameBuffer() const { return frameBuffers; }
     VkSemaphore* GetSemaphore(){ return &semaphore; }
     const VkFence& GetFence() const { return fence; }
 
     uint32 GetLength() const { return length; }
 
-    void PrepareRendering(VulkanCommandList& commandList, uint32 index);
-    void EndRendering(VulkanCommandList& commandList, uint32 index);
-    bool Present() const;
+    bool Present();
     bool WaitForPreviousFrame();
 private:
     VulkanDevice* device;

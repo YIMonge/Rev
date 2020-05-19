@@ -6,11 +6,13 @@
 #include "VulkanCommandList.h"
 #include "VulkanDescriptorSet.h"
 #include "revRect.h"
+#include "VulkanRenderPass.h"
 
 struct PipelineStateDesc
 {
     revMaterial* material;
-    VulkanDescriptorSet* descriptorSet;
+    VulkanDescriptorSetLayout* descriptorSetLayout;
+    VulkanRenderPass* renderPass;
     revRect viewportRect;
     revRect scissorRect;
 };
@@ -21,12 +23,11 @@ public:
     VulkanPipelineState() {}
     virtual ~VulkanPipelineState(){}
 
-    bool Create(revDevice* device, const revMaterial& material, const VulkanDescriptorSetLayout& descriptorSetLayout, const revRect& viewportRect, const revRect& scissorRect);
+    bool Create(revDevice* device, const PipelineStateDesc& desc);
     void Destroy();
-    void BeginRenderPass(VulkanCommandList& commandList, const VkFramebuffer& frameBuffer, const revColor& clearColor);
-    void EndRenderPass(VulkanCommandList& commandList);
+    void Apply(VulkanCommandList& commandList);
 
-    const VkRenderPass& GetRenderPass() const { return renderPass; }
+    const revRect& GetViewport() const { return viewportRect; }
     const VkPipelineLayout& GetPipelineLayout() const { return pipelineLayout; }
 
 private:
@@ -34,7 +35,6 @@ private:
     VkPipelineCache pipelineCache;
     revGraphicsPipeline pipelineState;
     VkPipelineLayout pipelineLayout;
-    VkRenderPass renderPass;
     revRect viewportRect;
     revRect scissorRect;
 };

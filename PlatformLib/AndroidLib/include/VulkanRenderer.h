@@ -12,6 +12,7 @@
 #include "VulkanDescriptorSetLayout.h"
 #include "VulkanDescriptorSet.h"
 #include "VulkanPipelineState.h"
+#include "VulkanRenderPass.h"
 
 class VulkanRenderer : public revRenderer
 {
@@ -25,8 +26,8 @@ public:
 	void Render();
 	void SwapBuffers();
 private:
-    void ExecuteCommand(revArray<revGraphicsCommandList>& lists);
-    void ExecuteCommand(revGraphicsCommandList& list);
+    void ExecuteCommand(revArray<revGraphicsCommandList>& lists, bool needSemaphore = false);
+    void ExecuteCommand(revGraphicsCommandList& list, bool needSemaphore = false);
 
     void setImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
 	VulkanDevice device;
@@ -44,6 +45,7 @@ private:
 	VulkanTexture texture;
 	VulkanTextureView textureView;
 	VulkanSampler sampler;
+	VulkanRenderPass renderPass;
 	revMaterial mat;
 };
 

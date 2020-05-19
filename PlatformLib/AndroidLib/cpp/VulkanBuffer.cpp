@@ -34,8 +34,8 @@ bool VulkanBuffer::Create(const revDevice& device, const float* data, uint32 siz
             .usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,     // TODO: decide by param(= format)
             .flags = 0,
             .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
-            .pQueueFamilyIndices = vulkanDevice.GetQueueFamilyIndexPtr(),
             .queueFamilyIndexCount = 1,
+            .pQueueFamilyIndices = vulkanDevice.GetQueueFamilyIndexPtr(),
     };
 
     VkResult result = vkCreateBuffer(revDevice, &bufferCreateInfo, nullptr, &buffer);

@@ -33,17 +33,17 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
         return;
     }
 
-        //-----------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------
     // TEST CODE
+    // Load Assets
+    device.GetGlobalCommandList().Open();
     const float triangleVertices[] = {
             // vertex         , texcoord
             -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
              1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
              0.0f,  1.0f, 0.0f, 0.5f, 1.0f,
     };
-    triangleVertexBuffer.Create(device, triangleVertices, sizeof(triangleVertices), 3);
-
-    // Load shader and material
+    triangleVertexBuffer.Create(device, triangleVertices, sizeof(float) * 5, 3);
     VulkanShader shader[2];
     shader[0].LoadFromFile(device, "texture_vert.spv", SHADER_TYPE::VERTX);
     shader[1].LoadFromFile(device, "texture_frag.spv", SHADER_TYPE::FRAGMENT);
@@ -55,35 +55,55 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     texture.LoadFromFile(&device, "sample_tex.png");
     sampler.Create(&device, texture);
 
-    // create pipeline
+    device.GetGlobalCommandList().Close();
+    ExecuteCommand(device.GetGlobalCommandList());
+    // TODO: wait for fence move to device from swapchain.
+    swapChain.WaitForPreviousFrame();
+
+    //-----------------------------------------------------------------------------
+
+    renderPass.Create(&device, mat);
+    swapChain.CreateFrameBuffer(renderPass);
+
     revDescriptorBindingDesc descriptorBindingDesc;
     descriptorBindingDesc.AddMaterial(mat);
     descriptorSetLayout.Create(&device, descriptorBindingDesc);
+
+    PipelineStateDesc pipelineStateDesc = {};
+    pipelineStateDesc.material = &mat;
+    pipelineStateDesc.renderPass = &renderPass;
+    pipelineStateDesc.descriptorSetLayout = &descriptorSetLayout;
+    pipelineStateDesc.viewportRect = swapChain.GetDisplaySize();
+    pipelineStateDesc.scissorRect = swapChain.GetDisplaySize();
+    pipelineState.Create(&device, pipelineStateDesc);
     descriptorSet.Create(&device, descriptorSetLayout, 4, true);
     textureView.Create(&device, texture, sampler, &descriptorSet);
-    pipelineState.Create(&device, mat, descriptorSetLayout, swapChain.GetDisplaySize(), swapChain.GetDisplaySize());
-    swapChain.CreateFrameBuffer(pipelineState);
 
-    // Make Draw commadn
+
+
+    // Make Draw Command
     auto& commandLists = device.GetCommandLists();
     for(uint32 i = 0; i < commandLists.size(); ++i){
         auto& commandList = commandLists[i];
         commandList.Open();
-        swapChain.PrepareRendering(commandList, i);
+        auto& frameBuffer = swapChain.GetFrameBuffer();
+        commandList.AddTransitionBarrier(frameBuffer.GetFrameBufferImage(i),
+                                         VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
 
-        pipelineState.BeginRenderPass(commandList, swapChain.GetCurrentFrameBuffer(), clearValue);
+        renderPass.Begin(commandList, frameBuffer.GetFrameBuffer(i), clearValue, swapChain.GetDisplaySize());
+        pipelineState.Apply(commandList);
         descriptorSet.Apply(commandList, pipelineState.GetPipelineLayout());
 
         triangleVertexBuffer.Apply(commandList);
         vkCmdDraw(commandList.GetList(), 3, 1, 0, 0);
 
-        pipelineState.EndRenderPass(commandList);
-        swapChain.EndRendering(commandList, i);
+        renderPass.End(commandList);
+        commandList.AddTransitionBarrier(frameBuffer.GetFrameBufferImage(i),
+                                         VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                                         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
 
         commandList.Close();
-//        ExecuteCommand(commandList);
- //       swapChain.WaitForPreviousFrame();
-  //      swapChain.Present();
     }
 
 }
@@ -100,12 +120,12 @@ void VulkanRenderer::ShutDown()
 void VulkanRenderer::Render()
 {
     auto& commandList = device.GetCommandLists()[swapChain.GetCurrentFrameIndex()];
-     ExecuteCommand(commandList);
+     ExecuteCommand(commandList, true);
      swapChain.WaitForPreviousFrame();
      swapChain.Present();
 }
 
-void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists)
+void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists, bool needSemaphore)
 {
     uint32 length = lists.size();
     revArray<revGraphicsCommandBuffer> commandlists(lists.size());
@@ -116,34 +136,34 @@ void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists)
     VkSubmitInfo submitInfo = {
             .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
             .pNext = nullptr,
-            .waitSemaphoreCount = 1,
-            .pWaitSemaphores = swapChain.GetSemaphore(),
             .pWaitDstStageMask = &waitStageMask,
             .commandBufferCount = length,
             .pCommandBuffers = commandlists.data(),
             .signalSemaphoreCount = 0,
             .pSignalSemaphores = nullptr,
     };
+    submitInfo.waitSemaphoreCount = needSemaphore ? 1 : 0;
+    submitInfo.pWaitSemaphores = needSemaphore ? swapChain.GetSemaphore() : nullptr;
     VkResult result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, swapChain.GetFence());
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
     }
 }
 
-void VulkanRenderer::ExecuteCommand(revGraphicsCommandList& list)
+void VulkanRenderer::ExecuteCommand(revGraphicsCommandList& list, bool needSemaphore)
 {
     VkPipelineStageFlags  waitStageMask =  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     VkSubmitInfo submitInfo = {
             .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
             .pNext = nullptr,
-            .waitSemaphoreCount = 1,
-            .pWaitSemaphores = swapChain.GetSemaphore(),
             .pWaitDstStageMask = &waitStageMask,
             .commandBufferCount = 1,
             .pCommandBuffers = &(list.GetList()),
             .signalSemaphoreCount = 0,
             .pSignalSemaphores = nullptr,
     };
+    submitInfo.waitSemaphoreCount = needSemaphore ? 1 : 0;
+    submitInfo.pWaitSemaphores = needSemaphore ? swapChain.GetSemaphore() : nullptr;
     VkResult result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, swapChain.GetFence());
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);

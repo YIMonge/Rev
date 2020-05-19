@@ -1,17 +1,17 @@
 #include <VulkanFrameBuffer.h>
 #include "VulkanPipelineState.h"
 
-bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material, const VulkanDescriptorSetLayout& descriptorSetLayout, const revRect& viewportRect, const revRect& scissorRect)
+bool VulkanPipelineState::Create(revDevice* device, const PipelineStateDesc& desc)
 {
     this->device = device;
-    this->viewportRect = viewportRect;
-    this->scissorRect = scissorRect;
+    viewportRect = desc.viewportRect;
+    scissorRect = desc.scissorRect;
 
     VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {};
     pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutCreateInfo.pNext = nullptr;
-    pipelineLayoutCreateInfo.setLayoutCount = descriptorSetLayout.GetDescriptorSetCount();
-    pipelineLayoutCreateInfo.pSetLayouts = descriptorSetLayout.GetDescriptorSets();
+    pipelineLayoutCreateInfo.setLayoutCount = desc.descriptorSetLayout->GetDescriptorSetCount();
+    pipelineLayoutCreateInfo.pSetLayouts = desc.descriptorSetLayout->GetDescriptorSets();
     pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
     pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
 
@@ -50,14 +50,14 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
     for(uint32 i = 0; i <= static_cast<uint32>(SHADER_TYPE::FRAGMENT); ++i){
         pipelineShaderStageCreateInfo[i].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
         pipelineShaderStageCreateInfo[i].pNext = nullptr;
-        pipelineShaderStageCreateInfo[i].module = material.GetShader(static_cast<SHADER_TYPE>(i))->GetHandle();
+        pipelineShaderStageCreateInfo[i].module = desc.material->GetShader(static_cast<SHADER_TYPE>(i))->GetHandle();
         pipelineShaderStageCreateInfo[i].pSpecializationInfo = nullptr;
         pipelineShaderStageCreateInfo[i].flags = 0;
         pipelineShaderStageCreateInfo[i].pName = shaderEntry;
         pipelineShaderStageCreateInfo[i].stage = i == static_cast<uint32>(SHADER_TYPE::VERTX) ? VK_SHADER_STAGE_VERTEX_BIT : VK_SHADER_STAGE_FRAGMENT_BIT;
     }
 
-    const auto& blendState = material.GetBlendState();
+    const auto& blendState = desc.material->GetBlendState();
 
     // Sampler
     VkPipelineMultisampleStateCreateInfo pipelineMultisampleStateCreateInfo = {};
@@ -92,7 +92,7 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
     pipelineColorBlendStateCreateInfo.flags = 0;
 
     // Rasterizer
-    const auto& rasterization = material.GetRasterization();
+    const auto& rasterization = desc.material->GetRasterization();
     VkPipelineRasterizationStateCreateInfo pipelineRasterizationStateCreateInfo = {};
     pipelineRasterizationStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     pipelineRasterizationStateCreateInfo.pNext = nullptr;
@@ -113,7 +113,7 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
 
     revArray<VkVertexInputBindingDescription> vertexInputBindings;
     revArray<VkVertexInputAttributeDescription> vertexInputAttributes;
-    const revShader* vertexShader = material.GetShader(SHADER_TYPE::VERTX);
+    const revShader* vertexShader = desc.material->GetShader(SHADER_TYPE::VERTX);
     if(vertexShader != nullptr) {
         const auto& attributes = vertexShader->GetAttributes();
         uint32 attributeLength = attributes.size();
@@ -127,17 +127,17 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
             vertexInputAttributes[i].offset = attributes[i].GetOffset();
 
             bool found = false;
-            for(uint32 i = 0; i < vertexInputBindings.size(); ++i){
-                if(vertexInputBindings[i].binding == binding){
+            for(uint32 j = 0; j < vertexInputBindings.size(); ++j){
+                if(vertexInputBindings[j].binding == binding){
                     found = true;
-                    vertexInputBindings[i].stride += GRAPHICS_SEMANTICS[static_cast<uint32>(attributes[i].GetForamt())].sizeOfBytes;
+                    vertexInputBindings[j].stride += ConvertToVKSizeOfBytes(attributes[i].GetForamt());
                 }
             }
             if(!found) {
                 VkVertexInputBindingDescription bindingDescription;
                 bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
                 bindingDescription.binding = binding;
-                bindingDescription.stride = GRAPHICS_SEMANTICS[static_cast<uint32>(attributes[i].GetForamt())].sizeOfBytes;
+                bindingDescription.stride = ConvertToVKSizeOfBytes(attributes[i].GetForamt());
                 vertexInputBindings.push_back(bindingDescription);
             }
         }
@@ -153,6 +153,7 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
 
     // render pass
     // TODO: create render pass from shader meta data.
+    /*
     VkAttachmentDescription attachmentDescription = {};
     attachmentDescription.format = VK_FORMAT_R8G8B8A8_UNORM;
     attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -192,6 +193,7 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
+     */
 
     // pipeline cache
     VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {
@@ -225,7 +227,7 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
     graphicsPipelineCreateInfo.pColorBlendState = &pipelineColorBlendStateCreateInfo;
     graphicsPipelineCreateInfo.pDynamicState = nullptr;
     graphicsPipelineCreateInfo.layout = pipelineLayout;
-    graphicsPipelineCreateInfo.renderPass = renderPass;
+    graphicsPipelineCreateInfo.renderPass = desc.renderPass->GetHandle();
     graphicsPipelineCreateInfo.subpass = 0;
     graphicsPipelineCreateInfo.basePipelineHandle = VK_NULL_HANDLE;
     graphicsPipelineCreateInfo.basePipelineIndex = 0;
@@ -239,33 +241,9 @@ bool VulkanPipelineState::Create(revDevice* device, const revMaterial& material,
      return true;
 }
 
-void VulkanPipelineState::BeginRenderPass(VulkanCommandList& commandList, const VkFramebuffer& frameBuffer, const revColor& clearColor)
+void VulkanPipelineState::Apply(VulkanCommandList& commandList)
 {
-    // needs Image layout setting?
-    VkRenderPassBeginInfo renderPassBeginInfo = {};
-    renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    renderPassBeginInfo.pNext = nullptr;
-    renderPassBeginInfo.framebuffer = frameBuffer;
-    renderPassBeginInfo.renderPass = renderPass;
-    renderPassBeginInfo.renderArea.offset.x = 0;
-    renderPassBeginInfo.renderArea.offset.y = 0;
-    renderPassBeginInfo.renderArea.extent.height = viewportRect.h;
-    renderPassBeginInfo.renderArea.extent.width = viewportRect.w;
-    renderPassBeginInfo.clearValueCount = 1;
-    VkClearValue clearValue;
-    clearValue.color.float32[0] = clearColor.data[0];
-    clearValue.color.float32[1] = clearColor.data[1];
-    clearValue.color.float32[2] = clearColor.data[2];
-    clearValue.color.float32[3] = clearColor.data[3];
-    renderPassBeginInfo.pClearValues = &clearValue;
-
-    vkCmdBeginRenderPass(commandList.GetList(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
     vkCmdBindPipeline(commandList.GetList(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineState);
-}
-
-void VulkanPipelineState::EndRenderPass(VulkanCommandList& commandList)
-{
-    vkCmdEndRenderPass(commandList.GetList());
 }
 
 void VulkanPipelineState::Destroy()
@@ -273,7 +251,6 @@ void VulkanPipelineState::Destroy()
     auto& vkDevice = device->GetDevice();
     vkDestroyPipeline(vkDevice, pipelineState, nullptr);
     vkDestroyPipelineCache(vkDevice, pipelineCache, nullptr);
-    vkDestroyRenderPass(vkDevice, renderPass, nullptr);
     vkDestroyPipelineLayout(vkDevice, pipelineLayout, nullptr);
 
 }

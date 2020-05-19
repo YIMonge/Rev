@@ -13,6 +13,8 @@ public:
     virtual void Destroy();
     virtual void Open();
     virtual void Close();
+
+    void AddTransitionBarrier(const VkImage& resource, VkImageLayout before, VkImageLayout after, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
 };
 
 #endif

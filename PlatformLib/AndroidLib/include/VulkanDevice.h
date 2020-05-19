@@ -26,12 +26,14 @@ public:
     const uint32* GetQueueFamilyIndexPtr() const { return &queueFamilyIndex; }
     const VkPhysicalDeviceMemoryProperties& GetPhysicalDeviceMemoryProperties() const { return physicalDeviceMemoryProperties; }
 
+    VulkanCommandList& GetGlobalCommandList() { return globalCommandList; }
     revArray<VulkanCommandList>& GetCommandLists() { return commandLists; }
 private:
     VkInstance instance;
     VkSurfaceKHR surface;
     uint32 queueFamilyIndex;
     VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
+    VulkanCommandList globalCommandList;
     revArray<VulkanCommandList> commandLists;
 #ifdef _DEBUG
     void initializeDebugLayer();

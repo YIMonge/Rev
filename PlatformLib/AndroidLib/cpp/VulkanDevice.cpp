@@ -147,6 +147,8 @@ bool VulkanDevice::Create(Window& window)
 
 bool VulkanDevice::CreateCommandList(uint32 num)
 {
+    globalCommandList.Create(this, nullptr);
+
     commandLists.resize(num);
     for(uint32 i = 0; i < num; ++i){
         if(!commandLists[i].Create(this, nullptr)){
@@ -161,6 +163,7 @@ void VulkanDevice::Destroy()
     for(auto l : commandLists){
         l.Destroy();
     }
+    globalCommandList.Destroy();
     vkDestroySurfaceKHR(instance, surface, nullptr);
     vkDestroyDevice(device, nullptr);
     vkDestroyInstance(instance, nullptr);

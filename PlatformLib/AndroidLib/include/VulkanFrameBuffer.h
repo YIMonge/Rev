@@ -18,9 +18,7 @@ public:
     const VkImage& GetFrameBufferImage(uint32 index) const { return images[index]; }
     const VkFramebuffer& GetFrameBuffer(uint32 index) const { return  framebuffers[index]; }
     uint32 GetFrameBufferCount() const { return static_cast<uint32>(framebuffers.size());}
-    void setImageLayout(VulkanCommandList& commandList, uint32 index,
-            VkImageLayout oldImageLayout, VkImageLayout newImageLayout,
-            VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
+
 private:
     revDevice* device;
     VkFormat foramt;

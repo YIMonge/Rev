@@ -103,9 +103,9 @@ bool VulkanSwapChain::Create(VulkanDevice* _device)
     return true;
 }
 
-bool VulkanSwapChain::CreateFrameBuffer(const VulkanPipelineState& pipelineState)
+bool VulkanSwapChain::CreateFrameBuffer(const VulkanRenderPass& renderPass)
 {
-    if(!frameBuffers.Create(device, swapChain, format, displaySize, length, pipelineState.GetRenderPass())){
+    if(!frameBuffers.Create(device, swapChain, format, displaySize, length, renderPass.GetHandle())){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
@@ -131,23 +131,9 @@ void VulkanSwapChain::Destroy()
     vkDestroySwapchainKHR(device->GetDevice(), swapChain, nullptr);
 }
 
-void VulkanSwapChain::PrepareRendering(VulkanCommandList& commandList, uint32 index)
+bool VulkanSwapChain::Present()
 {
-    frameBuffers.setImageLayout(commandList, index,
-                                //VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-                                VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-                                VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
-}
-
-void VulkanSwapChain::EndRendering(VulkanCommandList& commandList, uint32 index)
-{
-    frameBuffers.setImageLayout(commandList, index,
-                                VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-                                VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
-}
-
-bool VulkanSwapChain::Present() const
-{
+    auto& revDevice = device->GetDevice();
     VkResult result;
     VkPresentInfoKHR presentInfo = {
             .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
@@ -160,19 +146,6 @@ bool VulkanSwapChain::Present() const
             .pResults = &result,
     };
     vkQueuePresentKHR(device->GetQueue(), &presentInfo);
-    return result == VK_SUCCESS;
-}
-
-bool VulkanSwapChain::WaitForPreviousFrame()
-{
-    auto& revDevice = device->GetDevice();
-    VkResult result;
-    // wait for event
-    result = vkWaitForFences(revDevice, 1, &fence, VK_TRUE, 100000000);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
 
     // update buffer index
     result = vkAcquireNextImageKHR(revDevice,
@@ -189,6 +162,19 @@ bool VulkanSwapChain::WaitForPreviousFrame()
         return false;
     }
 
+    return result == VK_SUCCESS;
+}
+
+bool VulkanSwapChain::WaitForPreviousFrame()
+{
+    auto& revDevice = device->GetDevice();
+    VkResult result;
+    // wait for event
+    result = vkWaitForFences(revDevice, 1, &fence, VK_TRUE, 100000000);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return false;
+    }
     return true;
 }
 
