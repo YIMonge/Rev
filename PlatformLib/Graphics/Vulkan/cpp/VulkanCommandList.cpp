@@ -9,12 +9,12 @@ bool VulkanCommandList::Create(revDevice* device, revGraphicsPipeline* pipeline,
     (void)pipeline;
     this->device = device;
 
-    VkCommandPoolCreateInfo commandPoolCreateInfo = {
-            .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-            .pNext = nullptr,
-            .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-            .queueFamilyIndex = 0,
-    };
+    VkCommandPoolCreateInfo commandPoolCreateInfo = {};
+    commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    commandPoolCreateInfo.pNext = nullptr;
+    commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    commandPoolCreateInfo.queueFamilyIndex = 0;
+    
 
     const revGraphicsDevice& revDevice = device->GetDevice();
     VkResult result;
@@ -27,13 +27,13 @@ bool VulkanCommandList::Create(revDevice* device, revGraphicsPipeline* pipeline,
     }
     else commandAllocator = *allocator;
 
-    VkCommandBufferAllocateInfo commandBufferAllocateInfo = {
-                .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-                .pNext = nullptr,
-                .commandPool = commandAllocator,
-                .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-                .commandBufferCount = 1,
-                };
+    VkCommandBufferAllocateInfo commandBufferAllocateInfo = {};
+    commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    commandBufferAllocateInfo.pNext = nullptr;
+    commandBufferAllocateInfo.commandPool = commandAllocator;
+    commandBufferAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    commandBufferAllocateInfo.commandBufferCount = 1;
+                
     result = vkAllocateCommandBuffers(revDevice, &commandBufferAllocateInfo, &commandBuffer);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -94,12 +94,12 @@ void VulkanCommandList::Destroy()
 
 void VulkanCommandList::Open()
 {
-    VkCommandBufferBeginInfo commandBufferBeginInfo = {
-            .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-            .pNext = nullptr,
-            .flags = 0,
-            .pInheritanceInfo = nullptr,
-    };
+    VkCommandBufferBeginInfo commandBufferBeginInfo = {};
+    commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    commandBufferBeginInfo.pNext = nullptr;
+    commandBufferBeginInfo.flags = 0;
+    commandBufferBeginInfo.pInheritanceInfo = nullptr;
+    
     VkResult result = vkBeginCommandBuffer(commandBuffer, &commandBufferBeginInfo);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -116,24 +116,22 @@ void VulkanCommandList::Close()
 
 void VulkanCommandList::AddTransitionBarrier(const VkImage& resource, VkImageLayout before, VkImageLayout after, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages)
 {
-    VkImageMemoryBarrier imageMemoryBarrier = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
-            .pNext = nullptr,
-            .srcAccessMask = 0,
-            .dstAccessMask = 0,
-            .oldLayout = before,
-            .newLayout = after,
-            .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
-            .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
-            .image = resource,
-            .subresourceRange = {
-                    .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-                    .baseMipLevel = 0,
-                    .levelCount = 1,
-                    .baseArrayLayer = 0,
-                    .layerCount = 1,
-            }
-    };
+    VkImageMemoryBarrier imageMemoryBarrier = {};
+    imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    imageMemoryBarrier.pNext = nullptr;
+    imageMemoryBarrier.srcAccessMask = 0;
+    imageMemoryBarrier.dstAccessMask = 0;
+    imageMemoryBarrier.oldLayout = before;
+    imageMemoryBarrier.newLayout = after;
+    imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    imageMemoryBarrier.image = resource;
+    imageMemoryBarrier.subresourceRange = {};
+    imageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    imageMemoryBarrier.subresourceRange.baseMipLevel = 0;
+    imageMemoryBarrier.subresourceRange.levelCount = 1;
+    imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
+    imageMemoryBarrier.subresourceRange.layerCount = 1;
 
     switch (before) {
         case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
