@@ -26,29 +26,28 @@ bool VulkanTexture::CreateTexture(revDevice* device, uint8* imageData)
         needBlit = false;
     }
 
-    VkImageCreateInfo imageCreateInfo = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-            .pNext = nullptr,
-            .imageType = VK_IMAGE_TYPE_2D,
-            .format = TEXTURE_FORMAT,
-            .extent = {width, height, 1},
-            .mipLevels = 1,
-            .arrayLayers = 1,
-            .samples = VK_SAMPLE_COUNT_1_BIT,
-            .tiling = VK_IMAGE_TILING_LINEAR,
-            .usage = (needBlit ? VK_IMAGE_USAGE_TRANSFER_SRC_BIT : VK_IMAGE_USAGE_SAMPLED_BIT),
-            .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
-            .queueFamilyIndexCount = 1,
-            .pQueueFamilyIndices = static_cast<VulkanDevice*>(device)->GetQueueFamilyIndexPtr(),
-            .initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED,
-            .flags = 0,
-    };
-    VkMemoryAllocateInfo memoryAllocateInfo = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-            .pNext = nullptr,
-            .allocationSize = 0,
-            .memoryTypeIndex = 0,
-    };
+    VkImageCreateInfo imageCreateInfo = {};
+    imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageCreateInfo.pNext = nullptr;
+    imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
+    imageCreateInfo.format = TEXTURE_FORMAT;
+    imageCreateInfo.extent = { width, height, 1 };
+    imageCreateInfo.mipLevels = 1;
+    imageCreateInfo.arrayLayers = 1;
+    imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageCreateInfo.tiling = VK_IMAGE_TILING_LINEAR;
+    imageCreateInfo.usage = (needBlit ? VK_IMAGE_USAGE_TRANSFER_SRC_BIT : VK_IMAGE_USAGE_SAMPLED_BIT);
+    imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    imageCreateInfo.queueFamilyIndexCount = 1;
+    imageCreateInfo.pQueueFamilyIndices = static_cast<VulkanDevice*>(device)->GetQueueFamilyIndexPtr();
+    imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
+    imageCreateInfo.flags = 0;
+
+    VkMemoryAllocateInfo memoryAllocateInfo = {};
+    memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memoryAllocateInfo.pNext = nullptr;
+    memoryAllocateInfo.allocationSize = 0;
+    memoryAllocateInfo.memoryTypeIndex = 0;
 
     VkMemoryRequirements memoryRequirements;
     VkResult result = vkCreateImage(revDevice, &imageCreateInfo, nullptr, &handle);
@@ -78,11 +77,11 @@ bool VulkanTexture::CreateTexture(revDevice* device, uint8* imageData)
     }
 
     // TODO: VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT check
-    const VkImageSubresource imageSubresource = {
-            .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-            .mipLevel = 0,
-            .arrayLayer = 0,
-    };
+    VkImageSubresource imageSubresource = {};
+    imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    imageSubresource.mipLevel = 0;
+    imageSubresource.arrayLayer = 0;
+
     VkSubresourceLayout subresourceLayout;
     vkGetImageSubresourceLayout(revDevice, handle, &imageSubresource, &subresourceLayout);
 
