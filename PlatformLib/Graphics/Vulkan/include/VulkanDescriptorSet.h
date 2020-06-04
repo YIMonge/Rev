@@ -25,7 +25,7 @@ public:
 
     class Chunk
     {
-    friend class VulkanDescriptorHeap;
+    friend class VulkanDescriptorSet;
     public:
         const VkDescriptorSet* GetDescriptorHandle() const { return descriptorSet; }
         uint32 GetNumOfDescription() const { return numOfDescriptors; }
@@ -51,7 +51,7 @@ public:
             return Chunk(nullptr, 0, 0);
         }
 
-        kokokara
+        // kokokara
     }
 
 private:
