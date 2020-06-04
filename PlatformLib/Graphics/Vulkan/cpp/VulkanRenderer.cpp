@@ -141,15 +141,15 @@ void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists, boo
         commandlists[i] = lists[i].GetList();
     }
     VkPipelineStageFlags  waitStageMask =  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    VkSubmitInfo submitInfo = {
-            .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-            .pNext = nullptr,
-            .pWaitDstStageMask = &waitStageMask,
-            .commandBufferCount = length,
-            .pCommandBuffers = commandlists.data(),
-            .signalSemaphoreCount = 0,
-            .pSignalSemaphores = nullptr,
-    };
+    VkSubmitInfo submitInfo = {};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = nullptr;
+    submitInfo.pWaitDstStageMask = &waitStageMask;
+    submitInfo.commandBufferCount = length;
+    submitInfo.pCommandBuffers = commandlists.data();
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores = nullptr;
+    
     submitInfo.waitSemaphoreCount = needSemaphore ? 1 : 0;
     submitInfo.pWaitSemaphores = needSemaphore ? swapChain.GetSemaphore() : nullptr;
     VkResult result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, swapChain.GetFence());
@@ -161,15 +161,15 @@ void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists, boo
 void VulkanRenderer::ExecuteCommand(revGraphicsCommandList& list, bool needSemaphore)
 {
     VkPipelineStageFlags  waitStageMask =  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    VkSubmitInfo submitInfo = {
-            .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-            .pNext = nullptr,
-            .pWaitDstStageMask = &waitStageMask,
-            .commandBufferCount = 1,
-            .pCommandBuffers = &(list.GetList()),
-            .signalSemaphoreCount = 0,
-            .pSignalSemaphores = nullptr,
-    };
+    VkSubmitInfo submitInfo = {};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext = nullptr;
+    submitInfo.pWaitDstStageMask = &waitStageMask;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &(list.GetList());
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores = nullptr;
+    
     submitInfo.waitSemaphoreCount = needSemaphore ? 1 : 0;
     submitInfo.pWaitSemaphores = needSemaphore ? swapChain.GetSemaphore() : nullptr;
     VkResult result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, swapChain.GetFence());
