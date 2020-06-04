@@ -17,15 +17,14 @@ bool VulkanDevice::Create(Window& window)
 #ifdef _DEBUG
     initializeDebugLayer();
 #endif
-    VkApplicationInfo appInfo = {
-      .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
-      .pNext = nullptr,
-      .apiVersion = VK_MAKE_VERSION(1, 0, 0),
-      .applicationVersion = VK_MAKE_VERSION(1, 0, 0),
-      .engineVersion = VK_MAKE_VERSION(1, 0, 0),
-      .pApplicationName = "RevSample",
-      .pEngineName = "Rev",
-  };
+    VkApplicationInfo appInfo = {};
+    appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	appInfo.pNext = nullptr;
+	appInfo.apiVersion = VK_MAKE_VERSION(1, 0, 0);
+	appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+	appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+	appInfo.pApplicationName = "RevSample";
+	appInfo.pEngineName = "Rev";
 
     const int numOfInstanceExt = 2;
     const char* useInstanceExt[numOfInstanceExt] = 
@@ -34,13 +33,13 @@ bool VulkanDevice::Create(Window& window)
         "VK_KHR_android_surface",
     };
 
-    VkInstanceCreateInfo instanceInfo = {
-        .sType                 = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO, 
-        .pNext                 = nullptr,
-        .pApplicationInfo      = &appInfo,
-        .enabledExtensionCount = numOfInstanceExt,      
-        .ppEnabledExtensionNames = useInstanceExt,      
-    };
+    VkInstanceCreateInfo instanceInfo = {};
+    instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    instanceInfo.pNext = nullptr;
+    instanceInfo.pApplicationInfo = &appInfo;
+    instanceInfo.enabledExtensionCount = numOfInstanceExt;
+    instanceInfo.ppEnabledExtensionNames = useInstanceExt;
+   
 #ifdef _DEBUG
     instanceInfo.enabledLayerCount     = debugLayers.size();
     instanceInfo.ppEnabledLayerNames   = &debugLayers[0];
@@ -55,12 +54,17 @@ bool VulkanDevice::Create(Window& window)
         return false;
     }
 
-    VkAndroidSurfaceCreateInfoKHR surfaceInfo{
-        .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
-        .pNext = nullptr,
-        .flags = 0,
-        .window = window.GetHandle(),
-    };
+#ifdef _ANDROID
+    VkAndroidSurfaceCreateInfoKHR surfaceInfo = {};
+#elif defined(_WINDWOS)
+    VkDisplaySurfaceCreateInfoKHR surfaceInfo = {};
+#endif
+    surfaceInfo.sType = VK_STRUCTURE_TYPE_SURFACE_CREATE_INFO_KHR;
+    surfaceInfo.pNext = nullptr;
+	surfaceInfo.flags = 0;
+	surfaceInfo.window = window.GetHandle();
+    
+
     result = vkCreateAndroidSurfaceKHR(instance, &surfaceInfo, nullptr, &surface);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -74,8 +78,8 @@ bool VulkanDevice::Create(Window& window)
         return false;
     }
 
-    VkPhysicalDevice tmpGpus[gpuCount];
-    result = vkEnumeratePhysicalDevices(instance, &gpuCount, tmpGpus);
+    revArray<VkPhysicalDevice> tmpGpus(gpuCount);
+    result = vkEnumeratePhysicalDevices(instance, &gpuCount, tmpGpus.data());
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -85,8 +89,8 @@ bool VulkanDevice::Create(Window& window)
 
     uint32 queueFamilyCount;
     vkGetPhysicalDeviceQueueFamilyProperties(adapter, &queueFamilyCount, nullptr);
-    VkQueueFamilyProperties queueFamilyProperties[queueFamilyCount];
-    vkGetPhysicalDeviceQueueFamilyProperties(adapter, &queueFamilyCount, queueFamilyProperties);
+    revArray<VkQueueFamilyProperties> queueFamilyProperties(queueFamilyCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(adapter, &queueFamilyCount, queueFamilyProperties.data());
 
 
     // Find queue for graphics
@@ -109,14 +113,14 @@ bool VulkanDevice::Create(Window& window)
     float priorities[] = {
         1.0f,
     };
-    VkDeviceQueueCreateInfo queueCreateInfo{
-      .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-      .pNext = nullptr,
-      .flags = 0,
-      .queueCount = 1,
-      .queueFamilyIndex = queueFamilyIndex,
-      .pQueuePriorities = priorities,
-    };
+    VkDeviceQueueCreateInfo queueCreateInfo = {};
+    queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queueCreateInfo.pNext = nullptr;
+    queueCreateInfo.flags = 0;
+    queueCreateInfo.queueCount = 1;
+    queueCreateInfo.queueFamilyIndex = queueFamilyIndex;
+    queueCreateInfo.pQueuePriorities = priorities;
+   
 
     const uint32 numOfDeviceExt = 1;
     const char* useDeviceExt[numOfDeviceExt] = 
@@ -124,17 +128,17 @@ bool VulkanDevice::Create(Window& window)
         "VK_KHR_swapchain",
     };
 
-    VkDeviceCreateInfo deviceCreateInfo{
-        .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-        .pNext = nullptr,
-        .queueCreateInfoCount = 1,
-        .pQueueCreateInfos = &queueCreateInfo,
-        .enabledLayerCount = 0,
-        .ppEnabledLayerNames = nullptr,
-        .enabledExtensionCount = numOfDeviceExt,
-        .ppEnabledExtensionNames = useDeviceExt,
-        .pEnabledFeatures = nullptr,
-    };
+    VkDeviceCreateInfo deviceCreateInfo = {};
+    deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    deviceCreateInfo.pNext = nullptr;
+    deviceCreateInfo.queueCreateInfoCount = 1;
+    deviceCreateInfo.pQueueCreateInfos = &queueCreateInfo;
+    deviceCreateInfo.enabledLayerCount = 0;
+    deviceCreateInfo.ppEnabledLayerNames = nullptr;
+    deviceCreateInfo.enabledExtensionCount = numOfDeviceExt;
+    deviceCreateInfo.ppEnabledExtensionNames = useDeviceExt;
+    deviceCreateInfo.pEnabledFeatures = nullptr;
+  
     result = vkCreateDevice(adapter, &deviceCreateInfo, nullptr, &device);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -175,8 +179,8 @@ void VulkanDevice::initializeDebugLayer()
 {
     uint32 layerPropertyCount = 0;
     vkEnumerateInstanceLayerProperties(&layerPropertyCount, nullptr);
-    VkLayerProperties props[layerPropertyCount];
-    vkEnumerateInstanceLayerProperties(&layerPropertyCount, props);
+    revArray<VkLayerProperties> props(layerPropertyCount);
+    vkEnumerateInstanceLayerProperties(&layerPropertyCount, props.data());
 
     // for NDK r20
     debugLayers.resize(5);
