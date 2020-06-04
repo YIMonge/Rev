@@ -198,13 +198,12 @@ bool VulkanPipelineState::Create(revDevice* device, const PipelineStateDesc& des
      */
 
     // pipeline cache
-    VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {
-            .sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO,
-            .pNext = nullptr,
-            .initialDataSize = 0,
-            .pInitialData = nullptr,
-            .flags = 0,
-    };
+    VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
+    pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+    pipelineCacheCreateInfo.pNext = nullptr;
+    pipelineCacheCreateInfo.initialDataSize = 0;
+    pipelineCacheCreateInfo.pInitialData = nullptr;
+    pipelineCacheCreateInfo.flags = 0;
 
     result = vkCreatePipelineCache(device->GetDevice(), &pipelineCacheCreateInfo, nullptr, &pipelineCache);
     if(result != VK_SUCCESS) {
