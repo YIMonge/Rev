@@ -269,7 +269,7 @@ enum class SHADER_INPUT_TYPE
 
 // belows are specific graphics lib arguments.
 #ifdef _USE_VULKAN
-#include "../lib/vulkan_wrapper.h"
+#include "libs/vulkan_wrapper.h"
 using revGraphicsDevice = VkDevice;
 using revGraphicsAdapter = VkPhysicalDevice;
 using revSwapChain = VkSwapchainKHR;
