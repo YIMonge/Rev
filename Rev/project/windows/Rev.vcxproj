@@ -237,11 +237,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -261,11 +261,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

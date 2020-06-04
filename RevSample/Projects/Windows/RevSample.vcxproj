@@ -141,12 +141,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include</IncludePath>
     <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include</IncludePath>
     <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -161,12 +161,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include</IncludePath>
     <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include</IncludePath>
     <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

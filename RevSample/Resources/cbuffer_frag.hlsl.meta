@@ -5,10 +5,10 @@
         },
         "attributes": [
             {
-                "type": 0,
+                "type": 11,
                 "binding": 0,
                 "location": 0,
-                "format": 9,
+                "format": 13,
                 "offset": 0,
                 "inputClass": 205
             },
@@ -17,16 +17,11 @@
                 "binding": 0,
                 "location": 1,
                 "format": 6,
-                "offset": 12,
+                "offset": 0,
                 "inputClass": 205
             }
         ],
-        "cbuffers": [
-            {
-                "registerIndex": 0,
-                "sizeOfBytes": 3435973836
-            }
-        ],
+        "cbuffers": [],
         "textures": [],
         "samplers": []
     }

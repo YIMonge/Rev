@@ -233,6 +233,13 @@ enum class SHADER_VISIBILITY
 	MAX_NUM,
 };
 
+enum class DESCRIPTOR_USAGE
+{
+	STATIC,
+	VOLATILE,
+	DATA_VOLATILE,
+};
+
 enum class DESCRIPTOR_HEAP_TYPE
 {
 	RESOURCE,
@@ -492,7 +499,7 @@ namespace {
 #elif defined(_USE_DIRECTX12)
 #include <d3d12.h>
 #include <dxgi1_4.h>
-#include "libs/DX12/d3dx12.h"
+#include "libs/d3dx12.h"
 
 using revGraphicsDevice = ID3D12Device*;
 using revGraphicsAdapter = IDXGIAdapter1*;

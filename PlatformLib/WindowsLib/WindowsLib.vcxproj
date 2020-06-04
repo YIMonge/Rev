@@ -126,11 +126,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\DX12\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\DX12\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -150,11 +150,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\DX12\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\DX12\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -308,24 +308,40 @@
     <ClInclude Include="..\common\include\revRenderer.h" />
     <ClInclude Include="..\common\include\revSampler.h" />
     <ClInclude Include="..\common\include\revShader.h" />
+    <ClInclude Include="..\common\include\revShaderResourceView.h" />
     <ClInclude Include="..\common\include\revTexture.h" />
-    <ClInclude Include="..\common\include\revTextureView.h" />
     <ClInclude Include="..\common\include\revThread.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12Buffer.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12CommandList.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12ConstantBufferView.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12DescriptorHeap.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12Device.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12FrameBuffer.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12PipelineState.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12Renderer.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12RootSignature.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12Sampler.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12Shader.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12SwapChain.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12Texture.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12TextureView.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12VertexBufferView.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanBuffer.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanCommandList.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanConstantBufferView.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorSet.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorSetLayout.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanDevice.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanFrameBuffer.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanPipelineState.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderer.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderPass.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanSampler.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanShader.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanSwapChain.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanTexture.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanTextureView.h" />
     <ClInclude Include="include\CriticalSection.h" />
-    <ClInclude Include="include\DX12Buffer.h" />
-    <ClInclude Include="include\DX12CommandList.h" />
-    <ClInclude Include="include\DX12DescriptorHeap.h" />
-    <ClInclude Include="include\DX12RootSignature.h" />
-    <ClInclude Include="include\DX12Device.h" />
-    <ClInclude Include="include\DX12FrameBuffer.h" />
-    <ClInclude Include="include\DX12PipelineState.h" />
-    <ClInclude Include="include\DX12Renderer.h" />
-    <ClInclude Include="include\DX12RenderInfo.h" />
-    <ClInclude Include="include\DX12Sampler.h" />
-    <ClInclude Include="include\DX12Shader.h" />
-    <ClInclude Include="include\DX12SwapChain.h" />
-    <ClInclude Include="include\DX12Texture.h" />
-    <ClInclude Include="include\DX12TextureView.h" />
     <ClInclude Include="include\File.h" />
     <ClInclude Include="include\Log.h" />
     <ClInclude Include="include\Thread.h" />
@@ -335,20 +351,36 @@
     <ClCompile Include="..\common\cpp\revDescriptorBindingDesc.cpp" />
     <ClCompile Include="..\common\cpp\revShader.cpp" />
     <ClCompile Include="..\common\cpp\revTexture.cpp" />
-    <ClCompile Include="cpp\DX12Buffer.cpp" />
-    <ClCompile Include="cpp\DX12CommandList.cpp" />
-    <ClCompile Include="cpp\DX12DescriptorHeap.cpp" />
-    <ClCompile Include="cpp\DX12RootSignature.cpp" />
-    <ClCompile Include="cpp\DX12Device.cpp" />
-    <ClCompile Include="cpp\DX12FrameBuffer.cpp" />
-    <ClCompile Include="cpp\DX12PipelineState.cpp" />
-    <ClCompile Include="cpp\DX12Renderer.cpp" />
-    <ClCompile Include="cpp\DX12RenderInfo.cpp" />
-    <ClCompile Include="cpp\DX12Sampler.cpp" />
-    <ClCompile Include="cpp\DX12Shader.cpp" />
-    <ClCompile Include="cpp\DX12SwapChain.cpp" />
-    <ClCompile Include="cpp\DX12Texture.cpp" />
-    <ClCompile Include="cpp\DX12TextureView.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Buffer.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12CommandList.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12ConstantBufferView.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12DescriptorHeap.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Device.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12FrameBuffer.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12PipelineState.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Renderer.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12RootSignature.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Sampler.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Shader.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12SwapChain.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Texture.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12TextureView.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12VertexBufferView.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanBuffer.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanCommandList.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanConstantBufferView.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorSet.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorSetLayout.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDevice.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanFrameBuffer.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanPipelineState.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanRenderer.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanRenderPass.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSampler.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanShader.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSwapChain.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanTexture.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanTextureView.cpp" />
     <ClCompile Include="cpp\File.cpp" />
     <ClCompile Include="cpp\Log.cpp" />
     <ClCompile Include="cpp\Thread.cpp" />

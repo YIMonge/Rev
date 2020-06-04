@@ -16,13 +16,6 @@ cbuffer ConstantBuffer : register(b0)
     float4 offset;
 };
 
-/*
-cbuffer ConstantBuffer2 : register(b1)
-{
-    float2 offset2;
-};
-*/
-
 PSInput main(VSIn In)
 //PSInput main(float4 position : POSITION, float2 uv : TEXCOORD)
 {
