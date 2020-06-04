@@ -31,29 +31,23 @@ bool VulkanFrameBuffer::Create(revDevice* device, const VkSwapchainKHR& swapchai
         return false;
     }
     for(uint32 i = 0; i < imageCount; ++i){
-        VkImageViewCreateInfo viewCreateInfo = {
-                .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-                .pNext = nullptr,
-                .image = images[i],
-                .viewType = VK_IMAGE_VIEW_TYPE_2D,
-                .format = foramt,
-                .components =
-                        {
-                            .r = VK_COMPONENT_SWIZZLE_R,
-                            .g = VK_COMPONENT_SWIZZLE_G,
-                            .b = VK_COMPONENT_SWIZZLE_B,
-                            .a = VK_COMPONENT_SWIZZLE_A,
-                        },
-                .subresourceRange =
-                        {
-                            .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-                            .baseMipLevel = 0,
-                            .levelCount = 1,
-                            .baseArrayLayer = 0,
-                            .layerCount = 1
-                        },
-                .flags = 0,
-        };
+        VkImageViewCreateInfo viewCreateInfo = {};
+        viewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        viewCreateInfo.pNext = nullptr;
+        viewCreateInfo.image = images[i];
+        viewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        viewCreateInfo.format = foramt;
+        viewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_R;
+        viewCreateInfo.components.g = VK_COMPONENT_SWIZZLE_G;
+        viewCreateInfo.components.b = VK_COMPONENT_SWIZZLE_B;
+        viewCreateInfo.components.a = VK_COMPONENT_SWIZZLE_A;
+        viewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        viewCreateInfo.subresourceRange.baseMipLevel = 0;
+        viewCreateInfo.subresourceRange.levelCount = 1;
+        viewCreateInfo.subresourceRange.baseArrayLayer = 0;
+        viewCreateInfo.subresourceRange.layerCount = 1;
+        viewCreateInfo.flags = 0;
+        
         result = vkCreateImageView(device->GetDevice(), &viewCreateInfo, nullptr, &views[i]);
         if(result != VK_SUCCESS){
             NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -68,16 +62,16 @@ bool VulkanFrameBuffer::Create(revDevice* device, const VkSwapchainKHR& swapchai
                 views[i],
                 VK_NULL_HANDLE, // TODO: depth
         };
-        VkFramebufferCreateInfo framebufferCreateInfo = {
-            .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
-            .pNext = nullptr,
-            .renderPass = renderPass,
-            .layers = 1,
-            .attachmentCount = 1, // if using depth set to 2
-            .pAttachments = attachments,
-            .width = rect.w,
-            .height = rect.h,
-        };
+        VkFramebufferCreateInfo framebufferCreateInfo = {};
+        framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        framebufferCreateInfo.pNext = nullptr;
+        framebufferCreateInfo.renderPass = renderPass;
+        framebufferCreateInfo.layers = 1;
+        framebufferCreateInfo.attachmentCount = 1; // if using depth set to 2
+        framebufferCreateInfo.pAttachments = attachments;
+        framebufferCreateInfo.width = rect.w;
+        framebufferCreateInfo.height = rect.h;
+       
 
         VkResult result = vkCreateFramebuffer(device->GetDevice(), &framebufferCreateInfo, nullptr, &framebuffers[i]);
         if(result != VK_SUCCESS) {
