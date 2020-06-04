@@ -26,13 +26,13 @@ bool VulkanShader::LoadFromFile(const revDevice& device, const char* path, SHADE
     char* data = new char[length];
     file.ReadData(data);
 
-    VkShaderModuleCreateInfo shaderModuleCreateInfo {
-        .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-        .pNext = nullptr,
-        .codeSize = length,
-        .pCode = (const uint32*)data,
-        .flags = 0
-    };
+    VkShaderModuleCreateInfo shaderModuleCreateInfo = {};
+    shaderModuleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    shaderModuleCreateInfo.pNext = nullptr;
+    shaderModuleCreateInfo.codeSize = length;
+    shaderModuleCreateInfo.pCode = (const uint32*)data;
+    shaderModuleCreateInfo.flags = 0;
+
     VkResult result = vkCreateShaderModule(device.GetDevice(), &shaderModuleCreateInfo, nullptr, &handle);
     delete[] data;
     if(result != VK_SUCCESS){
@@ -44,14 +44,14 @@ bool VulkanShader::LoadFromFile(const revDevice& device, const char* path, SHADE
 
 VkPipelineShaderStageCreateInfo VulkanShader::getShaderStageCreateInfo() const
 {
-    VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo {
-        .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-        .pNext = nullptr,
-        .module = handle,
-        .pSpecializationInfo = nullptr,
-        .flags = 0,
-        .pName = "main",
-    };
+    VkPipelineShaderStageCreateInfo pipelineShaderStageCreateInfo = {};
+    pipelineShaderStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    pipelineShaderStageCreateInfo.pNext = nullptr;
+    pipelineShaderStageCreateInfo.module = handle;
+    pipelineShaderStageCreateInfo.pSpecializationInfo = nullptr;
+    pipelineShaderStageCreateInfo.flags = 0;
+    pipelineShaderStageCreateInfo.pName = "main";
+
     const VkShaderStageFlagBits SHADER_STAGE_FLAG[] = {
             VK_SHADER_STAGE_VERTEX_BIT,
             VK_SHADER_STAGE_FRAGMENT_BIT,
