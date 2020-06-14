@@ -13,7 +13,7 @@ public:
     VulkanSwapChain();
     ~VulkanSwapChain();
 
-    bool Create(VulkanDevice* _device);
+    bool Create(VulkanDevice* device);
     bool CreateFrameBuffer(const VulkanRenderPass& renderPass);
     void Destroy();
 
@@ -32,6 +32,7 @@ public:
     bool WaitForPreviousFrame();
 private:
     VulkanDevice* device;
+    
     revSwapChain swapChain;
     revRect displaySize;
     GRAPHICS_FORMAT format;
@@ -39,7 +40,6 @@ private:
     uint32 frameIndex;
 
     VulkanFrameBuffer frameBuffers;
-
     VkSemaphore  semaphore;
     VkFence fence;
 };

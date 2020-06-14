@@ -1,6 +1,7 @@
 #ifdef _USE_VULKAN
 
 #include "VulkanRenderPass.h"
+#include "VulkanSwapChain.h"
 
 VulkanRenderPass::VulkanRenderPass()
 {
@@ -10,12 +11,12 @@ VulkanRenderPass::~VulkanRenderPass()
 {
 }
 
-bool VulkanRenderPass::Create(revDevice* device, const revMaterial& material)
+bool VulkanRenderPass::Create(revDevice* device, VulkanSwapChain* swapChain, const revMaterial& material)
 {
     this->device = device;
 
     VkAttachmentDescription attachmentDescription = {};
-    attachmentDescription.format = VK_FORMAT_R8G8B8A8_UNORM;
+    attachmentDescription.format = ConvertToVKFormat(swapChain->GetFormat());
     attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
     attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;

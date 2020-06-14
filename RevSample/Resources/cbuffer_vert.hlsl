@@ -1,4 +1,3 @@
-//********************************************************
 struct VSIn
 {
     float4 position : POSITION;
@@ -17,7 +16,6 @@ cbuffer ConstantBuffer : register(b0)
 };
 
 PSInput main(VSIn In)
-//PSInput main(float4 position : POSITION, float2 uv : TEXCOORD)
 {
     PSInput result;
 

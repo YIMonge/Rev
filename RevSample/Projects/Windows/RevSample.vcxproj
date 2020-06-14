@@ -211,7 +211,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VK|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\Vulkan\include;$(VULKAN_SDK)\include</IncludePath>
-    <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(VULKAN_SDK)\Lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\Vulkan\libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -318,16 +318,20 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);_USE_VULKAN;_WINDOWS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);_USE_VULKAN;_WINDOWS;VK_USE_PLATFORM_WIN32_KHR</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>CoreLib.lib;Rev.lib;WindowsLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;CoreLib.lib;Rev.lib;WindowsLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>shaderCompiler.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

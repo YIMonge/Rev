@@ -42,7 +42,7 @@ bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, c
 	auto vertexShader = material.GetVertexShader();
 	if (vertexShader != nullptr) {
 		auto vertexAttributes = vertexShader->GetAttributes();
-		uint32 length = vertexAttributes.size();
+		uint32 length = static_cast<uint32>(vertexAttributes.size());
 		inputElements.resize(length);
 		for (uint32 i = 0; i < length; ++i) {
 			inputElements[i].SemanticName = ConvertToDXSemantic(vertexAttributes[i].GetInputElementType());

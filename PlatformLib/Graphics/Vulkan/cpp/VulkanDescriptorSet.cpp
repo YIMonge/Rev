@@ -22,7 +22,7 @@ bool VulkanDescriptorSet::Create(revDevice* device, const VulkanDescriptorSetLay
     descriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     descriptorPoolCreateInfo.pNext = nullptr;
     descriptorPoolCreateInfo.maxSets = descriptorSetCount;
-    descriptorPoolCreateInfo.poolSizeCount = descriptorPoolSizeArray.size();
+    descriptorPoolCreateInfo.poolSizeCount = static_cast<uint32>(descriptorPoolSizeArray.size());
     descriptorPoolCreateInfo.pPoolSizes = descriptorPoolSizeArray.data();
 
     VkResult result = vkCreateDescriptorPool(device->GetDevice(), &descriptorPoolCreateInfo, nullptr, &descriptorPool);

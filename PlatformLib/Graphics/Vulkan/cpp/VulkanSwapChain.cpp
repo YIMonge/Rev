@@ -3,6 +3,7 @@
 #include "revArray.h"
 #include "VulkanSwapChain.h"
 #include "Log.h"
+#include "Window.h"
 
 
 VulkanSwapChain::VulkanSwapChain()
@@ -15,12 +16,13 @@ VulkanSwapChain::~VulkanSwapChain()
     memset(&swapChain, 0, sizeof(swapChain));
 }
 
-bool VulkanSwapChain::Create(VulkanDevice* _device)
+bool VulkanSwapChain::Create(VulkanDevice* device)
 {
-    device = _device;
+    this->device = device;
+
     VkSurfaceCapabilitiesKHR  capabilities;
     const VkPhysicalDevice& gpu = device->GetAdapter();
-    const VkSurfaceKHR& surface = device->GetSurface();
+    auto surface = device->GetSurface();
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR (gpu, surface, &capabilities);
 
     uint32 count = 0;
@@ -29,8 +31,13 @@ bool VulkanSwapChain::Create(VulkanDevice* _device)
     vkGetPhysicalDeviceSurfaceFormatsKHR(gpu, surface, &count, formats.data());
 
     uint32 chosenIndex = 0;
+    format = GRAPHICS_FORMAT::R8G8B8A8_UNORM;
+#ifdef _WINDOWS
+    format = GRAPHICS_FORMAT::B8G8R8A8_UNORM;
+#endif
+
     for(; chosenIndex < count; ++chosenIndex){
-        if(formats[chosenIndex].format == VK_FORMAT_R8G8B8A8_UNORM) break;
+        if(formats[chosenIndex].format == ConvertToVKFormat(format)) break;
     }
     if(chosenIndex >= count){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
@@ -38,14 +45,14 @@ bool VulkanSwapChain::Create(VulkanDevice* _device)
     }
 
     displaySize = revRect(capabilities.currentExtent.width, capabilities.currentExtent.height);
-    format = GRAPHICS_FORMAT ::R8G8B8A8_UNORM;
+    
 
     uint32 queueFamilyIndex = device->GetQueueFamilyIndex();
 
     VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
     swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     swapchainCreateInfo.pNext = nullptr;
-    swapchainCreateInfo.surface = surface;
+    swapchainCreateInfo.surface = device->GetSurface();
     swapchainCreateInfo.minImageCount = capabilities.minImageCount;
     swapchainCreateInfo.imageFormat = ConvertToVKFormat(format);
     swapchainCreateInfo.imageColorSpace = formats[chosenIndex].colorSpace;
@@ -56,7 +63,11 @@ bool VulkanSwapChain::Create(VulkanDevice* _device)
     swapchainCreateInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
     swapchainCreateInfo.queueFamilyIndexCount = 1;
     swapchainCreateInfo.pQueueFamilyIndices = &queueFamilyIndex;
+#ifdef _ANDROID
     swapchainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR;
+#elif defined(_WINDOWS)
+    swapchainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+#endif
     swapchainCreateInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
     swapchainCreateInfo.oldSwapchain = VK_NULL_HANDLE;
     swapchainCreateInfo.clipped = VK_FALSE;

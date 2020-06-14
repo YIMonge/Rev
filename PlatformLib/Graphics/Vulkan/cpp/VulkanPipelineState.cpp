@@ -25,8 +25,8 @@ bool VulkanPipelineState::Create(revDevice* device, const PipelineStateDesc& des
 
     // Viewport and Scissor
     VkViewport viewport;
-    viewport.height = viewportRect.h;
-    viewport.width = viewportRect.w;
+    viewport.height = static_cast<f32>(viewportRect.h);
+    viewport.width = static_cast<f32>(viewportRect.w);
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
     viewport.x = 0;
@@ -118,7 +118,7 @@ bool VulkanPipelineState::Create(revDevice* device, const PipelineStateDesc& des
     const revShader* vertexShader = desc.material->GetShader(SHADER_TYPE::VERTX);
     if(vertexShader != nullptr) {
         const auto& attributes = vertexShader->GetAttributes();
-        uint32 attributeLength = attributes.size();
+        uint32 attributeLength = static_cast<uint32>(attributes.size());
         vertexInputAttributes.resize(attributeLength);
         uint32 offset = 0;
         for (uint32 i = 0; i < attributeLength; ++i) {
@@ -148,9 +148,9 @@ bool VulkanPipelineState::Create(revDevice* device, const PipelineStateDesc& des
     VkPipelineVertexInputStateCreateInfo vertexInputStateCreateInfo = {};
     vertexInputStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vertexInputStateCreateInfo.pNext = nullptr;
-    vertexInputStateCreateInfo.vertexBindingDescriptionCount = vertexInputBindings.size();
+    vertexInputStateCreateInfo.vertexBindingDescriptionCount = static_cast<uint32>(vertexInputBindings.size());
     vertexInputStateCreateInfo.pVertexBindingDescriptions = vertexInputBindings.data();
-    vertexInputStateCreateInfo.vertexAttributeDescriptionCount = vertexInputAttributes.size();
+    vertexInputStateCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32>(vertexInputAttributes.size());
     vertexInputStateCreateInfo.pVertexAttributeDescriptions = vertexInputAttributes.data();
 
     // render pass

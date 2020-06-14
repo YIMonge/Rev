@@ -28,8 +28,7 @@ bool VulkanShader::LoadFromFile(const revDevice& device, const char* path, SHADE
 
     VkShaderModuleCreateInfo shaderModuleCreateInfo = {};
     shaderModuleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    shaderModuleCreateInfo.pNext = nullptr;
-    shaderModuleCreateInfo.codeSize = length;
+    shaderModuleCreateInfo.codeSize = length; // MEM_ALIGN(length, 4);
     shaderModuleCreateInfo.pCode = (const uint32*)data;
     shaderModuleCreateInfo.flags = 0;
 

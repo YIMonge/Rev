@@ -4,13 +4,7 @@
 #include "revTypedef.h"
 #include "revMath.h"
 
-// TODO: if values are serialized should have origin value like below
-// enum class FILTER {
-//    A = 0,
-//    B = 1,
-// };
-// uint32 ConvertToVulkanFilter(FILTER filter) { return table[(uint32)filter]; }
-
+#define MEM_ALIGN(N, ALIGN) (N +(ALIGN-1)) & ~(ALIGN-1) 
 
 struct GraphicsDesc
 {
@@ -76,6 +70,7 @@ enum class BORDER_COLOR_MODE
 enum class GRAPHICS_FORMAT
 {
 	R8G8B8A8_UNORM,	
+	B8G8R8A8_UNORM,
 	R32_UINT,
 	R32_SINT,
 	R32_FLOAT,
@@ -269,7 +264,14 @@ enum class SHADER_INPUT_TYPE
 
 // belows are specific graphics lib arguments.
 #ifdef _USE_VULKAN
+#ifdef _ANDROID
 #include "libs/vulkan_wrapper.h"
+#elif defined _WINDOWS
+#include <vulkan/vulkan.h>
+#define GLFW_INCLUDE_VULKAN
+#include "libs/glfw3.h"
+#endif
+
 using revGraphicsDevice = VkDevice;
 using revGraphicsAdapter = VkPhysicalDevice;
 using revSwapChain = VkSwapchainKHR;
@@ -340,6 +342,7 @@ namespace {
 	VkFormat ConvertToVKFormat(GRAPHICS_FORMAT format) {
 		const VkFormat table[] = {
 				VK_FORMAT_R8G8B8A8_UNORM,
+				VK_FORMAT_B8G8R8A8_UNORM,
 				VK_FORMAT_R32_UINT,
 				VK_FORMAT_R32_SINT,
 				VK_FORMAT_R32_SFLOAT,
@@ -569,6 +572,7 @@ namespace {
 	{
 		const DXGI_FORMAT table[] = {
 			DXGI_FORMAT_R8G8B8A8_UNORM,
+			DXGI_FORMAT_B8G8R8A8_UNORM,
 			DXGI_FORMAT_R32_UINT,
 			DXGI_FORMAT_R32_SINT,
 			DXGI_FORMAT_R32_FLOAT,

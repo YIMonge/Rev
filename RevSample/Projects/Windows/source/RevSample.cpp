@@ -7,7 +7,8 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
 	Window* window = new revWindow();
-	window->Create("MainWindow", 1280, 780);	
+	window->Create("MainWindow", 1280, 780);
+	window->SetHInstance(hInstance);
 	revApp::Get().StartUp(window);
 	window->Disp();
 		

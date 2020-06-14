@@ -7,6 +7,8 @@
 	#include "DX11Renderer.h"
 	#elif defined(_USE_DIRECTX12)
 	#include "DX12Renderer.h"
+	#elif defined(_USE_VULKAN)
+	#include "VulkanRenderer.h"
 	#endif
 #elif defined(_ANDROID)
 	#if defined(_USE_GLES)

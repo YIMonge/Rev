@@ -5,8 +5,6 @@
 #include "revDevice.h"
 #include "revTexture.h"
 
-#define MEM_ALIGN(N, ALIGN) (N +(ALIGN-1)) & ~(ALIGN-1) 
-
 class revShaderResourceView
 {
 public:

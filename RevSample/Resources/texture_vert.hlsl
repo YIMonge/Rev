@@ -11,25 +11,12 @@ struct PSInput
     float2 uv : TEXCOORD;
 };
 
-cbuffer ConstantBuffer : register(b0)
-{
-    float4 offset;
-};
-
-/*
-cbuffer ConstantBuffer2 : register(b1)
-{
-    float2 offset2;
-};
-*/
-
 PSInput main(VSIn In)
-//PSInput main(float4 position : POSITION, float2 uv : TEXCOORD)
 {
     PSInput result;
 
-    result.position = In.position + offset;
-    result.uv = In.uv;// +offset2;
+    result.position = In.position;
+    result.uv = In.uv;
 
     return result;
 }

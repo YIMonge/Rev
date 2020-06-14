@@ -8,7 +8,7 @@
                 "type": 11,
                 "binding": 0,
                 "location": 0,
-                "format": 13,
+                "format": 14,
                 "offset": 0,
                 "inputClass": 205
             },
@@ -16,7 +16,7 @@
                 "type": 3,
                 "binding": 0,
                 "location": 1,
-                "format": 6,
+                "format": 7,
                 "offset": 0,
                 "inputClass": 205
             }

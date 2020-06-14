@@ -8,17 +8,17 @@
 
 bool VulkanBuffer::Create(revDevice* device, const revArray<revVector3>& data, USAGE usage)
 {
-    return Create(device, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3), data.size());
+    return Create(device, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3), static_cast<uint32>(data.size()));
 }
 
 bool VulkanBuffer::Create(revDevice* device, const revArray<revVector4>& data, USAGE usage)
 {
-    return Create(device, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4), data.size());
+    return Create(device, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4), static_cast<uint32>(data.size()));
 }
 
 bool VulkanBuffer::Create(revDevice* device, const revArray<float>& data, USAGE usage)
 {
-    return Create(device, static_cast<const float*>(&data[0]), sizeof(float), data.size());
+    return Create(device, static_cast<const float*>(&data[0]), sizeof(float), static_cast<uint32>(data.size()));
 }
 
 bool VulkanBuffer::Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
@@ -32,16 +32,15 @@ bool VulkanBuffer::Create(revDevice* device, const float* data, uint32 sizeOfByt
 
     VulkanDevice* vulkanDevice = (VulkanDevice*)(device);
     VkDevice revDevice = vulkanDevice->GetDevice();
-    VkBufferCreateInfo bufferCreateInfo = {
-            .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-            .pNext = nullptr,
-            .size = size,
-            .usage = type == BUFFER_TYPE::VERTEX ? VK_BUFFER_USAGE_VERTEX_BUFFER_BIT : VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-            .flags = 0,
-            .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
-            .queueFamilyIndexCount = 1,
-            .pQueueFamilyIndices = vulkanDevice->GetQueueFamilyIndexPtr(),
-    };
+    VkBufferCreateInfo bufferCreateInfo = {};
+    bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bufferCreateInfo.pNext = nullptr;
+    bufferCreateInfo.size = size;
+    bufferCreateInfo.usage = type == BUFFER_TYPE::VERTEX ? VK_BUFFER_USAGE_VERTEX_BUFFER_BIT : VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+    bufferCreateInfo.flags = 0;
+    bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    bufferCreateInfo.queueFamilyIndexCount = 1;
+    bufferCreateInfo.pQueueFamilyIndices = vulkanDevice->GetQueueFamilyIndexPtr();
 
     VkResult result = vkCreateBuffer(revDevice, &bufferCreateInfo, nullptr, &buffer);
     if(result != VK_SUCCESS) {
@@ -51,12 +50,12 @@ bool VulkanBuffer::Create(revDevice* device, const float* data, uint32 sizeOfByt
     // prepare for allocation
     vkGetBufferMemoryRequirements(revDevice, buffer, &memoryRequirements);
 
-    memoryAllocateInfo = {
-            .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-            .pNext = nullptr,
-            .allocationSize = memoryRequirements.size,
-            .memoryTypeIndex = 0,
-    };
+    memoryAllocateInfo = {};
+    memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memoryAllocateInfo.pNext = nullptr;
+    memoryAllocateInfo.allocationSize = memoryRequirements.size;
+    memoryAllocateInfo.memoryTypeIndex = 0;
+    
     if(!MapMemoryTypeToIndex(memoryRequirements.memoryTypeBits,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
             &memoryAllocateInfo.memoryTypeIndex)){
@@ -94,11 +93,14 @@ bool VulkanBuffer::Update(const float* data, uint32 sizeOfCopyBytes, uint32 offs
             return false;
         }
     }
-    memcpy(mappedMemory, data, sizeOfCopyBytes);
+    if (data != nullptr) {
+        memcpy(mappedMemory, data, sizeOfCopyBytes);
+    }
     if(usage == USAGE::STATIC) {
         vkUnmapMemory(revDevice, deviceMemory);
-        mappedMemory == nullptr;
+        mappedMemory = nullptr;
     }
+    return true;
 }
 
 bool VulkanBuffer::MapMemoryTypeToIndex(uint32 typeBits, VkFlags mask, uint32* typeIndex)

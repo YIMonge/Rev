@@ -7,13 +7,15 @@
 #include "revRect.h"
 #include "VulkanCommandList.h"
 
+class VulkanSwapChain;
+
 class VulkanRenderPass
 {
 public:
     VulkanRenderPass();
     ~VulkanRenderPass();
 
-    bool Create(revDevice* device, const revMaterial& material);
+    bool Create(revDevice* device, VulkanSwapChain* swapChain, const revMaterial& material);
     void Destroy();
 
     void Begin(VulkanCommandList& commandList, const VkFramebuffer& framebuffer, const revColor& clearColor, const revRect& viewport);

@@ -20,7 +20,7 @@ VulkanRenderer::~VulkanRenderer()
 
 void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
-    if(!device.Create(*window)) {
+    if(!device.Create(window)) {
         NATIVE_LOGE("Vulkan device create failed. file:%s, line:%d", __FILE__, __LINE__);
         return;
     }
@@ -48,8 +48,8 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     constantBuffer.Create(&device, nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::DYNAMIC);
 
     VulkanShader shader[2];
-    shader[0].LoadFromFile(device, "cbuffer_vert.spv", SHADER_TYPE::VERTX);
-    shader[1].LoadFromFile(device, "cbuffer_frag.spv", SHADER_TYPE::FRAGMENT);
+    shader[0].LoadFromFile(device, "texture_vert.spv", SHADER_TYPE::VERTX);
+    shader[1].LoadFromFile(device, "texture_frag.spv", SHADER_TYPE::FRAGMENT);
 
     mat.SetShader(SHADER_TYPE::VERTX, &shader[0]);
     mat.SetShader(SHADER_TYPE::FRAGMENT, &shader[1]);
@@ -65,7 +65,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 
     //-----------------------------------------------------------------------------
 
-    renderPass.Create(&device, mat);
+    renderPass.Create(&device, &swapChain, mat);
     swapChain.CreateFrameBuffer(renderPass);
 
     revDescriptorBindingDesc descriptorBindingDesc;

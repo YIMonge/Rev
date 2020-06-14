@@ -16,17 +16,19 @@ public:
     VulkanDevice(){}
     virtual ~VulkanDevice(){}
 
-    bool Create(Window& window);
+    bool Create(Window* window);
     bool CreateCommandList(uint32 num);
     void Destroy();
 
-    const VkSurfaceKHR& GetSurface() const { return surface; }
+    VkInstance GetInstance() const { return instance; }
+    VkSurfaceKHR GetSurface() const { return surface; }
     uint32 GetQueueFamilyIndex() const { return queueFamilyIndex; }
     const uint32* GetQueueFamilyIndexPtr() const { return &queueFamilyIndex; }
     const VkPhysicalDeviceMemoryProperties& GetPhysicalDeviceMemoryProperties() const { return physicalDeviceMemoryProperties; }
 
     VulkanCommandList& GetGlobalCommandList() { return globalCommandList; }
     revArray<VulkanCommandList>& GetCommandLists() { return commandLists; }
+
 private:
     VkInstance instance;
     VkSurfaceKHR surface;

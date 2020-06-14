@@ -1,19 +1,28 @@
 #ifdef _USE_VULKAN
 
 #include "VulkanDevice.h"
-#include "Window.h"
 #include "Log.h"
+#include "Window.h"
 #ifdef _DEBUG
 #include <string.h>
 #endif
 
-bool VulkanDevice::Create(Window& window)
+bool VulkanDevice::Create(Window* window)
 {
+#ifdef _ANDROID
     if(!InitVulkan())
     {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
+#elif defined(_WINDOWS)
+    glfwInit();
+    if (!glfwVulkanSupported()) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+        return false;
+    }
+#endif
+
 #ifdef _DEBUG
     initializeDebugLayer();
 #endif
@@ -26,46 +35,38 @@ bool VulkanDevice::Create(Window& window)
 	appInfo.pApplicationName = "RevSample";
 	appInfo.pEngineName = "Rev";
 
-    const int numOfInstanceExt = 2;
-    const char* useInstanceExt[numOfInstanceExt] = 
-    {
-        "VK_KHR_surface",
-        "VK_KHR_android_surface",
-    };
 
     VkInstanceCreateInfo instanceInfo = {};
     instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     instanceInfo.pNext = nullptr;
     instanceInfo.pApplicationInfo = &appInfo;
+
+#ifdef _ANDROID
+    const int numOfInstanceExt = 2;
+    const char* useInstanceExt[numOfInstanceExt] =
+    {
+        "VK_KHR_surface",
+        "VK_KHR_android_surface",
+    };
     instanceInfo.enabledExtensionCount = numOfInstanceExt;
     instanceInfo.ppEnabledExtensionNames = useInstanceExt;
+#elif defined(_WINDOWS)
+    uint32_t glfwExtensionCount = 0;
+    const char** glfwExtensions;
+    glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+    instanceInfo.enabledExtensionCount = glfwExtensionCount;
+    instanceInfo.ppEnabledExtensionNames = glfwExtensions;
+#endif
    
 #ifdef _DEBUG
-    instanceInfo.enabledLayerCount     = debugLayers.size();
-    instanceInfo.ppEnabledLayerNames   = &debugLayers[0];
+    instanceInfo.enabledLayerCount     = static_cast<uint32>(debugLayers.size());
+    instanceInfo.ppEnabledLayerNames   = debugLayers.data();
 #else
     instanceInfo.enabledLayerCount     = 0;
     instanceInfo.ppEnabledLayerNames   = nullptr;
 #endif
 
     VkResult result = vkCreateInstance(&instanceInfo, nullptr, &instance);
-    if(result != VK_SUCCESS){
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
-
-#ifdef _ANDROID
-    VkAndroidSurfaceCreateInfoKHR surfaceInfo = {};
-#elif defined(_WINDWOS)
-    VkDisplaySurfaceCreateInfoKHR surfaceInfo = {};
-#endif
-    surfaceInfo.sType = VK_STRUCTURE_TYPE_SURFACE_CREATE_INFO_KHR;
-    surfaceInfo.pNext = nullptr;
-	surfaceInfo.flags = 0;
-	surfaceInfo.window = window.GetHandle();
-    
-
-    result = vkCreateAndroidSurfaceKHR(instance, &surfaceInfo, nullptr, &surface);
     if(result != VK_SUCCESS){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
@@ -87,6 +88,30 @@ bool VulkanDevice::Create(Window& window)
 
     adapter = tmpGpus[0];
 
+#ifdef _ANDROID
+    VkAndroidSurfaceCreateInfoKHR surfaceInfo = {};
+    surfaceInfo.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
+    surfaceInfo.pNext = nullptr;
+    surfaceInfo.flags = 0;
+    surfaceInfo.window = window.GetHandle();
+    result = vkCreateAndroidSurfaceKHR(instance, &surfaceInfo, nullptr, &surface);
+    if (result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+        return false;
+    }
+#elif defined (_WINDOWS)
+    VkWin32SurfaceCreateInfoKHR surfaceCreateInfo = {};
+    surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+    surfaceCreateInfo.hinstance = window->GetHInstance();
+    surfaceCreateInfo.hwnd = window->GetHWnd();
+    result = vkCreateWin32SurfaceKHR(instance, &surfaceCreateInfo, nullptr, &surface);
+    if (result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+        return false;
+    }
+#endif
+
+
     uint32 queueFamilyCount;
     vkGetPhysicalDeviceQueueFamilyProperties(adapter, &queueFamilyCount, nullptr);
     revArray<VkQueueFamilyProperties> queueFamilyProperties(queueFamilyCount);
@@ -96,7 +121,11 @@ bool VulkanDevice::Create(Window& window)
     // Find queue for graphics
     for (queueFamilyIndex=0; queueFamilyIndex < queueFamilyCount; queueFamilyIndex++) {
         if (queueFamilyProperties[queueFamilyIndex].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-            break;
+            VkBool32 presentSupport = false;
+            vkGetPhysicalDeviceSurfaceSupportKHR(adapter, queueFamilyIndex, surface, &presentSupport);
+            if (presentSupport) {
+                break;
+            }
         }
     }
 
@@ -182,6 +211,7 @@ void VulkanDevice::initializeDebugLayer()
     revArray<VkLayerProperties> props(layerPropertyCount);
     vkEnumerateInstanceLayerProperties(&layerPropertyCount, props.data());
 
+#ifdef _ANDROID
     // for NDK r20
     debugLayers.resize(5);
     debugLayers[0] = "VK_LAYER_GOOGLE_threading";
@@ -189,7 +219,10 @@ void VulkanDevice::initializeDebugLayer()
     debugLayers[2] = "VK_LAYER_LUNARG_object_tracker";
     debugLayers[3] = "VK_LAYER_LUNARG_core_validation";
     debugLayers[4] = "VK_LAYER_GOOGLE_unique_objects";
-
+#elif defined(_WINDOWS)
+    debugLayers.resize(1);
+    debugLayers[0] = "VK_LAYER_KHRONOS_validation";
+#endif
 
     for(uint32 i = 0; i < debugLayers.size(); ++i){
         bool found = false;
@@ -203,6 +236,7 @@ void VulkanDevice::initializeDebugLayer()
         }
     }
 }
+
 #endif
 
 #endif
