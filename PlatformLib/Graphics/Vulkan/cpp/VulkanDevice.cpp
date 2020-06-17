@@ -93,7 +93,7 @@ bool VulkanDevice::Create(Window* window)
     surfaceInfo.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
     surfaceInfo.pNext = nullptr;
     surfaceInfo.flags = 0;
-    surfaceInfo.window = window.GetHandle();
+    surfaceInfo.window = window->GetHandle();
     result = vkCreateAndroidSurfaceKHR(instance, &surfaceInfo, nullptr, &surface);
     if (result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);

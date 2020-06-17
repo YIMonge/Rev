@@ -1,0 +1,41 @@
+{
+    "root": {
+        "data": {
+            "guid": 0
+        },
+        "attributes": [
+            {
+                "type": 11,
+                "binding": 0,
+                "location": 0,
+                "format": 14,
+                "offset": 0,
+                "inputClass": 205
+            },
+            {
+                "type": 3,
+                "binding": 0,
+                "location": 1,
+                "format": 7,
+                "offset": 0,
+                "inputClass": 205
+            }
+        ],
+        "cbuffers": [],
+        "textures": [
+            {
+                "registerIndex": 0,
+                "count": 1,
+                "space": 0,
+                "is3d": false
+            }
+        ],
+        "samplers": [
+            {
+                "registerIndex": 0,
+                "count": 1,
+                "space": 0
+            }
+        ]
+    }
+}

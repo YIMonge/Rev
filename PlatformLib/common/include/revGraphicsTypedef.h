@@ -341,20 +341,20 @@ namespace {
 
 	VkFormat ConvertToVKFormat(GRAPHICS_FORMAT format) {
 		const VkFormat table[] = {
-				VK_FORMAT_R8G8B8A8_UNORM,
-				VK_FORMAT_B8G8R8A8_UNORM,
-				VK_FORMAT_R32_UINT,
-				VK_FORMAT_R32_SINT,
-				VK_FORMAT_R32_SFLOAT,
-				VK_FORMAT_R32G32_UINT,
-				VK_FORMAT_R32G32_SINT,
-				VK_FORMAT_R32G32_SFLOAT,
-				VK_FORMAT_R32G32B32_UINT,
-				VK_FORMAT_R32G32B32_SINT,
-				VK_FORMAT_R32G32B32_SFLOAT,
-				VK_FORMAT_R32G32B32A32_UINT,
-				VK_FORMAT_R32G32B32A32_SINT,
-				VK_FORMAT_R32G32B32A32_SFLOAT,
+				VK_FORMAT_R8G8B8A8_UNORM,		// R8G8B8A8_UNORM
+				VK_FORMAT_B8G8R8A8_UNORM,		// B8G8R8A8_UNORM
+				VK_FORMAT_R32_UINT,				// R32_UINT
+				VK_FORMAT_R32_SINT,				// R32_SINT
+				VK_FORMAT_R32_SFLOAT,			// R32_FLOAT
+				VK_FORMAT_R32G32_UINT,			// R32G32_UINT
+				VK_FORMAT_R32G32_SINT,			// R32G32_SINT
+				VK_FORMAT_R32G32_SFLOAT,		// R32G32_FLOAT
+				VK_FORMAT_R32G32B32_UINT,		// R32G32B32_UINT
+				VK_FORMAT_R32G32B32_SINT,		// R32G32B32_SINT
+				VK_FORMAT_R32G32B32_SFLOAT,		// R32G32B32_FLOAT
+				VK_FORMAT_R32G32B32A32_UINT,	// R32G32B32A32_UINT
+				VK_FORMAT_R32G32B32A32_SINT,	// R32G32B32A32_SINT
+				VK_FORMAT_R32G32B32A32_SFLOAT,	// R32G32B32A32_FLOAT
 		};
 		return table[static_cast<uint32>(format)];
 	}
@@ -362,19 +362,20 @@ namespace {
 	uint32 ConvertToVKSizeOfBytes(GRAPHICS_FORMAT format)
 	{
 		const uint32 table[] = {
-				sizeof(uint32),
-				sizeof(uint32),
-				sizeof(int32),
-				sizeof(f32),
-				sizeof(uint32) * 2,
-				sizeof(int32) * 2,
-				sizeof(f32) * 2,
-				sizeof(uint32) * 3,
-				sizeof(int32) * 3,
-				sizeof(f32) * 3,
-				sizeof(uint32) * 4,
-				sizeof(int32) * 4,
-				sizeof(f32) * 4,
+				sizeof(uint32),				// R8G8B8A8_UNORM
+				sizeof(uint32),				// B8G8R8A8_UNORM
+				sizeof(uint32),				// R32_UINT
+				sizeof(int32),				// R32_SINT
+				sizeof(f32),				// R32_FLOAT
+				sizeof(uint32) * 2,			// R32G32_UINT
+				sizeof(int32) * 2,			// R32G32_SINT
+				sizeof(f32) * 2,			// R32G32_FLOAT
+				sizeof(uint32) * 3,			// R32G32B32_UINT
+				sizeof(int32) * 3,			// R32G32B32_SINT
+				sizeof(f32) * 3,			// R32G32B32_FLOAT
+				sizeof(uint32) * 4,			// R32G32B32A32_UINT
+				sizeof(int32) * 4,			// R32G32B32A32_SINT
+				sizeof(f32) * 4,			// R32G32B32A32_FLOAT
 		};
 		return table[static_cast<uint32>(format)];
 	}

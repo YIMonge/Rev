@@ -23,6 +23,7 @@ message("set source directory")
 set(CORELIB_DIR         ../../../../../../../CoreLib)
 set(PLATFORMLIB_DIR     ../../../../../../../PlatformLib)
 set(ANDROIDLIB_DIR      ../../../../../../../PlatformLib/AndroidLib)
+set(GRAPHICSLIB_DIR      ../../../../../../../PlatformLib/Graphics)
 set(REV_DIR             ../../../../../../../Rev)
 
 set(${CMAKE_C_FLAGS}, "${CMAKE_C_FLAGS}")
@@ -52,17 +53,25 @@ message("Build CoreLib Done")
 #------------------Build AndroidLib-----------------------------
 file(GLOB ANDROIDLIBSOURCES ${ANDROIDLIB_DIR}/cpp/*.cpp)
 file(GLOB COMMONLIBSOURCES ${PLATFORMLIB_DIR}/common/cpp/*.cpp)
+
+if(VULKAN)
+file(GLOB GRAPHICSLIBSOURCES ${GRAPHICSLIB_DIR}/Vulkan/cpp/*.cpp)
+elseif(GLES)
+endif()
 add_library(AndroidLib STATIC
         ${ANDROIDLIBSOURCES}
         ${COMMONLIBSOURCES}
-        ${ANDROIDLIB_DIR}/lib/vulkan_wrapper.cpp
+        ${GRAPHICSLIBSOURCES}
+        ${GRAPHICSLIB_DIR}/Vulkan/include/libs/vulkan_wrapper.cpp
         )
+
 target_include_directories(AndroidLib PRIVATE
         ${CORELIB_DIR}/include
         ${REV_DIR}/lib
         ${REV_DIR}/include
         ${PLATFORMLIB_DIR}/common/include
         ${ANDROIDLIB_DIR}/include
+        ${GRAPHICSLIB_DIR}/Vulkan/include
         ${ANDROID_NDK}/sources/android/native_app_glue
         )
 
@@ -75,6 +84,7 @@ add_library(Rev STATIC
 target_include_directories(Rev PRIVATE
         ${CORELIB_DIR}/include
         ${PLATFORMLIB_DIR}/common/include
+        ${GRAPHICSLIB_DIR}/Vulkan/include
         ${ANDROIDLIB_DIR}/include
         ${REV_DIR}/lib
         ${REV_DIR}/include
@@ -92,6 +102,7 @@ target_include_directories(native-activity PRIVATE
         ${CORELIB_DIR}/include
         ${ANDROIDLIB_DIR}/include
         ${PLATFORMLIB_DIR}/common/include
+        ${GRAPHICSLIB_DIR}/Vulkan/include
         ${REV_DIR}/lib
         ${REV_DIR}/include
         ${ANDROID_NDK}/sources/android/native_app_glue)

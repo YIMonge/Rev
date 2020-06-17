@@ -21,12 +21,7 @@
                 "inputClass": 205
             }
         ],
-        "cbuffers": [
-            {
-                "registerIndex": 0,
-                "sizeOfBytes": 3435973836
-            }
-        ],
+        "cbuffers": [],
         "textures": [],
         "samplers": []
     }

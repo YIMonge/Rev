@@ -1,0 +1,33 @@
+{
+    "root": {
+        "data": {
+            "guid": 0
+        },
+        "attributes": [
+            {
+                "type": 0,
+                "binding": 0,
+                "location": 0,
+                "format": 10,
+                "offset": 0,
+                "inputClass": 205
+            },
+            {
+                "type": 3,
+                "binding": 0,
+                "location": 1,
+                "format": 7,
+                "offset": 12,
+                "inputClass": 205
+            }
+        ],
+        "cbuffers": [
+            {
+                "registerIndex": 0,
+                "sizeOfBytes": 3435973836
+            }
+        ],
+        "textures": [],
+        "samplers": []
+    }
+}

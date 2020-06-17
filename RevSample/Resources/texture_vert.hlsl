@@ -2,21 +2,21 @@
 struct VSIn
 {
     float4 position : POSITION;
-    float4 uv : TEXCOORD;
+    float2 uv : TEXCOORD;
 };
 
 struct PSInput
 {
-    float4 position : SV_POSITION;
+    float4 position : SV_Position;
     float2 uv : TEXCOORD;
 };
 
-PSInput main(VSIn In)
+PSInput main(const VSIn input)
 {
-    PSInput result;
+    PSInput result = (PSInput)0;
 
-    result.position = In.position;
-    result.uv = In.uv;
+    result.position = input.position;
+    result.uv = input.uv;
 
     return result;
 }

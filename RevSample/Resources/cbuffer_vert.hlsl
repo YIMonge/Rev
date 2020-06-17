@@ -1,7 +1,7 @@
 struct VSIn
 {
     float4 position : POSITION;
-    float4 uv : TEXCOORD;
+    float2 uv : TEXCOORD;
 };
 
 struct PSInput
@@ -15,11 +15,12 @@ cbuffer ConstantBuffer : register(b0)
     float4 offset;
 };
 
+
 PSInput main(VSIn In)
 {
     PSInput result;
 
-    result.position = In.position + offset;
+    result.position = float4(In.position.xyz, 0) + offset;
     result.uv = In.uv;// +offset2;
 
     return result;

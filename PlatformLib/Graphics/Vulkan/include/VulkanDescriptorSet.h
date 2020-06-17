@@ -51,6 +51,7 @@ public:
             return Chunk(nullptr, 0, 0);
         }
 
+        return Chunk(&descriptorSet, allocationNum, allocNum);
         // kokokara
     }
 

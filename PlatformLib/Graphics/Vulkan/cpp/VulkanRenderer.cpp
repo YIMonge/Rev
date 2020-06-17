@@ -45,11 +45,13 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
              0.0f,  1.0f, 0.0f, 0.5f, 1.0f,
     };
     triangleVertexBuffer.Create(&device, triangleVertices, sizeof(float) * 5, 3);
-    constantBuffer.Create(&device, nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::DYNAMIC);
+    //constantBuffer.Create(&device, nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::DYNAMIC);
 
     VulkanShader shader[2];
     shader[0].LoadFromFile(device, "texture_vert.spv", SHADER_TYPE::VERTX);
     shader[1].LoadFromFile(device, "texture_frag.spv", SHADER_TYPE::FRAGMENT);
+	//shader[0].LoadFromFile(device, "cbuffer_vert.spv", SHADER_TYPE::VERTX);
+	//shader[1].LoadFromFile(device, "cbuffer_frag.spv", SHADER_TYPE::FRAGMENT);
 
     mat.SetShader(SHADER_TYPE::VERTX, &shader[0]);
     mat.SetShader(SHADER_TYPE::FRAGMENT, &shader[1]);
@@ -125,7 +127,7 @@ void VulkanRenderer::Render()
 {
     cbufferOffset.x += 0.005f;
     if (cbufferOffset.x > 1.25f) cbufferOffset.x = -1.25f;
-    constantBuffer.Update(cbufferOffset.data, sizeof(revVector4));
+    //constantBuffer.Update(cbufferOffset.data, sizeof(revVector4));
 
     auto& commandList = device.GetCommandLists()[swapChain.GetCurrentFrameIndex()];
      ExecuteCommand(commandList, true);
