@@ -20,7 +20,7 @@ PSInput main(VSIn In)
 {
     PSInput result;
 
-    result.position = float4(In.position.xyz, 0) + offset;
+    result.position = In.position + offset;
     result.uv = In.uv;// +offset2;
 
     return result;
