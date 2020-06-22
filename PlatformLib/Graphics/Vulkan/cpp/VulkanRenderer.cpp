@@ -233,8 +233,8 @@ void VulkanRenderer::Render()
 
 void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists, bool needSemaphore)
 {
-    uint32 length = lists.size();
-    revArray<revGraphicsCommandBuffer> commandlists(lists.size());
+    uint32 length = static_cast<uint32>(lists.size());
+    revArray<revGraphicsCommandBuffer> commandlists(length);
     for (uint32 i = 0; i < length; ++i) {
         commandlists[i] = lists[i].GetList();
     }
