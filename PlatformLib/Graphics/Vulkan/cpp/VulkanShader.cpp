@@ -16,7 +16,7 @@ bool VulkanShader::LoadFromFile(const revDevice& device, const char* path, SHADE
     revString resourcePath(RESOURCE_PATH);
     resourcePath += path;
     File file;
-    if(!file.Open(resourcePath.c_str(), FileMode::ReadText)){
+    if(!file.Open(resourcePath.c_str(), FileMode::ReadBinary)){
         NATIVE_LOGE("file not found : %s", path);
         return false;
     }

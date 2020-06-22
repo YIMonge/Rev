@@ -22,7 +22,20 @@
             }
         ],
         "cbuffers": [],
-        "textures": [],
-        "samplers": []
+        "textures": [
+            {
+                "registerIndex": 0,
+                "count": 1,
+                "space": 0,
+                "is3d": false
+            }
+        ],
+        "samplers": [
+            {
+                "registerIndex": 0,
+                "count": 1,
+                "space": 0
+            }
+        ]
     }
 }

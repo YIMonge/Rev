@@ -179,6 +179,9 @@
     <ClInclude Include="include\Window.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorPool.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\File.cpp">
@@ -291,6 +294,9 @@
     </ClCompile>
     <ClCompile Include="..\Graphics\DX12\cpp\DX12CommandList.cpp">
       <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorPool.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

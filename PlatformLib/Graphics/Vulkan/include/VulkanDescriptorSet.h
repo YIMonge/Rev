@@ -5,6 +5,7 @@
 #include "VulkanDevice.h"
 #include "VulkanDescriptorSetLayout.h"
 #include "revMaterial.h"
+#include "VulkanDescriptorPool.h"
 
 class VulkanDescriptorSet
 {
@@ -16,9 +17,10 @@ public:
         {}
     virtual ~VulkanDescriptorSet(){}
 
-    bool Create(revDevice* device, const VulkanDescriptorSetLayout& layout, uint32 numDescriptors, bool shaderVisiblity);
+    bool Create(revDevice* device, const VulkanDescriptorSetLayout& layout, uint32 numDescriptors, const VulkanDescriptorPool& descriptorPool);
     void Destroy();
 
+    void Update();
     void Apply(VulkanCommandList& commandList, const VkPipelineLayout& pipelineLayout);
 
     const VkDescriptorSet& GetHandle() const { return descriptorSet; }
@@ -27,40 +29,54 @@ public:
     {
     friend class VulkanDescriptorSet;
     public:
-        const VkDescriptorSet* GetDescriptorHandle() const { return descriptorSet; }
-        uint32 GetNumOfDescription() const { return numOfDescriptors; }
+        VkWriteDescriptorSet* GetVkWriteDescriptorSet() { return writeDescriptorSets; }
+        uint32 GetNumOfDescriptors() const { return numOfDescriptors; }
         uint32 GetBindingSlot() const { return binding; }
     private:
-        Chunk(VkDescriptorSet* descriptorSet, uint32 allocationNum, uint32 binding)
+        Chunk(VkWriteDescriptorSet* writeDescriptorSets,  uint32 allocationNum, uint32 binding)
         {
-            this->descriptorSet = descriptorSet;
+            this->writeDescriptorSets = writeDescriptorSets;
             this->numOfDescriptors = allocationNum;
             this->binding = binding;
         }
 
     private:
-        VkDescriptorSet* descriptorSet;
+        VkWriteDescriptorSet* writeDescriptorSets;
         uint32 numOfDescriptors;
         uint32 binding;
     };
 
-    Chunk Allocation(uint32 allocationNum)
+    Chunk Allocation(uint32 allocationNum, uint32 binding)
     {
         if(allocNum + allocationNum >= maxDescriptors) {
             NATIVE_LOGE("Out of range descriptor num");
             return Chunk(nullptr, 0, 0);
         }
 
-        return Chunk(&descriptorSet, allocationNum, allocNum);
-        // kokokara
+        VkWriteDescriptorSet writeDescriptorSet = {};
+        writeDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        writeDescriptorSet.pNext = nullptr;
+        writeDescriptorSet.dstSet = descriptorSet;
+        writeDescriptorSet.dstBinding = binding;
+        writeDescriptorSet.dstArrayElement = 0;
+        writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_MAX_ENUM;
+        writeDescriptorSet.descriptorCount = allocationNum;
+        writeDescriptorSet.pImageInfo = nullptr;
+        writeDescriptorSet.pBufferInfo = nullptr;
+        writeDescriptorSet.pTexelBufferView = nullptr;
+
+        writeDescriptorSets.push_back(writeDescriptorSet);
+        Chunk ret(&writeDescriptorSets[writeDescriptorSets.size()-1], allocationNum, binding);
+        allocNum += allocationNum;
+        return ret;
     }
 
 private:
     revDevice* device;
     uint32 maxDescriptors;
-    VkDescriptorPool descriptorPool;
-    VkDescriptorSet descriptorSet;
+    revArray<VkWriteDescriptorSet> writeDescriptorSets;
     uint32 allocNum;
+    VkDescriptorSet descriptorSet;
 };
 
 #endif

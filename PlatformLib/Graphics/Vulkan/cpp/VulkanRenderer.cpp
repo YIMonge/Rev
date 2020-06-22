@@ -7,7 +7,12 @@
 #include "VulkanTexture.h"
 #include "VulkanShader.h"
 
-VulkanRenderer::VulkanRenderer()
+#define _CBUFFER 1
+#define _TEX 1
+#define _TEST 0
+
+VulkanRenderer::VulkanRenderer() :
+        initialized(false)
 {
     clearValue = revColor::blue;
 }
@@ -37,6 +42,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     //-----------------------------------------------------------------------------------------------
     // TEST CODE
     // Load Assets
+
     device.GetGlobalCommandList().Open();
     const float triangleVertices[] = {
             // vertex         , texcoord
@@ -45,13 +51,19 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
              0.0f,  1.0f, 0.0f, 0.5f, 1.0f,
     };
     triangleVertexBuffer.Create(&device, triangleVertices, sizeof(float) * 5, 3);
-    //constantBuffer.Create(&device, nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::DYNAMIC);
+    constantBuffer.Create(&device, nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::STATIC);
 
     VulkanShader shader[2];
+#if !_CBUFFER && _TEX
     shader[0].LoadFromFile(device, "texture_vert.spv", SHADER_TYPE::VERTX);
     shader[1].LoadFromFile(device, "texture_frag.spv", SHADER_TYPE::FRAGMENT);
-	//shader[0].LoadFromFile(device, "cbuffer_vert.spv", SHADER_TYPE::VERTX);
-	//shader[1].LoadFromFile(device, "cbuffer_frag.spv", SHADER_TYPE::FRAGMENT);
+#elif _CBUFFER && !_TEX
+	shader[0].LoadFromFile(device, "cbuffer_vert.spv", SHADER_TYPE::VERTX);
+	shader[1].LoadFromFile(device, "cbuffer_frag.spv", SHADER_TYPE::FRAGMENT);
+#elif _CBUFFER && _TEX
+    shader[0].LoadFromFile(device, "cbufferTex_vert.spv", SHADER_TYPE::VERTX);
+    shader[1].LoadFromFile(device, "cbufferTex_frag.spv", SHADER_TYPE::FRAGMENT);
+#endif
 
     mat.SetShader(SHADER_TYPE::VERTX, &shader[0]);
     mat.SetShader(SHADER_TYPE::FRAGMENT, &shader[1]);
@@ -60,11 +72,12 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     texture.LoadFromFile(&device, "sample_tex.png");
     sampler.Create(&device, texture);
 
+    
     device.GetGlobalCommandList().Close();
     ExecuteCommand(device.GetGlobalCommandList());
     // TODO: wait for fence move to device from swapchain.
     swapChain.WaitForPreviousFrame();
-
+    
     //-----------------------------------------------------------------------------
 
     renderPass.Create(&device, &swapChain, mat);
@@ -81,10 +94,90 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     pipelineStateDesc.viewportRect = swapChain.GetDisplaySize();
     pipelineStateDesc.scissorRect = swapChain.GetDisplaySize();
     pipelineState.Create(&device, pipelineStateDesc);
-    descriptorSet.Create(&device, descriptorSetLayout, 4, true);
-    textureView.Create(&device, texture, sampler, &descriptorSet);
 
+    descriptorPool.Create(&device, 128, 128);
+    descriptorSet.Create(&device, descriptorSetLayout, 128, descriptorPool);
 
+    VulkanDescriptorSet::Chunk chunk = descriptorSet.Allocation(1, 0);
+
+#if _TEX && !_CBUFFER
+    textureView.Create(&device, texture, sampler, chunk);
+#endif
+
+#if _CBUFFER
+    constantBufferView.Create(&device, constantBuffer, chunk);
+#if _TEX
+    chunk = descriptorSet.Allocation(1, 1);
+    textureView.Create(&device, texture, sampler, chunk);
+#endif
+#endif
+
+#if _TEST
+    auto descriptorSetHandle = descriptorSet.GetHandle();
+
+    VkDescriptorBufferInfo descriptorBufferInfo = {};
+    descriptorBufferInfo.buffer = *constantBuffer.GetHandlePtr();
+    descriptorBufferInfo.offset = 0;
+    descriptorBufferInfo.range = sizeof(revVector4) * 1024;
+
+    VkWriteDescriptorSet writeDescriptorSet[2];
+    writeDescriptorSet[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeDescriptorSet[0].pNext = nullptr;
+    writeDescriptorSet[0].dstSet = descriptorSetHandle;
+    writeDescriptorSet[0].dstBinding = 0;
+    writeDescriptorSet[0].dstArrayElement = 0;
+    writeDescriptorSet[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    writeDescriptorSet[0].descriptorCount = 1;
+    writeDescriptorSet[0].pImageInfo = nullptr;
+    writeDescriptorSet[0].pBufferInfo = &descriptorBufferInfo;
+    writeDescriptorSet[0].pTexelBufferView = nullptr;
+
+    //- tex
+    VkImageViewCreateInfo imageViewCreateInfo = {};
+    imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    imageViewCreateInfo.pNext = nullptr;
+    imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    imageViewCreateInfo.components =
+            {
+                    VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G,
+                    VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A,
+            };
+    imageViewCreateInfo.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+    imageViewCreateInfo.flags = 0;
+    imageViewCreateInfo.format = ConvertToVKFormat(texture.GetFormat());
+    imageViewCreateInfo.image = texture.GetHandle();
+
+    VkImageView imageView;
+    VkResult result = vkCreateImageView(device.GetDevice(), &imageViewCreateInfo, nullptr, &imageView);
+    if(result != VK_SUCCESS) {
+        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
+        return;
+    }
+
+    VkDescriptorImageInfo descriptorImageInfo = {};
+    descriptorImageInfo.sampler = sampler.GetHandle();
+    descriptorImageInfo.imageView = imageView;
+    descriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+    writeDescriptorSet[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeDescriptorSet[1].pNext = nullptr;
+    writeDescriptorSet[1].dstSet = descriptorSetHandle;
+    writeDescriptorSet[1].dstBinding = 0;
+    writeDescriptorSet[1].dstArrayElement = 0;
+    writeDescriptorSet[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    writeDescriptorSet[1].descriptorCount = 1;
+    writeDescriptorSet[1].pImageInfo = &descriptorImageInfo;
+    writeDescriptorSet[1].pBufferInfo = nullptr;
+    writeDescriptorSet[1].pTexelBufferView = nullptr;
+
+    vkUpdateDescriptorSets(device.GetDevice(),
+                           2,                               // descriptorWriteCount
+                           writeDescriptorSet,             // pDescriptorWrites
+                           0,                                      // descriptorCopyCount
+                           nullptr);
+#else
+    descriptorSet.Update();
+#endif
 
     // Make Draw Command
     auto& commandLists = device.GetCommandLists();
@@ -112,6 +205,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
         commandList.Close();
     }
 
+    initialized = true;
 }
 
 void VulkanRenderer::ShutDown()
@@ -125,9 +219,11 @@ void VulkanRenderer::ShutDown()
 
 void VulkanRenderer::Render()
 {
+    if(!initialized) return;
+
     cbufferOffset.x += 0.005f;
     if (cbufferOffset.x > 1.25f) cbufferOffset.x = -1.25f;
-    //constantBuffer.Update(cbufferOffset.data, sizeof(revVector4));
+    constantBuffer.Update(cbufferOffset.data, sizeof(revVector4));
 
     auto& commandList = device.GetCommandLists()[swapChain.GetCurrentFrameIndex()];
      ExecuteCommand(commandList, true);

@@ -234,7 +234,7 @@ bool VulkanPipelineState::Create(revDevice* device, const PipelineStateDesc& des
     graphicsPipelineCreateInfo.basePipelineIndex = 0;
 
     result = vkCreateGraphicsPipelines(device->GetDevice(), pipelineCache, 1, &graphicsPipelineCreateInfo, nullptr, &pipelineState);
-    if(result != VK_SUCCESS) {
+    if(result != VK_SUCCESS && result != VK_INCOMPLETE) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }

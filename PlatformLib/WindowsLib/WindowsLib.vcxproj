@@ -106,13 +106,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VK|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -251,6 +251,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -473,6 +474,7 @@
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanBuffer.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanCommandList.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanConstantBufferView.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorPool.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorSet.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorSetLayout.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanDevice.h" />
@@ -513,6 +515,7 @@
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanBuffer.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanCommandList.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanConstantBufferView.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorPool.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorSet.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorSetLayout.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDevice.cpp" />

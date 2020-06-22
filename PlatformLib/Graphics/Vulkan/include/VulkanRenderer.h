@@ -10,9 +10,11 @@
 #include "VulkanTextureView.h"
 #include "VulkanSampler.h"
 #include "VulkanDescriptorSetLayout.h"
+#include "VulkanDescriptorPool.h"
 #include "VulkanDescriptorSet.h"
 #include "VulkanPipelineState.h"
 #include "VulkanRenderPass.h"
+#include "VulkanConstantBufferView.h"
 
 class VulkanRenderer : public revRenderer
 {
@@ -30,12 +32,16 @@ private:
     void ExecuteCommand(revGraphicsCommandList& list, bool needSemaphore = false);
 
     void setImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
-	VulkanDevice device;
+
+    bool initialized;
+
+    VulkanDevice device;
 	VulkanSwapChain swapChain;
 	VulkanFrameBuffer frameBuffer;
 	VulkanDescriptorSet descriptorSet;
 	VulkanDescriptorSetLayout descriptorSetLayout;
 	VulkanPipelineState pipelineState;
+    VulkanDescriptorPool descriptorPool;
 
 	// clear color
 	revColor clearValue;
@@ -44,6 +50,7 @@ private:
 	VulkanVertexBuffer triangleVertexBuffer;
 	revVector4 cbufferOffset;
 	VulkanConstantBuffer constantBuffer;
+	VulkanConstantBufferView constantBufferView;
 	VulkanTexture texture;
 	VulkanTextureView textureView;
 	VulkanSampler sampler;

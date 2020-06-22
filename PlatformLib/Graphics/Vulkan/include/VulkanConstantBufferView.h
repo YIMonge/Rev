@@ -11,10 +11,10 @@ public:
     VulkanConstantBufferView(){}
     virtual ~VulkanConstantBufferView(){}
 
-    void Create(revDevice* device, const VulkanConstantBuffer& cbuffer, VulkanDescriptorSet* descriptorSet);
+    void Create(revDevice* device, const VulkanConstantBuffer& cbuffer, VulkanDescriptorSet::Chunk& chunk);
     virtual void Destroy();
 private:
-
+    VkDescriptorBufferInfo descriptorBufferInfo;
 
 };
 

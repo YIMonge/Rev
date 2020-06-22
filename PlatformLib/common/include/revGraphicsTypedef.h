@@ -487,11 +487,12 @@ namespace {
 		return table[static_cast<uint32>(type)];
 	}
 
+
 	VkDescriptorType ConvertToVKDescriptorHeapType(DESCRIPTOR_HEAP_TYPE type)
 	{
 		VkDescriptorType table[] = {
+				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 				VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-				VK_DESCRIPTOR_TYPE_SAMPLER,
 				// TODO: RENDER_TARGET,
 				// TODO: DEPTH_STENCIL,
 		};

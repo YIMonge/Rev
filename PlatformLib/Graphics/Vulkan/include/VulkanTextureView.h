@@ -12,7 +12,7 @@ public:
     VulkanTextureView(){}
     virtual ~VulkanTextureView(){}
 
-    void Create(revDevice* device, const revTexture& texture, const VulkanSampler& sampler,  VulkanDescriptorSet* descriptorSet);
+    void Create(revDevice* device, const revTexture& texture, const VulkanSampler& sampler, VulkanDescriptorSet::Chunk& chunk);
     virtual void Destroy();
 private:
     VkImageView resourceView;

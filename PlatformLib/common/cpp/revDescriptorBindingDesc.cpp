@@ -4,8 +4,8 @@ void revDescriptorBindingDesc::AddMaterial(const revMaterial& material)
 {
 	const revShader* vertexShader = material.GetShader(SHADER_TYPE::VERTX);
 	const revShader* fragmentShader = material.GetShader(SHADER_TYPE::FRAGMENT);
-	AddShader(vertexShader);
 	AddShader(fragmentShader);
+	AddShader(vertexShader);
 	/*
 	revArray<DescriptorSetLayoutDesc> descriptorSets;
 	revArray<RootConstantDesc> rootConstants;
