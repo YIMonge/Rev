@@ -17,17 +17,17 @@ DX12Buffer::~DX12Buffer()
 
 bool DX12Buffer::Create(revDevice* device, const revArray<revVector3>& data, USAGE usage)
 {
-	return Create(device, &data[0].data[0], sizeof(revVector3), data.size(), usage);
+	return Create(device, &data[0].data[0], sizeof(revVector3), static_cast<uint32>(data.size()), usage);
 }
 
 bool DX12Buffer::Create(revDevice* device, const revArray<revVector4>& data, USAGE usage)
 {
-	return Create(device, &data[0].data[0], sizeof(revVector4), data.size(), usage);
+	return Create(device, &data[0].data[0], sizeof(revVector4), static_cast<uint32>(data.size()), usage);
 }
 
 bool DX12Buffer::Create(revDevice* device, const revArray<float>& data, USAGE usage)
 {
-	return Create(device, &data[0], sizeof(float), data.size(), usage);
+	return Create(device, &data[0], sizeof(float), static_cast<uint32>(data.size()), usage);
 }
 
 bool DX12Buffer::Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
