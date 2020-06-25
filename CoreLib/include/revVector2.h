@@ -19,7 +19,6 @@ public:
 public:
 	revVector2();
 	revVector2(const revVector2& src);
-	revVector2(revVector2&& src) noexcept;
 	revVector2(float a, float b);	
 
 			void	Add( const revVector2 &v );
