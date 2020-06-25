@@ -1,7 +1,8 @@
 {
     "root": {
         "data": {
-            "guid": 0
+            "guid": 0,
+            "userData": ""
         },
         "format": 0,
         "sampler": {
