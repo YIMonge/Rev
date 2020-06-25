@@ -14,13 +14,6 @@ inline revVector2::revVector2(const revVector2& src)
 {	
 }
 
-inline revVector2::revVector2(revVector2&& src) noexcept
-: x(src.x)
-, y(src.y)
-{
-}
-
-
 inline revVector2::revVector2( float a, float b ) 
 : x(a)
 , y(b) 
