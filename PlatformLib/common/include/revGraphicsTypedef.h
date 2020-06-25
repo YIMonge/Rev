@@ -499,6 +499,26 @@ namespace {
 		return table[static_cast<uint32>(type)];
 	}
 
+	uint32 GetDescriptorBindingOffset(DESCRIPTOR_TYPE type)
+	{
+		uint32 table[] = {
+			10, //TEXTURE_SHADER_RESOURCE_VIEW,
+			0, //RAW_BUFFER_SHADER_RESOURCE_VIEW,
+			0, //TYPED_BUFFER_SHADER_RESOURCE_VIEW,
+			0, //STRUCTURED_BUFFER_SHADER_RESOURCE_VIEW,
+
+			0, //TEXTURE_UNORDERED_ACCESS_VIEW,
+			0, //RAW_BUFFER_UNORDERED_RESOURCE_VIEW,
+			0, //TYPED_BUFFER_UNORDERED_RESOURCE_VIEW,
+			0, //STRUCTURED_BUFFER_UNORDERED_RESOURCE_VIEW,
+
+			0, //CONSTANT_BUFFER_VIEW,
+			20, //SAMPLER,
+		};
+		return table[static_cast<uint32>(type)];
+	}
+
+
 }
 
 #elif defined(_USE_DIRECTX12)
