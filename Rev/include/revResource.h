@@ -10,9 +10,14 @@ class revResource
 {
 public:
 	revResource() {}
-	virtual ~revResource() {}			
+	virtual ~revResource() {}
 
 	const revString& GetName() const { return name; }
+
+#ifdef _DEBUG
+	void SetName(const revString& name) { this->name = name; }
+	void SetName(const char* name) { this->name = name; }
+#endif
 
 protected:
 	void makeMetaPath(char* metaPath, const char* path)
@@ -27,10 +32,12 @@ private:
 struct DefaultMetaData
 {
 	uint32 guid;
+	revString userData;
 };
 
 SERIALIZE_FUNC_NON_INTRUSIVE(DefaultMetaData, data)
 {
-	archive(REV_MAKE_NVP(guid, data.guid));
+	archive(REV_MAKE_NVP(guid, data.guid),
+		REV_MAKE_NVP(userData, data.userData));
 }
 #endif

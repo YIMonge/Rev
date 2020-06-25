@@ -182,6 +182,9 @@
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorPool.h">
       <Filter>Graphics\Vulkan\header</Filter>
     </ClInclude>
+    <ClInclude Include="include\FBXLoader.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\File.cpp">
@@ -297,6 +300,9 @@
     </ClCompile>
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorPool.cpp">
       <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\FBXLoader.cpp">
+      <Filter>cpp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
