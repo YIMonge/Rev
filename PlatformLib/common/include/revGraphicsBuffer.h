@@ -8,18 +8,37 @@
 class revGraphicsBuffer
 {
 public:
-    revGraphicsBuffer(){}
+    revGraphicsBuffer():
+        buffer(NULL_HANDLE),
+        sizeOfBytes(0),
+        length(0),
+        usage(USAGE::STATIC)
+        {}
     virtual ~revGraphicsBuffer(){}
 
-    virtual bool Create(const revDevice& deviceContext, const revArray<revVector3>& data) = 0;
-    virtual bool Create(const revDevice& deviceContext, const revArray<revVector4>& data) = 0;
-    virtual bool Create(const revDevice& deviceContext, const revArray<float>& data) = 0;
-    virtual bool Create(const revDevice& deviceContext, const float* data, uint32 size) = 0;
-    virtual void Destroy(const revDevice& deviceContext) = 0;
 
-    const revGraphicsResource& GetHandle() const { return buffer; }
+    enum class USAGE
+    {
+        STATIC,
+        DYNAMIC,
+    };
+
+    virtual bool Create(revDevice* device, const revArray<revVector3>& data, USAGE usage = USAGE::STATIC) = 0;
+    virtual bool Create(revDevice* device, const revArray<revVector4>& data, USAGE usage = USAGE::STATIC) = 0;
+    virtual bool Create(revDevice* device, const revArray<float>& data, USAGE usage = USAGE::STATIC) = 0;
+    virtual bool Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC) = 0;
+    virtual void Destroy() = 0;
+
+    const revGraphicsResource* GetHandlePtr() const { return &buffer; }
+    uint32 GetSizeOfBytes() const { return sizeOfBytes; }
+    uint32 GetLength() const { return length; }
+
 protected:
+    revDevice* device;
     revGraphicsResource buffer;
+    uint32 sizeOfBytes;
+    uint32 length;
+    USAGE usage;
 };
 
 #endif

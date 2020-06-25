@@ -9,33 +9,162 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{638c9c1a-bb8f-4679-8b77-5d2095f04c84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\DX12">
+      <UniqueIdentifier>{3678d0ef-7b32-45e3-91b4-ab9de95d6f84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\DX12\cpp">
+      <UniqueIdentifier>{f7276767-4348-4f94-9690-f23a55f803a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\DX12\header">
+      <UniqueIdentifier>{db20064f-153b-46ba-a4e1-951875073fa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Vulkan">
+      <UniqueIdentifier>{86d06cab-3405-4e4a-8874-bb3f7019a5cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Vulkan\cpp">
+      <UniqueIdentifier>{e209a3e2-caa4-4f6b-a287-a87d4fc270db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Vulkan\header">
+      <UniqueIdentifier>{088a168c-d19c-4ef1-9568-4fe29b39bdc0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanBuffer.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanCommandList.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanConstantBufferView.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorSet.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorSetLayout.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanDevice.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanFrameBuffer.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanPipelineState.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderer.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderPass.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanSampler.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanShader.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanSwapChain.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanTexture.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanTextureView.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12Buffer.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12CommandList.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12ConstantBufferView.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12DescriptorHeap.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12Device.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12FrameBuffer.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12PipelineState.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12Renderer.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12RootSignature.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12Sampler.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12Shader.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12SwapChain.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12Texture.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12TextureView.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12VertexBufferView.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revAsyncable.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revDescriptorBindingDesc.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revDevice.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revFile.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revGraphicsBuffer.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revGraphicsCommandList.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revGraphicsTypedef.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revLocker.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revRenderer.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revSampler.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revShader.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revShaderResourceView.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revTexture.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revThread.h">
+      <Filter>header</Filter>
+    </ClInclude>
     <ClInclude Include="include\CriticalSection.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12Buffer.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12FrameBuffer.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12Renderer.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12RenderInfo.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12Shader.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12SwapChain.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12Texture.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12TextureView.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="include\File.h">
@@ -50,92 +179,11 @@
     <ClInclude Include="include\Window.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\include\revAsyncable.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revFile.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revGraphicsBuffer.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revGraphicsTypedef.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revLocker.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revRenderer.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revShader.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revTexture.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revTextureView.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revThread.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12Device.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revDevice.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revGraphicsCommandList.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12CommandList.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12PipelineState.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12RootSignature.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12DescriptorHeap.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DX12Sampler.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revSampler.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\include\revDescriptorBindingDesc.h">
-      <Filter>header</Filter>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorPool.h">
+      <Filter>Graphics\Vulkan\header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cpp\DX12Buffer.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12FrameBuffer.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12Renderer.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12RenderInfo.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12Shader.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12SwapChain.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12Texture.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12TextureView.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\File.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
@@ -148,32 +196,107 @@
     <ClCompile Include="..\common\cpp\revTexture.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\DX12Device.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12CommandList.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12PipelineState.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12RootSignature.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\Log.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
     <ClCompile Include="..\common\cpp\revShader.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\DX12DescriptorHeap.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\DX12Sampler.cpp">
-      <Filter>cpp</Filter>
-    </ClCompile>
     <ClCompile Include="..\common\cpp\revDescriptorBindingDesc.cpp">
       <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanFrameBuffer.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanPipelineState.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanRenderer.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanRenderPass.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSampler.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanShader.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSwapChain.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanTexture.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanTextureView.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanBuffer.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanCommandList.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanConstantBufferView.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorSet.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorSetLayout.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDevice.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12ConstantBufferView.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12DescriptorHeap.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Device.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12FrameBuffer.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12PipelineState.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Renderer.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12RootSignature.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Sampler.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Shader.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12SwapChain.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Texture.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12TextureView.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12VertexBufferView.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Buffer.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12CommandList.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorPool.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

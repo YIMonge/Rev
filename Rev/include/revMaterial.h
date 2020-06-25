@@ -99,7 +99,7 @@ public:
         POLYGON_MODE GetPolygonMode() const { return static_cast<POLYGON_MODE>(polygonMode); }
 
         void SetCullMode(CULL_MODE_FLAG flag) { cullModeFlag = static_cast<uint8>(flag); }
-        void GetPolygonMode(POLYGON_MODE mode) { polygonMode = static_cast<uint8>(mode); }
+        void SetPolygonMode(POLYGON_MODE mode) { polygonMode = static_cast<uint8>(mode); }
 
         SERIALIZE_FUNC()
         {

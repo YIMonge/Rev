@@ -16,7 +16,9 @@ public:
 	virtual void Disp();
 	virtual void Hide();
 
-	HWND GetHWnd()const { return hwnd; }
+	HWND GetHWnd() const { return hwnd; }
+	void SetHInstance(HINSTANCE hInstance) { this->hInstance = hInstance; }
+	HINSTANCE GetHInstance() const { return hInstance; }
 	unsigned int GetWidth() const { return width;  }
 	unsigned int GetHeight() const { return height; }
 
@@ -45,6 +47,7 @@ protected:
 	bool DetachHWnd();
 private:
 	HWND hwnd;
+	HINSTANCE hInstance;
 	const char* name;
 	unsigned int width;
 	unsigned int height;

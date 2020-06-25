@@ -36,7 +36,7 @@ public:
         revString outputString = ss.str();
         // TODO: Debug json, Release Binary
         File file(path, FileMode::WriteText);
-        file.WriteData(&outputString[0], outputString.size());
+        file.WriteData(&outputString[0], static_cast<uint32>(outputString.size()));
         file.Close();
     }
 

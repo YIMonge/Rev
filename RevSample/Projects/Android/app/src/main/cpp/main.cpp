@@ -32,6 +32,8 @@ void android_main(struct android_app* state)
                             (void**)&source) >= 0) {
             if (source != NULL) source->process(state, source);
         }
-        if(app.isInitialized()) app.Run();
+        if(app.isInitialized()) {
+            app.Run();
+        }
     } while (state->destroyRequested == 0);
 }

@@ -4,13 +4,7 @@
 #include "revTypedef.h"
 #include "revMath.h"
 
-// TODO: if values are serialized should have origin value like below
-// enum class FILTER {
-//    A = 0,
-//    B = 1,
-// };
-// uint32 ConvertToVulkanFilter(FILTER filter) { return table[(uint32)filter]; }
-
+#define MEM_ALIGN(N, ALIGN) (N +(ALIGN-1)) & ~(ALIGN-1) 
 
 struct GraphicsDesc
 {
@@ -76,6 +70,7 @@ enum class BORDER_COLOR_MODE
 enum class GRAPHICS_FORMAT
 {
 	R8G8B8A8_UNORM,	
+	B8G8R8A8_UNORM,
 	R32_UINT,
 	R32_SINT,
 	R32_FLOAT,
@@ -174,6 +169,31 @@ enum class INPUT_ELEMENT_TYPE
 	MAX_NUM,
 };
 
+struct SemanticData
+{
+	const char* name;
+	uint32 index;
+	GRAPHICS_FORMAT format;
+	uint32 sizeOfBytes;
+};
+
+// TODO: split to cpp
+const SemanticData GRAPHICS_SEMANTICS[] =
+{
+		{"POSITION",	0,  GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
+		{"NORMAL",		0,  GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
+		{"TANGENT",		0,	GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
+		{"TEXCOORD",	0,	GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
+		{"TEXCOORD",	1,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
+		{"TEXCOORD",	2,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
+		{"TEXCOORD",	3,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
+		{"COLOR",		0,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
+		{"COLOR",		1,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
+		{"COLOR",		2,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
+		{"COLOR",		3,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
+		{"MAX_NUM",		0,  GRAPHICS_FORMAT::MAX_NUM,				0, },
+};
+
 enum class INPUT_CLASS
 {
 	PER_VERTEX,
@@ -208,6 +228,13 @@ enum class SHADER_VISIBILITY
 	MAX_NUM,
 };
 
+enum class DESCRIPTOR_USAGE
+{
+	STATIC,
+	VOLATILE,
+	DATA_VOLATILE,
+};
+
 enum class DESCRIPTOR_HEAP_TYPE
 {
 	RESOURCE,
@@ -234,9 +261,17 @@ enum class SHADER_INPUT_TYPE
 	MAX_NUM,
 };
 
+
 // belows are specific graphics lib arguments.
 #ifdef _USE_VULKAN
-#include "../lib/vulkan_wrapper.h"
+#ifdef _ANDROID
+#include "libs/vulkan_wrapper.h"
+#elif defined _WINDOWS
+#include <vulkan/vulkan.h>
+#define GLFW_INCLUDE_VULKAN
+#include "libs/glfw3.h"
+#endif
+
 using revGraphicsDevice = VkDevice;
 using revGraphicsAdapter = VkPhysicalDevice;
 using revSwapChain = VkSwapchainKHR;
@@ -249,80 +284,98 @@ using revGraphicsPipeline = VkPipeline;
 using revTextureHandle = VkImage;
 using revTextureSampler = VkSampler;
 using revDescriptorHeap = void;
+#define NULL_HANDLE VK_NULL_HANDLE
+
 
 namespace {
-	VkFilter ConvertToVKFilter(FILTER_MODE filter)
-    {
-        const VkFilter table[] = {
-            VK_FILTER_NEAREST,
-            VK_FILTER_LINEAR,
-        };
-        return table[static_cast<uint32>(filter)];
-    }
-
-	VkSamplerMipmapMode ConvertToVKMipFilterMode(MIP_FILTER_MODE mode)
-	{
-    	const VkSamplerMipmapMode table[] = {
-			VK_SAMPLER_MIPMAP_MODE_NEAREST,
-			VK_SAMPLER_MIPMAP_MODE_LINEAR,
-			VK_SAMPLER_MIPMAP_MODE_LINEAR,	// dummy
-    	};
-    	return table[static_cast<uint32>(mode)];
-	}
-
-	VkSamplerAddressMode ConvertToVKTextureAddressMode(TEXTURE_ADDRESS_MODE mode)
-	{
-    	const VkSamplerAddressMode table[] = {
-			VK_SAMPLER_ADDRESS_MODE_REPEAT,
-			VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
-			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
-			VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE,
+	VkFilter ConvertToVKFilter(FILTER_MODE filter) {
+		const VkFilter table[] = {
+				VK_FILTER_NEAREST,
+				VK_FILTER_LINEAR,
 		};
-    	return table[static_cast<uint32>(mode)];
+		return table[static_cast<uint32>(filter)];
 	}
 
-	VkCompareOp ConverToVKComparisonFunc(COMPARISON_FUNC comparisonFunc)
-	{
-    	const VkCompareOp table[] = {
-			VK_COMPARE_OP_NEVER,
-			VK_COMPARE_OP_LESS,
-			VK_COMPARE_OP_EQUAL,
-			VK_COMPARE_OP_LESS_OR_EQUAL,
-			VK_COMPARE_OP_GREATER,
-			VK_COMPARE_OP_NOT_EQUAL,
-			VK_COMPARE_OP_GREATER_OR_EQUAL,
-			VK_COMPARE_OP_ALWAYS,
-    	};
-    	return table[static_cast<uint32>(comparisonFunc)];
+	VkSamplerMipmapMode ConvertToVKMipFilterMode(MIP_FILTER_MODE mode) {
+		const VkSamplerMipmapMode table[] = {
+				VK_SAMPLER_MIPMAP_MODE_NEAREST,
+				VK_SAMPLER_MIPMAP_MODE_LINEAR,
+				VK_SAMPLER_MIPMAP_MODE_LINEAR,    // dummy
+		};
+		return table[static_cast<uint32>(mode)];
 	}
 
-	VkBorderColor ConvertToVKBorderColor(BORDER_COLOR_MODE mode)
-	{
-    	const VkBorderColor table[] = {
-			VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,
-			VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK,
-			VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE,
-    	};
-    	return table[static_cast<uint32>(mode)];
+	VkSamplerAddressMode ConvertToVKTextureAddressMode(TEXTURE_ADDRESS_MODE mode) {
+		const VkSamplerAddressMode table[] = {
+				VK_SAMPLER_ADDRESS_MODE_REPEAT,
+				VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
+				VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+				VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
+				VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE,
+		};
+		return table[static_cast<uint32>(mode)];
 	}
 
-	VkFormat ConvertToVKFormat(GRAPHICS_FORMAT format)
-	{
+	VkCompareOp ConverToVKComparisonFunc(COMPARISON_FUNC comparisonFunc) {
+		const VkCompareOp table[] = {
+				VK_COMPARE_OP_NEVER,
+				VK_COMPARE_OP_LESS,
+				VK_COMPARE_OP_EQUAL,
+				VK_COMPARE_OP_LESS_OR_EQUAL,
+				VK_COMPARE_OP_GREATER,
+				VK_COMPARE_OP_NOT_EQUAL,
+				VK_COMPARE_OP_GREATER_OR_EQUAL,
+				VK_COMPARE_OP_ALWAYS,
+		};
+		return table[static_cast<uint32>(comparisonFunc)];
+	}
+
+	VkBorderColor ConvertToVKBorderColor(BORDER_COLOR_MODE mode) {
+		const VkBorderColor table[] = {
+				VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,
+				VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK,
+				VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE,
+		};
+		return table[static_cast<uint32>(mode)];
+	}
+
+	VkFormat ConvertToVKFormat(GRAPHICS_FORMAT format) {
 		const VkFormat table[] = {
-			VK_FORMAT_R8G8B8A8_UNORM,
-			VK_FORMAT_R32_UINT,
-			VK_FORMAT_R32_SINT,
-			VK_FORMAT_R32_SFLOAT,
-			VK_FORMAT_R32G32_UINT,
-			VK_FORMAT_R32G32_SINT,
-			VK_FORMAT_R32G32_SFLOAT,
-			VK_FORMAT_R32G32B32_UINT,
-			VK_FORMAT_R32G32B32_SINT,
-			VK_FORMAT_R32G32B32_SFLOAT,
-			VK_FORMAT_R32G32B32A32_UINT,
-			VK_FORMAT_R32G32B32A32_SINT,
-			VK_FORMAT_R32G32B32A32_SFLOAT,
+				VK_FORMAT_R8G8B8A8_UNORM,		// R8G8B8A8_UNORM
+				VK_FORMAT_B8G8R8A8_UNORM,		// B8G8R8A8_UNORM
+				VK_FORMAT_R32_UINT,				// R32_UINT
+				VK_FORMAT_R32_SINT,				// R32_SINT
+				VK_FORMAT_R32_SFLOAT,			// R32_FLOAT
+				VK_FORMAT_R32G32_UINT,			// R32G32_UINT
+				VK_FORMAT_R32G32_SINT,			// R32G32_SINT
+				VK_FORMAT_R32G32_SFLOAT,		// R32G32_FLOAT
+				VK_FORMAT_R32G32B32_UINT,		// R32G32B32_UINT
+				VK_FORMAT_R32G32B32_SINT,		// R32G32B32_SINT
+				VK_FORMAT_R32G32B32_SFLOAT,		// R32G32B32_FLOAT
+				VK_FORMAT_R32G32B32A32_UINT,	// R32G32B32A32_UINT
+				VK_FORMAT_R32G32B32A32_SINT,	// R32G32B32A32_SINT
+				VK_FORMAT_R32G32B32A32_SFLOAT,	// R32G32B32A32_FLOAT
+		};
+		return table[static_cast<uint32>(format)];
+	}
+
+	uint32 ConvertToVKSizeOfBytes(GRAPHICS_FORMAT format)
+	{
+		const uint32 table[] = {
+				sizeof(uint32),				// R8G8B8A8_UNORM
+				sizeof(uint32),				// B8G8R8A8_UNORM
+				sizeof(uint32),				// R32_UINT
+				sizeof(int32),				// R32_SINT
+				sizeof(f32),				// R32_FLOAT
+				sizeof(uint32) * 2,			// R32G32_UINT
+				sizeof(int32) * 2,			// R32G32_SINT
+				sizeof(f32) * 2,			// R32G32_FLOAT
+				sizeof(uint32) * 3,			// R32G32B32_UINT
+				sizeof(int32) * 3,			// R32G32B32_SINT
+				sizeof(f32) * 3,			// R32G32B32_FLOAT
+				sizeof(uint32) * 4,			// R32G32B32A32_UINT
+				sizeof(int32) * 4,			// R32G32B32A32_SINT
+				sizeof(f32) * 4,			// R32G32B32A32_FLOAT
 		};
 		return table[static_cast<uint32>(format)];
 	}
@@ -353,7 +406,7 @@ namespace {
 		return table[static_cast<uint32>(mode)];
 	}
 
-    VkCullModeFlagBits ConvertToDXCullMode(CULL_MODE_FLAG mode)
+    VkCullModeFlagBits ConvertToVKCullMode(CULL_MODE_FLAG mode)
 	{
 		VkCullModeFlagBits table[] = {
 			VK_CULL_MODE_NONE,
@@ -374,7 +427,7 @@ namespace {
 		return table[static_cast<uint32>(op)];
 	}
 
-	VkLogicOp ConverToVKLogicOp(LOGIC_OP op)
+	VkLogicOp ConvertToVKLogicOp(LOGIC_OP op)
 	{
 		VkLogicOp table[] = {
 			VK_LOGIC_OP_CLEAR,
@@ -418,7 +471,7 @@ namespace {
 	VkDescriptorType ConvertToVKDescriptorType(DESCRIPTOR_TYPE type)
 	{
 		VkDescriptorType table[] = {
-				VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+                VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -433,12 +486,45 @@ namespace {
 		};
 		return table[static_cast<uint32>(type)];
 	}
+
+
+	VkDescriptorType ConvertToVKDescriptorHeapType(DESCRIPTOR_HEAP_TYPE type)
+	{
+		VkDescriptorType table[] = {
+				VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+				VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+				// TODO: RENDER_TARGET,
+				// TODO: DEPTH_STENCIL,
+		};
+		return table[static_cast<uint32>(type)];
+	}
+
+	uint32 GetDescriptorBindingOffset(DESCRIPTOR_TYPE type)
+	{
+		uint32 table[] = {
+			10, //TEXTURE_SHADER_RESOURCE_VIEW,
+			0, //RAW_BUFFER_SHADER_RESOURCE_VIEW,
+			0, //TYPED_BUFFER_SHADER_RESOURCE_VIEW,
+			0, //STRUCTURED_BUFFER_SHADER_RESOURCE_VIEW,
+
+			0, //TEXTURE_UNORDERED_ACCESS_VIEW,
+			0, //RAW_BUFFER_UNORDERED_RESOURCE_VIEW,
+			0, //TYPED_BUFFER_UNORDERED_RESOURCE_VIEW,
+			0, //STRUCTURED_BUFFER_UNORDERED_RESOURCE_VIEW,
+
+			0, //CONSTANT_BUFFER_VIEW,
+			20, //SAMPLER,
+		};
+		return table[static_cast<uint32>(type)];
+	}
+
+
 }
 
 #elif defined(_USE_DIRECTX12)
 #include <d3d12.h>
 #include <dxgi1_4.h>
-#include "libs/DX12/d3dx12.h"
+#include "libs/d3dx12.h"
 
 using revGraphicsDevice = ID3D12Device*;
 using revGraphicsAdapter = IDXGIAdapter1*;
@@ -449,10 +535,10 @@ using revGraphicsCommandAllocator = ID3D12CommandAllocator*;
 using revGraphicsCommandBuffer = ID3D12GraphicsCommandList*;
 using revGraphicsCommandQueue = ID3D12CommandQueue*;
 using revGraphicsPipeline = ID3D12PipelineState*;
-using revTextureHandle = ID3D12Resource;
+using revTextureHandle = ID3D12Resource*;
 using revTextureSampler = D3D12_GPU_DESCRIPTOR_HANDLE;
 using revDescriptorHeap = ID3D12DescriptorHeap;
-
+#define NULL_HANDLE nullptr
 
 namespace {
 	REV_INLINE D3D12_FILTER ConvertToDXFilter(FILTER_MODE minFilter, FILTER_MODE magFilter, MIP_FILTER_MODE mip, uint32 anisotorpy, bool compare)
@@ -508,6 +594,7 @@ namespace {
 	{
 		const DXGI_FORMAT table[] = {
 			DXGI_FORMAT_R8G8B8A8_UNORM,
+			DXGI_FORMAT_B8G8R8A8_UNORM,
 			DXGI_FORMAT_R32_UINT,
 			DXGI_FORMAT_R32_SINT,
 			DXGI_FORMAT_R32_FLOAT,
@@ -600,31 +687,6 @@ namespace {
 		if (component & static_cast<uint8>(COLOR_COMPONENT_FRAG::A)) ret |= D3D12_COLOR_WRITE_ENABLE_ALPHA;
 		return ret;
 	}
-
-	struct SemanticData
-	{
-		const char* name;
-		uint32 index;
-		GRAPHICS_FORMAT format;
-		uint32 sizeOfBytes;
-	};
-
-	const SemanticData GRAPHICS_SEMANTICS[] =
-	{
-		{"POSITION",	0,  GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
-		{"NORMAL",		0,  GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
-		{"TANGENT",		0,	GRAPHICS_FORMAT::R32G32B32_FLOAT,		sizeof(revVector3), },
-		{"TEXCOORD",	0,	GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
-		{"TEXCOORD",	1,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
-		{"TEXCOORD",	2,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
-		{"TEXCOORD",	3,  GRAPHICS_FORMAT::R32G32_FLOAT,			sizeof(revVector2), },
-		{"COLOR",		0,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
-		{"COLOR",		1,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
-		{"COLOR",		2,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
-		{"COLOR",		3,  GRAPHICS_FORMAT::R32G32B32A32_FLOAT,	sizeof(revVector4), },
-		{"MAX_NUM",		0,  GRAPHICS_FORMAT::MAX_NUM,				0, },
-	};
-
 
 	INPUT_ELEMENT_TYPE ConvertToREVSemantic(const char* name)
 	{

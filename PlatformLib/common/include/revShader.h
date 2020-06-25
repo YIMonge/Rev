@@ -26,7 +26,7 @@ public:
 
 	INPUT_ELEMENT_TYPE GetInputElementType() const { return static_cast<INPUT_ELEMENT_TYPE>(type); }
     uint8 GetBinding() const { return binding; }
-    uint8 GetLocation() const { return static_cast<uint32>(type); }
+    uint8 GetLocation() const { return location; }
     GRAPHICS_FORMAT GetForamt() const { return static_cast<GRAPHICS_FORMAT>(format); }
     uint8 GetOffset() const { return offset; }
 	INPUT_CLASS GetInputClass() const { return static_cast<INPUT_CLASS>(inputClass); }
@@ -35,6 +35,7 @@ public:
 	void SetInputElementType(INPUT_ELEMENT_TYPE _type) { type = static_cast<uint8>(_type); }
 	void SetBinding(uint8 _binding) { binding = _binding; }
 	void SetFormat(GRAPHICS_FORMAT _format) { format = static_cast<uint8>(_format); }
+	void SetLocation(uint8 _location) { location = _location; }
 	void SetOffset(uint8 _offset) { offset = _offset; }
 	void SetInputClass(INPUT_CLASS _class) { inputClass = static_cast<uint8>(_class); }
 #endif
@@ -44,6 +45,7 @@ public:
 	{
 		archive(REV_NVP(type),
 			REV_NVP(binding),
+			REV_NVP(location),
 			REV_NVP(format),
 			REV_NVP(offset),
 			REV_NVP(inputClass)
@@ -53,6 +55,7 @@ public:
 private:
 	uint8 type;
     uint8 binding;
+    uint8 location;
     uint8 format;
     uint8 offset;
 	uint8 inputClass;
@@ -61,13 +64,22 @@ private:
 class revConstantBufferBinding
 {
 public:
+	uint8 GetRegisterIndex() const { return registerIndex; }
+	uint32 GetSizeOfBytes() const { return sizeOfBytes; }
+#ifdef _DEBUG
+	void SetRegisterIndex(uint8 index) { registerIndex = index; }
+	void SetSizeOfBytes(uint32 size) { sizeOfBytes = size; }
+#endif
+
 	SERIALIZE_FUNC()
 	{
-		archive(REV_NVP(registerIndex)
+		archive(REV_NVP(registerIndex), 
+			REV_NVP(sizeOfBytes)
 		);
 	}
 private:
 	uint8 registerIndex;
+	uint32 sizeOfBytes;
 };
 
 class revTextureBinding
@@ -153,7 +165,7 @@ public:
 	virtual bool LoadFromFile(const revDevice& deviceContext, const char* path, SHADER_TYPE shaderType) = 0;
 	revShaderHandle GetHandle() const { return handle; }
 	const revArray<revAttributeBinding>& GetAttributes() const { return metaData.attributes; }
-	const revArray<revConstantBufferBinding>& GetConstantBuffers() const { return metaData.cbuffers; }
+	const revArray<revConstantBufferBinding>& GetConstantBufferBindings() const { return metaData.cbuffers; }
 	const revArray<revTextureBinding>& GetTextureBindings() const { return metaData.textures; }
 	const revArray<revSamplerBinding>& GetSamplerBindings() const { return metaData.samplers; }
 
@@ -166,6 +178,7 @@ public:
 		revArray<revSamplerBinding> samplers;
 	};
 	
+	SHADER_TYPE GetType() const { return type; }
 protected:
 	bool LoadMetaData(const char* path);
 
