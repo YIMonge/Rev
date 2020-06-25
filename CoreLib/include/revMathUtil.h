@@ -11,17 +11,22 @@
 static const float PI = 3.1415926535f;
 static const float EPSILON = ((float)1e-10);
 
-typedef struct{
+typedef struct {
 	int x, y;
 }revIndex2;
 
-typedef struct{
-	int x, y, z;
+typedef struct {
+	union {
+		struct {
+			int x, y, z;
+		};
+		int data[3];
+	};
 }revIndex3;
 
-typedef struct{
-	union{
-		struct{
+typedef struct {
+	union {
+		struct {
 			int x, y, z, w;
 		};
 		int data[4];
@@ -32,7 +37,7 @@ typedef struct{
 namespace MathUtil
 {
 
-	inline float Dot( const revVector3& lhs, const revVector3& rhs)
+	inline float Dot(const revVector3& lhs, const revVector3& rhs)
 	{
 		return lhs.x * rhs.x + lhs.y + rhs.y + lhs.z * rhs.z;
 	}
@@ -55,19 +60,19 @@ namespace MathUtil
 
 	inline bool CompareFloats(float a, float b)
 	{
-		if(a >= b + EPSILON || a <= b - EPSILON){
+		if (a >= b + EPSILON || a <= b - EPSILON) {
 			return false;
 		}
 		return true;
 	}
 
-    template<class T>
+	template<class T>
 	inline T Clamp(T n, T fmin, T fmax)
 	{
-		if (n < fmin){
+		if (n < fmin) {
 			return fmin;
 		}
-		if (n > fmax){
+		if (n > fmax) {
 			return fmax;
 		}
 		return n;
@@ -101,7 +106,7 @@ namespace MathUtil
 	{
 		float xValue = distance * cosf(dir_radian);
 		float yValue = distance * sinf(dir_radian);
-		float dispersion = 2 *sigma * sigma;
+		float dispersion = 2 * sigma * sigma;
 		return expf(-(xValue * xValue) / dispersion) * expf(-(yValue * yValue) / dispersion);
 	}
 
@@ -109,21 +114,21 @@ namespace MathUtil
 	{
 		float xValue = distance * cosf(dir_radian);
 		float yValue = distance * sinf(dir_radian);
-		float dispersion = 2 *sigma * sigma;
+		float dispersion = 2 * sigma * sigma;
 		return C * expf(-(xValue * xValue) / dispersion) * expf(-(yValue * yValue) / dispersion);
 	}
 
 	inline float Gausian3D(const revVector3& Center, const revVector3& Point, float sigma)
 	{
 		revVector3 Length = Center - Point;
-		float dispersion = 2 *sigma * sigma;
+		float dispersion = 2 * sigma * sigma;
 		return expf(-(Length.x * Length.x) / dispersion) * expf(-(Length.z * Length.z) / dispersion);
 	}
 
 	inline float Gausian3D(const revVector3& Center, const revVector3& Point, float sigma, float C)
 	{
 		revVector3 Length = Center - Point;
-		float dispersion = 2 *sigma * sigma;
+		float dispersion = 2 * sigma * sigma;
 		return C * expf(-(Length.x * Length.x) / dispersion) * expf(-(Length.z * Length.z) / dispersion);
 	}
 
@@ -131,8 +136,8 @@ namespace MathUtil
 	inline TYPE GetBitCount(TYPE value)
 	{
 		TYPE count = 0;
-		for(TYPE i = 0; i < sizeof(TYPE) * 8; ++i){
-			if(value & (0x01 << i)){
+		for (TYPE i = 0; i < sizeof(TYPE) * 8; ++i) {
+			if (value & (0x01 << i)) {
 				++count;
 			}
 		}
