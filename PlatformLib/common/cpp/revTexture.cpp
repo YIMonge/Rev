@@ -5,7 +5,7 @@
 //#define STBI_MALLOC(sz)           malloc(sz)
 //#define STBI_REALLOC(p,newsz)     realloc(p,newsz)
 //#define STBI_FREE(p)              free(p)
-#include "stb/stb_image.h"
+#include "stb_image.h"
 
 bool revTexture::LoadFromFile(revDevice* device, const char* path)
 {

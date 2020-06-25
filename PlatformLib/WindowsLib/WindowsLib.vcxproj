@@ -184,11 +184,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\DX12\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\Graphics\DX12\include;$(ProjectDir)..\..\ThirdParty\fbx\include;$(ProjectDir)..\..\ThirdParty\cereal\include;$(ProjectDir)..\..\ThirdParty\stb;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VK|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\Vulkan\include;$(VULKAN_SDK)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\Vulkan\include;$(VULKAN_SDK)\include;$(ProjectDir)..\..\ThirdParty\cereal\include;$(ProjectDir)..\..\ThirdParty\stb;$(ProjectDir)..\..\ThirdParty\fbx\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(VULKAN_SDK)\Lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -488,6 +488,7 @@
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanTexture.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanTextureView.h" />
     <ClInclude Include="include\CriticalSection.h" />
+    <ClInclude Include="include\FBXLoader.h" />
     <ClInclude Include="include\File.h" />
     <ClInclude Include="include\Log.h" />
     <ClInclude Include="include\Thread.h" />
@@ -528,6 +529,7 @@
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSwapChain.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanTexture.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanTextureView.cpp" />
+    <ClCompile Include="cpp\FBXLoader.cpp" />
     <ClCompile Include="cpp\File.cpp" />
     <ClCompile Include="cpp\Log.cpp" />
     <ClCompile Include="cpp\Thread.cpp" />
