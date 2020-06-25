@@ -98,16 +98,17 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     descriptorPool.Create(&device, 128, 128);
     descriptorSet.Create(&device, descriptorSetLayout, 128, descriptorPool);
 
-    VulkanDescriptorSet::Chunk chunk = descriptorSet.Allocation(1, 0);
-
+    
 #if _TEX && !_CBUFFER
+	VulkanDescriptorSet::Chunk chunk = descriptorSet.Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::TEXTURE_SHADER_RESOURCE_VIEW));
     textureView.Create(&device, texture, sampler, chunk);
 #endif
 
 #if _CBUFFER
-    constantBufferView.Create(&device, constantBuffer, chunk);
+	VulkanDescriptorSet::Chunk chunk = descriptorSet.Allocation(1, 0);
+	constantBufferView.Create(&device, constantBuffer, chunk);
 #if _TEX
-    chunk = descriptorSet.Allocation(1, 1);
+	chunk = descriptorSet.Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::TEXTURE_SHADER_RESOURCE_VIEW));
     textureView.Create(&device, texture, sampler, chunk);
 #endif
 #endif

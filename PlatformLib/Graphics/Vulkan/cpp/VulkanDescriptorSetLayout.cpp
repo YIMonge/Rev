@@ -26,21 +26,18 @@ bool VulkanDescriptorSetLayout::Create(revDevice* device, const revDescriptorBin
     this->device = device;
     uint32 layoutSetCount = desc.GetDescriptorSetLayoutCount();
     revArray<VkDescriptorSetLayoutBinding> descriptorSetLayoutBindings;
-    uint32 bindingNo = 0;
-    //for(uint32 i = layoutSetCount-1; i >= 0; ++i){
     for(uint32 i = 0; i < layoutSetCount; ++i){
         auto& set = desc.GetDescriptorSetLayout(i);
         uint32 rangeCount = set.GetRangeCount();
         VkDescriptorSetLayoutBinding descriptorSetLayoutBinding = {};
-        descriptorSetLayoutBinding.binding = bindingNo; //set.GetRange(0).registerIndex;
+        descriptorSetLayoutBinding.binding = set.GetRange(0).registerIndex + GetDescriptorBindingOffset(set.GetDescriptorType());
         descriptorSetLayoutBinding.descriptorType = ConvertToVKDescriptorType(set.GetDescriptorType());
         descriptorSetLayoutBinding.descriptorCount = rangeCount;
-        descriptorSetLayoutBinding.stageFlags = ConvertToVKShaderVisibility(set.GetShaderVisiblity());
+		descriptorSetLayoutBinding.stageFlags = ConvertToVKShaderVisibility(set.GetShaderVisiblity());
         descriptorSetLayoutBinding.pImmutableSamplers = nullptr;
 
-        if(descriptorSetLayoutBinding.descriptorType == VK_DESCRIPTOR_TYPE_SAMPLER) continue;
+        //if(descriptorSetLayoutBinding.descriptorType == VK_DESCRIPTOR_TYPE_SAMPLER) continue;
         descriptorSetLayoutBindings.push_back(descriptorSetLayoutBinding);
-        ++bindingNo;
     }
 
     VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo = {};
