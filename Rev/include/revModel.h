@@ -10,13 +10,15 @@ public:
 	revModel() {}
 	~revModel(){}
 
+	const revArray<revMesh>& GetMeshes() const { return meshes; }
+
 #ifdef _DEBUG
 	void AddMesh(const revMesh& mesh) { meshes.push_back(mesh); }
 #endif
 
 private:
 	revArray<revMesh> meshes;
-	revArray<revMaterial> materials;
+	revArray<uint32> materials;
 };
 
 #endif
