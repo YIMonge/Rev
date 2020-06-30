@@ -55,6 +55,8 @@
     <ClCompile Include="..\..\cpp\revDrawCommand.cpp" />
     <ClCompile Include="..\..\cpp\revGraphics.cpp" />
     <ClCompile Include="..\..\cpp\revLogger.cpp" />
+    <ClCompile Include="..\..\cpp\revMesh.cpp" />
+    <ClCompile Include="..\..\cpp\revMeshRenderer.cpp" />
     <ClCompile Include="..\..\cpp\revThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +68,8 @@
     <ClInclude Include="..\..\include\revLogger.h" />
     <ClInclude Include="..\..\include\revMaterial.h" />
     <ClInclude Include="..\..\include\revMesh.h" />
+    <ClInclude Include="..\..\include\revMeshRenderer.h" />
+    <ClInclude Include="..\..\include\revModel.h" />
     <ClInclude Include="..\..\include\revResource.h" />
     <ClInclude Include="..\..\include\revSerializer.h" />
     <ClInclude Include="..\..\include\revSystemBase.h" />

@@ -26,6 +26,12 @@
     <ClCompile Include="..\..\cpp\revThreadPool.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\cpp\revMeshRenderer.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cpp\revMesh.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\revApp.h">
@@ -65,6 +71,12 @@
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\revWindow.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revMeshRenderer.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revModel.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>
