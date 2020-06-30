@@ -5,7 +5,7 @@
 #include <fbxsdk.h>
 #include "revArray.h"
 #include "revString.h"
-#include "revMesh.h"
+#include "revModel.h"
 
 class FBXLoader
 {
@@ -15,7 +15,7 @@ public:
 	void LoadFromFile(const revString& path, revMesh* mesh);
 
 private:
-	void ImportNode(FbxNode* node);
+	void ImportNode(FbxNode* node, revModel* model);
 	void LoadStaticMesh(FbxNode* parentNode);
 	
 	int32 sdkMajorVersion;

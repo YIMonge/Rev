@@ -56,16 +56,17 @@ void FBXLoader::LoadFromFile(const revString& path, revMesh* mesh)
 	FbxGeometryConverter converter(manager);
 	converter.Triangulate(scene, true);
 
+	revModel model;
 	FbxNode* root = scene->GetRootNode();
 	if (root) {
-		ImportNode(root);
+		ImportNode(root, &model);
 	}
 
 	scene->Destroy();
 	importer->Destroy();
 }
 
-void FBXLoader::ImportNode(FbxNode* node)
+void FBXLoader::ImportNode(FbxNode* node, revModel* model)
 {
 	if (node == nullptr) return;
 
@@ -77,27 +78,93 @@ void FBXLoader::ImportNode(FbxNode* node)
 		const uint32 vertexCount = meshNode->GetControlPointsCount();
 		const uint32 polygonCount = meshNode->GetPolygonCount();
 
-		auto& vertices = meshResource.GetVertexArray();
-		auto& indexies = meshResource.GetIndexArray();
+		revArray<revVector3> vertices;
+		revArray<revVector3> normals;
+		revArray<revVector2> texcoords[MAX_TEXCOORD_NUM];
+		revArray<revIndex3> indexies;
+
+		uint32 normalCount = meshNode->GetElementNormalCount();
 		vertices.reserve(vertexCount);
+		normals.reserve(vertexCount);
 		indexies.reserve(polygonCount * 3);
 
+		// vertex and normal
 		for (uint32 i = 0; i < polygonCount; ++i) {
 			// polygon size must be 3 cause Triangulate. 
 			revIndex3 index;
 			for (uint32 j = 0; j < 3; ++j) {
 				index.data[j] = meshNode->GetPolygonVertex(i, j);
 
-				 
-
-
+				FbxVector4 fbxPosition = meshNode->GetControlPointAt(index.data[j]);				
+				revVector3 position(fbxPosition[0], fbxPosition[1], fbxPosition[2]);
+				vertices.push_back(position);
+				
+				if (normalCount > 0) {
+					FbxVector4 fbxNormal;
+					meshNode->GetPolygonVertexNormal(i, j, fbxNormal);
+					revVector3 normal(fbxNormal[0], fbxNormal[1], fbxNormal[2]);
+					normals.push_back(normal);
+				}
 			}
 			indexies.push_back(index);
 		}
 
+		if (polygonCount > 0) {
+			meshResource.SetVertexArray(vertices);
+			meshResource.SetNormalArray(normals);
+			meshResource.SetIndexArray(indexies);
+
+			meshResource.SetFormat(INPUT_ELEMENT_TYPE::POSITION);
+			if(normalCount > 0) meshResource.SetFormat(INPUT_ELEMENT_TYPE::NORMAL);
+		}
+
+		// uv
+		FbxStringList uvSetNames;
+		meshNode->GetUVSetNames(uvSetNames);
+		uint32 uvSetCount = uvSetNames.GetCount();
+		bool unmapped = false;
 
 
+		INPUT_ELEMENT_TYPE TEXCOORD_ELEMENT[] = {
+			INPUT_ELEMENT_TYPE::TEXCOORD0,
+			INPUT_ELEMENT_TYPE::TEXCOORD1,
+			INPUT_ELEMENT_TYPE::TEXCOORD2,
+			INPUT_ELEMENT_TYPE::TEXCOORD3,
+		};
+
+		for (uint32 i = 0; i < uvSetCount; ++i) {
+			FbxString uvSetName = uvSetNames.GetStringAt(i);
+			texcoords[i].reserve(polygonCount * 3);
+			for (uint32 j = 0; j < polygonCount; ++j) {
+				// polygon size must be 3 cause Triangulate. 
+				for (uint32 k = 0; k < 3; ++k) {
+					FbxVector2 fbxUV;
+					meshNode->GetPolygonVertexUV(j, k, uvSetName, fbxUV, unmapped);
+					revVector2 uv(fbxUV[0], fbxUV[1]);
+					texcoords[i].push_back(uv);
+				}
+			}
+			meshResource.SetTexCoordArray(i, texcoords[i]);
+			meshResource.SetFormat(TEXCOORD_ELEMENT[i]);
+		}
+
+		INPUT_ELEMENT_TYPE COLOR_ELEMENT[] = {
+			INPUT_ELEMENT_TYPE::COLOR0,
+			INPUT_ELEMENT_TYPE::COLOR1,
+			INPUT_ELEMENT_TYPE::COLOR2,
+			INPUT_ELEMENT_TYPE::COLOR3,
+		};
+		// TODO: read color element
+
+		meshResource.CreateVertexBufferData();
+		model->AddMesh(meshResource);
 	}
+
+	uint32 childNodeCount = node->GetChildCount();
+	for (uint32 i = 0; i < childNodeCount; ++i) {
+		ImportNode(node->GetChild(i), model);
+	}
+
 
 }
 
