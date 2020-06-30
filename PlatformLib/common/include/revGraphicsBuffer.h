@@ -8,12 +8,14 @@
 class revGraphicsBuffer
 {
 public:
-    revGraphicsBuffer():
+    revGraphicsBuffer(revDevice* device) :
         buffer(NULL_HANDLE),
         sizeOfBytes(0),
         length(0),
         usage(USAGE::STATIC)
-        {}
+        {
+			this->device = device;
+		}
     virtual ~revGraphicsBuffer(){}
 
 
@@ -23,10 +25,10 @@ public:
         DYNAMIC,
     };
 
-    virtual bool Create(revDevice* device, const revArray<revVector3>& data, USAGE usage = USAGE::STATIC) = 0;
-    virtual bool Create(revDevice* device, const revArray<revVector4>& data, USAGE usage = USAGE::STATIC) = 0;
-    virtual bool Create(revDevice* device, const revArray<float>& data, USAGE usage = USAGE::STATIC) = 0;
-    virtual bool Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC) = 0;
+    virtual bool Create(const revArray<revVector3>& data, USAGE usage = USAGE::STATIC) = 0;
+    virtual bool Create(const revArray<revVector4>& data, USAGE usage = USAGE::STATIC) = 0;
+    virtual bool Create(const revArray<float>& data, USAGE usage = USAGE::STATIC) = 0;
+    virtual bool Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC) = 0;
     virtual void Destroy() = 0;
 
     const revGraphicsResource* GetHandlePtr() const { return &buffer; }
