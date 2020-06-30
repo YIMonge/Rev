@@ -1,21 +1,11 @@
 #include "revGraphics.h"
 
-#ifdef _WINDOWS
-	#if	 defined(_USE_OPENGL)
-	#include "GLRenderer.h"
-	#elif defined(_USE_DIRECTX11)
-	#include "DX11Renderer.h"
-	#elif defined(_USE_DIRECTX12)
+#if defined(_USE_DIRECTX12)
 	#include "DX12Renderer.h"
-	#elif defined(_USE_VULKAN)
+	#include "DX12Buffer.h"
+#elif defined(_USE_VULKAN)
 	#include "VulkanRenderer.h"
-	#endif
-#elif defined(_ANDROID)
-	#if defined(_USE_GLES)
-	#include "GLESRenderer.h"
-	#elif defined(_USE_VULKAN)
-	#include "VulkanRenderer.h"
-	#endif
+	#include "VulkanBuffer.h"
 #endif
 
 #include "Window.h"
@@ -48,4 +38,24 @@ void revGraphics::ShutDown()
 void revGraphics::Draw()
 {
 	renderer->Render();
+}
+
+revGraphicsBuffer* revGraphics::CreateVertexBuffer()
+{
+	revDevice* device = renderer->GetDevice();
+#if defined(_USE_DIRECTX12)
+	return new DX12VertexBuffer(device);
+#elif defined(_USE_VULKAN)
+	return new VulkanVertexBuffer(device);
+#endif
+}
+
+revGraphicsBuffer* revGraphics::CreateIndexBuffer()
+{
+	revDevice* device = renderer->GetDevice();
+#if defined(_USE_DIRECTX12)
+	return new DX12IndexBuffer(device);
+#elif defined(_USE_VULKAN)
+	return new (device);
+#endif
 }

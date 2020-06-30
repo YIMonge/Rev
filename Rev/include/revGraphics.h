@@ -5,10 +5,10 @@
 #include "revDevice.h"
 #include "revColor.h"
 #include "revDrawCommand.h"
+#include "revRenderer.h"
 
 class Color;
 class Window;
-class revRenderer;
 class revGraphicsBuffer;
 
 class revGraphics : public revSingleton<revGraphics>
@@ -22,6 +22,9 @@ public:
 	void Draw();	
 
 	revGraphicsBuffer* CreateVertexBuffer();
+	revGraphicsBuffer* CreateIndexBuffer();
+
+	revDevice* GetDevice() { return renderer->GetDevice(); }
 
 private:
 	GraphicsDesc desc;
