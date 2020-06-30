@@ -12,24 +12,24 @@ static const float PI = 3.1415926535f;
 static const float EPSILON = ((float)1e-10);
 
 typedef struct {
-	int x, y;
+	uint32 x, y;
 }revIndex2;
 
 typedef struct {
 	union {
 		struct {
-			int x, y, z;
+			uint32 x, y, z;
 		};
-		int data[3];
+		uint32 data[3];
 	};
 }revIndex3;
 
 typedef struct {
 	union {
 		struct {
-			int x, y, z, w;
+			uint32 x, y, z, w;
 		};
-		int data[4];
+		uint32 data[4];
 	};
 }revIndex4;
 
