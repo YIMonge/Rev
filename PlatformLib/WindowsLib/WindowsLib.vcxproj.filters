@@ -185,6 +185,12 @@
     <ClInclude Include="include\FBXLoader.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12MeshRenderer.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12IndexBufferView.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\File.cpp">
@@ -303,6 +309,12 @@
     </ClCompile>
     <ClCompile Include="cpp\FBXLoader.cpp">
       <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12MeshRenderer.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12IndexBufferView.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
