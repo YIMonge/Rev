@@ -25,8 +25,9 @@ public:
 	virtual void StartUp(Window* window, const GraphicsDesc& desc);
 	virtual void ShutDown();
 
+	virtual revDevice* GetDevice() { return &device; }
+
 	void Render();
-	void SwapBuffers();
 private:
     void ExecuteCommand(revArray<revGraphicsCommandList>& lists, bool needSemaphore = false);
     void ExecuteCommand(revGraphicsCommandList& list, bool needSemaphore = false);
@@ -47,9 +48,9 @@ private:
 	revColor clearValue;
 
 	// TEST CODE(resource)
-	VulkanVertexBuffer triangleVertexBuffer;
+	VulkanVertexBuffer* triangleVertexBuffer;
 	revVector4 cbufferOffset;
-	VulkanConstantBuffer constantBuffer;
+	VulkanConstantBuffer* constantBuffer;
 	VulkanConstantBufferView constantBufferView;
 	VulkanTexture texture;
 	VulkanTextureView textureView;

@@ -2,7 +2,8 @@
 
 #include "DX12Buffer.h"
 
-DX12Buffer::DX12Buffer() :
+DX12Buffer::DX12Buffer(revDevice* device) :
+	revGraphicsBuffer(device),
 	mappedMemory(nullptr)
 {
 	buffer = nullptr;
@@ -15,25 +16,24 @@ DX12Buffer::~DX12Buffer()
 	}
 }
 
-bool DX12Buffer::Create(revDevice* device, const revArray<revVector3>& data, USAGE usage)
+bool DX12Buffer::Create(const revArray<revVector3>& data, USAGE usage)
 {
-	return Create(device, &data[0].data[0], sizeof(revVector3), static_cast<uint32>(data.size()), usage);
+	return Create(&data[0].data[0], sizeof(revVector3), static_cast<uint32>(data.size()), usage);
 }
 
-bool DX12Buffer::Create(revDevice* device, const revArray<revVector4>& data, USAGE usage)
+bool DX12Buffer::Create(const revArray<revVector4>& data, USAGE usage)
 {
-	return Create(device, &data[0].data[0], sizeof(revVector4), static_cast<uint32>(data.size()), usage);
+	return Create(&data[0].data[0], sizeof(revVector4), static_cast<uint32>(data.size()), usage);
 }
 
-bool DX12Buffer::Create(revDevice* device, const revArray<float>& data, USAGE usage)
+bool DX12Buffer::Create(const revArray<float>& data, USAGE usage)
 {
-	return Create(device, &data[0], sizeof(float), static_cast<uint32>(data.size()), usage);
+	return Create(&data[0], sizeof(float), static_cast<uint32>(data.size()), usage);
 }
 
-bool DX12Buffer::Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
+bool DX12Buffer::Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
 {
 	this->usage = usage;
-	this->device = device;
 	this->length = length;
 	this->sizeOfBytes = sizeOfBytes;
 	uint32 size = sizeOfBytes * length;
@@ -85,15 +85,15 @@ void DX12Buffer::Destroy()
 	}
 }
 
-bool DX12VertexBuffer::Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
+bool DX12VertexBuffer::Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
 {
-	return DX12Buffer::Create(device, data, sizeOfBytes, length);
+	return DX12Buffer::Create(data, sizeOfBytes, length);
 }
 
 
-bool DX12ConstantBuffer::Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
+bool DX12ConstantBuffer::Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
 {
-	return DX12Buffer::Create(device, data, sizeOfBytes, length);
+	return DX12Buffer::Create(data, sizeOfBytes, length);
 }
 
 

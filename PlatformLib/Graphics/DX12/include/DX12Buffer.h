@@ -10,14 +10,14 @@
 class DX12Buffer : public revGraphicsBuffer
 {
 public:
-	DX12Buffer();
+	DX12Buffer(revDevice* device);
 	virtual ~DX12Buffer();
 
 	// TODO: set stride for resource view 
-	virtual bool Create(revDevice* device, const revArray<revVector3>& data, USAGE usage = USAGE::STATIC);
-	virtual bool Create(revDevice* device, const revArray<revVector4>& data, USAGE usage = USAGE::STATIC);
-	virtual bool Create(revDevice* device, const revArray<float>& data, USAGE usage = USAGE::STATIC);
-	virtual bool Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
+	virtual bool Create(const revArray<revVector3>& data, USAGE usage = USAGE::STATIC);
+	virtual bool Create(const revArray<revVector4>& data, USAGE usage = USAGE::STATIC);
+	virtual bool Create(const revArray<float>& data, USAGE usage = USAGE::STATIC);
+	virtual bool Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
 	virtual void Destroy();
 
 	bool Update(const float* data, uint32 sizeOfCopyBytes, uint32 offset = 0);
@@ -28,20 +28,24 @@ private:
 class DX12VertexBuffer : public DX12Buffer
 {
 public:
-	DX12VertexBuffer(){}
+	DX12VertexBuffer(revDevice* device) : 
+		DX12Buffer(device)
+	{}
 	virtual ~DX12VertexBuffer(){}
 
-	virtual bool Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
+	virtual bool Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
 };
 
 
 class DX12ConstantBuffer : public DX12Buffer
 {
 public:
-	DX12ConstantBuffer() {}
+	DX12ConstantBuffer(revDevice* device) :
+		DX12Buffer(device)
+	{}
 	virtual ~DX12ConstantBuffer(){}
 
-	virtual bool Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
+	virtual bool Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
 
 	const D3D12_CONSTANT_BUFFER_VIEW_DESC* GetResourceViewDesc() const { return &view; }
 private:

@@ -6,25 +6,24 @@
 #include "Log.h"
 
 
-bool VulkanBuffer::Create(revDevice* device, const revArray<revVector3>& data, USAGE usage)
+bool VulkanBuffer::Create(const revArray<revVector3>& data, USAGE usage)
 {
-    return Create(device, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3), static_cast<uint32>(data.size()));
+    return Create(static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3), static_cast<uint32>(data.size()));
 }
 
-bool VulkanBuffer::Create(revDevice* device, const revArray<revVector4>& data, USAGE usage)
+bool VulkanBuffer::Create(const revArray<revVector4>& data, USAGE usage)
 {
-    return Create(device, static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4), static_cast<uint32>(data.size()));
+    return Create(static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4), static_cast<uint32>(data.size()));
 }
 
-bool VulkanBuffer::Create(revDevice* device, const revArray<float>& data, USAGE usage)
+bool VulkanBuffer::Create(const revArray<float>& data, USAGE usage)
 {
-    return Create(device, static_cast<const float*>(&data[0]), sizeof(float), static_cast<uint32>(data.size()));
+    return Create(static_cast<const float*>(&data[0]), sizeof(float), static_cast<uint32>(data.size()));
 }
 
-bool VulkanBuffer::Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
+bool VulkanBuffer::Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
 {
     this->usage = usage;
-    this->device = device;
     this->length = length;
     this->sizeOfBytes = sizeOfBytes;
 

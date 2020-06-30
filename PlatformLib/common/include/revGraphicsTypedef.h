@@ -153,6 +153,9 @@ enum class COLOR_COMPONENT_FRAG : uint8
 	ALL = R | G | B | A
 };
 
+const uint32 MAX_TEXCOORD_NUM = 4;
+const uint32 MAX_VERTEX_COLOR_NUM = 4;
+
 enum class INPUT_ELEMENT_TYPE
 {
 	POSITION,

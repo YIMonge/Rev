@@ -50,8 +50,11 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
              1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
              0.0f,  1.0f, 0.0f, 0.5f, 1.0f,
     };
-    triangleVertexBuffer.Create(&device, triangleVertices, sizeof(float) * 5, 3);
-    constantBuffer.Create(&device, nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::STATIC);
+	triangleVertexBuffer = new VulkanVertexBuffer(&device);
+	triangleVertexBuffer->Create(triangleVertices, sizeof(float) * 5, 3);
+
+	constantBuffer = new VulkanConstantBuffer(&device);
+    constantBuffer->Create(nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::STATIC);
 
     VulkanShader shader[2];
 #if !_CBUFFER && _TEX
@@ -106,7 +109,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 
 #if _CBUFFER
 	VulkanDescriptorSet::Chunk chunk = descriptorSet.Allocation(1, 0);
-	constantBufferView.Create(&device, constantBuffer, chunk);
+	constantBufferView.Create(&device, *constantBuffer, chunk);
 #if _TEX
 	chunk = descriptorSet.Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::TEXTURE_SHADER_RESOURCE_VIEW));
     textureView.Create(&device, texture, sampler, chunk);
@@ -195,7 +198,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
         descriptorSet.Apply(commandList, pipelineState.GetPipelineLayout());
 
         VkDeviceSize offset = 0;
-        vkCmdBindVertexBuffers(commandList.GetList(), 0, 1, triangleVertexBuffer.GetHandlePtr(), &offset);
+        vkCmdBindVertexBuffers(commandList.GetList(), 0, 1, triangleVertexBuffer->GetHandlePtr(), &offset);
         vkCmdDraw(commandList.GetList(), 3, 1, 0, 0);
 
         renderPass.End(commandList);
@@ -224,7 +227,7 @@ void VulkanRenderer::Render()
 
     cbufferOffset.x += 0.005f;
     if (cbufferOffset.x > 1.25f) cbufferOffset.x = -1.25f;
-    constantBuffer.Update(cbufferOffset.data, sizeof(revVector4));
+    constantBuffer->Update(cbufferOffset.data, sizeof(revVector4));
 
     auto& commandList = device.GetCommandLists()[swapChain.GetCurrentFrameIndex()];
      ExecuteCommand(commandList, true);
@@ -235,7 +238,7 @@ void VulkanRenderer::Render()
 void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists, bool needSemaphore)
 {
     uint32 length = static_cast<uint32>(lists.size());
-    revArray<revGraphicsCommandBuffer> commandlists(length);
+    revArray<revGraphicsCommandBuffer> commandlists(lists.size());
     for (uint32 i = 0; i < length; ++i) {
         commandlists[i] = lists[i].GetList();
     }

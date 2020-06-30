@@ -3,8 +3,17 @@
 #include "DX12Renderer.h"
 #include "Window.h"
 
+#include "FbxLoader.h"
+
 void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
+	// TEST
+	FBXLoader loader;
+	revMesh mesh;
+	loader.LoadFromFile("../../Resources/Models/cube.fbx", &mesh);
+//	loader.LoadFromFile("../../Resources/Models/ironman.fbx", &mesh2);
+
+
 	if (!device.Create(desc)) return;		
 	if (!resourceHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::RESOURCE, 1024)) return;
 	if (!samplerHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::SAMPLER, 128)) return;
@@ -26,7 +35,7 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	
 	resourceChunk = resourceHeap.Allocation(1);
 	resourceHandle = resourceChunk.GetHandle();
-	constantBufferView.Create(&device, constantBuffer, &resourceHandle);
+	constantBufferView.Create(&device, *constantBuffer, &resourceHandle);
 
 	DX12DescriptorHeap::Chunk samplerChunk = samplerHeap.Allocation(1);
 	auto samplerHandle = samplerChunk.GetHandle();
@@ -68,7 +77,7 @@ void DX12Renderer::Render()
 	// Update
 	cbufferOffset.x += 0.005f;
 	if (cbufferOffset.x > 1.25f) cbufferOffset.x = -1.25f;
-	constantBuffer.Update(cbufferOffset.data, sizeof(revVector4));
+	constantBuffer->Update(cbufferOffset.data, sizeof(revVector4));
 
 	// Render 
 	DX12CommandList& globalCommandList = device.GetGlobalCommandList();
@@ -123,10 +132,13 @@ bool DX12Renderer::IntialzieForApp()
 		{ { -0.25f, -0.25f, 0.0f }, { 0.0f, 1.0f } }
 	};
 
-	vertexBuffer.Create(&device, &(triangleVertices[0].position.data[0]), sizeof(Vertex), 3);
-	constantBuffer.Create(&device, nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::DYNAMIC);
+	vertexBuffer = new DX12VertexBuffer(&device);
+	vertexBuffer->Create(&(triangleVertices[0].position.data[0]), sizeof(Vertex), 3);
+	
+	constantBuffer = new DX12ConstantBuffer(&device);
+	constantBuffer->Create(nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::DYNAMIC);
 
-	vertexBufferView.Create(&device, vertexBuffer);
+	vertexBufferView.Create(&device, *vertexBuffer);
 	
 	return true;
 }

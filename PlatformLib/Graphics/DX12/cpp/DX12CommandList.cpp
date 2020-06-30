@@ -50,7 +50,7 @@ void DX12CommandList::Open()
 void DX12CommandList::Close()
 {
 	if (!needBarrierResources.empty()) {
-		commandBuffer->ResourceBarrier(static_cast<uint32>(needBarrierResources.size()), needBarrierResources.data());
+		commandBuffer->ResourceBarrier(needBarrierResources.size(), needBarrierResources.data());
 	}
 	commandBuffer->Close();
 }
@@ -80,7 +80,7 @@ void DX12CommandList::AddTransitionBarrier(ID3D12Resource* resource, D3D12_RESOU
 
 void DX12CommandList::ReleaseResoucers()
 {
-	uint32 length = static_cast<uint32>(needReleaseResources.size());
+	uint32 length = needReleaseResources.size();
 	for (uint32 i = 0; i < length; ++i) {
 		needReleaseResources[i]->Release();
 	}

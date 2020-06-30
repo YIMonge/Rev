@@ -10,15 +10,16 @@
 class VulkanBuffer : public revGraphicsBuffer
 {
 public:
-    VulkanBuffer() :
-    mappedMemory(nullptr)
+    VulkanBuffer(revDevice* device) :
+		revGraphicsBuffer(device),
+	    mappedMemory(nullptr)
     {}
     virtual ~VulkanBuffer(){}
 
-    virtual bool Create(revDevice* device, const revArray<revVector3>& data, USAGE usage = USAGE::STATIC);
-    virtual bool Create(revDevice* device, const revArray<revVector4>& data, USAGE usage = USAGE::STATIC);
-    virtual bool Create(revDevice* device, const revArray<float>& data, USAGE usage = USAGE::STATIC);
-    virtual bool Create(revDevice* device, const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
+    virtual bool Create(const revArray<revVector3>& data, USAGE usage = USAGE::STATIC);
+    virtual bool Create(const revArray<revVector4>& data, USAGE usage = USAGE::STATIC);
+    virtual bool Create(const revArray<float>& data, USAGE usage = USAGE::STATIC);
+    virtual bool Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
     virtual void Destroy();
 
     bool Update(const float* data, uint32 sizeOfCopyBytes, uint32 offset = 0);
@@ -46,7 +47,8 @@ private:
 class VulkanVertexBuffer : public VulkanBuffer
 {
 public:
-    VulkanVertexBuffer()
+    VulkanVertexBuffer(revDevice* device) :
+		VulkanBuffer(device)
     {
         type = BUFFER_TYPE::VERTEX;
     }
@@ -56,7 +58,8 @@ public:
 class VulkanConstantBuffer : public VulkanBuffer
 {
 public:
-    VulkanConstantBuffer()
+    VulkanConstantBuffer(revDevice* device) :
+		VulkanBuffer(device)
     {
         type = BUFFER_TYPE::CONSTANT;
     }

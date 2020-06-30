@@ -20,6 +20,9 @@ public:
 	virtual void ShutDown() = 0;
 
 	virtual void Render() = 0;
+
+	virtual revDevice* GetDevice() = 0;
+private:
 };
 
 enum class BLEND_FUNC : uint8

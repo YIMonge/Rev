@@ -30,6 +30,7 @@ public:
 
 	virtual void Render();
 
+	virtual revDevice* GetDevice() { return &device; }
 private:
 	bool IntialzieForApp();
 
@@ -53,9 +54,9 @@ private:
 	DX12Shader vertexShader;
 	DX12Shader fragmentShader;
 	revMaterial mat;
-	DX12VertexBuffer vertexBuffer;
+	DX12VertexBuffer* vertexBuffer;
 	DX12VertexBufferView vertexBufferView;
-	DX12ConstantBuffer constantBuffer;
+	DX12ConstantBuffer* constantBuffer;
 	DX12ConstantBufferView constantBufferView;
 	revVector4 cbufferOffset;
 	DX12Texture texture;
