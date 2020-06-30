@@ -9,7 +9,7 @@
 class Color;
 class Window;
 class revRenderer;
-
+class revGraphicsBuffer;
 
 class revGraphics : public revSingleton<revGraphics>
 {
@@ -19,7 +19,10 @@ public:
 
 	void ResizeWindow(int w, int h);
 
-	void Draw();
+	void Draw();	
+
+	revGraphicsBuffer* CreateVertexBuffer();
+
 private:
 	GraphicsDesc desc;
 	revRenderer* renderer;
