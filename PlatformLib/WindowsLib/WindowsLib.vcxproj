@@ -462,6 +462,8 @@
     <ClInclude Include="..\Graphics\DX12\include\DX12DescriptorHeap.h" />
     <ClInclude Include="..\Graphics\DX12\include\DX12Device.h" />
     <ClInclude Include="..\Graphics\DX12\include\DX12FrameBuffer.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12IndexBufferView.h" />
+    <ClInclude Include="..\Graphics\DX12\include\DX12MeshRenderer.h" />
     <ClInclude Include="..\Graphics\DX12\include\DX12PipelineState.h" />
     <ClInclude Include="..\Graphics\DX12\include\DX12Renderer.h" />
     <ClInclude Include="..\Graphics\DX12\include\DX12RootSignature.h" />
@@ -504,6 +506,8 @@
     <ClCompile Include="..\Graphics\DX12\cpp\DX12DescriptorHeap.cpp" />
     <ClCompile Include="..\Graphics\DX12\cpp\DX12Device.cpp" />
     <ClCompile Include="..\Graphics\DX12\cpp\DX12FrameBuffer.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12IndexBufferView.cpp" />
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12MeshRenderer.cpp" />
     <ClCompile Include="..\Graphics\DX12\cpp\DX12PipelineState.cpp" />
     <ClCompile Include="..\Graphics\DX12\cpp\DX12Renderer.cpp" />
     <ClCompile Include="..\Graphics\DX12\cpp\DX12RootSignature.cpp" />
