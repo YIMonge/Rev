@@ -7,6 +7,7 @@ DX12Buffer::DX12Buffer(revDevice* device) :
 	mappedMemory(nullptr)
 {
 	buffer = nullptr;
+	destResourceState = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
 }
 
 DX12Buffer::~DX12Buffer()
@@ -16,58 +17,79 @@ DX12Buffer::~DX12Buffer()
 	}
 }
 
-bool DX12Buffer::Create(const revArray<revVector3>& data, USAGE usage)
-{
-	return Create(&data[0].data[0], sizeof(revVector3), static_cast<uint32>(data.size()), usage);
-}
-
-bool DX12Buffer::Create(const revArray<revVector4>& data, USAGE usage)
-{
-	return Create(&data[0].data[0], sizeof(revVector4), static_cast<uint32>(data.size()), usage);
-}
-
-bool DX12Buffer::Create(const revArray<float>& data, USAGE usage)
-{
-	return Create(&data[0], sizeof(float), static_cast<uint32>(data.size()), usage);
-}
-
-bool DX12Buffer::Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
+bool DX12Buffer::Create(const void* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
 {
 	this->usage = usage;
 	this->length = length;
 	this->sizeOfBytes = sizeOfBytes;
 	uint32 size = sizeOfBytes * length;
+
+	D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_DEFAULT;
+	D3D12_RESOURCE_STATES resourceState = D3D12_RESOURCE_STATE_COPY_DEST;
+	if (usage == USAGE::DYNAMIC) {
+		heapType = D3D12_HEAP_TYPE_UPLOAD;
+		resourceState = D3D12_RESOURCE_STATE_GENERIC_READ;
+	}
+
+
 	HRESULT hr = device->GetDevice()->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		&CD3DX12_HEAP_PROPERTIES(heapType),
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer(size),
-		D3D12_RESOURCE_STATE_GENERIC_READ,
+		resourceState,
 		nullptr,
 		IID_PPV_ARGS(&buffer)
 	);
 	if (FAILED(hr)) {
 		return false;
 	}
+	
 
 	return Update(data, size);
 }
 
-bool DX12Buffer::Update(const float* data, uint32 sizeOfCopyBytes, uint32 offset)
+bool DX12Buffer::Update(const void* data, uint32 sizeOfCopyBytes, uint32 offset)
 {
 	if (data == nullptr) return false;
 
-	if (mappedMemory == nullptr) {
-		CD3DX12_RANGE readRange(0, 0);
-		HRESULT hr = buffer->Map(0, &readRange, &mappedMemory);
+	if (usage == USAGE::DYNAMIC) {
+		if (mappedMemory == nullptr) {
+			CD3DX12_RANGE readRange(0, 0);
+			HRESULT hr = buffer->Map(0, &readRange, &mappedMemory);
+			if (FAILED(hr)) {
+				return false;
+			}
+		}
+		memcpy(mappedMemory, (uint32*)data + offset, sizeOfCopyBytes);
+		buffer->Unmap(0, nullptr);
+	}
+	else {
+
+		HRESULT hr = device->GetDevice()->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+			D3D12_HEAP_FLAG_NONE,
+			&CD3DX12_RESOURCE_DESC::Buffer(sizeOfCopyBytes),
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&uploadBuffer)
+		);
 		if (FAILED(hr)) {
 			return false;
 		}
+
+		D3D12_SUBRESOURCE_DATA subResourceData = {};
+		subResourceData.pData = data;
+		subResourceData.RowPitch = sizeOfCopyBytes;
+		subResourceData.SlicePitch = subResourceData.RowPitch;
+
+		DX12CommandList& commandList = static_cast<DX12Device*>(device)->GetGlobalCommandList();
+		UpdateSubresources(commandList.GetList(), buffer, uploadBuffer, 0, 0, 1, &subResourceData);
+		commandList.AddTransitionBarrier(buffer, D3D12_RESOURCE_STATE_COPY_DEST, destResourceState);
+		commandList.ReserveRelease(uploadBuffer);
+
 	}
-	memcpy(mappedMemory, data+offset, sizeOfCopyBytes);
-	if (usage == USAGE::STATIC) {
-		buffer->Unmap(0, nullptr);
-		mappedMemory = nullptr;
-	}
+
+
 	return true;
 }
 
@@ -85,16 +107,24 @@ void DX12Buffer::Destroy()
 	}
 }
 
-bool DX12VertexBuffer::Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
+bool DX12VertexBuffer::Create(const revArray<revVector3>& data, USAGE usage)
 {
-	return DX12Buffer::Create(data, sizeOfBytes, length);
+	return DX12Buffer::Create(&data[0].data[0], sizeof(revVector3), static_cast<uint32>(data.size()), usage);
 }
 
-
-bool DX12ConstantBuffer::Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
+bool DX12VertexBuffer::Create(const revArray<revVector4>& data, USAGE usage)
 {
-	return DX12Buffer::Create(data, sizeOfBytes, length);
+	return DX12Buffer::Create(&data[0].data[0], sizeof(revVector4), static_cast<uint32>(data.size()), usage);
 }
 
+bool DX12VertexBuffer::Create(const revArray<float>& data, USAGE usage)
+{
+	return DX12Buffer::Create(&data[0], sizeof(float), static_cast<uint32>(data.size()), usage);
+}
+
+bool DX12IndexBuffer::Create(const uint32* index, uint32 length)
+{
+	return DX12Buffer::Create(index, sizeof(revIndex3), length, USAGE::STATIC);
+}
 
 #endif

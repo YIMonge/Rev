@@ -25,10 +25,7 @@ public:
         DYNAMIC,
     };
 
-    virtual bool Create(const revArray<revVector3>& data, USAGE usage = USAGE::STATIC) = 0;
-    virtual bool Create(const revArray<revVector4>& data, USAGE usage = USAGE::STATIC) = 0;
-    virtual bool Create(const revArray<float>& data, USAGE usage = USAGE::STATIC) = 0;
-    virtual bool Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC) = 0;
+    virtual bool Create(const void* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC) = 0;
     virtual void Destroy() = 0;
 
     const revGraphicsResource* GetHandlePtr() const { return &buffer; }

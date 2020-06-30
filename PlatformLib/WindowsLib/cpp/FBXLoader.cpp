@@ -38,8 +38,10 @@ FBXLoader::~FBXLoader()
 	}
 }
 
-void FBXLoader::LoadFromFile(const revString& path, revMesh* mesh)
+void FBXLoader::LoadFromFile(const revString& path, revModel* model)
 {
+	if (model == nullptr) return;
+
 	FbxImporter* importer = FbxImporter::Create(manager, "");
 	if (!importer->Initialize(path.c_str(), -1, manager->GetIOSettings())) {
 		NATIVE_LOGE("[FBX] Load Error %s, %d", __FILE__, __LINE__);
@@ -56,10 +58,9 @@ void FBXLoader::LoadFromFile(const revString& path, revMesh* mesh)
 	FbxGeometryConverter converter(manager);
 	converter.Triangulate(scene, true);
 
-	revModel model;
 	FbxNode* root = scene->GetRootNode();
 	if (root) {
-		ImportNode(root, &model);
+		ImportNode(root, model);
 	}
 
 	scene->Destroy();
@@ -88,14 +89,13 @@ void FBXLoader::ImportNode(FbxNode* node, revModel* model)
 		normals.reserve(vertexCount);
 		indexies.reserve(polygonCount * 3);
 
-		// vertex and normal
+		// index
 		for (uint32 i = 0; i < polygonCount; ++i) {
 			// polygon size must be 3 cause Triangulate. 
 			revIndex3 index;
 			for (uint32 j = 0; j < 3; ++j) {
-				index.data[j] = meshNode->GetPolygonVertex(i, j);
-
-				FbxVector4 fbxPosition = meshNode->GetControlPointAt(index.data[j]);				
+				uint32 fbxIndex = meshNode->GetPolygonVertex(i, j);
+				FbxVector4 fbxPosition = meshNode->GetControlPointAt(fbxIndex);
 				revVector3 position(fbxPosition[0], fbxPosition[1], fbxPosition[2]);
 				vertices.push_back(position);
 				
@@ -105,7 +105,9 @@ void FBXLoader::ImportNode(FbxNode* node, revModel* model)
 					revVector3 normal(fbxNormal[0], fbxNormal[1], fbxNormal[2]);
 					normals.push_back(normal);
 				}
+				index.data[j] = i * 3 + j;
 			}
+			
 			indexies.push_back(index);
 		}
 

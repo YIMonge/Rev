@@ -5,15 +5,9 @@
 
 #include "FbxLoader.h"
 
+
 void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
-	// TEST
-	FBXLoader loader;
-	revMesh mesh;
-	loader.LoadFromFile("../../Resources/Models/cube.fbx", &mesh);
-//	loader.LoadFromFile("../../Resources/Models/ironman.fbx", &mesh2);
-
-
 	if (!device.Create(desc)) return;		
 	if (!resourceHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::RESOURCE, 1024)) return;
 	if (!samplerHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::SAMPLER, 128)) return;
@@ -33,9 +27,9 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	auto resourceHandle = resourceChunk.GetHandle();
 	textureView.Create(&device, texture, &resourceHandle);
 	
-	resourceChunk = resourceHeap.Allocation(1);
-	resourceHandle = resourceChunk.GetHandle();
-	constantBufferView.Create(&device, *constantBuffer, &resourceHandle);
+	//resourceChunk = resourceHeap.Allocation(1);
+	//resourceHandle = resourceChunk.GetHandle();
+	//constantBufferView.Create(&device, *constantBuffer, &resourceHandle);
 
 	DX12DescriptorHeap::Chunk samplerChunk = samplerHeap.Allocation(1);
 	auto samplerHandle = samplerChunk.GetHandle();
@@ -75,9 +69,9 @@ void DX12Renderer::ShutDown()
 void DX12Renderer::Render()
 {
 	// Update
-	cbufferOffset.x += 0.005f;
-	if (cbufferOffset.x > 1.25f) cbufferOffset.x = -1.25f;
-	constantBuffer->Update(cbufferOffset.data, sizeof(revVector4));
+	//cbufferOffset.x += 0.005f;
+	//if (cbufferOffset.x > 1.25f) cbufferOffset.x = -1.25f;
+	//constantBuffer->Update(cbufferOffset.data, sizeof(revVector4));
 
 	// Render 
 	DX12CommandList& globalCommandList = device.GetGlobalCommandList();
@@ -88,14 +82,15 @@ void DX12Renderer::Render()
 	rootSiganture.Apply(globalCommandList);
 	pipelineState.Apply(globalCommandList);
 	// TODO: index detemine by what?
-	resourceHeap.Apply(globalCommandList, 0, 1);
-	resourceHeap.Apply(globalCommandList, 1, 0);
-	samplerHeap.Apply(globalCommandList, 2);
+	resourceHeap.Apply(globalCommandList, 0, 0);
+	//resourceHeap.Apply(globalCommandList, 1, 1);
+	samplerHeap.Apply(globalCommandList, 1);
 	swapChain.Appply(globalCommandList);
 
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	commandList->IASetVertexBuffers(0, 1, vertexBufferView.GetResourceView());
-	commandList->DrawInstanced(3, 1, 0, 0);
+	meshRenderer.Draw(globalCommandList);
+	//commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//commandList->IASetVertexBuffers(0, 1, vertexBufferView.GetResourceView());
+	//commandList->DrawInstanced(3, 1, 0, 0);
 
 	globalCommandList.Close();
 	ExecuteCommand(globalCommandList);
@@ -111,35 +106,24 @@ bool DX12Renderer::IntialzieForApp()
 {
 	//vertexShader.LoadFromFile(device, "cbuffer_vert.hlsl", SHADER_TYPE::VERTX);
 	//fragmentShader.LoadFromFile(device, "cbuffer_frag.hlsl", SHADER_TYPE::FRAGMENT);
-	vertexShader.LoadFromFile(device, "cbufferTex_vert.hlsl", SHADER_TYPE::VERTX);
-	fragmentShader.LoadFromFile(device, "cbufferTex_frag.hlsl", SHADER_TYPE::FRAGMENT); 
+	//vertexShader.LoadFromFile(device, "cbufferTex_vert.hlsl", SHADER_TYPE::VERTX);
+	//fragmentShader.LoadFromFile(device, "cbufferTex_frag.hlsl", SHADER_TYPE::FRAGMENT); 
 	//vertexShader.LoadFromFile(device, "texture_vert.hlsl", SHADER_TYPE::VERTX);
 	//fragmentShader.LoadFromFile(device, "texture_frag.hlsl", SHADER_TYPE::FRAGMENT);
+	vertexShader.LoadFromFile(device, "model_vert.hlsl", SHADER_TYPE::VERTX);
+	fragmentShader.LoadFromFile(device, "model_frag.hlsl", SHADER_TYPE::FRAGMENT);
 
 	mat.SetShader(SHADER_TYPE::VERTX, &vertexShader);
 	mat.SetShader(SHADER_TYPE::FRAGMENT, &fragmentShader);
 
-	struct Vertex
-	{
-		revVector3 position;
-		revVector2 color;
-	};
-
-	Vertex triangleVertices[] =
-	{
-		{ {  0.0f,   0.25f, 0.0f }, { 0.5f, 0.0f } },
-		{ {  0.25f, -0.25f, 0.0f }, { 1.0f, 1.0f } },
-		{ { -0.25f, -0.25f, 0.0f }, { 0.0f, 1.0f } }
-	};
-
-	vertexBuffer = new DX12VertexBuffer(&device);
-	vertexBuffer->Create(&(triangleVertices[0].position.data[0]), sizeof(Vertex), 3);
-	
-	constantBuffer = new DX12ConstantBuffer(&device);
-	constantBuffer->Create(nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::DYNAMIC);
-
-	vertexBufferView.Create(&device, *vertexBuffer);
-	
+	FBXLoader loader;
+	//loader.LoadFromFile("../../Resources/Models/plane.fbx", &model);
+	//loader.LoadFromFile("../../Resources/Models/cube_maya.fbx", &model);
+	loader.LoadFromFile("../../Resources/Models/cube_blender.fbx", &model);
+	//	loader.LoadFromFile("../../Resources/Models/ironman.fbx", &mesh2);
+	meshRenderer.SetMeshes(model.GetMeshes());
+	meshRenderer.SetMaterial(0, &mat);
+	meshRenderer.Initialize();
 	return true;
 }
 

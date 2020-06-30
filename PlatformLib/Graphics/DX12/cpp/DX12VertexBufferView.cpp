@@ -3,14 +3,14 @@
 #include "DX12VertexBufferView.h"
 
 
-void DX12VertexBufferView::Create(revDevice* device, const DX12VertexBuffer& buffer)
+void DX12VertexBufferView::Create(revDevice* device, const revGraphicsBuffer* buffer)
 {
     this->device = device;
 
-	auto handlePtr = buffer.GetHandlePtr();
+	auto handlePtr = buffer->GetHandlePtr();
 	view.BufferLocation = (*handlePtr)->GetGPUVirtualAddress();
-	view.StrideInBytes = buffer.GetSizeOfBytes(); 
-	view.SizeInBytes = buffer.GetSizeOfBytes() * buffer.GetLength();
+	view.StrideInBytes = buffer->GetSizeOfBytes(); 
+	view.SizeInBytes = buffer->GetSizeOfBytes() * buffer->GetLength();
 }
 
 void DX12VertexBufferView::Destroy()

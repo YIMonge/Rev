@@ -12,7 +12,7 @@ public:
 	DX12VertexBufferView() {}
 	virtual ~DX12VertexBufferView(){}
 	
-	void Create(revDevice* device, const DX12VertexBuffer& buffer);
+	void Create(revDevice* device, const revGraphicsBuffer* buffer);
 	virtual void Destroy();
 
 	const D3D12_VERTEX_BUFFER_VIEW* GetResourceView() const { return &view; }

@@ -16,9 +16,10 @@
 #include "DX12Sampler.h"
 #include "DX12VertexBufferView.h"
 #include "DX12ConstantBufferView.h"
+#include "DX12MeshRenderer.h"
 #include "revMaterial.h"
 #include "revArray.h"
-
+#include "revModel.h"
 
 class Window;
 
@@ -54,11 +55,13 @@ private:
 	DX12Shader vertexShader;
 	DX12Shader fragmentShader;
 	revMaterial mat;
-	DX12VertexBuffer* vertexBuffer;
-	DX12VertexBufferView vertexBufferView;
-	DX12ConstantBuffer* constantBuffer;
-	DX12ConstantBufferView constantBufferView;
-	revVector4 cbufferOffset;
+	revModel model;
+	DX12MeshRenderer meshRenderer;
+	//DX12VertexBuffer* vertexBuffer;
+	//DX12VertexBufferView vertexBufferView;
+	//DX12ConstantBuffer* constantBuffer;
+	//DX12ConstantBufferView constantBufferView;
+	//revVector4 cbufferOffset;
 	DX12Texture texture;
 	DX12TextureView textureView;
 	DX12Sampler sampler;
