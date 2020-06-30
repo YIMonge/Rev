@@ -33,10 +33,10 @@ public:
 
 
 public:
-			void		Multi( const revMatrix44& m );
-	static	revMatrix44	Multi(const revMatrix44& lhs, const revMatrix44& rhs);
+			void		Mul( const revMatrix44& m );
+	static	revMatrix44	Mul(const revMatrix44& lhs, const revMatrix44& rhs);
 
-			void		MultiScalar( float s );
+			void		MulScalar( float s );
 			void		DivScalar( float s );
 
 			void		Identity();
@@ -56,10 +56,10 @@ public:
             void		Translation( float x, float y, float z );
 			void		CreateLookAtrevMatrixRH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec);
 			void		CreatePerspectiverevMatrixRH(float fov_radian, float aspect, float near, float far);
-			void		CreateViewPortrevMatrixRH(int Width, int height, int Near, int Far);
+			void		CreateViewPortMatrixRH(int Width, int height, int Near, int Far);
 
 			void		CreateLookAtrevMatrixLH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec);
-			void		CreatePerspectiverevMatrixLH(float fov_radian, float aspect, float near, float far);
+			void		CreatePerspectiveMatrixLH(float fov_radian, float aspect, float near, float far);
 
 			void		Transpose();
 

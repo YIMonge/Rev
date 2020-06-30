@@ -2,7 +2,7 @@
 #define __REVMATRIX44_INL__
 #include "revTypedef.h"
 
-inline void revMatrix44::Multi( const revMatrix44& matrix )
+inline void revMatrix44::Mul( const revMatrix44& matrix )
 {
 	revMatrix44 mat = *this;
 	for( int i=0; i<4; i++ ){
@@ -15,7 +15,7 @@ inline void revMatrix44::Multi( const revMatrix44& matrix )
 	}
 }
 
-inline revMatrix44 revMatrix44::Multi(const revMatrix44& lhs, const revMatrix44& rhs)
+inline revMatrix44 revMatrix44::Mul(const revMatrix44& lhs, const revMatrix44& rhs)
 {
 	revMatrix44 mat;
 	for( int i=0; i<4; i++ ){
@@ -29,7 +29,7 @@ inline revMatrix44 revMatrix44::Multi(const revMatrix44& lhs, const revMatrix44&
 	return mat;
 }
 
-inline void revMatrix44::MultiScalar( float s )
+inline void revMatrix44::MulScalar( float s )
 {
 	for( int i=0; i<16; ++i ){
 		data[i] *= s;
@@ -129,8 +129,8 @@ inline void revMatrix44::RotationXYZ( const revVector3& vec )
 	ry.RotationY( vec.y );
 	rz.RotationZ( vec.z );
 
-	Multi( ry );
-	Multi( rz );
+	Mul( ry );
+	Mul( rz );
 }
 
 inline void revMatrix44::RotationXYZ( float x, float y, float z )
@@ -141,8 +141,8 @@ inline void revMatrix44::RotationXYZ( float x, float y, float z )
 	ry.RotationY( y );
 	rz.RotationZ( z );
 
-	Multi( ry );
-	Multi( rz );
+	Mul( ry );
+	Mul( rz );
 }
 
 inline void revMatrix44::RotationZYX( const revVector3& vec )
@@ -153,8 +153,8 @@ inline void revMatrix44::RotationZYX( const revVector3& vec )
 	ry.RotationY( vec.y );
 	rx.RotationX( vec.x );
 
-	Multi( ry );
-	Multi( rx );
+	Mul( ry );
+	Mul( rx );
 }
 
 inline void revMatrix44::RotationZYX( float x, float y, float z )
@@ -165,8 +165,8 @@ inline void revMatrix44::RotationZYX( float x, float y, float z )
 	ry.RotationY( y );
 	rx.RotationX( x );
 
-	Multi( ry );
-	Multi( rx );
+	Mul( ry );
+	Mul( rx );
 }
 
 
@@ -299,7 +299,7 @@ inline revVector3 operator * (const revMatrix44& mat, const revVector3& vec)
 
 inline revMatrix44 operator * (const revMatrix44& lhs, revMatrix44& rhs)
 {
-	return revMatrix44::Multi(lhs, rhs);
+	return revMatrix44::Mul(lhs, rhs);
 }
 
 inline revVector4 operator * (const revMatrix44& mat, const revVector4& vec)

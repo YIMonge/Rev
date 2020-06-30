@@ -181,7 +181,7 @@ void revMatrix44::CreatePerspectiverevMatrixRH( float fov_radian,  float aspect,
 
 }
 
-void revMatrix44::CreatePerspectiverevMatrixLH( float fov_radian,  float aspect,  float near,  float far)
+void revMatrix44::CreatePerspectiveMatrixLH( float fov_radian,  float aspect,  float near,  float far)
 {
 	Identity();
 	float fTemp = (1.0f / tanf(fov_radian / 2.0f));
@@ -196,7 +196,7 @@ void revMatrix44::CreatePerspectiverevMatrixLH( float fov_radian,  float aspect,
 
 }
 
-void revMatrix44::CreateViewPortrevMatrixRH(int width, int height, int near, int far)
+void revMatrix44::CreateViewPortMatrixRH(int width, int height, int near, int far)
 {
 	Identity();
 	_11 = (float)width/2;
