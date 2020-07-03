@@ -62,6 +62,7 @@ bool DX12Buffer::Update(const void* data, uint32 sizeOfCopyBytes, uint32 offset)
 		}
 		memcpy(mappedMemory, (uint32*)data + offset, sizeOfCopyBytes);
 		buffer->Unmap(0, nullptr);
+		mappedMemory = nullptr;
 	}
 	else {
 
