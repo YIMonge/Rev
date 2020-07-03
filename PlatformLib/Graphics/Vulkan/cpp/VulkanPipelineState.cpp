@@ -153,50 +153,6 @@ bool VulkanPipelineState::Create(revDevice* device, const PipelineStateDesc& des
     vertexInputStateCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32>(vertexInputAttributes.size());
     vertexInputStateCreateInfo.pVertexAttributeDescriptions = vertexInputAttributes.data();
 
-    // render pass
-    // TODO: create render pass from shader meta data.
-    /*
-    VkAttachmentDescription attachmentDescription = {};
-    attachmentDescription.format = VK_FORMAT_R8G8B8A8_UNORM;
-    attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
-    attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-    VkAttachmentReference attachmentReference;
-    attachmentReference.attachment = 0;
-    attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-    VkSubpassDescription subpassDescription;
-    subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    subpassDescription.flags = 0;
-    subpassDescription.inputAttachmentCount = 0;
-    subpassDescription.pInputAttachments = nullptr;
-    subpassDescription.colorAttachmentCount = 1;
-    subpassDescription.pColorAttachments = &attachmentReference;
-    subpassDescription.pResolveAttachments = nullptr;
-    subpassDescription.pDepthStencilAttachment = nullptr;
-    subpassDescription.preserveAttachmentCount = 0;
-    subpassDescription.pPreserveAttachments = nullptr;
-
-    VkRenderPassCreateInfo renderPassCreateInfo = {};
-    renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    renderPassCreateInfo.pNext = nullptr;
-    renderPassCreateInfo.attachmentCount = 1;
-    renderPassCreateInfo.pAttachments = &attachmentDescription;
-    renderPassCreateInfo.subpassCount = 1;
-    renderPassCreateInfo.pSubpasses = &subpassDescription;
-    renderPassCreateInfo.dependencyCount = 0;
-    renderPassCreateInfo.pDependencies = nullptr;
-    result = vkCreateRenderPass(device->GetDevice(), &renderPassCreateInfo, nullptr, &renderPass);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
-     */
-
     // pipeline cache
     VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
     pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
