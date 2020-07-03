@@ -28,6 +28,8 @@ public:
 		float m31, float m32, float m33, float m34,
 		float m41, float m42, float m43, float m44);
 	revMatrix44(float afNum[16]);
+	revMatrix44(const revVector3& x, const revVector3& y, const revVector3& z, const revVector3& w);
+	revMatrix44(const revVector4& x, const revVector4& y, const revVector4& z, const revVector4& w);
 	revMatrix44(const revMatrix44& m);
 	~revMatrix44();
 
@@ -54,11 +56,13 @@ public:
             void		Translation( const revVector3& vec );
     
             void		Translation( float x, float y, float z );
-			void		CreateLookAtrevMatrixRH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec);
-			void		CreatePerspectiverevMatrixRH(float fov_radian, float aspect, float near, float far);
+
+			void		CreateLookTo(const revVector3& eye, const revVector3& eyeDir, const revVector3& upvec);
+			void		CreateLookAtMatrixRH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec);
+			void		CreatePerspectiveMatrixRH(float fov_radian, float aspect, float near, float far);
 			void		CreateViewPortMatrixRH(int Width, int height, int Near, int Far);
 
-			void		CreateLookAtrevMatrixLH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec);
+			void		CreateLookAtMatrixLH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec);
 			void		CreatePerspectiveMatrixLH(float fov_radian, float aspect, float near, float far);
 
 			void		Transpose();
@@ -80,12 +84,18 @@ public:
 	static	revVector4	Vector4Transform(const revVector4& vec, const revMatrix44& matrix);
 
 
-			revVector3	operator * (const revVector3& vec);
-			revMatrix44	operator * (revMatrix44& matrix);
-			revVector4	operator * (const revVector4& vec);
+	revVector3	operator * (const revVector3& vec) {
+		return Vector3TransformCoord(vec, *this);
+	}
+	revMatrix44	operator * (revMatrix44& matrix)
+	{
+		return Mul(*this, matrix);
+	}
+	revVector4	operator * (const revVector4& vec)
+	{
+		return this->Vector4Transform(vec);
+	}
 };
-
-typedef revMatrix44 revMatrix44;
 
 #include "revMatrix44.inl"
 

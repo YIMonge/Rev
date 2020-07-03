@@ -5,28 +5,86 @@
 inline void revMatrix44::Mul( const revMatrix44& matrix )
 {
 	revMatrix44 mat = *this;
-	for( int i=0; i<4; i++ ){
-		for( int j=0; j<4; j++ ){
-			m[i][j] = mat.m[0][j] * matrix.m[i][0]
-				+ mat.m[1][j] * matrix.m[i][1]
-				+ mat.m[2][j] * matrix.m[i][2]
-				+ mat.m[3][j] * matrix.m[i][3];
-		}
-	}
+	f32 x = mat.m[0][0];
+	f32 y = mat.m[0][1];
+	f32 z = mat.m[0][2];
+	f32 w = mat.m[0][3];
+	m[0][0] = (matrix.m[0][0] * x) + (matrix.m[1][0] * y) + (matrix.m[2][0] * z) + (matrix.m[3][0] * w);
+	m[0][1] = (matrix.m[0][1] * x) + (matrix.m[1][1] * y) + (matrix.m[2][1] * z) + (matrix.m[3][1] * w);
+	m[0][2] = (matrix.m[0][2] * x) + (matrix.m[1][2] * y) + (matrix.m[2][2] * z) + (matrix.m[3][2] * w);
+	m[0][3] = (matrix.m[0][3] * x) + (matrix.m[1][3] * y) + (matrix.m[2][3] * z) + (matrix.m[3][3] * w);
+
+	x = mat.m[1][0];
+	y = mat.m[1][1];
+	z = mat.m[1][2];
+	w = mat.m[1][3];
+	m[1][0] = (matrix.m[0][0] * x) + (matrix.m[1][0] * y) + (matrix.m[2][0] * z) + (matrix.m[3][0] * w);
+	m[1][1] = (matrix.m[0][1] * x) + (matrix.m[1][1] * y) + (matrix.m[2][1] * z) + (matrix.m[3][1] * w);
+	m[1][2] = (matrix.m[0][2] * x) + (matrix.m[1][2] * y) + (matrix.m[2][2] * z) + (matrix.m[3][2] * w);
+	m[1][3] = (matrix.m[0][3] * x) + (matrix.m[1][3] * y) + (matrix.m[2][3] * z) + (matrix.m[3][3] * w);
+
+	x = mat.m[2][0];
+	y = mat.m[2][1];
+	z = mat.m[2][2];
+	w = mat.m[2][3];
+	m[2][0] = (matrix.m[0][0] * x) + (matrix.m[1][0] * y) + (matrix.m[2][0] * z) + (matrix.m[3][0] * w);
+	m[2][1] = (matrix.m[0][1] * x) + (matrix.m[1][1] * y) + (matrix.m[2][1] * z) + (matrix.m[3][1] * w);
+	m[2][2] = (matrix.m[0][2] * x) + (matrix.m[1][2] * y) + (matrix.m[2][2] * z) + (matrix.m[3][2] * w);
+	m[2][3] = (matrix.m[0][3] * x) + (matrix.m[1][3] * y) + (matrix.m[2][3] * z) + (matrix.m[3][3] * w);
+
+	x = mat.m[3][0];
+	y = mat.m[3][1];
+	z = mat.m[3][2];
+	w = mat.m[3][3];
+	m[3][0] = (matrix.m[0][0] * x) + (matrix.m[1][0] * y) + (matrix.m[2][0] * z) + (matrix.m[3][0] * w);
+	m[3][1] = (matrix.m[0][1] * x) + (matrix.m[1][1] * y) + (matrix.m[2][1] * z) + (matrix.m[3][1] * w);
+	m[3][2] = (matrix.m[0][2] * x) + (matrix.m[1][2] * y) + (matrix.m[2][2] * z) + (matrix.m[3][2] * w);
+	m[3][3] = (matrix.m[0][3] * x) + (matrix.m[1][3] * y) + (matrix.m[2][3] * z) + (matrix.m[3][3] * w);
+
 }
 
 inline revMatrix44 revMatrix44::Mul(const revMatrix44& lhs, const revMatrix44& rhs)
 {
-	revMatrix44 mat;
-	for( int i=0; i<4; i++ ){
-		for( int j=0; j<4; j++ ){
-			mat.m[i][j]  = lhs.m[0][j] * rhs.m[i][0]
-				+ lhs.m[1][j] * rhs.m[i][1]
-				+ lhs.m[2][j] * rhs.m[i][2]
-				+ lhs.m[3][j] * rhs.m[i][3];
-		}
-	}
-	return mat;
+	revMatrix44 result;
+	f32 x = lhs.m[0][0];
+	f32 y = lhs.m[0][1];
+	f32 z = lhs.m[0][2];
+	f32 w = lhs.m[0][3];
+	result.m[0][0] = (rhs.m[0][0] * x) + (rhs.m[1][0] * y) + (rhs.m[2][0] * z) + (rhs.m[3][0] * w);
+	result.m[0][1] = (rhs.m[0][1] * x) + (rhs.m[1][1] * y) + (rhs.m[2][1] * z) + (rhs.m[3][1] * w);
+	result.m[0][2] = (rhs.m[0][2] * x) + (rhs.m[1][2] * y) + (rhs.m[2][2] * z) + (rhs.m[3][2] * w);
+	result.m[0][3] = (rhs.m[0][3] * x) + (rhs.m[1][3] * y) + (rhs.m[2][3] * z) + (rhs.m[3][3] * w);
+
+	x = lhs.m[1][0];
+	y = lhs.m[1][1];
+	z = lhs.m[1][2];
+	w = lhs.m[1][3];
+	result.m[1][0] = (rhs.m[0][0] * x) + (rhs.m[1][0] * y) + (rhs.m[2][0] * z) + (rhs.m[3][0] * w);
+	result.m[1][1] = (rhs.m[0][1] * x) + (rhs.m[1][1] * y) + (rhs.m[2][1] * z) + (rhs.m[3][1] * w);
+	result.m[1][2] = (rhs.m[0][2] * x) + (rhs.m[1][2] * y) + (rhs.m[2][2] * z) + (rhs.m[3][2] * w);
+	result.m[1][3] = (rhs.m[0][3] * x) + (rhs.m[1][3] * y) + (rhs.m[2][3] * z) + (rhs.m[3][3] * w);
+
+	x = lhs.m[2][0];
+	y = lhs.m[2][1];
+	z = lhs.m[2][2];
+	w = lhs.m[2][3];
+	result.m[2][0] = (rhs.m[0][0] * x) + (rhs.m[1][0] * y) + (rhs.m[2][0] * z) + (rhs.m[3][0] * w);
+	result.m[2][1] = (rhs.m[0][1] * x) + (rhs.m[1][1] * y) + (rhs.m[2][1] * z) + (rhs.m[3][1] * w);
+	result.m[2][2] = (rhs.m[0][2] * x) + (rhs.m[1][2] * y) + (rhs.m[2][2] * z) + (rhs.m[3][2] * w);
+	result.m[2][3] = (rhs.m[0][3] * x) + (rhs.m[1][3] * y) + (rhs.m[2][3] * z) + (rhs.m[3][3] * w);
+
+	x = lhs.m[3][0];
+	y = lhs.m[3][1];
+	z = lhs.m[3][2];
+	w = lhs.m[3][3];
+	result.m[3][0] = (rhs.m[0][0] * x) + (rhs.m[1][0] * y) + (rhs.m[2][0] * z) + (rhs.m[3][0] * w);
+	result.m[3][1] = (rhs.m[0][1] * x) + (rhs.m[1][1] * y) + (rhs.m[2][1] * z) + (rhs.m[3][1] * w);
+	result.m[3][2] = (rhs.m[0][2] * x) + (rhs.m[1][2] * y) + (rhs.m[2][2] * z) + (rhs.m[3][2] * w);
+	result.m[3][3] = (rhs.m[0][3] * x) + (rhs.m[1][3] * y) + (rhs.m[2][3] * z) + (rhs.m[3][3] * w);
+
+
+
+	return result;
 }
 
 inline void revMatrix44::MulScalar( float s )
@@ -297,7 +355,7 @@ inline revVector3 operator * (const revMatrix44& mat, const revVector3& vec)
 	return revMatrix44::Vector3TransformCoord(vec, mat);
 }
 
-inline revMatrix44 operator * (const revMatrix44& lhs, revMatrix44& rhs)
+inline revMatrix44 operator * (const revMatrix44& lhs, const revMatrix44& rhs)
 {
 	return revMatrix44::Mul(lhs, rhs);
 }
@@ -306,5 +364,6 @@ inline revVector4 operator * (const revMatrix44& mat, const revVector4& vec)
 {
 	return mat.Vector4Transform(vec);
 }
+
 
 #endif

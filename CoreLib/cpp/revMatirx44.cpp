@@ -29,6 +29,53 @@ revMatrix44::revMatrix44(const revMatrix44& m)
 	*this = m;
 }
 
+revMatrix44::revMatrix44(const revVector3& x, const revVector3& y, const revVector3& z, const revVector3& w)
+{
+	m[0][0] = x.data[0];
+	m[0][1] = x.data[1];
+	m[0][2] = x.data[2];
+	m[0][3] = 0.0f;
+
+	m[1][0] = y.data[0];
+	m[1][1] = y.data[1];
+	m[1][2] = y.data[2];
+	m[1][3] = 0.0f;
+
+	m[2][0] = z.data[0];
+	m[2][1] = z.data[1];
+	m[2][2] = z.data[2];
+	m[2][3] = 0.0f;
+
+	m[3][0] = w.data[0];
+	m[3][1] = w.data[1];
+	m[3][2] = w.data[2];
+	m[3][3] = 1.0f;
+}
+
+revMatrix44::revMatrix44(const revVector4& x, const revVector4& y, const revVector4& z, const revVector4& w)
+{
+	m[0][0] = x.data[0];
+	m[0][1] = x.data[1];
+	m[0][2] = x.data[2];
+	m[0][3] = x.data[2];
+
+	m[1][0] = y.data[0];
+	m[1][1] = y.data[1];
+	m[1][2] = y.data[2];
+	m[1][3] = y.data[2];
+
+	m[2][0] = z.data[0];
+	m[2][1] = z.data[1];
+	m[2][2] = z.data[2];
+	m[2][3] = z.data[2];
+
+	m[3][0] = w.data[0];
+	m[3][1] = w.data[1];
+	m[3][2] = w.data[2];
+	m[3][3] = w.data[3];
+}
+
+
 revMatrix44::~revMatrix44()
 {
 }
@@ -130,54 +177,37 @@ revMatrix44 revMatrix44::Inverse()
 }
 
 
-void revMatrix44::CreateLookAtrevMatrixRH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec)
+
+void revMatrix44::CreateLookTo(const revVector3& eye, const revVector3& eyeDir, const revVector3& upVec)
 {
-	revVector3 axisX, axisY, axisZ;
+	revVector3 z = revVector3::Normalize(eyeDir);
+	revVector3 x = revVector3::Normalize(revVector3::Cross(upVec, z));
+	revVector3 y = revVector3::Cross(z, x);
 
-	Identity();
+	revMatrix44 o(x, y, z, revVector3::Zero());
+	revMatrix44 t;
+	t.Translation(-1.0f * eye);
 
-	axisZ = eye - lookat;
-	axisZ.normalize();
-
-	axisX = upvec.cross(axisZ);
-	axisX.normalize();
-
-	axisY = axisZ.cross(axisX);
-
-	_11 = axisX.x;
-	_21 = axisX.y;
-	_31 = axisX.z;
-	_41 = -axisX.dot(eye);
-
-	_12 = axisY.x;
-	_22 = axisY.y;
-	_32 = axisY.z;
-	_42 = -axisY.dot(eye);
-
-	_13 = axisZ.x;
-	_23 = axisZ.y;
-	_33 = axisZ.z;
-	_43 = -axisZ.dot(eye);
+	*this = o * t;
 }
 
-void revMatrix44::CreateLookAtrevMatrixLH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec)
+void revMatrix44::CreateLookAtMatrixLH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec)
 {
-	CreateLookAtrevMatrixRH(eye, lookat, upvec);
-	Transpose();
+	CreateLookTo(eye, lookat - eye, upvec);
+}
+
+void revMatrix44::CreateLookAtMatrixRH(const revVector3& eye, const revVector3& lookat, const revVector3& upvec)
+{
+	CreateLookTo(eye, eye - lookat, upvec);
 }
 
 
-void revMatrix44::CreatePerspectiverevMatrixRH( float fov_radian,  float aspect,  float near,  float far)
+
+void revMatrix44::CreatePerspectiveMatrixRH( float fov_radian,  float aspect,  float near,  float far)
 {
 	Identity();
-	float fTemp = (1.0f / tanf(fov_radian / 2.0f));
 
-	_11 = fTemp / aspect;
-	_22 = fTemp;
-	_33 = (far)/(near - far);
-	_34 = -1.0f;
-	_43 = (far * near)/(near - far);
-	_44 =  0.0f;
+	
 
 }
 
@@ -189,9 +219,9 @@ void revMatrix44::CreatePerspectiveMatrixLH( float fov_radian,  float aspect,  f
 
 	_11 = fTemp / aspect;
 	_22 = fTemp;
-	_33 = (far) / near_to_far;
+	_33 = -(far) / near_to_far;
 	_34 = 1.0f;
-	_43 = -(far * near) / near_to_far;
+	_43 = (far * near) / near_to_far;
 	_44 =  0.0f;
 
 }
