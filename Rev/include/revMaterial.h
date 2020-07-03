@@ -81,11 +81,34 @@ public:
     class DepthStencilState
     {
     public:
-        DepthStencilState(){}
+        DepthStencilState() : 
+			enableDepthTest(true),
+			enableDepthWrite(true),
+			enableStanecil(false),
+			depthFunc(static_cast<uint8>(COMPARISON_FUNC::LESS_EQUAL))
+		{}
 
+		bool IsEnableDepthTest() const { return enableDepthTest; }
+		bool IsEnableDepthWrite() const { return enableDepthWrite; }
+		COMPARISON_FUNC GetDepthFunc() const { return static_cast<COMPARISON_FUNC>(depthFunc); }
+
+		bool IsEnableStencil() const { return enableStanecil; }
+
+		SERIALIZE_FUNC()
+		{
+			archive(REV_NVP(enableDepthTest),
+				REV_NVP(enableDepthWrite),
+				REV_NVP(enableStanecil),
+				REV_NVP(depthFunc)
+			);
+		}
     private:
+		uint8 depthFunc;
+		bool enableDepthTest;
+		bool enableDepthWrite;
+		bool enableStanecil;
 
-    };
+	};
 
     class RasterizationState
     {
@@ -116,6 +139,7 @@ public:
     const revShader* GetShader(SHADER_TYPE type) const { return shader[static_cast<uint32>(type)]; }
     const revArray<revTexture*> GetTextures() const { return textures; }
     const BlendState& GetBlendState() const { return blend; }
+	const DepthStencilState& GetDepthStencil() const { return depthStencil; }
     const RasterizationState& GetRasterization() const { return rasterization; }
     bool isDirty() const { return dirty; }
 
@@ -151,6 +175,7 @@ public:
     {
         archive(
 			REV_NVP(blend),
+			REV_NVP(depthStencil),
             REV_NVP(rasterization)
         );
     }
@@ -160,6 +185,7 @@ protected:
     revShader* shader[2];
     revArray<revTexture*> textures; // TODO: material batch
     BlendState blend;
+	DepthStencilState depthStencil;
     RasterizationState rasterization;
     bool dirty;
 };

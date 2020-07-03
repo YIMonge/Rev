@@ -3,8 +3,9 @@
 
 bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, const DX12RootSignature& rootSignature, const revRect& viewportRect, const revRect& scissorRect)
 {
-	auto blendState = material.GetBlendState();
-	auto rasterizerState = material.GetRasterization();
+	const auto& blendState = material.GetBlendState();
+	const auto& rasterizerState = material.GetRasterization();
+	const auto& depthStencil = material.GetDepthStencil();
 
 	D3D12_RASTERIZER_DESC rasterizerDesc;
 	rasterizerDesc.FillMode = ConvertToDXFillMode(rasterizerState.GetPolygonMode());
@@ -13,7 +14,7 @@ bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, c
 	rasterizerDesc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
 	rasterizerDesc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
 	rasterizerDesc.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
-	rasterizerDesc.DepthClipEnable = true;
+	rasterizerDesc.DepthClipEnable = depthStencil.IsEnableDepthTest();
 	rasterizerDesc.MultisampleEnable = false;
 	rasterizerDesc.AntialiasedLineEnable = false;
 	rasterizerDesc.ForcedSampleCount = 0;
@@ -55,8 +56,14 @@ bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, c
 		}
 	}
 
-	auto pixelShader = material.GetPixelShader();
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc;
+	depthStencilDesc.DepthEnable = depthStencil.IsEnableDepthTest();
+	depthStencilDesc.DepthWriteMask = depthStencil.IsEnableDepthWrite() ? D3D12_DEPTH_WRITE_MASK_ALL : D3D12_DEPTH_WRITE_MASK_ZERO;
+	depthStencilDesc.DepthFunc = ConvertToDXComparisonFunc(depthStencil.GetDepthFunc());
 
+	depthStencilDesc.StencilEnable = depthStencil.IsEnableStencil();
+
+	auto pixelShader = material.GetPixelShader();
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineStateDesc;
 	memset(&pipelineStateDesc, 0, sizeof(pipelineStateDesc));
 	pipelineStateDesc.InputLayout = { &inputElements[0], static_cast<uint32>(inputElements.size()) };
@@ -65,15 +72,13 @@ bool DX12PipelineState::Create(revDevice* device, const revMaterial& material, c
 	pipelineStateDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader->GetHandle());
 	pipelineStateDesc.RasterizerState = rasterizerDesc;
 	pipelineStateDesc.BlendState = blendDesc;
-	pipelineStateDesc.DepthStencilState.DepthEnable = false;
-	pipelineStateDesc.DepthStencilState.StencilEnable = false;
+	pipelineStateDesc.DepthStencilState = depthStencilDesc;
 	pipelineStateDesc.SampleMask = UINT_MAX;
 	pipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	pipelineStateDesc.NumRenderTargets = 1;
 	pipelineStateDesc.RTVFormats[0] = ConvertToDXFormat(GRAPHICS_FORMAT::R8G8B8A8_UNORM);
 	pipelineStateDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 	pipelineStateDesc.SampleDesc.Count = 1;
-
 	auto dxDevice = device->GetDevice();
 	HRESULT hr = dxDevice->CreateGraphicsPipelineState(&pipelineStateDesc,
 			IID_PPV_ARGS(&pipelineState)

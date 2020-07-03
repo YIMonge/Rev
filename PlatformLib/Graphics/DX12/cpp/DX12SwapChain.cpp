@@ -138,7 +138,7 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
 
-	auto chunkForDepthStencil = depthStencilHeap.Allocation(1);
+	auto chunkForDepthStencil = depthStencilHeap.Allocation(bufferNum);
 	dxdevice->CreateDepthStencilView(depthStencil, &depthStencilDesc, chunkForDepthStencil.GetHandle());
 
 	dxgiFactory->Release();
@@ -162,6 +162,7 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 void DX12SwapChain::Appply(DX12CommandList& commandList, const revColor& clearColor)
 {
 	auto dxCommandList = commandList.GetList();
+	ID3D12Resource* renderTarget = GetCurrentRenderTarget();
 
 	D3D12_RESOURCE_BARRIER barrier;
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -169,18 +170,21 @@ void DX12SwapChain::Appply(DX12CommandList& commandList, const revColor& clearCo
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	barrier.Transition.pResource = GetCurrentRenderTarget();
+	barrier.Transition.pResource = renderTarget;
 
 	auto renderTargetHandle = renderTargetHeap.GetCPUHandle(frameIndex);
+	auto depthStenclisHandle = depthStencilHeap.GetCPUHandle();
 	dxCommandList->ResourceBarrier(1, &barrier);
 	dxCommandList->OMSetRenderTargets(1,
 		&renderTargetHandle,
-		FALSE, 
-		nullptr);
+		FALSE,
+		//nullptr);
+		&depthStenclisHandle);
 	dxCommandList->ClearRenderTargetView(renderTargetHandle, clearColor.data, 0, nullptr);
+	dxCommandList->ClearDepthStencilView(depthStenclisHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 	// for close
-	commandList.AddTransitionBarrier(GetCurrentRenderTarget(),
+	commandList.AddTransitionBarrier(renderTarget,
 		D3D12_RESOURCE_STATE_RENDER_TARGET,
 		D3D12_RESOURCE_STATE_PRESENT
 		);
