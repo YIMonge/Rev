@@ -29,6 +29,11 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
         NATIVE_LOGE("Vulkan device create failed. file:%s, line:%d", __FILE__, __LINE__);
         return;
     }
+	if (!CreateFence()) {
+		NATIVE_LOGE("Vulkan command list create failed. file:%s, line:%d", __FILE__, __LINE__);
+		return;
+	}
+
     if(!swapChain.Create(&device)) {
         NATIVE_LOGE("Vulkan swapchain create failed. file:%s, line:%d", __FILE__, __LINE__);
         return;
@@ -54,7 +59,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 	triangleVertexBuffer->Create(triangleVertices, sizeof(float) * 5, 3);
 
 	constantBuffer = new VulkanConstantBuffer(&device);
-    constantBuffer->Create(nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::STATIC);
+    constantBuffer->Create(nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::DYNAMIC);
 
     VulkanShader shader[2];
 #if !_CBUFFER && _TEX
@@ -75,16 +80,16 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     texture.LoadFromFile(&device, "sample_tex.png");
     sampler.Create(&device, texture);
 
+	renderPass.Create(&device, &swapChain, mat);
+	swapChain.CreateFrameBuffer(renderPass);
     
     device.GetGlobalCommandList().Close();
     ExecuteCommand(device.GetGlobalCommandList());
     // TODO: wait for fence move to device from swapchain.
-    swapChain.WaitForPreviousFrame();
-    
-    //-----------------------------------------------------------------------------
+	WaitForFence();
+	ResetFence();
 
-    renderPass.Create(&device, &swapChain, mat);
-    swapChain.CreateFrameBuffer(renderPass);
+    //-----------------------------------------------------------------------------
 
     revDescriptorBindingDesc descriptorBindingDesc;
     descriptorBindingDesc.AddMaterial(mat);
@@ -113,75 +118,12 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 #if _TEX
 	chunk = descriptorSet.Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::TEXTURE_SHADER_RESOURCE_VIEW));
     textureView.Create(&device, texture, sampler, chunk);
+	chunk = descriptorSet.Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::SAMPLER));
+	samplerView.Create(&device, sampler, chunk);
 #endif
 #endif
 
-#if _TEST
-    auto descriptorSetHandle = descriptorSet.GetHandle();
-
-    VkDescriptorBufferInfo descriptorBufferInfo = {};
-    descriptorBufferInfo.buffer = *constantBuffer.GetHandlePtr();
-    descriptorBufferInfo.offset = 0;
-    descriptorBufferInfo.range = sizeof(revVector4) * 1024;
-
-    VkWriteDescriptorSet writeDescriptorSet[2];
-    writeDescriptorSet[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeDescriptorSet[0].pNext = nullptr;
-    writeDescriptorSet[0].dstSet = descriptorSetHandle;
-    writeDescriptorSet[0].dstBinding = 0;
-    writeDescriptorSet[0].dstArrayElement = 0;
-    writeDescriptorSet[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    writeDescriptorSet[0].descriptorCount = 1;
-    writeDescriptorSet[0].pImageInfo = nullptr;
-    writeDescriptorSet[0].pBufferInfo = &descriptorBufferInfo;
-    writeDescriptorSet[0].pTexelBufferView = nullptr;
-
-    //- tex
-    VkImageViewCreateInfo imageViewCreateInfo = {};
-    imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    imageViewCreateInfo.pNext = nullptr;
-    imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    imageViewCreateInfo.components =
-            {
-                    VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G,
-                    VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A,
-            };
-    imageViewCreateInfo.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-    imageViewCreateInfo.flags = 0;
-    imageViewCreateInfo.format = ConvertToVKFormat(texture.GetFormat());
-    imageViewCreateInfo.image = texture.GetHandle();
-
-    VkImageView imageView;
-    VkResult result = vkCreateImageView(device.GetDevice(), &imageViewCreateInfo, nullptr, &imageView);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return;
-    }
-
-    VkDescriptorImageInfo descriptorImageInfo = {};
-    descriptorImageInfo.sampler = sampler.GetHandle();
-    descriptorImageInfo.imageView = imageView;
-    descriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
-    writeDescriptorSet[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeDescriptorSet[1].pNext = nullptr;
-    writeDescriptorSet[1].dstSet = descriptorSetHandle;
-    writeDescriptorSet[1].dstBinding = 0;
-    writeDescriptorSet[1].dstArrayElement = 0;
-    writeDescriptorSet[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    writeDescriptorSet[1].descriptorCount = 1;
-    writeDescriptorSet[1].pImageInfo = &descriptorImageInfo;
-    writeDescriptorSet[1].pBufferInfo = nullptr;
-    writeDescriptorSet[1].pTexelBufferView = nullptr;
-
-    vkUpdateDescriptorSets(device.GetDevice(),
-                           2,                               // descriptorWriteCount
-                           writeDescriptorSet,             // pDescriptorWrites
-                           0,                                      // descriptorCopyCount
-                           nullptr);
-#else
     descriptorSet.Update();
-#endif
 
     // Make Draw Command
     auto& commandLists = device.GetCommandLists();
@@ -189,10 +131,11 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
         auto& commandList = commandLists[i];
         commandList.Open();
         auto& frameBuffer = swapChain.GetFrameBuffer();
+		/*
         commandList.AddTransitionBarrier(frameBuffer.GetFrameBufferImage(i),
                                          VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
                                          VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
-
+			*/							
         renderPass.Begin(commandList, frameBuffer.GetFrameBuffer(i), clearValue, swapChain.GetDisplaySize());
         pipelineState.Apply(commandList);
         descriptorSet.Apply(commandList, pipelineState.GetPipelineLayout());
@@ -202,10 +145,11 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
         vkCmdDraw(commandList.GetList(), 3, 1, 0, 0);
 
         renderPass.End(commandList);
+		/*
         commandList.AddTransitionBarrier(frameBuffer.GetFrameBufferImage(i),
                                          VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
                                          VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
-
+			*/							 
         commandList.Close();
     }
 
@@ -231,11 +175,13 @@ void VulkanRenderer::Render()
 
     auto& commandList = device.GetCommandLists()[swapChain.GetCurrentFrameIndex()];
      ExecuteCommand(commandList, true);
-     swapChain.WaitForPreviousFrame();
+	 WaitForFence();
      swapChain.Present();
+	 ResetFence();
+	 commandList.ReleaseResource();
 }
 
-void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists, bool needSemaphore)
+void VulkanRenderer::ExecuteCommand(revArray<VulkanCommandList>& lists, bool needSemaphore)
 {
     uint32 length = static_cast<uint32>(lists.size());
     revArray<revGraphicsCommandBuffer> commandlists(lists.size());
@@ -254,13 +200,13 @@ void VulkanRenderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists, boo
     
     submitInfo.waitSemaphoreCount = needSemaphore ? 1 : 0;
     submitInfo.pWaitSemaphores = needSemaphore ? swapChain.GetSemaphore() : nullptr;
-    VkResult result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, swapChain.GetFence());
+    VkResult result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, fence);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
     }
 }
 
-void VulkanRenderer::ExecuteCommand(revGraphicsCommandList& list, bool needSemaphore)
+void VulkanRenderer::ExecuteCommand(VulkanCommandList& list, bool needSemaphore)
 {
     VkPipelineStageFlags  waitStageMask =  VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     VkSubmitInfo submitInfo = {};
@@ -274,11 +220,45 @@ void VulkanRenderer::ExecuteCommand(revGraphicsCommandList& list, bool needSemap
     
     submitInfo.waitSemaphoreCount = needSemaphore ? 1 : 0;
     submitInfo.pWaitSemaphores = needSemaphore ? swapChain.GetSemaphore() : nullptr;
-    VkResult result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, swapChain.GetFence());
+    VkResult result = vkQueueSubmit(device.GetQueue(), 1, &submitInfo, fence);
     if(result != VK_SUCCESS) {
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
     }
 }
 
+bool VulkanRenderer::CreateFence()
+{
+	auto device = this->device.GetDevice();
+	// create fence and semaphore
+	VkFenceCreateInfo fenceCreateInfo = {};
+	fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	fenceCreateInfo.pNext = nullptr;
+	fenceCreateInfo.flags = 0;
+
+	VkResult result = vkCreateFence(device, &fenceCreateInfo, nullptr, &fence);
+	if (result != VK_SUCCESS) {
+		NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+		return false;
+	}
+	ResetFence();
+	return true;
+}
+
+void VulkanRenderer::WaitForFence()
+{
+	VkResult result = vkWaitForFences(device.GetDevice(), 1, &fence, VK_TRUE, 100000000);
+	if (result != VK_SUCCESS) {
+		NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+	}
+}
+
+void VulkanRenderer::ResetFence()
+{
+	VkResult result = vkResetFences(device.GetDevice(), 1, &fence);
+	if (result != VK_SUCCESS) {
+		NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+		return;
+	}
+}
 
 #endif

@@ -56,6 +56,6 @@ revGraphicsBuffer* revGraphics::CreateIndexBuffer()
 #if defined(_USE_DIRECTX12)
 	return new DX12IndexBuffer(device);
 #elif defined(_USE_VULKAN)
-	return new (device);
+	return new VulkanIndexBuffer(device);
 #endif
 }

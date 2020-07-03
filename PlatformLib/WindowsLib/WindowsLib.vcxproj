@@ -485,6 +485,7 @@
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderer.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderPass.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanSampler.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanSamplerView.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanShader.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanSwapChain.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanTexture.h" />
@@ -529,6 +530,7 @@
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanRenderer.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanRenderPass.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSampler.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSamplerView.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanShader.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSwapChain.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanTexture.cpp" />

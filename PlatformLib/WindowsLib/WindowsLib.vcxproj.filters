@@ -191,6 +191,9 @@
     <ClInclude Include="..\Graphics\DX12\include\DX12IndexBufferView.h">
       <Filter>Graphics\DX12\header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanSamplerView.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\File.cpp">
@@ -315,6 +318,9 @@
     </ClCompile>
     <ClCompile Include="..\Graphics\DX12\cpp\DX12IndexBufferView.cpp">
       <Filter>Graphics\DX12\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSamplerView.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

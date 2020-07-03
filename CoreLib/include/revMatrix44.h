@@ -84,12 +84,17 @@ public:
 	static	revVector4	Vector4Transform(const revVector4& vec, const revMatrix44& matrix);
 
 
-	revVector3	operator * (const revVector3& vec) {
+	revVector3	operator * (const revVector3& vec) 
+	{
 		return Vector3TransformCoord(vec, *this);
 	}
 	revMatrix44	operator * (revMatrix44& matrix)
 	{
 		return Mul(*this, matrix);
+	}
+	void	operator *= (revMatrix44& matrix)
+	{
+		*this = Mul(*this, matrix);
 	}
 	revVector4	operator * (const revVector4& vec)
 	{

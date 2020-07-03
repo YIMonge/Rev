@@ -16,32 +16,22 @@ public:
     {}
     virtual ~VulkanBuffer(){}
 
-    virtual bool Create(const revArray<revVector3>& data, USAGE usage = USAGE::STATIC);
-    virtual bool Create(const revArray<revVector4>& data, USAGE usage = USAGE::STATIC);
-    virtual bool Create(const revArray<float>& data, USAGE usage = USAGE::STATIC);
-    virtual bool Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
+    virtual bool Create(const void* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
     virtual void Destroy();
 
-    bool Update(const float* data, uint32 sizeOfCopyBytes, uint32 offset = 0);
-
-    enum class BUFFER_TYPE
-    {
-        VERTEX,
-        CONSTANT,
-    };
+    bool Update(const void* data, uint32 sizeOfCopyBytes, uint32 offset = 0);
 
 protected:
-    BUFFER_TYPE type;
+	VkBufferUsageFlags bufferUsageFlags;
+
 private:
+	bool CreateBuffer(uint32 size, VkBufferUsageFlags usageFlag, VkMemoryPropertyFlags properties, revGraphicsResource& buffer, VkDeviceMemory& memory);
+
     bool MapMemoryTypeToIndex(uint32 typeBits, VkFlags mask, uint32* typeIndex);
 
     void* mappedMemory;
-    VkDeviceMemory deviceMemory;
-    VkMemoryRequirements memoryRequirements;
+    VkDeviceMemory deviceMemory; 
     VkMemoryAllocateInfo memoryAllocateInfo;
-
-
-
 };
 
 class VulkanVertexBuffer : public VulkanBuffer
@@ -50,7 +40,7 @@ public:
     VulkanVertexBuffer(revDevice* device) :
 		VulkanBuffer(device)
     {
-        type = BUFFER_TYPE::VERTEX;
+		bufferUsageFlags = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     }
     virtual ~VulkanVertexBuffer(){}
 };
@@ -61,10 +51,21 @@ public:
     VulkanConstantBuffer(revDevice* device) :
 		VulkanBuffer(device)
     {
-        type = BUFFER_TYPE::CONSTANT;
+		bufferUsageFlags = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
     }
     virtual ~VulkanConstantBuffer(){}
 
+};
+
+class VulkanIndexBuffer : public VulkanBuffer
+{
+public:
+	VulkanIndexBuffer(revDevice* device) :
+		VulkanBuffer(device)
+	{
+		bufferUsageFlags = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+	}
+	virtual ~VulkanIndexBuffer(){}
 };
 
 #endif

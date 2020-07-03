@@ -15,6 +15,7 @@
 #include "VulkanPipelineState.h"
 #include "VulkanRenderPass.h"
 #include "VulkanConstantBufferView.h"
+#include "VulkanSamplerView.h"
 
 class VulkanRenderer : public revRenderer
 {
@@ -29,10 +30,11 @@ public:
 
 	void Render();
 private:
-    void ExecuteCommand(revArray<revGraphicsCommandList>& lists, bool needSemaphore = false);
-    void ExecuteCommand(revGraphicsCommandList& list, bool needSemaphore = false);
-
-    void setImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldImageLayout, VkImageLayout newImageLayout, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
+    void ExecuteCommand(revArray<VulkanCommandList>& lists, bool needSemaphore = false);
+    void ExecuteCommand(VulkanCommandList& list, bool needSemaphore = false);
+	bool CreateFence();
+	void WaitForFence();
+	void ResetFence();
 
     bool initialized;
 
@@ -43,6 +45,7 @@ private:
 	VulkanDescriptorSetLayout descriptorSetLayout;
 	VulkanPipelineState pipelineState;
     VulkanDescriptorPool descriptorPool;
+	VkFence fence;
 
 	// clear color
 	revColor clearValue;
@@ -55,6 +58,7 @@ private:
 	VulkanTexture texture;
 	VulkanTextureView textureView;
 	VulkanSampler sampler;
+	VulkanSamplerView samplerView;
 	VulkanRenderPass renderPass;
 	revMaterial mat;
 };

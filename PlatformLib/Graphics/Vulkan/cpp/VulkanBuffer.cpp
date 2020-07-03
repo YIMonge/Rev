@@ -5,100 +5,110 @@
 #include "VulkanBuffer.h"
 #include "Log.h"
 
-
-bool VulkanBuffer::Create(const revArray<revVector3>& data, USAGE usage)
+bool VulkanBuffer::CreateBuffer(uint32 size, VkBufferUsageFlags usageFlag, VkMemoryPropertyFlags properties, revGraphicsResource& buffer, VkDeviceMemory& memory)
 {
-    return Create(static_cast<const float*>(&(data[0].data[0])), sizeof(revVector3), static_cast<uint32>(data.size()));
+	const auto& device = this->device->GetDevice();
+	
+	VkBufferCreateInfo bufferCreateInfo = {};
+	bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	bufferCreateInfo.pNext = nullptr;
+	bufferCreateInfo.size = size;
+	bufferCreateInfo.usage = usageFlag;
+	bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+	VkResult result = vkCreateBuffer(device, &bufferCreateInfo, nullptr, &buffer);
+	if (result != VK_SUCCESS) {
+		NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+		return false;
+	}
+
+	VkMemoryRequirements memoryRequirements;
+	vkGetBufferMemoryRequirements(device, buffer, &memoryRequirements);
+
+	memoryAllocateInfo = {};
+	memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	memoryAllocateInfo.allocationSize = memoryRequirements.size;
+	if (!MapMemoryTypeToIndex(memoryRequirements.memoryTypeBits,
+		properties,
+		&memoryAllocateInfo.memoryTypeIndex)) {
+		NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+		return false;
+	}
+
+	result = vkAllocateMemory(device, &memoryAllocateInfo, nullptr, &memory);
+	if (result != VK_SUCCESS) {
+		NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+		return false;
+	}
+
+	result = vkBindBufferMemory(device, buffer, memory, 0);
+	if (result != VK_SUCCESS) {
+		NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+		return false;
+	}
+
+
+	return true;
 }
 
-bool VulkanBuffer::Create(const revArray<revVector4>& data, USAGE usage)
-{
-    return Create(static_cast<const float*>(&(data[0].data[0])), sizeof(revVector4), static_cast<uint32>(data.size()));
-}
 
-bool VulkanBuffer::Create(const revArray<float>& data, USAGE usage)
-{
-    return Create(static_cast<const float*>(&data[0]), sizeof(float), static_cast<uint32>(data.size()));
-}
-
-bool VulkanBuffer::Create(const float* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
+bool VulkanBuffer::Create(const void* data, uint32 sizeOfBytes, uint32 length, USAGE usage)
 {
     this->usage = usage;
     this->length = length;
     this->sizeOfBytes = sizeOfBytes;
 
     uint32 size = sizeOfBytes * length;
-
-    VulkanDevice* vulkanDevice = (VulkanDevice*)(device);
-    VkDevice revDevice = vulkanDevice->GetDevice();
-    VkBufferCreateInfo bufferCreateInfo = {};
-    bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferCreateInfo.pNext = nullptr;
-    bufferCreateInfo.size = size;
-    bufferCreateInfo.usage = type == BUFFER_TYPE::VERTEX ? VK_BUFFER_USAGE_VERTEX_BUFFER_BIT : VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-    bufferCreateInfo.flags = 0;
-    bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    bufferCreateInfo.queueFamilyIndexCount = 1;
-    bufferCreateInfo.pQueueFamilyIndices = vulkanDevice->GetQueueFamilyIndexPtr();
-
-    VkResult result = vkCreateBuffer(revDevice, &bufferCreateInfo, nullptr, &buffer);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
-    // prepare for allocation
-    vkGetBufferMemoryRequirements(revDevice, buffer, &memoryRequirements);
-
-    memoryAllocateInfo = {};
-    memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    memoryAllocateInfo.pNext = nullptr;
-    memoryAllocateInfo.allocationSize = memoryRequirements.size;
-    memoryAllocateInfo.memoryTypeIndex = 0;
-    
-    if(!MapMemoryTypeToIndex(memoryRequirements.memoryTypeBits,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-            &memoryAllocateInfo.memoryTypeIndex)){
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
-
-    // allocate memory
-    result = vkAllocateMemory(revDevice, &memoryAllocateInfo, nullptr, &deviceMemory);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
-        return false;
-    }
-
-    Update(data, size);
-
-    result = vkBindBufferMemory(revDevice, buffer, deviceMemory, 0);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
+	VkBufferUsageFlags usageFlags = bufferUsageFlags;
+	VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+	if (usage == USAGE::STATIC) {
+		usageFlags |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+		properties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+	}
+	CreateBuffer(size, usageFlags, properties, buffer, deviceMemory);
+	Update(data, size);
 
     return true;
 }
 
-bool VulkanBuffer::Update(const float* data, uint32 sizeOfCopyBytes, uint32 offset)
+bool VulkanBuffer::Update(const void* data, uint32 sizeOfCopyBytes, uint32 offset)
 {
-    // TODO:offset
-    revGraphicsDevice revDevice = device->GetDevice();
+    revGraphicsDevice device = this->device->GetDevice();
 
-    if(mappedMemory == nullptr) {
-        VkResult result = vkMapMemory(revDevice, deviceMemory, 0, memoryAllocateInfo.allocationSize, 0, &mappedMemory);
-        if (result != VK_SUCCESS) {
-            NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
-            return false;
-        }
+	if (usage == USAGE::DYNAMIC) {
+		if (mappedMemory == nullptr) {
+			VkResult result = vkMapMemory(device, deviceMemory, 0, memoryAllocateInfo.allocationSize, 0, &mappedMemory);
+			if (result != VK_SUCCESS) {
+				NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+				return false;
+			}
+		}
+		if (data != nullptr) {
+			memcpy(mappedMemory, data, sizeOfCopyBytes);
+		}
+		vkUnmapMemory(device, deviceMemory);
+		mappedMemory = nullptr;
     }
-    if (data != nullptr) {
-        memcpy(mappedMemory, data, sizeOfCopyBytes);
-    }
-    if(usage == USAGE::STATIC) {
-        vkUnmapMemory(revDevice, deviceMemory);
-        mappedMemory = nullptr;
-    }
+	else {
+		VkDeviceMemory stagingMemory;
+		VkBuffer stagingBuffer;
+		CreateBuffer(sizeOfCopyBytes, bufferUsageFlags | VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingMemory);
+		VkResult result = vkMapMemory(device, stagingMemory, 0, sizeOfCopyBytes, 0, &mappedMemory);
+		if (result != VK_SUCCESS) {
+			NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+			return false;
+		}
+		memcpy(mappedMemory, data, sizeOfCopyBytes);
+		vkUnmapMemory(device, stagingMemory);
+
+		VulkanDevice* vulkanDevice = static_cast<VulkanDevice*>(this->device);
+		vulkanDevice->GetGlobalCommandList().ReserveReleaseBuffer(stagingBuffer, stagingMemory);
+
+
+		VkBufferCopy copyRegion = {};
+		copyRegion.size = sizeOfCopyBytes;
+		vkCmdCopyBuffer(vulkanDevice->GetGlobalCommandList().GetList(), stagingBuffer, buffer, 1, &copyRegion);
+	}
     return true;
 }
 
