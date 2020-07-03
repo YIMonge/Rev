@@ -80,10 +80,14 @@ void DX12Renderer::ShutDown()
 
 void DX12Renderer::Render()
 {
-	// Update
-	//cbufferOffset.x += 0.005f;
-	//if (cbufferOffset.x > 1.25f) cbufferOffset.x = -1.25f;
-	//constantBuffer->Update(cbufferOffset.data, sizeof(revVector4));
+	// cbuffer update
+	revMatrix44 t;
+	t.RotationXYZ(revVector3(MathUtil::ToRadian(1.0f), MathUtil::ToRadian(2.0f), MathUtil::ToRadian(4.0f)));
+	cbufferData.world *= t;
+	cbufferData.wvp = cbufferData.world * cbufferData.view * cbufferData.projection;
+	cbufferData.wvp.Transpose();
+	constantBuffer->Update(&cbufferData, sizeof(cbufferData));
+
 
 	// Render 
 	DX12CommandList& globalCommandList = device.GetGlobalCommandList();
