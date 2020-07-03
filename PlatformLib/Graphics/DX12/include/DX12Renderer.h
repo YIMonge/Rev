@@ -48,7 +48,8 @@ private:
 	DX12RootSignature rootSiganture;
 	DX12PipelineState pipelineState;
 
-	DX12DescriptorHeap resourceHeap;
+	DX12DescriptorHeap cbufferHeap;
+	DX12DescriptorHeap textureHeap;
 	DX12DescriptorHeap samplerHeap;
 
 	// resources for test

@@ -19,7 +19,8 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
 	main_window = window;
 	if (!device.Create(desc)) return;		
-	if (!resourceHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::RESOURCE, 1024)) return;
+	if (!cbufferHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::BUFFER, 1024)) return;
+	if (!textureHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::TEXTURE, 1024)) return;
 	if (!samplerHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::SAMPLER, 128)) return;
 	if (!swapChain.Create(&device, *window)) return;
 
@@ -32,13 +33,13 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	pipelineState.Create(&device, mat, rootSiganture, windowSize, windowSize);
 
 
-	DX12DescriptorHeap::Chunk resourceChunk = resourceHeap.Allocation(1);
+	DX12DescriptorHeap::Chunk resourceChunk = cbufferHeap.Allocation(1);
 	auto resourceHandle = resourceChunk.GetHandle();
 	constantBufferView.Create(&device, *constantBuffer, &resourceHandle);
 
 	// Load resource 
 	texture.LoadFromFile(&device, "sample_tex.png");
-	resourceChunk = resourceHeap.Allocation(1);
+	resourceChunk = textureHeap.Allocation(1);
 	resourceHandle = resourceChunk.GetHandle();
 	textureView.Create(&device, texture, &resourceHandle);
 	
@@ -98,8 +99,8 @@ void DX12Renderer::Render()
 	rootSiganture.Apply(globalCommandList);
 	pipelineState.Apply(globalCommandList);
 	// TODO: index detemine by what?
-	resourceHeap.Apply(globalCommandList, 0, 0);
-	resourceHeap.Apply(globalCommandList, 1, 1);
+	cbufferHeap.Apply(globalCommandList, 0);
+	textureHeap.Apply(globalCommandList, 1);
 	samplerHeap.Apply(globalCommandList, 2);
 	swapChain.Appply(globalCommandList);
 
@@ -136,7 +137,6 @@ bool DX12Renderer::IntialzieForApp()
 	//	loader.LoadFromFile("../../Resources/Models/ironman.fbx", &mesh2);
 	meshRenderer.SetMeshes(model.GetMeshes());
 	meshRenderer.SetMaterial(0, &mat);
-	meshRenderer.Initialize();
 
 	cbufferData.view.CreateLookAtMatrixLH(revVector3(0.0f, 0.0f, -10.0f), revVector3(0.0f, 0.0f, 0.0f), revVector3(0.0f, 1.0f, 0.0f));
 	cbufferData.projection.CreatePerspectiveMatrixLH(MathUtil::ToRadian(45.0f), main_window->GetAspectRatio() , 0.001f, 100.0f);
