@@ -13,9 +13,9 @@ struct PSInput
 
 cbuffer global : register(b0)
 {
+	matrix world;
 	matrix view;
 	matrix projection;
-	matrix world;
 	matrix wvp;
 }
 
@@ -24,8 +24,9 @@ PSInput main(const VSIn input)
 {
     PSInput result = (PSInput)0;
 
-    result.position = input.position;
-    result.uv = input.uv;
+    result.position = mul(float4(input.position.xyz, 1), wvp);
+
+	result.uv = input.uv;
 
     return result;
 }

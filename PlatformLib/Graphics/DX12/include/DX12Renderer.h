@@ -57,14 +57,14 @@ private:
 	revMaterial mat;
 	revModel model;
 	DX12MeshRenderer meshRenderer;
-	//DX12VertexBuffer* vertexBuffer;
-	//DX12VertexBufferView vertexBufferView;
-	//DX12ConstantBuffer* constantBuffer;
-	//DX12ConstantBufferView constantBufferView;
-	//revVector4 cbufferOffset;
 	DX12Texture texture;
 	DX12TextureView textureView;
 	DX12Sampler sampler;
+
+	DX12ConstantBuffer* constantBuffer;
+	DX12ConstantBufferView constantBufferView;
+
+
 };
 
 #endif

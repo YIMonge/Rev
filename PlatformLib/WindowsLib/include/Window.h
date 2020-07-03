@@ -2,6 +2,7 @@
 #define __WINDOW_H__
 
 #include <windows.h>
+#include "revTypedef.h"
 
 class Window
 {
@@ -19,8 +20,9 @@ public:
 	HWND GetHWnd() const { return hwnd; }
 	void SetHInstance(HINSTANCE hInstance) { this->hInstance = hInstance; }
 	HINSTANCE GetHInstance() const { return hInstance; }
-	unsigned int GetWidth() const { return width;  }
-	unsigned int GetHeight() const { return height; }
+	uint32 GetWidth() const { return width;  }
+	uint32 GetHeight() const { return height; }
+	f32 GetAspectRatio() const { return static_cast<f32>(width) / static_cast<f32>(height); }
 
 	bool IsDestroyed() const
 	{
@@ -49,8 +51,8 @@ private:
 	HWND hwnd;
 	HINSTANCE hInstance;
 	const char* name;
-	unsigned int width;
-	unsigned int height;
+	uint32 width;
+	uint32 height;
 	bool destroyed;
 };
 

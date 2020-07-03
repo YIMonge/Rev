@@ -5,9 +5,19 @@
 
 #include "FbxLoader.h"
 
+struct cbuffer
+{
+	revMatrix44 world;
+	revMatrix44 view;
+	revMatrix44 projection;
+	revMatrix44 wvp;
+};
+
+cbuffer cbufferData;
 
 void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
+	main_window = window;
 	if (!device.Create(desc)) return;		
 	if (!resourceHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::RESOURCE, 1024)) return;
 	if (!samplerHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::SAMPLER, 128)) return;
@@ -21,15 +31,17 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	revRect windowSize(window->GetWidth(), window->GetHeight());
 	pipelineState.Create(&device, mat, rootSiganture, windowSize, windowSize);
 
-	// Load resource 
-	texture.LoadFromFile(&device, "sample_tex.png");
+
 	DX12DescriptorHeap::Chunk resourceChunk = resourceHeap.Allocation(1);
 	auto resourceHandle = resourceChunk.GetHandle();
+	constantBufferView.Create(&device, *constantBuffer, &resourceHandle);
+
+	// Load resource 
+	texture.LoadFromFile(&device, "sample_tex.png");
+	resourceChunk = resourceHeap.Allocation(1);
+	resourceHandle = resourceChunk.GetHandle();
 	textureView.Create(&device, texture, &resourceHandle);
 	
-	//resourceChunk = resourceHeap.Allocation(1);
-	//resourceHandle = resourceChunk.GetHandle();
-	//constantBufferView.Create(&device, *constantBuffer, &resourceHandle);
 
 	DX12DescriptorHeap::Chunk samplerChunk = samplerHeap.Allocation(1);
 	auto samplerHandle = samplerChunk.GetHandle();
@@ -83,14 +95,11 @@ void DX12Renderer::Render()
 	pipelineState.Apply(globalCommandList);
 	// TODO: index detemine by what?
 	resourceHeap.Apply(globalCommandList, 0, 0);
-	//resourceHeap.Apply(globalCommandList, 1, 1);
-	samplerHeap.Apply(globalCommandList, 1);
+	resourceHeap.Apply(globalCommandList, 1, 1);
+	samplerHeap.Apply(globalCommandList, 2);
 	swapChain.Appply(globalCommandList);
 
 	meshRenderer.Draw(globalCommandList);
-	//commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//commandList->IASetVertexBuffers(0, 1, vertexBufferView.GetResourceView());
-	//commandList->DrawInstanced(3, 1, 0, 0);
 
 	globalCommandList.Close();
 	ExecuteCommand(globalCommandList);
@@ -124,7 +133,19 @@ bool DX12Renderer::IntialzieForApp()
 	meshRenderer.SetMeshes(model.GetMeshes());
 	meshRenderer.SetMaterial(0, &mat);
 	meshRenderer.Initialize();
+
+	cbufferData.view.CreateLookAtMatrixLH(revVector3(0.0f, 0.0f, -10.0f), revVector3(0.0f, 0.0f, 0.0f), revVector3(0.0f, 1.0f, 0.0f));
+	cbufferData.projection.CreatePerspectiveMatrixLH(MathUtil::ToRadian(45.0f), main_window->GetAspectRatio() , 0.001f, 100.0f);
+	cbufferData.wvp.Identity();
+	cbufferData.wvp = cbufferData.view * cbufferData.projection;
+	cbufferData.wvp.Transpose();
+
+	constantBuffer = new DX12ConstantBuffer(&device);
+	constantBuffer->Create(&cbufferData, sizeof(cbufferData), 1, revGraphicsBuffer::USAGE::DYNAMIC);
+
 	return true;
 }
+
+
 
 #endif
