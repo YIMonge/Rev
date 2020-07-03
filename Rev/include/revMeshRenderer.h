@@ -11,15 +11,15 @@ class revMeshRenderer
 {
 public:
 	revMeshRenderer();
-	~revMeshRenderer();
+	virtual ~revMeshRenderer();
 
 	void SetModel(const revModel& model);
 
-	void SetMeshes(const revArray<revMesh>& meshes);
-	void SetMesh(uint32 index, const revMesh& mesh);
+	virtual void SetMeshes(const revArray<revMesh>& meshes);
+	virtual void SetMesh(uint32 index, const revMesh& mesh);
 
-	void SetMaterials(const revArray<revMaterial*>& materials);
-	void SetMaterial(uint32 index, revMaterial* material);
+	virtual void SetMaterials(const revArray<revMaterial*>& materials);
+	virtual void SetMaterial(uint32 index, revMaterial* material);
 
 	virtual void Draw(revGraphicsCommandList& commandList) = 0;
 

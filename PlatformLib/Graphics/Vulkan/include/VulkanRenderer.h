@@ -2,6 +2,7 @@
 #define __VULKANRENDERER_H__
 #ifdef _USE_VULKAN
 
+#include "window.h"
 #include "revRenderer.h"
 #include "VulkanDevice.h"
 #include "VulkanSwapChain.h"
@@ -16,6 +17,10 @@
 #include "VulkanRenderPass.h"
 #include "VulkanConstantBufferView.h"
 #include "VulkanSamplerView.h"
+#include "revMaterial.h"
+#include "revArray.h"
+#include "VulkanMeshRenderer.h"
+#include "revModel.h"
 
 class VulkanRenderer : public revRenderer
 {
@@ -51,8 +56,6 @@ private:
 	revColor clearValue;
 
 	// TEST CODE(resource)
-	VulkanVertexBuffer* triangleVertexBuffer;
-	revVector4 cbufferOffset;
 	VulkanConstantBuffer* constantBuffer;
 	VulkanConstantBufferView constantBufferView;
 	VulkanTexture texture;
@@ -61,6 +64,8 @@ private:
 	VulkanSamplerView samplerView;
 	VulkanRenderPass renderPass;
 	revMaterial mat;
+	revModel model;
+	VulkanMeshRenderer meshRenderer;
 };
 
 #endif

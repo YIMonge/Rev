@@ -194,6 +194,9 @@
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanSamplerView.h">
       <Filter>Graphics\Vulkan\header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanMeshRenderer.h">
+      <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\File.cpp">
@@ -320,6 +323,9 @@
       <Filter>Graphics\DX12\cpp</Filter>
     </ClCompile>
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSamplerView.cpp">
+      <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanMeshRenderer.cpp">
       <Filter>Graphics\Vulkan\cpp</Filter>
     </ClCompile>
   </ItemGroup>

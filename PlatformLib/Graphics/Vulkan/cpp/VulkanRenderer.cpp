@@ -6,10 +6,17 @@
 // TEST
 #include "VulkanTexture.h"
 #include "VulkanShader.h"
+#include "FbxLoader.h"
 
-#define _CBUFFER 1
-#define _TEX 1
-#define _TEST 0
+struct cbuffer
+{
+	revMatrix44 world;
+	revMatrix44 view;
+	revMatrix44 projection;
+	revMatrix44 wvp;
+};
+
+cbuffer cbufferData;
 
 VulkanRenderer::VulkanRenderer() :
         initialized(false)
@@ -49,32 +56,25 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     // Load Assets
 
     device.GetGlobalCommandList().Open();
-    const float triangleVertices[] = {
-            // vertex         , texcoord
-            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-             0.0f,  1.0f, 0.0f, 0.5f, 1.0f,
-    };
-	triangleVertexBuffer = new VulkanVertexBuffer(&device);
-	triangleVertexBuffer->Create(triangleVertices, sizeof(float) * 5, 3);
+
+
+	cbufferData.view.CreateLookAtMatrixLH(revVector3(0.0f, 0.0f, -10.0f), revVector3(0.0f, 0.0f, 0.0f), revVector3(0.0f, 1.0f, 0.0f));
+	cbufferData.projection.CreatePerspectiveMatrixLH(MathUtil::ToRadian(45.0f), window->GetAspectRatio(), 0.001f, 100.0f);
+	cbufferData.wvp.Identity();
+	cbufferData.wvp = cbufferData.view * cbufferData.projection;
 
 	constantBuffer = new VulkanConstantBuffer(&device);
-    constantBuffer->Create(nullptr, sizeof(revVector4), 1024, revGraphicsBuffer::USAGE::DYNAMIC);
+    constantBuffer->Create(nullptr, sizeof(cbufferData), 1, revGraphicsBuffer::USAGE::DYNAMIC);
 
     VulkanShader shader[2];
-#if !_CBUFFER && _TEX
-    shader[0].LoadFromFile(device, "texture_vert.spv", SHADER_TYPE::VERTX);
-    shader[1].LoadFromFile(device, "texture_frag.spv", SHADER_TYPE::FRAGMENT);
-#elif _CBUFFER && !_TEX
-	shader[0].LoadFromFile(device, "cbuffer_vert.spv", SHADER_TYPE::VERTX);
-	shader[1].LoadFromFile(device, "cbuffer_frag.spv", SHADER_TYPE::FRAGMENT);
-#elif _CBUFFER && _TEX
-    shader[0].LoadFromFile(device, "cbufferTex_vert.spv", SHADER_TYPE::VERTX);
-    shader[1].LoadFromFile(device, "cbufferTex_frag.spv", SHADER_TYPE::FRAGMENT);
-#endif
+    shader[0].LoadFromFile(device, "model_vert.spv", SHADER_TYPE::VERTX);
+    shader[1].LoadFromFile(device, "model_frag.spv", SHADER_TYPE::FRAGMENT);
 
     mat.SetShader(SHADER_TYPE::VERTX, &shader[0]);
     mat.SetShader(SHADER_TYPE::FRAGMENT, &shader[1]);
+	FBXLoader loader;
+	loader.LoadFromFile("../../Resources/Models/cube_blender.fbx", &model);
+	meshRenderer.SetModel(model);
 
     VulkanTexture texture;
     texture.LoadFromFile(&device, "sample_tex.png");
@@ -107,21 +107,12 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     descriptorSet.Create(&device, descriptorSetLayout, 128, descriptorPool);
 
     
-#if _TEX && !_CBUFFER
-	VulkanDescriptorSet::Chunk chunk = descriptorSet.Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::TEXTURE_SHADER_RESOURCE_VIEW));
-    textureView.Create(&device, texture, sampler, chunk);
-#endif
-
-#if _CBUFFER
 	VulkanDescriptorSet::Chunk chunk = descriptorSet.Allocation(1, 0);
 	constantBufferView.Create(&device, *constantBuffer, chunk);
-#if _TEX
 	chunk = descriptorSet.Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::TEXTURE_SHADER_RESOURCE_VIEW));
     textureView.Create(&device, texture, sampler, chunk);
 	chunk = descriptorSet.Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::SAMPLER));
 	samplerView.Create(&device, sampler, chunk);
-#endif
-#endif
 
     descriptorSet.Update();
 
@@ -131,25 +122,13 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
         auto& commandList = commandLists[i];
         commandList.Open();
         auto& frameBuffer = swapChain.GetFrameBuffer();
-		/*
-        commandList.AddTransitionBarrier(frameBuffer.GetFrameBufferImage(i),
-                                         VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-                                         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
-			*/							
         renderPass.Begin(commandList, frameBuffer.GetFrameBuffer(i), clearValue, swapChain.GetDisplaySize());
         pipelineState.Apply(commandList);
         descriptorSet.Apply(commandList, pipelineState.GetPipelineLayout());
 
-        VkDeviceSize offset = 0;
-        vkCmdBindVertexBuffers(commandList.GetList(), 0, 1, triangleVertexBuffer->GetHandlePtr(), &offset);
-        vkCmdDraw(commandList.GetList(), 3, 1, 0, 0);
+		meshRenderer.Draw(commandList);
 
         renderPass.End(commandList);
-		/*
-        commandList.AddTransitionBarrier(frameBuffer.GetFrameBufferImage(i),
-                                         VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-                                         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
-			*/							 
         commandList.Close();
     }
 
@@ -169,9 +148,13 @@ void VulkanRenderer::Render()
 {
     if(!initialized) return;
 
-    cbufferOffset.x += 0.005f;
-    if (cbufferOffset.x > 1.25f) cbufferOffset.x = -1.25f;
-    constantBuffer->Update(cbufferOffset.data, sizeof(revVector4));
+	revMatrix44 t;
+	t.RotationXYZ(revVector3(MathUtil::ToRadian(1.0f), MathUtil::ToRadian(2.0f), MathUtil::ToRadian(4.0f)));
+	cbufferData.world *= t;
+	cbufferData.wvp = cbufferData.world * cbufferData.view * cbufferData.projection;
+	cbufferData.wvp.Transpose();
+	constantBuffer->Update(&cbufferData, sizeof(cbufferData));
+
 
     auto& commandList = device.GetCommandLists()[swapChain.GetCurrentFrameIndex()];
      ExecuteCommand(commandList, true);

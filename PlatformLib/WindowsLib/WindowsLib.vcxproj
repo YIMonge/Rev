@@ -272,6 +272,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(VULKAN_SDK)\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -481,6 +482,7 @@
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorSetLayout.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanDevice.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanFrameBuffer.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanMeshRenderer.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanPipelineState.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderer.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderPass.h" />
@@ -526,6 +528,7 @@
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorSetLayout.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDevice.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanFrameBuffer.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanMeshRenderer.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanPipelineState.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanRenderer.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanRenderPass.cpp" />
