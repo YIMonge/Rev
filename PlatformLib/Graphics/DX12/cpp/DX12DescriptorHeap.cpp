@@ -6,7 +6,7 @@
 DX12DescriptorHeap::DX12DescriptorHeap() :
 device(nullptr),
 heap(nullptr),
-type(DESCRIPTOR_HEAP_TYPE::RESOURCE),
+type(DESCRIPTOR_HEAP_TYPE::TEXTURE),
 maxDescriptors(0),
 allocNum(0),
 incrementalSize(0)
