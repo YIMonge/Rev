@@ -96,7 +96,7 @@ void VulkanFrameBuffer::Destroy()
     for(int i = 0; i < framebuffers.size(); ++i){
         vkDestroyFramebuffer(vkDevice, framebuffers[i], nullptr);
         vkDestroyImageView(vkDevice, views[i], nullptr);
-        vkDestroyImage(vkDevice, images[i], nullptr);
+        //vkDestroyImage(vkDevice, images[i], nullptr);
     }
 }
 #endif
