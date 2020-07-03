@@ -14,8 +14,8 @@ public:
 	DX12MeshRenderer();
 	virtual ~DX12MeshRenderer();
 
-	void Initialize();
-	void Finalize();
+	virtual void SetMesh(uint32 index, const revMesh& mesh);
+	void Destroy();
 	virtual void Draw(revGraphicsCommandList& commandList);
 
 private:

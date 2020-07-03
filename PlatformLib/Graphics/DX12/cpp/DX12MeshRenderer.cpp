@@ -11,25 +11,26 @@ DX12MeshRenderer::~DX12MeshRenderer()
 
 }
 
-void DX12MeshRenderer::Initialize()
+void DX12MeshRenderer::SetMesh(uint32 index, const revMesh& mesh)
 {
-	const uint32 vertexBufferCount = static_cast<uint32>(vertexBuffers.size());
-	vertexBufferViews.resize(vertexBufferCount);
-	for (uint32 i = 0; i < vertexBufferCount; ++i) {
-		vertexBufferViews[i] = new DX12VertexBufferView();
-		vertexBufferViews[i]->Create(revGraphics::Get().GetDevice(), vertexBuffers[i]);
-	}
+	revMeshRenderer::SetMesh(index, mesh);
 
-	indexBufferViews.resize(vertexBufferCount);
-	for (uint32 i = 0; i < vertexBufferCount; ++i) {
-		if (indexBuffers[i] != nullptr) {
-			indexBufferViews[i] = new DX12IndexBufferView();
-			indexBufferViews[i]->Create(revGraphics::Get().GetDevice(), indexBuffers[i]);
-		}
+	if (vertexBufferViews.size() <= index) {
+		vertexBufferViews.resize(index + 1);
+	}
+	vertexBufferViews[index] = new DX12VertexBufferView();
+	vertexBufferViews[index]->Create(revGraphics::Get().GetDevice(), vertexBuffers[index]);
+
+	if (indexBufferViews.size() <= index) {
+		indexBufferViews.resize(index + 1);
+	}
+	if (indexBuffers[index] != nullptr) {
+		indexBufferViews[index] = new DX12IndexBufferView();
+		indexBufferViews[index]->Create(revGraphics::Get().GetDevice(), indexBuffers[index]);
 	}
 }
 
-void DX12MeshRenderer::Finalize()
+void DX12MeshRenderer::Destroy()
 {
 	const uint32 vertexBufferCount = static_cast<uint32>(vertexBuffers.size());
 	for (uint32 i = 0; i < vertexBufferCount; ++i) {
