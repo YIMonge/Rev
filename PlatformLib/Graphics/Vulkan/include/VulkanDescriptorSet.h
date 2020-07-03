@@ -29,9 +29,15 @@ public:
     {
     friend class VulkanDescriptorSet;
     public:
-        VkWriteDescriptorSet* GetVkWriteDescriptorSet() { return writeDescriptorSets; }
-        uint32 GetNumOfDescriptors() const { return numOfDescriptors; }
         uint32 GetBindingSlot() const { return binding; }
+		void UpdateResource(uint32 index, DESCRIPTOR_TYPE type, const VkDescriptorImageInfo* imageInfo, const VkDescriptorBufferInfo* bufferInfo, const VkBufferView* texelView)
+		{
+			writeDescriptorSets[index].descriptorType = ConvertToVKDescriptorType(type);
+			writeDescriptorSets[index].pImageInfo = imageInfo;
+			writeDescriptorSets[index].pBufferInfo = bufferInfo;
+			writeDescriptorSets[index].pTexelBufferView = texelView;
+		}
+
     private:
         Chunk(VkWriteDescriptorSet* writeDescriptorSets,  uint32 allocationNum, uint32 binding)
         {

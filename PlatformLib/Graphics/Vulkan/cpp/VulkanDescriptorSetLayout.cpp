@@ -5,17 +5,17 @@
 DESCRIPTOR_HEAP_TYPE DescriptorTypeToHeapType(DESCRIPTOR_TYPE type)
 {
     DESCRIPTOR_HEAP_TYPE table[] = {
-        DESCRIPTOR_HEAP_TYPE::RESOURCE,
-        DESCRIPTOR_HEAP_TYPE::RESOURCE,
-        DESCRIPTOR_HEAP_TYPE::RESOURCE,
-        DESCRIPTOR_HEAP_TYPE::RESOURCE,
+        DESCRIPTOR_HEAP_TYPE::TEXTURE,
+        DESCRIPTOR_HEAP_TYPE::BUFFER,
+        DESCRIPTOR_HEAP_TYPE::BUFFER,
+        DESCRIPTOR_HEAP_TYPE::BUFFER,
 
-        DESCRIPTOR_HEAP_TYPE::RESOURCE,
-        DESCRIPTOR_HEAP_TYPE::RESOURCE,
-        DESCRIPTOR_HEAP_TYPE::RESOURCE,
-        DESCRIPTOR_HEAP_TYPE::RESOURCE,
+        DESCRIPTOR_HEAP_TYPE::TEXTURE,
+        DESCRIPTOR_HEAP_TYPE::BUFFER,
+        DESCRIPTOR_HEAP_TYPE::BUFFER,
+        DESCRIPTOR_HEAP_TYPE::BUFFER,
 
-        DESCRIPTOR_HEAP_TYPE::RESOURCE,
+        DESCRIPTOR_HEAP_TYPE::BUFFER,
         DESCRIPTOR_HEAP_TYPE::SAMPLER,
     };
     return table[static_cast<uint32>(type)];
@@ -36,7 +36,6 @@ bool VulkanDescriptorSetLayout::Create(revDevice* device, const revDescriptorBin
 		descriptorSetLayoutBinding.stageFlags = ConvertToVKShaderVisibility(set.GetShaderVisiblity());
         descriptorSetLayoutBinding.pImmutableSamplers = nullptr;
 
-        //if(descriptorSetLayoutBinding.descriptorType == VK_DESCRIPTOR_TYPE_SAMPLER) continue;
         descriptorSetLayoutBindings.push_back(descriptorSetLayoutBinding);
     }
 

@@ -10,12 +10,7 @@ void VulkanConstantBufferView::Create(revDevice* device, const VulkanConstantBuf
     descriptorBufferInfo.offset = 0;
     descriptorBufferInfo.range = VK_WHOLE_SIZE;
 
-    VkWriteDescriptorSet* writeDescriptorSet = chunk.GetVkWriteDescriptorSet();
-    for(uint32 i = 0; i < chunk.GetNumOfDescriptors(); ++i){
-        writeDescriptorSet[i].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        writeDescriptorSet[i].pBufferInfo = &descriptorBufferInfo;
-    }
-
+	chunk.UpdateResource(0, DESCRIPTOR_TYPE::CONSTANT_BUFFER_VIEW, nullptr, &descriptorBufferInfo, nullptr);
 }
 
 void VulkanConstantBufferView::Destroy()

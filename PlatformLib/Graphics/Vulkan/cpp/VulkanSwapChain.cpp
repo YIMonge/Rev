@@ -83,22 +83,6 @@ bool VulkanSwapChain::Create(VulkanDevice* device)
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
-    // create fence and semaphore
-    VkFenceCreateInfo fenceCreateInfo = {};
-    fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceCreateInfo.pNext = nullptr;
-    fenceCreateInfo.flags = 0;
-    
-    result = vkCreateFence(revDevice, &fenceCreateInfo, nullptr, &fence);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
-    result = vkResetFences(revDevice, 1, &fence);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-    }
-
     VkSemaphoreCreateInfo semaphoreCreateInfo = {};
     semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
     semaphoreCreateInfo.pNext = nullptr;
@@ -165,27 +149,8 @@ bool VulkanSwapChain::Present()
                                    VK_NULL_HANDLE,
                                    &frameIndex);
 
-    // reset fence
-    result = vkResetFences(revDevice, 1, &fence);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
-
     return result == VK_SUCCESS;
 }
 
-bool VulkanSwapChain::WaitForPreviousFrame()
-{
-    auto& revDevice = device->GetDevice();
-    VkResult result;
-    // wait for event
-    result = vkWaitForFences(revDevice, 1, &fence, VK_TRUE, 100000000);
-    if(result != VK_SUCCESS) {
-        NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-        return false;
-    }
-    return true;
-}
 
 #endif

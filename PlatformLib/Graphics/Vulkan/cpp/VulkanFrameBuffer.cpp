@@ -13,7 +13,7 @@ VulkanFrameBuffer::~VulkanFrameBuffer()
 {
 }
 
-bool VulkanFrameBuffer::Create(revDevice* device, const VkSwapchainKHR& swapchainKhr, GRAPHICS_FORMAT format, const revRect& rect, uint32 num, const VkRenderPass& renderPass)
+bool VulkanFrameBuffer::Create(VulkanDevice* device, const VkSwapchainKHR& swapchainKhr, GRAPHICS_FORMAT format, const revRect& rect, uint32 num, const VkRenderPass& renderPass)
 {
     this->device = device;
     this->foramt = ConvertToVKFormat(format);
@@ -30,17 +30,17 @@ bool VulkanFrameBuffer::Create(revDevice* device, const VkSwapchainKHR& swapchai
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }
+
     for(uint32 i = 0; i < imageCount; ++i){
         VkImageViewCreateInfo viewCreateInfo = {};
         viewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-        viewCreateInfo.pNext = nullptr;
         viewCreateInfo.image = images[i];
         viewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
         viewCreateInfo.format = foramt;
-        viewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_R;
-        viewCreateInfo.components.g = VK_COMPONENT_SWIZZLE_G;
-        viewCreateInfo.components.b = VK_COMPONENT_SWIZZLE_B;
-        viewCreateInfo.components.a = VK_COMPONENT_SWIZZLE_A;
+        viewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        viewCreateInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        viewCreateInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        viewCreateInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
         viewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         viewCreateInfo.subresourceRange.baseMipLevel = 0;
         viewCreateInfo.subresourceRange.levelCount = 1;
@@ -79,6 +79,13 @@ bool VulkanFrameBuffer::Create(revDevice* device, const VkSwapchainKHR& swapchai
             return false;
         }
     }
+
+	for (uint32 i = 0; i < num; ++i) {
+		device->GetGlobalCommandList().AddTransitionBarrier(images[i],
+			VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+	}
+
 
     return true;
 }

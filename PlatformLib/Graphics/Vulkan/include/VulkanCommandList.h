@@ -3,6 +3,7 @@
 #ifdef _USE_VULKAN
 
 #include "revGraphicsCommandList.h"
+#include "revArray.h"
 
 class VulkanCommandList : public revGraphicsCommandList
 {
@@ -16,6 +17,15 @@ public:
     virtual void Close();
 
     void AddTransitionBarrier(const VkImage& resource, VkImageLayout before, VkImageLayout after, VkPipelineStageFlags srcStages, VkPipelineStageFlags destStages);
+	void ReserveReleaseBuffer(VkBuffer& stagingBuffer, VkDeviceMemory& memory);
+	void ReleaseResource();
+private:
+	struct BufferMemoryPair
+	{
+		VkBuffer buffer;
+		VkDeviceMemory memory;
+	};
+	revArray<BufferMemoryPair> reservedReleaseBuffers;
 };
 
 #endif

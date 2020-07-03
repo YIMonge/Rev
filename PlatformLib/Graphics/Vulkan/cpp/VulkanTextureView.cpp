@@ -27,14 +27,9 @@ void VulkanTextureView::Create(revDevice* device, const revTexture& texture, con
 
     descriptorImageInfo.sampler = sampler.GetHandle();
     descriptorImageInfo.imageView = resourceView;
-    descriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
-
-
-    VkWriteDescriptorSet* writeDescriptorSet = chunk.GetVkWriteDescriptorSet();
-    for(uint32 i = 0; i < chunk.GetNumOfDescriptors(); ++i){
-        writeDescriptorSet[i].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        writeDescriptorSet[i].pImageInfo = &descriptorImageInfo;
-    }
+	descriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	//descriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+	chunk.UpdateResource(0, DESCRIPTOR_TYPE::TEXTURE_SHADER_RESOURCE_VIEW, &descriptorImageInfo, nullptr, nullptr);
 }
 
 void VulkanTextureView::Destroy()

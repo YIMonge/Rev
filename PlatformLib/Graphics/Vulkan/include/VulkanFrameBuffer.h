@@ -11,7 +11,7 @@ public:
     VulkanFrameBuffer();
     ~VulkanFrameBuffer();
 
-    bool Create(revDevice* device, const VkSwapchainKHR& swapchainKhr, GRAPHICS_FORMAT format, const revRect& rect, uint32 num, const VkRenderPass& renderPass);
+    bool Create(VulkanDevice* device, const VkSwapchainKHR& swapchainKhr, GRAPHICS_FORMAT format, const revRect& rect, uint32 num, const VkRenderPass& renderPass);
     void Destroy();
 
     const VkImage& GetFrameBufferImage(uint32 index) const { return images[index]; }

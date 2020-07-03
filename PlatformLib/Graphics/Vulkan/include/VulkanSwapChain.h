@@ -24,7 +24,6 @@ public:
     uint32 GetCurrentFrameIndex() const { return frameIndex; }
     const VulkanFrameBuffer& GetFrameBuffer() const { return frameBuffers; }
     VkSemaphore* GetSemaphore(){ return &semaphore; }
-    const VkFence& GetFence() const { return fence; }
 
     uint32 GetLength() const { return length; }
 
@@ -39,9 +38,8 @@ private:
     uint32 length;
     uint32 frameIndex;
 
+	VkSemaphore  semaphore;
     VulkanFrameBuffer frameBuffers;
-    VkSemaphore  semaphore;
-    VkFence fence;
 };
 
 
