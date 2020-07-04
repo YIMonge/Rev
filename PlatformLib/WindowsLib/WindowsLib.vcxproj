@@ -477,6 +477,7 @@
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanBuffer.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanCommandList.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanConstantBufferView.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanDepthBuffer.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorPool.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorSet.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanDescriptorSetLayout.h" />
@@ -485,6 +486,7 @@
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanMeshRenderer.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanPipelineState.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderer.h" />
+    <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderingBuffer.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderPass.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanSampler.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanSamplerView.h" />
@@ -523,6 +525,7 @@
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanBuffer.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanCommandList.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanConstantBufferView.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDepthBuffer.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorPool.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorSet.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDescriptorSetLayout.cpp" />
@@ -531,6 +534,7 @@
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanMeshRenderer.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanPipelineState.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanRenderer.cpp" />
+    <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanRenderingBuffer.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanRenderPass.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSampler.cpp" />
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanSamplerView.cpp" />
