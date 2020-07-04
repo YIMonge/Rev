@@ -83,6 +83,7 @@ enum class GRAPHICS_FORMAT
 	R32G32B32A32_UINT,
 	R32G32B32A32_SINT,
 	R32G32B32A32_FLOAT,
+	D32_FLOAT,
 	MAX_NUM,
 };
 
@@ -358,7 +359,8 @@ namespace {
 				VK_FORMAT_R32G32B32_SFLOAT,		// R32G32B32_FLOAT
 				VK_FORMAT_R32G32B32A32_UINT,	// R32G32B32A32_UINT
 				VK_FORMAT_R32G32B32A32_SINT,	// R32G32B32A32_SINT
-				VK_FORMAT_R32G32B32A32_SFLOAT,	// R32G32B32A32_FLOAT
+				VK_FORMAT_R32G32B32A32_SFLOAT,	// R32G32B32A32_FLOA
+				VK_FORMAT_D32_SFLOAT,			// D32_FLOAT
 		};
 		return table[static_cast<uint32>(format)];
 	}
@@ -380,6 +382,7 @@ namespace {
 				sizeof(uint32) * 4,			// R32G32B32A32_UINT
 				sizeof(int32) * 4,			// R32G32B32A32_SINT
 				sizeof(f32) * 4,			// R32G32B32A32_FLOAT
+				sizeof(f32),				// D32_FLOAT
 		};
 		return table[static_cast<uint32>(format)];
 	}
