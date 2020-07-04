@@ -27,8 +27,6 @@ protected:
 private:
 	bool CreateBuffer(uint32 size, VkBufferUsageFlags usageFlag, VkMemoryPropertyFlags properties, revGraphicsResource& buffer, VkDeviceMemory& memory);
 
-    bool MapMemoryTypeToIndex(uint32 typeBits, VkFlags mask, uint32* typeIndex);
-
     void* mappedMemory;
     VkDeviceMemory deviceMemory; 
     VkMemoryAllocateInfo memoryAllocateInfo;

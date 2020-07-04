@@ -523,7 +523,21 @@ namespace {
 		return table[static_cast<uint32>(type)];
 	}
 
-
+	bool MapMemoryTypeToIndex(const revGraphicsAdapter& adapter, uint32 typeBits, VkFlags mask, uint32* typeIndex)
+	{
+		VkPhysicalDeviceMemoryProperties memoryProperties;
+		vkGetPhysicalDeviceMemoryProperties(adapter, &memoryProperties);
+		for (uint32 i = 0; i < 32; ++i) {
+			if ((typeBits & 1) == 1) {
+				if ((memoryProperties.memoryTypes[i].propertyFlags & mask) == mask) {
+					*typeIndex = i;
+					return true;
+				}
+			}
+			typeBits >>= 1;
+		}
+		return false;
+	}
 }
 
 #elif defined(_USE_DIRECTX12)

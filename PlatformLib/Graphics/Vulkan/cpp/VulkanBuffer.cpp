@@ -28,7 +28,8 @@ bool VulkanBuffer::CreateBuffer(uint32 size, VkBufferUsageFlags usageFlag, VkMem
 	memoryAllocateInfo = {};
 	memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	memoryAllocateInfo.allocationSize = memoryRequirements.size;
-	if (!MapMemoryTypeToIndex(memoryRequirements.memoryTypeBits,
+	if (!MapMemoryTypeToIndex(this->device->GetAdapter(),
+		memoryRequirements.memoryTypeBits,
 		properties,
 		&memoryAllocateInfo.memoryTypeIndex)) {
 		NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
@@ -110,23 +111,6 @@ bool VulkanBuffer::Update(const void* data, uint32 sizeOfCopyBytes, uint32 offse
 		vkCmdCopyBuffer(vulkanDevice->GetGlobalCommandList().GetList(), stagingBuffer, buffer, 1, &copyRegion);
 	}
     return true;
-}
-
-bool VulkanBuffer::MapMemoryTypeToIndex(uint32 typeBits, VkFlags mask, uint32* typeIndex)
-{
-    VkPhysicalDeviceMemoryProperties memoryProperties;
-    vkGetPhysicalDeviceMemoryProperties(device->GetAdapter(), &memoryProperties);
-    for(uint32 i = 0; i < 32; ++i){
-        if((typeBits & 1) == 1){
-            if((memoryProperties.memoryTypes[i].propertyFlags & mask) == mask){
-                *typeIndex = i;
-                return true;
-            }
-        }
-        typeBits >>= 1;
-    }
-    NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
-    return false;
 }
 
 void VulkanBuffer::Destroy()
