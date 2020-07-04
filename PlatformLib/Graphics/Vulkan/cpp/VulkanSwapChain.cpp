@@ -97,6 +97,12 @@ bool VulkanSwapChain::Create(VulkanDevice* device)
     return true;
 }
 
+bool VulkanSwapChain::CreateDepthBuffer()
+{
+	return depthBuffers.Create(device, swapChain, GRAPHICS_FORMAT::D32_FLOAT, displaySize);
+}
+
+
 bool VulkanSwapChain::CreateFrameBuffer(const VulkanRenderPass& renderPass)
 {
     if(!frameBuffers.Create(device, swapChain, format, displaySize, length, renderPass.GetHandle())){

@@ -11,7 +11,6 @@ public:
     VulkanRenderingBuffer();
     virtual ~VulkanRenderingBuffer();
 
-    virtual bool Create(VulkanDevice* device, const VkSwapchainKHR& swapchainKhr, GRAPHICS_FORMAT format, const revRect& rect, uint32 num, const VkRenderPass& renderPass) = 0;
     virtual void Destroy();
 
     const VkImage& GetImage(uint32 index) const { return images[index]; }
