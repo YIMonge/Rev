@@ -42,10 +42,19 @@ bool VulkanRenderingBuffer::CreateImage(const revRect& rect, GRAPHICS_FORMAT for
     VkMemoryAllocateInfo memoryAllocateInfo = {};
     memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     memoryAllocateInfo.allocationSize = memoryRequirements.size;
-    memoryAllocateInfo.memoryTypeIndex
-
-
-
+	if (!MapMemoryTypeToIndex(this->device->GetAdapter(),
+		memoryRequirements.memoryTypeBits,
+		properties,
+		&memoryAllocateInfo.memoryTypeIndex)) {
+		NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+		return false;
+	}
+	result = vkAllocateMemory(device, &memoryAllocateInfo, nullptr, &imageMemory);
+	if (result != VK_SUCCESS) {
+		NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__, __LINE__);
+		return false;
+	}
+	vkBindImageMemory(device, image, imageMemory, 0);
 
     return true;
 }
@@ -80,7 +89,7 @@ bool VulkanRenderingBuffer::CreateImageView(const VkImage& image, GRAPHICS_FORMA
 void VulkanRenderingBuffer::Destroy()
 {
     VkDevice vkDevice = device->GetDevice();
-    for (int i = 0; i < static_cast<uint32>(views.size()); ++i) {
+    for (uint32 i = 0; i < static_cast<uint32>(views.size()); ++i) {
         vkDestroyImageView(vkDevice, views[i], nullptr);
     }
 }
