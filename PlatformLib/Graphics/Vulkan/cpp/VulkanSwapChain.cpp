@@ -99,13 +99,13 @@ bool VulkanSwapChain::Create(VulkanDevice* device)
 
 bool VulkanSwapChain::CreateDepthBuffer()
 {
-	return depthBuffers.Create(device, swapChain, GRAPHICS_FORMAT::D32_FLOAT, displaySize);
+	return depthBuffer.Create(device, swapChain, GRAPHICS_FORMAT::D32_FLOAT, displaySize);
 }
 
 
 bool VulkanSwapChain::CreateFrameBuffer(const VulkanRenderPass& renderPass)
 {
-    if(!frameBuffers.Create(device, swapChain, format, displaySize, length, renderPass.GetHandle())){
+    if(!frameBuffers.Create(device, swapChain, format, displaySize, length, renderPass.GetHandle(), depthBuffer.GetImageView())){
         NATIVE_LOGE("Vulkan error. File[%s], line[%d]", __FILE__,__LINE__);
         return false;
     }

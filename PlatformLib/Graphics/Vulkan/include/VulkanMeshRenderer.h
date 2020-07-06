@@ -11,8 +11,6 @@ public:
 	VulkanMeshRenderer();
 	virtual ~VulkanMeshRenderer();
 
-	void Initialize();
-	void Finalize();
 	virtual void Draw(revGraphicsCommandList& commandList);
 
 };

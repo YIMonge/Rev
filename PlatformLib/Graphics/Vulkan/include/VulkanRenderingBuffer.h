@@ -13,15 +13,14 @@ public:
 
     virtual void Destroy();
 
-    const VkImage& GetImage(uint32 index) const { return images[index]; }
+	VkFormat GetVulkanFormat() const { return format; }
+    
 protected:
     bool CreateImage(const revRect& rect, GRAPHICS_FORMAT format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
     bool CreateImageView(const VkImage& image, GRAPHICS_FORMAT format, VkImageAspectFlags aspectFlags, VkImageView& imageView);
 
     revDevice* device;
-    VkFormat foramt;
-    revArray<VkImage>  images;
-    revArray<VkImageView> views;
+    VkFormat format;
 };
 
 #endif

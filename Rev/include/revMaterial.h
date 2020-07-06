@@ -85,7 +85,7 @@ public:
 			enableDepthTest(true),
 			enableDepthWrite(true),
 			enableStanecil(false),
-			depthFunc(static_cast<uint8>(COMPARISON_FUNC::LESS_EQUAL))
+			depthFunc(static_cast<uint8>(COMPARISON_FUNC::LESS))
 		{}
 
 		bool IsEnableDepthTest() const { return enableDepthTest; }

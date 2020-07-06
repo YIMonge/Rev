@@ -106,6 +106,17 @@ bool VulkanPipelineState::Create(revDevice* device, const PipelineStateDesc& des
     pipelineRasterizationStateCreateInfo.depthBiasEnable = VK_FALSE;
     pipelineRasterizationStateCreateInfo.lineWidth = 1;
 
+	// Depth Stencil 
+	const auto& depthStencil = desc.material->GetDepthStencil();
+	VkPipelineDepthStencilStateCreateInfo pipelineDepthStencilStateCreateInfo = {};
+	pipelineDepthStencilStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+	pipelineDepthStencilStateCreateInfo.depthTestEnable = depthStencil.IsEnableDepthTest();
+	pipelineDepthStencilStateCreateInfo.depthWriteEnable = depthStencil.IsEnableDepthWrite();
+	pipelineDepthStencilStateCreateInfo.depthCompareOp = ConverToVKComparisonFunc(depthStencil.GetDepthFunc());
+	pipelineDepthStencilStateCreateInfo.depthBoundsTestEnable = VK_FALSE;
+	pipelineDepthStencilStateCreateInfo.minDepthBounds = 0.0f;
+	pipelineDepthStencilStateCreateInfo.maxDepthBounds = 1.0f;
+
     // input assembler
     VkPipelineInputAssemblyStateCreateInfo pipelineInputAssemblyStateCreateInfo = {};
     pipelineInputAssemblyStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -180,7 +191,7 @@ bool VulkanPipelineState::Create(revDevice* device, const PipelineStateDesc& des
     graphicsPipelineCreateInfo.pViewportState = &pipelineViewportStateCreateInfo;
     graphicsPipelineCreateInfo.pRasterizationState = &pipelineRasterizationStateCreateInfo;
     graphicsPipelineCreateInfo.pMultisampleState = &pipelineMultisampleStateCreateInfo;
-    graphicsPipelineCreateInfo.pDepthStencilState = nullptr; // TODO: create depth stencil
+	graphicsPipelineCreateInfo.pDepthStencilState = &pipelineDepthStencilStateCreateInfo;
     graphicsPipelineCreateInfo.pColorBlendState = &pipelineColorBlendStateCreateInfo;
     graphicsPipelineCreateInfo.pDynamicState = nullptr;
     graphicsPipelineCreateInfo.layout = pipelineLayout;

@@ -26,7 +26,7 @@ public:
     uint32 GetCurrentFrameIndex() const { return frameIndex; }
 
     const VulkanFrameBuffer& GetFrameBuffer() const { return frameBuffers; }
-	const VulkanDepthBuffer& GetDepthBuffer() const { return depthBuffers; }
+	const VulkanDepthBuffer& GetDepthBuffer() const { return depthBuffer; }
 
 	VkSemaphore* GetSemaphore(){ return &semaphore; }
     uint32 GetLength() const { return length; }
@@ -43,7 +43,7 @@ private:
 
 	VkSemaphore  semaphore;
     VulkanFrameBuffer frameBuffers;
-	VulkanDepthBuffer depthBuffers;
+	VulkanDepthBuffer depthBuffer;
 };
 
 

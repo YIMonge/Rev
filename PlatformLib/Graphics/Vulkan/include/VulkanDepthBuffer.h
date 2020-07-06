@@ -13,9 +13,12 @@ public:
 	virtual bool Create(VulkanDevice* device, const VkSwapchainKHR& swapchainKhr, GRAPHICS_FORMAT format, const revRect& rect);
 	virtual void Destroy();
 
+	const VkImageView& GetImageView() const { return view; }
 
 private:
 	VkDeviceMemory imageMemory;
+	VkImage  image;
+	VkImageView view;
 };
 
 #endif

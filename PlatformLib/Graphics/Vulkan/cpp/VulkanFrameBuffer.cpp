@@ -12,10 +12,10 @@ VulkanFrameBuffer::~VulkanFrameBuffer()
 {
 }
 
-bool VulkanFrameBuffer::Create(VulkanDevice* device, const VkSwapchainKHR& swapchainKhr, GRAPHICS_FORMAT format, const revRect& rect, uint32 num, const VkRenderPass& renderPass)
+bool VulkanFrameBuffer::Create(VulkanDevice* device, const VkSwapchainKHR& swapchainKhr, GRAPHICS_FORMAT format, const revRect& rect, uint32 num, const VkRenderPass& renderPass, const VkImageView& depthBufferView)
 {
     this->device = device;
-    this->foramt = ConvertToVKFormat(format);
+    this->format = ConvertToVKFormat(format);
     uint32 imageCount = 0;
     VkResult result = vkGetSwapchainImagesKHR(device->GetDevice(), swapchainKhr, &imageCount, nullptr);
     if(result != VK_SUCCESS) {
@@ -43,15 +43,15 @@ bool VulkanFrameBuffer::Create(VulkanDevice* device, const VkSwapchainKHR& swapc
     for(uint32 i = 0; i < num; ++i){
         VkImageView  attachments[2] = {
                 views[i],
-                VK_NULL_HANDLE, // TODO: depth
+                depthBufferView
         };
         VkFramebufferCreateInfo framebufferCreateInfo = {};
         framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         framebufferCreateInfo.pNext = nullptr;
         framebufferCreateInfo.renderPass = renderPass;
         framebufferCreateInfo.layers = 1;
-        framebufferCreateInfo.attachmentCount = 1; // if using depth set to 2
-        framebufferCreateInfo.pAttachments = attachments;
+		framebufferCreateInfo.attachmentCount = depthBufferView != NULL_HANDLE ? 2 : 1; 
+		framebufferCreateInfo.pAttachments = attachments;
         framebufferCreateInfo.width = rect.w;
         framebufferCreateInfo.height = rect.h;
        
