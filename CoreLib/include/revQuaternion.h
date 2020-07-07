@@ -29,15 +29,12 @@ public:
 	revQuaternion(const revVector4& revVector4);
 
 	void Identity();
-
-	void Add(const revQuaternion& quat);
-	void Sub(const revQuaternion& quat);
-	void mult(const revQuaternion& quat);
-	void MultiScalar(float s);
+	void Mul(const revQuaternion& quat);
+	void MulScalar(float s);
 	void DivScalar(float s);
 
-	void CreateRotation(float Radius, float xval, float yval, float zval);
-	void CreateRotation(float Radius, revVector3& axis);
+	void CreateRotation(float radian, float xval, float yval, float zval);
+	void CreateRotation(float radian, const revVector3& axis);
 
 
 	revMatrix44 CreateRotationMatrix();

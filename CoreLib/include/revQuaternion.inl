@@ -41,23 +41,7 @@ inline void revQuaternion::Identity( )
 	w = 1.0f;
 }
 
-inline void revQuaternion::Add( const revQuaternion& quat )
-{
-	x += quat.x;
-	y += quat.y;
-	z += quat.z;
-	w += quat.w;
-}
-
-inline void revQuaternion::Sub( const revQuaternion& quat )
-{
-	x -= quat.x;
-	y -= quat.y;
-	z -= quat.z;
-	w -= quat.w;
-}
-
-inline void revQuaternion::mult( const revQuaternion& quat )
+inline void revQuaternion::Mul( const revQuaternion& quat )
 {
 	revQuaternion leftrevQuat = *this;
 
@@ -67,7 +51,7 @@ inline void revQuaternion::mult( const revQuaternion& quat )
 	w = leftrevQuat.w * quat.w - leftrevQuat.x * quat.x - leftrevQuat.y * quat.y - leftrevQuat.z * quat.z;
 }
 
-inline void revQuaternion::MultiScalar( float s )
+inline void revQuaternion::MulScalar( float s )
 {
 	x *= s;
 	y *= s;
@@ -83,9 +67,9 @@ inline void revQuaternion::DivScalar( float s )
 	w /= s;
 }
 
-inline void revQuaternion::CreateRotation(float Radius, float xval, float yval, float zval)
+inline void revQuaternion::CreateRotation(float radian, float xval, float yval, float zval)
 {
-	float rad = Radius / 2.0f;
+	float rad = radian / 2.0f;
 	float sinval = sinf(rad);
 	w = cosf(rad);
 	x = xval * sinval;
@@ -93,9 +77,9 @@ inline void revQuaternion::CreateRotation(float Radius, float xval, float yval, 
 	z = zval * sinval;
 }
 
-inline void revQuaternion::CreateRotation(float Radius, revVector3& axis)
+inline void revQuaternion::CreateRotation(float radian, const revVector3& axis)
 {
-	float rad = Radius / 2.0f;
+	float rad = radian / 2.0f;
 	float sinval = sinf(rad);
 	w = cosf(rad);
 	x = axis.x * sinval;
@@ -117,8 +101,8 @@ inline float revQuaternion::GetNorm()
 inline revVector3 revQuaternion::Vector3TransformCoord(const revVector3& vec)
 {
 	revQuaternion qur(w, -x, -y, -z), qpos(vec);
-	qur.mult(qpos);
-	qur.mult(*this);
+	qur.Mul(qpos);
+	qur.Mul(*this);
 
 	return revVector3(qur.x, qur.y, qur.z);
 }
