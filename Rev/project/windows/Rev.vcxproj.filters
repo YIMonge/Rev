@@ -35,6 +35,9 @@
     <ClCompile Include="..\..\cpp\revModelLoader.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\cpp\revTransform.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\revApp.h">
@@ -83,6 +86,9 @@
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\revModelLoader.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revTransform.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>

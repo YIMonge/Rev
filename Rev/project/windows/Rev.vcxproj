@@ -59,6 +59,7 @@
     <ClCompile Include="..\..\cpp\revMeshRenderer.cpp" />
     <ClCompile Include="..\..\cpp\revModelLoader.cpp" />
     <ClCompile Include="..\..\cpp\revThreadPool.cpp" />
+    <ClCompile Include="..\..\cpp\revTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\revApp.h" />
@@ -76,6 +77,7 @@
     <ClInclude Include="..\..\include\revSerializer.h" />
     <ClInclude Include="..\..\include\revSystemBase.h" />
     <ClInclude Include="..\..\include\revThreadPool.h" />
+    <ClInclude Include="..\..\include\revTransform.h" />
     <ClInclude Include="..\..\include\revWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
