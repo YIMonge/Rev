@@ -1,0 +1,12 @@
+{
+    "root": {
+        "metaData": {
+            "guid": 0,
+            "userData": ""
+        },
+        "importSetting": {
+            "readOnly": true,
+            "usageForCollision": false
+        }
+    }
+}
