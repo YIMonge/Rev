@@ -38,14 +38,14 @@ FBXLoader::~FBXLoader()
 	}
 }
 
-void FBXLoader::LoadFromFile(const revString& path, revModel* model)
+bool FBXLoader::LoadFromFile(const revString& path, revModel* model)
 {
-	if (model == nullptr) return;
+	if (model == nullptr) return false;
 
 	FbxImporter* importer = FbxImporter::Create(manager, "");
 	if (!importer->Initialize(path.c_str(), -1, manager->GetIOSettings())) {
 		NATIVE_LOGE("[FBX] Load Error %s, %d", __FILE__, __LINE__);
-		return;
+		return false;
 	}
 	FbxManager::GetFileFormatVersion(sdkMajorVersion, sdkMinorVersion, sdkRevision);
 	
@@ -65,6 +65,7 @@ void FBXLoader::LoadFromFile(const revString& path, revModel* model)
 
 	scene->Destroy();
 	importer->Destroy();
+	return true;
 }
 
 void FBXLoader::ImportNode(FbxNode* node, revModel* model)
@@ -82,6 +83,7 @@ void FBXLoader::ImportNode(FbxNode* node, revModel* model)
 		revArray<revVector3> vertices;
 		revArray<revVector3> normals;
 		revArray<revVector2> texcoords[MAX_TEXCOORD_NUM];
+		revArray<revColor> vertexColors[MAX_VERTEX_COLOR_NUM];
 		revArray<revIndex3> indexies;
 
 		uint32 normalCount = meshNode->GetElementNormalCount();
@@ -156,7 +158,30 @@ void FBXLoader::ImportNode(FbxNode* node, revModel* model)
 			INPUT_ELEMENT_TYPE::COLOR2,
 			INPUT_ELEMENT_TYPE::COLOR3,
 		};
-		// TODO: read color element
+
+		// color 
+		uint32 elementColorCount = meshNode->GetElementVertexColorCount();
+		for (uint32 i = 0; i < elementColorCount; ++i) {
+			FbxGeometryElementVertexColor* colorBuffer = meshNode->GetElementVertexColor(i);
+
+			auto& colors = colorBuffer->GetDirectArray();
+			auto& colorIndexies = colorBuffer->GetIndexArray();
+
+			uint32 colorIndexCount = colorIndexies.GetCount();
+			vertexColors[i].resize(colorIndexCount);
+
+			for (uint32 j = 0; j < colorIndexCount; ++j) {
+				uint32 index = colorIndexies.GetAt(j);
+				FbxColor fbxColor = colors.GetAt(index);
+				revColor color(static_cast<f32>(fbxColor.mRed), 
+					static_cast<f32>(fbxColor.mGreen), 
+					static_cast<f32>(fbxColor.mBlue), 
+					static_cast<f32>(fbxColor.mAlpha));
+				vertexColors[i].push_back(color);
+			}
+			meshResource.SetColorArray(i, vertexColors[i]);
+			meshResource.SetFormat(COLOR_ELEMENT[i]);
+		}
 
 		meshResource.CreateVertexBufferData();
 		model->AddMesh(meshResource);
@@ -166,123 +191,8 @@ void FBXLoader::ImportNode(FbxNode* node, revModel* model)
 	for (uint32 i = 0; i < childNodeCount; ++i) {
 		ImportNode(node->GetChild(i), model);
 	}
-
-
 }
 
-
-void FBXLoader::LoadStaticMesh(FbxNode* parentNode)
-{
-	uint32 format;
-	revArray<ControlPoint> controlPointArray;
-	revArray<revIndex3> indexArray;
-	FbxMesh* meshNode = parentNode->GetMesh();
-
-	uint32 controlPointCount = meshNode->GetControlPointsCount();
-	controlPointArray.reserve(controlPointCount);
-	
-	format |= FBX_FORMAT_FLAG_VERTEX;
-
-	uint32 polygonCount = meshNode->GetPolygonCount();
-	for (uint32 i = 0; i < polygonCount; ++i) {
-		// always 3 because I did triangulate. 
-		uint32 polygonSize = meshNode->GetPolygonSize(i);
-		if (polygonSize != 3) NATIVE_LOGE("%s, %s", __FILE__, __LINE__);
-		revIndex3 index;
-		index.x = meshNode->GetPolygonVertex(i, 0);
-		index.y	= meshNode->GetPolygonVertex(i, 1);
-		index.z = meshNode->GetPolygonVertex(i, 2);
-		indexArray.push_back(index);
-	}
-
-	for (uint32 i = 0; i < polygonCount; ++i) {
-		for (uint32 j = 0; j < 3; ++j) {
-			uint32 index = indexArray[i].data[j];
-			auto fbxControlPoint = meshNode->GetControlPointAt(index);
-			ControlPoint controlPoint;
-			controlPoint.position.x = static_cast<float>(fbxControlPoint[0]);
-			controlPoint.position.y = static_cast<float>(fbxControlPoint[1]);
-			controlPoint.position.z = static_cast<float>(fbxControlPoint[2]);
-			controlPoint.position.z = static_cast<float>(fbxControlPoint[2]);
-			controlPointArray.push_back(controlPoint);		
-		}
-	}
-
-
-	FbxGeometryElementNormal* elementNormal = meshNode->GetElementNormal(0);
-	auto normalMappingMode = elementNormal->GetMappingMode();
-	auto normalReferenceMode = elementNormal->GetReferenceMode();
-
-	if (elementNormal->GetDirectArray().GetCount() > 0) {
-		format |= FBX_FORMAT_FLAG_NORMAL;
-	}
-
-	switch (normalMappingMode)
-	{
-	case FbxLayerElement::eByPolygonVertex:
-	{
-		uint32 normalIndex = 0;
-		for (uint32 i = 0; i < polygonCount; ++i) {
-			for (uint32 j = 0; j < 3; ++j) {
-				FbxVector4 n;
-				meshNode->GetPolygonVertexNormal(i, j, n);
-				controlPointArray[normalIndex++].normal = revVector3(n[0], n[1], n[2]);
-			}
-		}
-	}
-		break;
-
-
-	case FbxLayerElement::eByControlPoint:
-	{
-		uint32 normalIndex = 0;
-		for (uint32 i = 0; i < polygonCount; ++i) {
-			for (uint32 j = 0; j < 3; ++j) {
-				uint32 index = indexArray[i].data[j];
-				auto n = elementNormal->GetDirectArray().GetAt(index);
-				controlPointArray[normalIndex++].normal = revVector3(n[0], n[1], n[2]);
-			}
-		}
-	}
-		break;
-
-	}
-
-	// TODO: multi layer 
-	FbxLayerElementUV* elementUV = meshNode->GetLayer(0)->GetUVs();
-	auto uvMappingMode = elementNormal->GetMappingMode();
-	auto uvReferenceMode = elementNormal->GetReferenceMode();
-
-	const char* uvSetName = meshNode->GetLayer(0)->GetUVSets()[0]->GetName();
-
-	uint32 uvCount = elementUV->GetDirectArray().GetCount();
-	if (uvCount > 0) {
-		format |= FBX_FORMAT_FLAG_TEXCOORD;
-	}
-
-	switch (uvMappingMode) {
-	case FbxLayerElement::eByPolygonVertex:
-		{
-			uint32 uvIndex = 0;
-			for (uint32 i = 0; i < polygonCount; ++i) {
-				for (uint32 j = 0; j < 3; ++j) {
-					FbxVector2 uv;
-					bool mapped;
-					meshNode->GetPolygonVertexUV(i, j, uvSetName, uv, mapped);
-					controlPointArray[uvIndex++].texCoord = revVector2(uv[0], uv[1]);
-				}
-			}
-		}
-		break;
-	}
-
-	// load children 
-	uint32 childCount = parentNode->GetChildCount();
-	for (uint32 i = 0; i < childCount; ++i) {		
-		LoadStaticMesh(parentNode->GetChild(i));
-	}
-
-}
 
 
 #endif

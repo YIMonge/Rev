@@ -4,6 +4,10 @@
 #include "Window.h"
 
 #include "FbxLoader.h"
+#include "revModelLoader.h"
+
+#define IRONMAN 0
+#define CBUFFER_TEX 1
 
 struct cbuffer
 {
@@ -100,8 +104,10 @@ void DX12Renderer::Render()
 	pipelineState.Apply(globalCommandList);
 	// TODO: index detemine by what?
 	cbufferHeap.Apply(globalCommandList, 0);
+#if CBUFFER_TEX
 	textureHeap.Apply(globalCommandList, 1);
 	samplerHeap.Apply(globalCommandList, 2);
+#endif
 	swapChain.Appply(globalCommandList);
 
 	meshRenderer.Draw(globalCommandList);
@@ -118,25 +124,33 @@ revMaterial mat;
 
 bool DX12Renderer::IntialzieForApp()
 {
+
 	//vertexShader.LoadFromFile(device, "cbuffer_vert.hlsl", SHADER_TYPE::VERTX);
 	//fragmentShader.LoadFromFile(device, "cbuffer_frag.hlsl", SHADER_TYPE::FRAGMENT);
 	//vertexShader.LoadFromFile(device, "cbufferTex_vert.hlsl", SHADER_TYPE::VERTX);
 	//fragmentShader.LoadFromFile(device, "cbufferTex_frag.hlsl", SHADER_TYPE::FRAGMENT); 
 	//vertexShader.LoadFromFile(device, "texture_vert.hlsl", SHADER_TYPE::VERTX);
 	//fragmentShader.LoadFromFile(device, "texture_frag.hlsl", SHADER_TYPE::FRAGMENT);
+#if CBUFFER_TEX
 	vertexShader.LoadFromFile(device, "model_vert.hlsl", SHADER_TYPE::VERTX);
 	fragmentShader.LoadFromFile(device, "model_frag.hlsl", SHADER_TYPE::FRAGMENT);
+	//loader.LoadFromFile("../../Resources/Models/cube_maya.fbx", &model);
+	revModelLoader loader;
+	//FBXLoader loader;
+	loader.LoadFromFile("../../Resources/Models/cube_blender.mdl", &model);
+#endif
+#if IRONMAN
+	vertexShader.LoadFromFile(device, "ironman_vert.hlsl", SHADER_TYPE::VERTX);
+	fragmentShader.LoadFromFile(device, "ironman_frag.hlsl", SHADER_TYPE::FRAGMENT);
+	revModelLoader loader;
+	loader.LoadFromFile("../../Resources/Models/ironman.fbx", &model);
+#endif
 
 	mat.SetShader(SHADER_TYPE::VERTX, &vertexShader);
 	mat.SetShader(SHADER_TYPE::FRAGMENT, &fragmentShader);
 
-	FBXLoader loader;
-	//loader.LoadFromFile("../../Resources/Models/plane.fbx", &model);
-	//loader.LoadFromFile("../../Resources/Models/cube_maya.fbx", &model);
-	loader.LoadFromFile("../../Resources/Models/cube_blender.fbx", &model);
-	//	loader.LoadFromFile("../../Resources/Models/ironman.fbx", &mesh2);
 	meshRenderer.SetMeshes(model.GetMeshes());
-	meshRenderer.SetMaterial(0, &mat);
+	meshRenderer.SetMaterialToAllSubMesh(&mat);
 
 	cbufferData.view.CreateLookAtMatrixLH(revVector3(0.0f, 0.0f, -10.0f), revVector3(0.0f, 0.0f, 0.0f), revVector3(0.0f, 1.0f, 0.0f));
 	cbufferData.projection.CreatePerspectiveMatrixLH(MathUtil::ToRadian(45.0f), main_window->GetAspectRatio() , 0.001f, 100.0f);

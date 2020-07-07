@@ -57,6 +57,7 @@
     <ClCompile Include="..\..\cpp\revLogger.cpp" />
     <ClCompile Include="..\..\cpp\revMesh.cpp" />
     <ClCompile Include="..\..\cpp\revMeshRenderer.cpp" />
+    <ClCompile Include="..\..\cpp\revModelLoader.cpp" />
     <ClCompile Include="..\..\cpp\revThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +71,7 @@
     <ClInclude Include="..\..\include\revMesh.h" />
     <ClInclude Include="..\..\include\revMeshRenderer.h" />
     <ClInclude Include="..\..\include\revModel.h" />
+    <ClInclude Include="..\..\include\revModelLoader.h" />
     <ClInclude Include="..\..\include\revResource.h" />
     <ClInclude Include="..\..\include\revSerializer.h" />
     <ClInclude Include="..\..\include\revSystemBase.h" />
@@ -210,11 +212,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include;$(ProjectDir)..\..\..\ThirdParty\cereal\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include;$(ProjectDir)..\..\..\ThirdParty\cereal\include;$(ProjectDir)..\..\..\ThirdParty\fbx\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VK|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\Graphics\Vulkan\include;$(VULKAN_SDK)\include;$(ProjectDir)..\..\..\ThirdParty\cereal\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\..\include\;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(WindowsSdkDir)Include\10.0.10240.0\shared;$(WindowsSdkDir)Include\10.0.10240.0\um;$(WindowsSdkDir)Include\10.0.10240.0\ucrt;$(ProjectDir)..\..\..\PlatformLib\include;$(ProjectDir)..\..\..\CoreLib\include;$(ProjectDir)..\..\lib\;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\Graphics\Vulkan\include;$(VULKAN_SDK)\include;$(ProjectDir)..\..\..\ThirdParty\cereal\include;$(ProjectDir)..\..\..\ThirdParty\fbx\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>

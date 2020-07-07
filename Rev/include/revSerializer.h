@@ -41,10 +41,11 @@ public:
     }
 
     template<typename T>
-    static void Deserialize(const char* path, T& obj)
+    static bool Deserialize(const char* path, T& obj)
     {
         revString str;
-        File file(path, FileMode::ReadText);
+		File file;
+		if (!file.Open(path, FileMode::ReadText)) return false;
         str.resize(file.GetFileSize());
         file.ReadData(&str[0]);
         file.Close();
@@ -53,6 +54,7 @@ public:
             cereal::JSONInputArchive archive_in(ss);
             archive_in(obj);
         }
+		return true;
     }
 };
 

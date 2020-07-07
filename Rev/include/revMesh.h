@@ -5,9 +5,9 @@
 #include "revMath.h"
 #include "revResource.h"
 #include "revGraphicsTypedef.h"
-
 class revMesh : public revResource
 {
+friend class revModelLoader;
 public:
 	revMesh() :
 	readOnly(false){}
@@ -42,7 +42,6 @@ public:
 #endif 
 
 private:
-
 	// if disable readonly you can access these data and recreate vertex data 
 	revArray<revVector3> vertices;
 	revArray<revVector3> normals;

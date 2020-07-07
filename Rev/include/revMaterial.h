@@ -174,6 +174,7 @@ public:
     SERIALIZE_FUNC()
     {
         archive(
+			REV_NVP(metaData),
 			REV_NVP(blend),
 			REV_NVP(depthStencil),
             REV_NVP(rasterization)

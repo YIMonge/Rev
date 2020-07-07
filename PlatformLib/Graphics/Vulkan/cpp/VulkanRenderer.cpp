@@ -157,12 +157,10 @@ void VulkanRenderer::Render()
 	revMatrix44 t;
 	t.RotationXYZ(revVector3(MathUtil::ToRadian(1.0f), MathUtil::ToRadian(2.0f), MathUtil::ToRadian(4.0f)));
 	cbufferData.world *= t;
-	t = cbufferData.world;
 	cbufferData.wvp = cbufferData.world * cbufferData.view * cbufferData.projection;
 	cbufferData.wvp.Transpose();
-	cbufferData.world.Transpose();
 	constantBuffer->Update(&cbufferData, sizeof(cbufferData));
-	cbufferData.world = t;
+
 
     auto& commandList = device.GetCommandLists()[swapChain.GetCurrentFrameIndex()];
      ExecuteCommand(commandList, true);

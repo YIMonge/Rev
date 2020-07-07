@@ -64,4 +64,7 @@ void revMeshRenderer::SetMaterial(uint32 index, revMaterial* material)
 	materials[index] = material;
 }
 
-
+void revMeshRenderer::SetMaterialToAllSubMesh(revMaterial* material)
+{
+	materials.resize(vertexBuffers.size(), material);
+}

@@ -12,7 +12,7 @@ class FBXLoader
 public:
 	FBXLoader();
 	virtual ~FBXLoader();
-	void LoadFromFile(const revString& path, revModel* model);
+	bool LoadFromFile(const revString& path, revModel* model);
 
 private:
 	void ImportNode(FbxNode* node, revModel* model);

@@ -18,6 +18,7 @@ public:
 	virtual void SetMeshes(const revArray<revMesh>& meshes);
 	virtual void SetMesh(uint32 index, const revMesh& mesh);
 
+	virtual void SetMaterialToAllSubMesh(revMaterial* material);
 	virtual void SetMaterials(const revArray<revMaterial*>& materials);
 	virtual void SetMaterial(uint32 index, revMaterial* material);
 
