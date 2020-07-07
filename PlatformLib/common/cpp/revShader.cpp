@@ -3,8 +3,8 @@
 
 bool revShader::LoadMetaData(const char* path)
 {
-	char metaPath[256];
-	makeMetaPath(metaPath, path);
+	char metaPath[MAX_META_PATH_LENGTH];
+	MakeMetaPath(metaPath, path);
 #ifdef _DEBUG
 	File metaFile;
 	// TODO: debug always recreate.... should compare last modified 

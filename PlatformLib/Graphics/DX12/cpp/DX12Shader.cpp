@@ -60,7 +60,7 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 #if _DEBUG
     if (!LoadMetaData(resourcePath.c_str()) || true) {
         char metaPath[256];
-        makeMetaPath(metaPath, resourcePath.c_str());
+        MakeMetaPath(metaPath, resourcePath.c_str());
         CreateMetaDataFromShader(metaPath);
         LoadMetaData(resourcePath.c_str());
 #else

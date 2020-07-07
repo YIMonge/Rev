@@ -19,8 +19,8 @@ bool revTexture::LoadFromFile(revDevice* device, const char* path)
     }
 
     // Load Meta Data
-    char metaPath[256];
-    makeMetaPath(metaPath, resourcePath.c_str());
+    char metaPath[MAX_META_PATH_LENGTH];
+    MakeMetaPath(metaPath, resourcePath.c_str());
 #ifdef _DEBUG
     // if meta file is not found try to make default meta
     File metaFile;

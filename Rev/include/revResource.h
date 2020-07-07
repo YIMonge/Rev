@@ -14,13 +14,11 @@ public:
 
 	const revString& GetName() const { return name; }
 
-#ifdef _DEBUG
 	void SetName(const revString& name) { this->name = name; }
 	void SetName(const char* name) { this->name = name; }
-#endif
 
-protected:
-	void makeMetaPath(char* metaPath, const char* path)
+	static const uint32 MAX_META_PATH_LENGTH = 256;
+	static void MakeMetaPath(char* metaPath, const char* path)
 	{
 		strcpy(metaPath, path);
 		strcat(metaPath, ".meta");
