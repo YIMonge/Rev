@@ -16,8 +16,10 @@ public:
 
 private:
 	void ImportNode(FbxNode* node, revModel* model);
-	void LoadStaticMesh(FbxNode* parentNode);
-	
+	void ImportVertexData(FbxNode* node, revModel* model);
+	void ImportMaterialData(FbxNode* node, revModel* model);
+
+
 	int32 sdkMajorVersion;
 	int32 sdkMinorVersion;
 	int32 sdkRevision;

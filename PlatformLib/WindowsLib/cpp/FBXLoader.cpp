@@ -70,6 +70,17 @@ bool FBXLoader::LoadFromFile(const revString& path, revModel* model)
 
 void FBXLoader::ImportNode(FbxNode* node, revModel* model)
 {
+	ImportVertexData(node, model);
+
+
+	uint32 childNodeCount = node->GetChildCount();
+	for (uint32 i = 0; i < childNodeCount; ++i) {
+		ImportNode(node->GetChild(i), model);
+	}
+}
+
+void FBXLoader::ImportVertexData(FbxNode* node, revModel* model)
+{
 	if (node == nullptr) return;
 
 	revMesh meshResource;
@@ -185,11 +196,6 @@ void FBXLoader::ImportNode(FbxNode* node, revModel* model)
 
 		meshResource.CreateVertexBufferData();
 		model->AddMesh(meshResource);
-	}
-
-	uint32 childNodeCount = node->GetChildCount();
-	for (uint32 i = 0; i < childNodeCount; ++i) {
-		ImportNode(node->GetChild(i), model);
 	}
 }
 
