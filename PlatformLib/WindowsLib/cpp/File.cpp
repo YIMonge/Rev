@@ -1,4 +1,5 @@
-#include "../include/File.h"
+#include "File.h"
+#include "Log.h"
 #include <assert.h>
 #include <string.h>
 
@@ -15,8 +16,8 @@ namespace
 	};
 }
 
-File::File() 
-	: file(nullptr)
+File::File() : 
+	file(nullptr)
 {
 }
 
@@ -45,24 +46,40 @@ void File::Close()
 	file = nullptr;
 }
 
-void File::ReadData(char* data, uint32 length)
+uint32 File::ReadData(void* data, uint32 length, uint32 offset)
 {
 	if (mode == FileMode::WriteBinary || mode == FileMode::WriteText) {
-		// TODO: assertion
-		return;
+		NATIVE_LOGE("File mode is write only. cant read data");
+		return offset;
 	}
 	if (length == 0) length = GetFileSize();
+	fseek(file, offset, SEEK_SET);
 	fread(data, 1, length, file);
+	fseek(file, 0, SEEK_SET);
+	return offset + length;
 }
 
-void File::WriteData(char* data, uint32 length)
+void File::WriteData(const void* data, uint32 length)
 {
 	if (mode == FileMode::ReadBinary || mode == FileMode::ReadText) {
-		// TODO: assertion
+		NATIVE_LOGE("File mode is read only. cant write data");
 		return;
 	}
 	fwrite(data, 1, length, file);
 }
+
+void File::WriteAppend(const void* data, uint32 length)
+{
+	if (mode == FileMode::ReadBinary || mode == FileMode::ReadText) {
+		NATIVE_LOGE("File mode is read only. cant write data");
+		return;
+	}
+
+	fseek(file, 0, SEEK_END);
+	fwrite(data, 1, length, file);
+	fseek(file, 0, SEEK_SET);
+}
+
 
 uint32 File::GetFileSize()
 {
