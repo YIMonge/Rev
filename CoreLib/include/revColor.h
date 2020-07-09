@@ -4,11 +4,11 @@
 class revColor
 {
 public:
-	static const revColor red;
-	static const revColor green;
-	static const revColor blue;
-	static const revColor white;
-	static const revColor black;
+	static const revColor RED;
+	static const revColor GREEN;
+	static const revColor BLUE;
+	static const revColor WHITE;
+	static const revColor BLACK;
 
 	revColor():
 		r(0),
