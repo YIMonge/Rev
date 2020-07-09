@@ -1,7 +1,5 @@
 #include "FBXLoader.h"
 #include "Log.h"
-#include <set>
-
 #ifdef _DEBUG
 
 using namespace fbxsdk;
@@ -26,7 +24,8 @@ struct ControlPoint
 };
 
 FBXLoader::FBXLoader():
-	manager(nullptr)
+	manager(nullptr),
+	scene(nullptr)
 {
 	manager = FbxManager::Create();
 }
@@ -47,20 +46,14 @@ bool FBXLoader::LoadFromFile(const revString& path, revModel* model)
 		NATIVE_LOGE("[FBX] Load Error %s, %d", __FILE__, __LINE__);
 		return false;
 	}
-	FbxManager::GetFileFormatVersion(sdkMajorVersion, sdkMinorVersion, sdkRevision);
 	
-	// TODO: blender
-	//FbxIOFileHeaderInfo* fileHeaderInfo = importer->GetFileHeaderInfo();
-	
-	
-	FbxScene* scene = FbxScene::Create(manager, "scence");
+	scene = FbxScene::Create(manager, "scence");
 	importer->Import(scene);
 	FbxGeometryConverter converter(manager);
 	converter.Triangulate(scene, true);
-
 	FbxNode* root = scene->GetRootNode();
 	if (root) {
-		ImportNode(root, model);
+		ImportNode(root, model, nullptr);
 	}
 
 	scene->Destroy();
@@ -68,16 +61,19 @@ bool FBXLoader::LoadFromFile(const revString& path, revModel* model)
 	return true;
 }
 
-void FBXLoader::ImportNode(FbxNode* node, revModel* model)
+void FBXLoader::ImportNode(FbxNode* node, revModel* model, revTransform* parent)
 {
 	ImportVertexData(node, model);
+	ImportMatrix(node, model, parent);
 
-
+	const revArray<revTransform>& transforms = model->GetTransforms();
 	uint32 childNodeCount = node->GetChildCount();
 	for (uint32 i = 0; i < childNodeCount; ++i) {
-		ImportNode(node->GetChild(i), model);
+		ImportNode(node->GetChild(i), model, const_cast<revTransform*>(&transforms[static_cast<uint32>(transforms.size()) - 1]));
 	}
 }
+
+
 
 void FBXLoader::ImportVertexData(FbxNode* node, revModel* model)
 {
@@ -199,6 +195,33 @@ void FBXLoader::ImportVertexData(FbxNode* node, revModel* model)
 	}
 }
 
+void FBXLoader::ImportMatrix(FbxNode* node, revModel* model, revTransform* parent)
+{
+	if (node == nullptr) return;
+	FbxAnimEvaluator* animEvaluator = scene->GetAnimationEvaluator();
+	revTransform transform;
+	FbxVector4 fbxScale = animEvaluator->GetNodeLocalScaling(node);
+	FbxVector4 fbxRotation = animEvaluator->GetNodeLocalRotation(node);
+	FbxVector4 fbxPosition = animEvaluator->GetNodeLocalTranslation(node);
 
+	revVector3 scale(static_cast<f32>(fbxScale[0]), static_cast<f32>(fbxScale[1]), static_cast<f32>(fbxScale[2]));
+	revVector3 rotation(static_cast<f32>(fbxRotation[0]), static_cast<f32>(fbxRotation[1]), static_cast<f32>(fbxRotation[2]));
+	revVector3 position(static_cast<f32>(fbxPosition[0]), static_cast<f32>(fbxPosition[1]), static_cast<f32>(fbxPosition[2]));
+
+	transform.SetParent(parent);
+	transform.SetScale(scale);
+	transform.SetRotation(rotation);
+	transform.SetPosition(position);
+
+	model->AddTransform(transform);
+}
+
+void FBXLoader::ImportMaterialData(FbxNode* node, revModel* model)
+{
+	if (node == nullptr) return;
+
+
+
+}
 
 #endif

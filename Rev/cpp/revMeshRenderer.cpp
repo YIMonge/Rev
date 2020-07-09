@@ -10,9 +10,23 @@ revMeshRenderer::~revMeshRenderer()
 {
 }
 
-void revMeshRenderer::SetModel(const revModel& model)
+void revMeshRenderer::SetModel(const revModel* model)
 {
-	SetMeshes(model.GetMeshes());
+	this->model = model;
+	transforms = revArray<revTransform>(model->GetTransforms());
+	uint32 count = static_cast<uint32>(transforms.size());
+	constantBuffers.resize(count);
+
+	revMatrix44 matrixies[2];
+
+	for (uint32 i = 0; i < count; ++i) {
+		matrixies[0] = transforms[i].GetLocalMatrix();
+		matrixies[1] = transforms[i].GetWorldMatrix();
+
+		constantBuffers[i] = revGraphics::Get().CreateConstantBuffer();
+		constantBuffers[i]->Create(matrixies, sizeof(matrixies), 1, revGraphicsBuffer::USAGE::DYNAMIC);
+	}
+	SetMeshes(model->GetMeshes());
 }
 
 void revMeshRenderer::SetMeshes(const revArray<revMesh>& meshes)
@@ -67,4 +81,12 @@ void revMeshRenderer::SetMaterial(uint32 index, revMaterial* material)
 void revMeshRenderer::SetMaterialToAllSubMesh(revMaterial* material)
 {
 	materials.resize(vertexBuffers.size(), material);
+}
+
+void revMeshRenderer::Update(const revMatrix44& world)
+{
+	uint32 transformsCount = static_cast<uint32>(transforms.size());
+	for (uint32 i = 0; i < transformsCount; ++i) {
+		transforms[i].UpdateMatrix(world);
+	}
 }

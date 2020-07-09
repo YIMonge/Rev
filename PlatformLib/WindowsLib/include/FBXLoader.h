@@ -6,6 +6,7 @@
 #include "revArray.h"
 #include "revString.h"
 #include "revModel.h"
+#include "revTransform.h"
 
 class FBXLoader
 {
@@ -15,16 +16,14 @@ public:
 	bool LoadFromFile(const revString& path, revModel* model);
 
 private:
-	void ImportNode(FbxNode* node, revModel* model);
+	void ImportNode(FbxNode* node, revModel* model, revTransform* parent);
 	void ImportVertexData(FbxNode* node, revModel* model);
+	void ImportMatrix(FbxNode* node, revModel* model, revTransform* parent);
 	void ImportMaterialData(FbxNode* node, revModel* model);
 
-
-	int32 sdkMajorVersion;
-	int32 sdkMinorVersion;
-	int32 sdkRevision;
-	
-	FbxManager *manager;
+	revMatrix44 globalMatrix;
+	FbxManager* manager;
+	FbxScene* scene;
 };
 
 #endif

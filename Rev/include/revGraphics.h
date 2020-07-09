@@ -23,6 +23,7 @@ public:
 
 	revGraphicsBuffer* CreateVertexBuffer();
 	revGraphicsBuffer* CreateIndexBuffer();
+	revGraphicsBuffer* CreateConstantBuffer();
 
 	revDevice* GetDevice() { return renderer->GetDevice(); }
 

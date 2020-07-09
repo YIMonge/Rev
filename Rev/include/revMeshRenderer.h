@@ -13,7 +13,7 @@ public:
 	revMeshRenderer();
 	virtual ~revMeshRenderer();
 
-	void SetModel(const revModel& model);
+	virtual void SetModel(const revModel* model);
 
 	virtual void SetMeshes(const revArray<revMesh>& meshes);
 	virtual void SetMesh(uint32 index, const revMesh& mesh);
@@ -22,11 +22,14 @@ public:
 	virtual void SetMaterials(const revArray<revMaterial*>& materials);
 	virtual void SetMaterial(uint32 index, revMaterial* material);
 
-	virtual void Draw(revGraphicsCommandList& commandList) = 0;
+	virtual void Update(const revMatrix44& world);
 
 protected:
+	const revModel* model;
+	revArray<revTransform> transforms;
 	revArray<revGraphicsBuffer*> vertexBuffers;
 	revArray<revGraphicsBuffer*> indexBuffers;
+	revArray<revGraphicsBuffer*> constantBuffers;
 	revArray<revMaterial*> materials;
 
 };

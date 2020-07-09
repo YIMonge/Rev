@@ -59,3 +59,13 @@ revGraphicsBuffer* revGraphics::CreateIndexBuffer()
 	return new VulkanIndexBuffer(device);
 #endif
 }
+
+revGraphicsBuffer* revGraphics::CreateConstantBuffer()
+{
+	revDevice* device = renderer->GetDevice();
+#if defined(_USE_DIRECTX12)
+	return new DX12ConstantBuffer(device);
+#elif defined(_USE_VULKAN)
+	return new VulkanConstantBuffer(device);
+#endif
+}

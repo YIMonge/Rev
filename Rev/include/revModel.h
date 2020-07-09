@@ -4,6 +4,7 @@
 #include "revMesh.h"
 #include "revMaterial.h"
 #include "revResource.h"
+#include "revTransform.h"
 
 class revModel : public revResource
 {
@@ -13,9 +14,11 @@ public:
 	virtual ~revModel(){}
 
 	const revArray<revMesh>& GetMeshes() const { return meshes; }
+	const revArray<revTransform>& GetTransforms() const { return transforms; }
 
 #ifdef _DEBUG
 	void AddMesh(const revMesh& mesh) { meshes.push_back(mesh); }
+	void AddTransform(const revTransform& transform) { transforms.push_back(transform); }
 #endif
 	class ImportSetting
 	{
@@ -55,6 +58,7 @@ private:
 	DefaultMetaData metaData;
 	ImportSetting importSetting;
 
+	revArray<revTransform> transforms;
 	revArray<revMesh> meshes;
 	revArray<uint32> materials;
 };

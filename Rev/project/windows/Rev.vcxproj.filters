@@ -91,5 +91,8 @@
     <ClInclude Include="..\..\include\revTransform.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\revCamera.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

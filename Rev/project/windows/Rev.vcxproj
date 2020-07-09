@@ -64,6 +64,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\revApp.h" />
     <ClInclude Include="..\..\include\revAsyncTaskWorker.h" />
+    <ClInclude Include="..\..\include\revCamera.h" />
     <ClInclude Include="..\..\include\revCriticalSection.h" />
     <ClInclude Include="..\..\include\revDrawCommand.h" />
     <ClInclude Include="..\..\include\revGraphics.h" />

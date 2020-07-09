@@ -2,28 +2,26 @@
 
 revTransform::revTransform(revTransform* parent) :
 scale(revVector3(1.0f, 1.0f, 1.0f)),
-position(revVector3(0.0f, 0.0f, 0.0f))
+rotation(revVector3(0.0f, 0.0f, 0.0f)),
+position(revVector3(0.0f, 0.0f, 0.0f)),
+dirty(false)
 {
-	rotation.Identity();
 	this->parent = parent;
-	if(parent != nullptr) parent->children.push_back(this);
 	UpdateMatrix();
 }
 
 revTransform::~revTransform()
 {
-	if (parent != nullptr) {
-		parent->children.erase(std::find(parent->children.begin(), parent->children.end(), this));
-	}
 }
 
-void revTransform::UpdateMatrix()
+void revTransform::UpdateMatrix(const revMatrix44& parentMatrix)
 {
 	revMatrix44 s, r, t;
 	s.Scaling(scale);
-	r = rotation.CreateRotationMatrix();
+	r.RotationXYZ(rotation);
 	t.Translation(position);
 	local = s * r * t;
 	if (parent != nullptr) world = parent->GetWorldMatrix() * local;
 	else world = local;
+	dirty = false;
 }
