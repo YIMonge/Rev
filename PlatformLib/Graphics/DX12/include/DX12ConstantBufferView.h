@@ -12,7 +12,7 @@ public:
 	DX12ConstantBufferView() {}
 	virtual ~DX12ConstantBufferView(){}
 	
-	void Create(revDevice* device, const DX12ConstantBuffer& cbuffer, D3D12_CPU_DESCRIPTOR_HANDLE* heap);
+	void Create(revDevice* device, const revGraphicsBuffer* cbuffer, const D3D12_CPU_DESCRIPTOR_HANDLE& heap);
 	virtual void Destroy();
 private:
 	

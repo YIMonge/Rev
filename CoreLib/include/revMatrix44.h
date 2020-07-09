@@ -7,6 +7,8 @@
 class revMatrix44
 {
 public:
+	static const revMatrix44 Identity;
+
 	union
 	{
 		struct
@@ -41,7 +43,7 @@ public:
 			void		MulScalar( float s );
 			void		DivScalar( float s );
 
-			void		Identity();
+			void		CreateIdentity();
             revMatrix44	Inverse();
 
 			void		Scaling( const revVector3& vec );
@@ -74,11 +76,11 @@ public:
 			void		Set(revVector4 a, revVector4 b, revVector4 c, revVector4 d);
 			void		Set(float* afNum);
 
-			revVector4	Vector3Transform(const revVector3& vec);
+			revVector4	Vector3Transform(const revVector3& vec) const;
 	static	revVector4	Vector3Transform(const revVector3& vec, const revMatrix44& matrix);
-			revVector3	Vector3TransformCoord(const revVector3& vec);
+			revVector3	Vector3TransformCoord(const revVector3& vec)  const;
 	static	revVector3	Vector3TransformCoord(const revVector3& vec, const revMatrix44& matrix);
-			revVector3	Vector3TransformNormal(const revVector3& vec);
+			revVector3	Vector3TransformNormal(const revVector3& vec)  const;
 	static	revVector3	Vector3TransformNormal(const revVector3& vec, const revMatrix44& matrix);
 			revVector4	Vector4Transform(const revVector4& vec) const;
 	static	revVector4	Vector4Transform(const revVector4& vec, const revMatrix44& matrix);

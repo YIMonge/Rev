@@ -15,7 +15,7 @@ public:
 	bool Create(DX12Device* device, DESCRIPTOR_HEAP_TYPE type, uint32 numDescriptors, bool shaderVisiblity = true);
 	void Destroy();
 
-	void Apply(DX12CommandList& commandList, uint32 rootIndex, uint32 offset = 0);
+	void Apply(revGraphicsCommandList& commandList, uint32 rootIndex, uint32 offset = 0);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUHandle(uint32 index = 0) 
 	{
@@ -30,8 +30,9 @@ public:
 
 	class Chunk
 	{
-	friend class DX12DescriptorHeap;
+		friend class DX12DescriptorHeap;
 	public:
+		Chunk(){}
 
 		D3D12_CPU_DESCRIPTOR_HANDLE GetHandle(uint32 index = 0)
 		{
@@ -45,6 +46,7 @@ public:
 		}
 
 		uint32 GetIndexStartAllocation() const { return startIndex; }
+		uint32 GetDescriptorOffset(uint32 indexOfAllocation) const { return startIndex + indexOfAllocation; }
 	private:
 		Chunk(D3D12_CPU_DESCRIPTOR_HANDLE handle, uint32 allocationNum, uint32 startIndex, uint32 incrementalSize) {
 			base = handle;

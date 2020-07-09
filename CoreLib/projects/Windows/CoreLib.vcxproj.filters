@@ -29,6 +29,9 @@
     <ClCompile Include="..\..\cpp\revString.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\cpp\revVector3.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\revArray.h">

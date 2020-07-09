@@ -6,7 +6,7 @@
 #include "revMeshRenderer.h"
 #include "DX12VertexBufferView.h"
 #include "DX12IndexBufferView.h"
-
+#include "DX12ConstantBufferView.h"
 
 class DX12MeshRenderer : public revMeshRenderer
 {
@@ -14,13 +14,18 @@ public:
 	DX12MeshRenderer();
 	virtual ~DX12MeshRenderer();
 
+	virtual void SetModel(const revModel* model);
 	virtual void SetMesh(uint32 index, const revMesh& mesh);
 	void Destroy();
-	virtual void Draw(revGraphicsCommandList& commandList);
+
+	void Initialize(DX12DescriptorHeap* cBufferHeap);
+	virtual void Draw(revGraphicsCommandList& commandList, DX12DescriptorHeap& cBufferHeap, DX12DescriptorHeap& textureHeap, DX12DescriptorHeap& samplerHeap);
 
 private:
 	revArray<DX12VertexBufferView*> vertexBufferViews;
 	revArray<DX12IndexBufferView*> indexBufferViews;
+	revArray<DX12ConstantBufferView*> constantBufferViews;
+	DX12DescriptorHeap::Chunk cbufferHeapChunk;
 };
 
 

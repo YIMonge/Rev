@@ -6,6 +6,7 @@
 #include "FbxLoader.h"
 #include "revModelLoader.h"
 #include "revTransform.h"
+#include "revCamera.h"
 
 #define IRONMAN 1
 #define CBUFFER_TEX 0
@@ -21,6 +22,7 @@ struct cbuffer
 cbuffer cbufferData;
 revMaterial mat;
 revTransform transform;
+revCamera camera;
 
 void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
@@ -42,7 +44,7 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 
 	DX12DescriptorHeap::Chunk resourceChunk = cbufferHeap.Allocation(1);
 	auto resourceHandle = resourceChunk.GetHandle();
-	constantBufferView.Create(&device, *constantBuffer, &resourceHandle);
+	constantBufferView.Create(&device, constantBuffer, resourceHandle);
 
 	// Load resource 
 	texture.LoadFromFile(&device, "sample_tex.png");
@@ -92,11 +94,7 @@ void DX12Renderer::Render()
 	revVector3 newPos = transform.GetPosition() + revVector3(0.03f, 0.0f, 0.0f);
 	if (newPos.x > 10.0f) newPos.x = -10.0f;
 	transform.SetPosition(newPos);
-	revQuaternion q = transform.GetRoation();
-	revQuaternion q2;
-	q2.CreateRotation(MathUtil::ToRadian(1.5f), revVector3(0.0f, 1.0f, 0.0f));
-	q.Mul(q2);
-	transform.SetRotation(q);
+	transform.SetRotation(transform.GetRoation() + revVector3(0.0f, MathUtil::ToRadian(1.5f), 0.0f));
 
 	cbufferData.world = transform.GetWorldMatrix();
 	cbufferData.wvp = cbufferData.world * cbufferData.view * cbufferData.projection;
@@ -118,9 +116,9 @@ void DX12Renderer::Render()
 	textureHeap.Apply(globalCommandList, 1);
 	samplerHeap.Apply(globalCommandList, 2);
 #endif
-	swapChain.Appply(globalCommandList, revColor::blue);
+	swapChain.Appply(globalCommandList, revColor::BLUE);
 
-	meshRenderer.Draw(globalCommandList);
+	meshRenderer.Draw(globalCommandList, cbufferHeap, textureHeap, samplerHeap);
 
 	globalCommandList.Close();
 	ExecuteCommand(globalCommandList);
@@ -150,10 +148,10 @@ bool DX12Renderer::IntialzieForApp()
 	vertexShader.LoadFromFile(device, "ironman_vert.hlsl", SHADER_TYPE::VERTX);
 	fragmentShader.LoadFromFile(device, "ironman_frag.hlsl", SHADER_TYPE::FRAGMENT);
 	// converter test
-	//FBXLoader fbxLoader;
-	//fbxLoader.LoadFromFile("../../Resources/Models/ironman.fbx", &model);
-	revModelLoader loader;
-	loader.LoadFromFile("../../Resources/Models/ironman.mdl", &model);
+	FBXLoader fbxLoader;
+	fbxLoader.LoadFromFile("../../Resources/Models/ironman.fbx", &model);
+	//revModelLoader loader;
+	//loader.LoadFromFile("../../Resources/Models/ironman.mdl", &model);
 #endif
 
 	mat.SetShader(SHADER_TYPE::VERTX, &vertexShader);
@@ -164,7 +162,7 @@ bool DX12Renderer::IntialzieForApp()
 
 	cbufferData.view.CreateLookAtMatrixLH(revVector3(0.0f, 0.0f, -30.0f), revVector3(0.0f, 0.0f, 0.0f), revVector3(0.0f, 1.0f, 0.0f));
 	cbufferData.projection.CreatePerspectiveMatrixLH(MathUtil::ToRadian(45.0f), main_window->GetAspectRatio() , 0.001f, 100.0f);
-	cbufferData.wvp.Identity();
+	cbufferData.wvp = revMatrix44::Identity;
 	cbufferData.wvp = cbufferData.view * cbufferData.projection;
 	cbufferData.wvp.Transpose();
 

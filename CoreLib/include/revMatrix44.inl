@@ -101,7 +101,7 @@ inline void revMatrix44::DivScalar( float s )
 	}
 }
 
-inline void revMatrix44::Identity()
+inline void revMatrix44::CreateIdentity()
 {
 	for( int i=0; i<4; i++ ){
 		for( int j=0; j<4; j++ ){
@@ -118,7 +118,7 @@ inline void revMatrix44::Identity()
 
 inline void revMatrix44::Scaling( const revVector3& vec )
 {
-	Identity();
+	CreateIdentity();
 
 	m[0][0] = vec.x;
 	m[1][1] = vec.y;
@@ -127,7 +127,7 @@ inline void revMatrix44::Scaling( const revVector3& vec )
 
 inline void revMatrix44::Scaling( float x, float y, float z )
 {
-	Identity();
+	CreateIdentity();
 
 	m[0][0] = x;
 	m[1][1] = y;
@@ -141,7 +141,7 @@ inline void revMatrix44::RotationX( float radian )
 	val_sin = sinf( radian );
 	val_cos = cosf( radian );
 
-	Identity();
+	CreateIdentity();
 
 	m[1][1] =  val_cos;
 	m[1][2] =  val_sin;
@@ -156,7 +156,7 @@ inline void revMatrix44::RotationY( float radian )
 	val_sin = sinf( radian );
 	val_cos = cosf( radian );
 
-	Identity();
+	CreateIdentity();
 
 	m[0][0] =  val_cos;
 	m[0][2] = -val_sin;
@@ -171,7 +171,7 @@ inline void revMatrix44::RotationZ( float radian )
 	val_sin = sinf( radian );
 	val_cos = cosf( radian );
 
-	Identity();
+	CreateIdentity();
 
 	m[0][0] =  val_cos;
 	m[0][1] =  val_sin;
@@ -230,7 +230,7 @@ inline void revMatrix44::RotationZYX( float x, float y, float z )
 
 inline void revMatrix44::Translation( const revVector3& vec )
 {
-	Identity();
+	CreateIdentity();
 
 	m[3][0] = vec.x;
 	m[3][1] = vec.y;
@@ -239,15 +239,12 @@ inline void revMatrix44::Translation( const revVector3& vec )
 
 inline void revMatrix44::Translation( float x, float y, float z )
 {
-	Identity();
+	CreateIdentity();
 
 	m[3][0] = x;
 	m[3][1] = y;
 	m[3][2] = z;
 }
-
-
-
 
 inline void revMatrix44::Transpose()
 {
@@ -260,7 +257,7 @@ inline void revMatrix44::Transpose()
 	}
 }
 
-inline revVector4 revMatrix44::Vector3Transform(const revVector3& vec)
+inline revVector4 revMatrix44::Vector3Transform(const revVector3& vec) const
 {
 	return revVector4(
 		m[0][0] * vec.x + m[1][0] * vec.y + m[2][0] * vec.z + m[3][0],
@@ -282,7 +279,7 @@ inline revVector4 revMatrix44::Vector3Transform(const revVector3& vec, const rev
 }
 
 
-inline revVector3 revMatrix44::Vector3TransformCoord(const revVector3& vec)
+inline revVector3 revMatrix44::Vector3TransformCoord(const revVector3& vec) const
 {
 	return revVector3(
 		m[0][0] * vec.x + m[1][0] * vec.y + m[2][0] * vec.z + m[3][0],
@@ -302,7 +299,7 @@ inline revVector3 revMatrix44::Vector3TransformCoord(const revVector3& vec, cons
 }
 
 
-inline revVector3 revMatrix44::Vector3TransformNormal(const revVector3& vec)
+inline revVector3 revMatrix44::Vector3TransformNormal(const revVector3& vec) const
 {
 	return revVector3(
 		m[0][0] * vec.x + m[1][0] * vec.y + m[2][0] * vec.z,

@@ -7,6 +7,11 @@
 class revVector3
 {
 public:
+	static const revVector3 UP;
+	static const revVector3 RIGHT;
+	static const revVector3 ZERO;
+
+
 	union
 	{
 		struct

@@ -1,6 +1,6 @@
 #include <new>
 #include <stdlib.h>
-#include "../include/revMemory.h"
+#include "revMemory.h"
 
 //#define ONLY_MSPACES (1)
 //#define MALLOC_ALIGNMENT (8)

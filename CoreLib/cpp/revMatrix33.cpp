@@ -1,4 +1,4 @@
-#include "../include/revMatrix33.h"
+#include "revMatrix33.h"
 
 revMatrix33::revMatrix33()
 {

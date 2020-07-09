@@ -18,7 +18,7 @@ bool DX12Sampler::Create(DX12Device* device, const revTexture& texture, D3D12_CP
 	dxDesc.MaxLOD = desc.GetMaxLod();
 	dxDesc.MinLOD = desc.GetMinLod();
 	dxDesc.MipLODBias = desc.GetMipLodBias();
-	revColor borderColor = desc.GetBorderColor() == BORDER_COLOR_MODE::OPAQUE_BLACK ? revColor::black : revColor::white;
+	revColor borderColor = desc.GetBorderColor() == BORDER_COLOR_MODE::OPAQUE_BLACK ? revColor::BLACK : revColor::WHITE;
 	for (uint32 i = 0; i < 4; ++i) {
 		dxDesc.BorderColor[i] = borderColor.data[i];
 	}

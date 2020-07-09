@@ -1,4 +1,4 @@
-#include "../include/revQuaternion.h"
+#include "revQuaternion.h"
 
 const revQuaternion revQuaternion::ZERO = revQuaternion(0.0f, 0.0f, 0.0f, 0.0f);
 

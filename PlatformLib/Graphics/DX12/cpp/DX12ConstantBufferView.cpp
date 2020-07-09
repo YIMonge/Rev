@@ -3,14 +3,14 @@
 #include "DX12ConstantBufferView.h"
 
 
-void DX12ConstantBufferView::Create(revDevice* device, const DX12ConstantBuffer& cbuffer, D3D12_CPU_DESCRIPTOR_HANDLE* heap)
+void DX12ConstantBufferView::Create(revDevice* device, const revGraphicsBuffer* cbuffer, const D3D12_CPU_DESCRIPTOR_HANDLE& heap)
 {
     this->device = device;
     D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-    auto bufferHandlePtr = cbuffer.GetHandlePtr();
+    auto bufferHandlePtr = cbuffer->GetHandlePtr();
     cbvDesc.BufferLocation = (*bufferHandlePtr)->GetGPUVirtualAddress();
-    cbvDesc.SizeInBytes = MEM_ALIGN((cbuffer.GetSizeOfBytes()*cbuffer.GetLength()), 256);
-    device->GetDevice()->CreateConstantBufferView(&cbvDesc, *heap);
+    cbvDesc.SizeInBytes = MEM_ALIGN((cbuffer->GetSizeOfBytes()*cbuffer->GetLength()), 256);
+    device->GetDevice()->CreateConstantBufferView(&cbvDesc, heap);
 }
 
 void DX12ConstantBufferView::Destroy()

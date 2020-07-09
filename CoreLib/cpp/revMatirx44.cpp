@@ -1,8 +1,10 @@
-#include "../include/revMatrix44.h"
+#include "revMatrix44.h"
+
+const revMatrix44 revMatrix44::Identity = revMatrix44();
 
 revMatrix44::revMatrix44()
 {
-	Identity();
+	CreateIdentity();
 }
 
 revMatrix44::revMatrix44(
@@ -113,7 +115,7 @@ revMatrix44 revMatrix44::Inverse()
 			if(a > max) max = a;
 		}
 		if(max == 0.0f){
-			matrix.Identity();
+			matrix.CreateIdentity();
 			return matrix;
 		}
 		plu[j][4] = 1.0f / max;
@@ -144,7 +146,7 @@ revMatrix44 revMatrix44::Inverse()
 			det = -det;
 		}
 		if(plu[j][j] == 0.0){
-			matrix.Identity();
+			matrix.CreateIdentity();
 			return matrix;
 		}
 		det *= plu[j][j];
@@ -205,7 +207,7 @@ void revMatrix44::CreateLookAtMatrixRH(const revVector3& eye, const revVector3& 
 
 void revMatrix44::CreatePerspectiveMatrixRH( float fov_radian,  float aspect,  float near,  float far)
 {
-	Identity();
+	CreateIdentity();
 
 	
 
@@ -213,7 +215,7 @@ void revMatrix44::CreatePerspectiveMatrixRH( float fov_radian,  float aspect,  f
 
 void revMatrix44::CreatePerspectiveMatrixLH( float fov_radian,  float aspect,  float near,  float far)
 {
-	Identity();
+	CreateIdentity();
 	float fTemp = (1.0f / tanf(fov_radian / 2.0f));
 	float near_to_far = near - far;
 
@@ -228,7 +230,7 @@ void revMatrix44::CreatePerspectiveMatrixLH( float fov_radian,  float aspect,  f
 
 void revMatrix44::CreateViewPortMatrixRH(int width, int height, int near, int far)
 {
-	Identity();
+	CreateIdentity();
 	_11 = (float)width/2;
 	_41 = -_11;
 

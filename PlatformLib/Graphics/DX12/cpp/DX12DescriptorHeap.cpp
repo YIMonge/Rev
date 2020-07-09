@@ -42,7 +42,7 @@ void DX12DescriptorHeap::Destroy()
 	if (heap != nullptr) heap->Release();
 }
 
-void DX12DescriptorHeap::Apply(DX12CommandList& commandList, uint32 rootIndex, uint32 offset)
+void DX12DescriptorHeap::Apply(revGraphicsCommandList& commandList, uint32 rootIndex, uint32 offset)
 {
 	auto& list = commandList.GetList();
 	list->SetDescriptorHeaps(1, &heap);
