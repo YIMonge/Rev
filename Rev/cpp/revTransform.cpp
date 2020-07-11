@@ -18,7 +18,8 @@ void revTransform::UpdateMatrix(const revMatrix44& parentMatrix)
 {
 	revMatrix44 s, r, t;
 	s.Scaling(scale);
-	r.RotationXYZ(rotation);
+	r = rotation.CreateRotationMatrix();
+	//r.RotationXYZ(rotation);
 	t.Translation(position);
 	local = s * r * t;
 	if (parent != nullptr) world = parent->GetWorldMatrix() * local;

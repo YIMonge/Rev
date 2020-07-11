@@ -94,7 +94,7 @@ void DX12Renderer::Render()
 	revVector3 newPos = transform.GetPosition() + revVector3(0.03f, 0.0f, 0.0f);
 	if (newPos.x > 10.0f) newPos.x = -10.0f;
 	transform.SetPosition(newPos);
-	transform.SetRotation(transform.GetRoation() + revVector3(0.0f, MathUtil::ToRadian(1.5f), 0.0f));
+	transform.SetRotation(transform.GetRotaion() * revQuaternion(MathUtil::ToRadian(1.5f), revVector3::UP));
 
 	cbufferData.world = transform.GetWorldMatrix();
 	cbufferData.wvp = cbufferData.world * cbufferData.view * cbufferData.projection;

@@ -47,6 +47,7 @@ public:
 	}
 
 	void UpdateMatrix(const revMatrix44& parentMatrix = revMatrix44::Identity);
+	void LookAt(const revVector3& target, const revVector3& up = revVector3::UP);
 
 private:
 
