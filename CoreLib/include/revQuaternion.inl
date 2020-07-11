@@ -132,9 +132,9 @@ inline float revQuaternion::GetNorm()
 	return sqrtf( GetSqrNorm() );
 }
 
-inline revVector3 revQuaternion::Vector3TransformCoord(const revVector3& vec)
+inline revVector3 revQuaternion::Vector3TransformCoord(const revVector3& vec) const
 {
-	revQuaternion qur(w, -x, -y, -z), qpos(vec);
+	revQuaternion qur(w, -x, -y, -z), qpos(0.0f, vec.x, vec.y, vec.z);
 	qur.Mul(qpos);
 	qur.Mul(*this);
 

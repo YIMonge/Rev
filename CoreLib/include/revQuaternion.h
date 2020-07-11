@@ -43,7 +43,7 @@ public:
 	float GetSqrNorm(void);
 	float GetNorm(void);
 
-	revVector3	Vector3TransformCoord(const revVector3& vec);
+	revVector3	Vector3TransformCoord(const revVector3& vec) const;
 	static	revVector3	Vector3TransformCoord(const revVector3& vec, const revQuaternion& quat);
 
 	revQuaternion operator + (const revQuaternion& q);
