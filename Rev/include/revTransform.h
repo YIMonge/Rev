@@ -14,6 +14,22 @@ public:
 	const revVector3& GetPosition() const { return position; }
 	const revQuaternion& GetRotaion() const { return rotation; }
 
+	revVector3 GetFoward() const 
+	{
+		return rotation.Vector3TransformCoord(revVector3::FOWARD);
+	}
+
+	revVector3 GetRight() const
+	{
+		return rotation.Vector3TransformCoord(revVector3::RIGHT);
+	}
+
+	revVector3 GetUp() const
+	{
+		return rotation.Vector3TransformCoord(revVector3::UP);
+	}
+
+
 	void SetParent(revTransform* parent)
 	{
 		this->parent = parent;

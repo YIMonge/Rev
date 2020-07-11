@@ -26,3 +26,13 @@ void revTransform::UpdateMatrix(const revMatrix44& parentMatrix)
 	else world = local;
 	dirty = false;
 }
+
+void revTransform::LookAt(const revVector3& target, const revVector3& up)
+{
+	revVector3 eyeDir = revVector3::Normalize(position - target);
+	revVector3 right = -1.0f * revVector3::Cross(eyeDir, up);
+
+
+	revMatrix44 rotationMat(right, up, eyeDir, revVector3::ZERO);
+	rotation = revQuaternion(rotationMat);
+}
