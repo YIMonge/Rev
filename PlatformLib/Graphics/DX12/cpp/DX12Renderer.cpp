@@ -148,10 +148,10 @@ bool DX12Renderer::IntialzieForApp()
 	vertexShader.LoadFromFile(device, "ironman_vert.hlsl", SHADER_TYPE::VERTX);
 	fragmentShader.LoadFromFile(device, "ironman_frag.hlsl", SHADER_TYPE::FRAGMENT);
 	// converter test
-	FBXLoader fbxLoader;
-	fbxLoader.LoadFromFile("../../Resources/Models/ironman.fbx", &model);
-	//revModelLoader loader;
-	//loader.LoadFromFile("../../Resources/Models/ironman.mdl", &model);
+	//FBXLoader fbxLoader;
+	//fbxLoader.LoadFromFile("../../Resources/Models/ironman.fbx", &model);
+	revModelLoader loader;
+	loader.LoadFromFile("../../Resources/Models/ironman.mdl", &model);
 #endif
 
 	mat.SetShader(SHADER_TYPE::VERTX, &vertexShader);
@@ -160,8 +160,14 @@ bool DX12Renderer::IntialzieForApp()
 	meshRenderer.SetMeshes(model.GetMeshes());
 	meshRenderer.SetMaterialToAllSubMesh(&mat);
 
+	camera.GetTransform().SetPosition(revVector3(0.0f, 0.0f, -30.0f));
+	camera.GetTransform().LookAt(revVector3::ZERO, revVector3::UP);
+	revMatrix44 p = camera.GetProjectionMatrix();
+	revMatrix44 v = camera.GetViewMatrix();
+
+
 	cbufferData.view.CreateLookAtMatrixLH(revVector3(0.0f, 0.0f, -30.0f), revVector3(0.0f, 0.0f, 0.0f), revVector3(0.0f, 1.0f, 0.0f));
-	cbufferData.projection.CreatePerspectiveMatrixLH(MathUtil::ToRadian(45.0f), main_window->GetAspectRatio() , 0.001f, 100.0f);
+	cbufferData.projection.CreatePerspectiveMatrixLH(MathUtil::ToRadian(45.0f), main_window->GetAspectRatio() , 0.001f, 10000.0f);
 	cbufferData.wvp = revMatrix44::Identity;
 	cbufferData.wvp = cbufferData.view * cbufferData.projection;
 	cbufferData.wvp.Transpose();
