@@ -24,9 +24,10 @@ public:
 
 public:
 	revQuaternion();
-	revQuaternion(float wval, float xval, float yval, float zval);
-	revQuaternion(const revVector3& revVector3);
-	revQuaternion(const revVector4& revVector4);
+	revQuaternion(float radian, const revVector3& axis);
+	revQuaternion(const revVector3& radians);
+	revQuaternion(float w, float x, float y, float z);
+	revQuaternion(const revMatrix44 matrix);
 
 	void Identity();
 	void Mul(const revQuaternion& quat);
@@ -48,9 +49,17 @@ public:
 	revQuaternion operator + (const revQuaternion& q);
 	revQuaternion operator - (const revQuaternion& q);
 
-	revQuaternion operator * (const revQuaternion& q);
+	revQuaternion operator * (const revQuaternion& q) const 
+	{
+		revQuaternion ret;
+		ret = *this;
+		ret.Mul(q);
+		return ret;
+	}
 	revQuaternion operator * (float fs);
 	revQuaternion operator / (float fs);
+
+
 };
 
 #include "revQuaternion.inl"
