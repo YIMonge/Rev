@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\cpp\revApp.cpp" />
+    <ClCompile Include="..\..\cpp\revCamera.cpp" />
     <ClCompile Include="..\..\cpp\revDrawCommand.cpp" />
     <ClCompile Include="..\..\cpp\revGraphics.cpp" />
     <ClCompile Include="..\..\cpp\revLogger.cpp" />
