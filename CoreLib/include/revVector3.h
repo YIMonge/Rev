@@ -9,6 +9,7 @@ class revVector3
 public:
 	static const revVector3 UP;
 	static const revVector3 RIGHT;
+	static const revVector3 FOWARD;
 	static const revVector3 ZERO;
 
 
@@ -41,7 +42,11 @@ public:
 
 	friend	revVector3		operator *  (f32 s, const revVector3& lhs);
 	friend	revVector3		operator /  (f32 s, const revVector3& lhs);
-
+	
+	void Normalize()
+	{
+		*this /= Magnitude(*this);
+	}
 
 	static f32 Dot(const revVector3& lhs, const revVector3& rhs)
 	{
