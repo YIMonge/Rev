@@ -114,8 +114,15 @@ void revModelLoader::writeMDL(const char* path, const revModel& model)
 		file.WriteAppend(meshes[i].GetName().data(), nameLength);
 		file.WriteAppend(&meshes[i].format, sizeof(meshes[i].format));
 
+		// write node transform 
+
+
+
+		// write readonly flag 
 		bool readOnly = model.GetImportSetting().IsReadOnly();
 		file.WriteAppend(&readOnly, sizeof(bool));
+
+		// write vertex data
 		uint32 vertexDataCount = static_cast<uint32>(meshes[i].vertexData.size());
 		file.WriteAppend(&vertexDataCount, sizeof(uint32));
 		file.WriteAppend(meshes[i].vertexData.data(), vertexDataCount * sizeof(f32));
