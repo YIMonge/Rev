@@ -12,7 +12,7 @@ public:
 
 	const revVector3& GetScale() const { return scale; }
 	const revVector3& GetPosition() const { return position; }
-	const revVector3& GetRoation() const { return rotation; }
+	const revQuaternion& GetRotaion() const { return rotation; }
 
 	void SetParent(revTransform* parent)
 	{
@@ -29,7 +29,7 @@ public:
 		this->position = position; 
 		dirty = true;
 	}
-	void SetRotation(const revVector3& rotation) 
+	void SetRotation(const revQuaternion& rotation) 
 	{ 
 		this->rotation = rotation; 
 		dirty = true;
@@ -54,7 +54,7 @@ private:
 	revTransform* parent;
 	revVector3 scale;
 	revVector3 position;
-	revVector3 rotation;
+	revQuaternion rotation;
 
 	revMatrix44 world;
 	revMatrix44 local;
