@@ -17,9 +17,10 @@ public:
 
 private:
 	void ImportNode(FbxNode* node, revModel* model, revTransform* parent);
-	void ImportVertexData(FbxNode* node, revModel* model);
-	void ImportMatrix(FbxNode* node, revModel* model, revTransform* parent);
-	void ImportMaterialData(FbxNode* node, revModel* model);
+	void ImportVertexData(FbxNode* node, revModel* model, int32 influenceTransformIndex = -1);
+	revTransform* ImportMatrix(FbxNode* node, revModel* model, revTransform* parent);
+	void ImportMaterialData(FbxSurfaceMaterial* material, revModel* model);
+	FbxDouble3 ImportMaterialProperty(FbxSurfaceMaterial* material, const char* propertyName, const char* factorName);
 
 	revMatrix44 globalMatrix;
 	FbxManager* manager;
