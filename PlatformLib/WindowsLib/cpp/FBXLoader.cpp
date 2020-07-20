@@ -49,6 +49,13 @@ bool FBXLoader::LoadFromFile(const revString& path, revModel* model)
 	
 	scene = FbxScene::Create(manager, "scence");
 	importer->Import(scene);
+
+	FbxSystemUnit SceneSystemUnit = scene->GetGlobalSettings().GetSystemUnit();
+	if (SceneSystemUnit.GetScaleFactor() != 1.0)
+	{
+		FbxSystemUnit::m.ConvertScene(scene);
+	}
+
 	FbxGeometryConverter converter(manager);
 	converter.Triangulate(scene, true);
 	FbxNode* root = scene->GetRootNode();
@@ -61,29 +68,36 @@ bool FBXLoader::LoadFromFile(const revString& path, revModel* model)
 	return true;
 }
 
-void FBXLoader::ImportNode(FbxNode* node, revModel* model, revTransform* parent)
+void FBXLoader::ImportNode(fbxsdk::FbxNode* node, revModel* model, revTransform* parent)
 {
-	ImportVertexData(node, model);
-	ImportMatrix(node, model, parent);
+	revTransform* transform = ImportMatrix(node, model, parent);
+	ImportVertexData(node, model, static_cast<int32>(model->GetTransforms().size()) - 1);
 
-	const revArray<revTransform>& transforms = model->GetTransforms();
+	const uint32 materialCount = node->GetMaterialCount();
+	for (uint32 i = 0; i < materialCount; ++i) {
+		FbxSurfaceMaterial* material = node->GetMaterial(i);
+		ImportMaterialData(material, model);		
+	}
+
 	uint32 childNodeCount = node->GetChildCount();
 	for (uint32 i = 0; i < childNodeCount; ++i) {
-		ImportNode(node->GetChild(i), model, const_cast<revTransform*>(&transforms[static_cast<uint32>(transforms.size()) - 1]));
+		ImportNode(node->GetChild(i), model, transform);
 	}
 }
 
 
 
-void FBXLoader::ImportVertexData(FbxNode* node, revModel* model)
+void FBXLoader::ImportVertexData(FbxNode* node, revModel* model, int32 influenceTransformIndex)
 {
 	if (node == nullptr) return;
 
-	revMesh meshResource;
-	meshResource.SetName(node->GetName());
+	revMesh* meshResource = new revMesh();
+	meshResource->SetName(node->GetName());
 
 	FbxMesh* meshNode = node->GetMesh();
 	if (meshNode != nullptr) {
+		meshResource->SetTransformIndex(influenceTransformIndex);
+
 		const uint32 vertexCount = meshNode->GetControlPointsCount();
 		const uint32 polygonCount = meshNode->GetPolygonCount();
 
@@ -121,12 +135,12 @@ void FBXLoader::ImportVertexData(FbxNode* node, revModel* model)
 		}
 
 		if (polygonCount > 0) {
-			meshResource.SetVertexArray(vertices);
-			meshResource.SetNormalArray(normals);
-			meshResource.SetIndexArray(indexies);
+			meshResource->SetVertexArray(vertices);
+			meshResource->SetNormalArray(normals);
+			meshResource->SetIndexArray(indexies);
 
-			meshResource.SetFormat(INPUT_ELEMENT_TYPE::POSITION);
-			if(normalCount > 0) meshResource.SetFormat(INPUT_ELEMENT_TYPE::NORMAL);
+			meshResource->SetFormat(INPUT_ELEMENT_TYPE::POSITION);
+			if(normalCount > 0) meshResource->SetFormat(INPUT_ELEMENT_TYPE::NORMAL);
 		}
 
 		// uv
@@ -155,8 +169,8 @@ void FBXLoader::ImportVertexData(FbxNode* node, revModel* model)
 					texcoords[i].push_back(uv);
 				}
 			}
-			meshResource.SetTexCoordArray(i, texcoords[i]);
-			meshResource.SetFormat(TEXCOORD_ELEMENT[i]);
+			meshResource->SetTexCoordArray(i, texcoords[i]);
+			meshResource->SetFormat(TEXCOORD_ELEMENT[i]);
 		}
 
 		INPUT_ELEMENT_TYPE COLOR_ELEMENT[] = {
@@ -186,42 +200,76 @@ void FBXLoader::ImportVertexData(FbxNode* node, revModel* model)
 					static_cast<f32>(fbxColor.mAlpha));
 				vertexColors[i].push_back(color);
 			}
-			meshResource.SetColorArray(i, vertexColors[i]);
-			meshResource.SetFormat(COLOR_ELEMENT[i]);
+			meshResource->SetColorArray(i, vertexColors[i]);
+			meshResource->SetFormat(COLOR_ELEMENT[i]);
 		}
 
-		meshResource.CreateVertexBufferData();
+		meshResource->CreateVertexBufferData();
 		model->AddMesh(meshResource);
 	}
 }
 
-void FBXLoader::ImportMatrix(FbxNode* node, revModel* model, revTransform* parent)
+revTransform* FBXLoader::ImportMatrix(FbxNode* node, revModel* model, revTransform* parent)
 {
-	if (node == nullptr) return;
+	if (node == nullptr) return nullptr;
 	FbxAnimEvaluator* animEvaluator = scene->GetAnimationEvaluator();
-	revTransform transform;
-	FbxVector4 fbxScale = animEvaluator->GetNodeLocalScaling(node);
-	FbxVector4 fbxRotation = animEvaluator->GetNodeLocalRotation(node);
-	FbxVector4 fbxPosition = animEvaluator->GetNodeLocalTranslation(node);
+	revTransform* transform = new revTransform(parent);
+	
+	auto fbxGlobalTransform = animEvaluator->GetNodeGlobalTransform(node);
+	FbxVector4 fbxScale = fbxGlobalTransform.GetS();
+	FbxVector4 fbxRotation = fbxGlobalTransform.GetR();
+	FbxVector4 fbxPosition = fbxGlobalTransform.GetT();
+	//FbxVector4 fbxScale = animEvaluator->GetNodeLocalScaling(node);
+	//FbxVector4 fbxRotation = animEvaluator->GetNodeLocalRotation(node);
+	//FbxVector4 fbxPosition = animEvaluator->GetNodeLocalTranslation(node);
 
 	revVector3 scale(static_cast<f32>(fbxScale[0]), static_cast<f32>(fbxScale[1]), static_cast<f32>(fbxScale[2]));
-	revVector3 rotation(static_cast<f32>(fbxRotation[0]), static_cast<f32>(fbxRotation[1]), static_cast<f32>(fbxRotation[2]));
+	revQuaternion rotation(revVector3(
+		MathUtil::ToRadian(static_cast<f32>(fbxRotation[0])),
+		MathUtil::ToRadian(static_cast<f32>(fbxRotation[1])),
+		MathUtil::ToRadian(static_cast<f32>(fbxRotation[2]))));
 	revVector3 position(static_cast<f32>(fbxPosition[0]), static_cast<f32>(fbxPosition[1]), static_cast<f32>(fbxPosition[2]));
 
-	transform.SetParent(parent);
-	transform.SetScale(scale);
-	transform.SetRotation(rotation);
-	transform.SetPosition(position);
+	transform->SetScale(scale);
+	transform->SetRotation(rotation);
+	transform->SetPosition(position);
 
 	model->AddTransform(transform);
+	return transform;
 }
 
-void FBXLoader::ImportMaterialData(FbxNode* node, revModel* model)
+void FBXLoader::ImportMaterialData(FbxSurfaceMaterial* material, revModel* model)
 {
-	if (node == nullptr) return;
+	if (material == nullptr) return;
+
+	if (material->GetClassId().Is(FbxSurfaceLambert::ClassId)) {
+
+	}
+	else if (material->GetClassId().Is(FbxSurfacePhong::ClassId)) {
+
+	}
 
 
+	//FbxDouble3 emissive = Ge
 
+}
+
+FbxDouble3 FBXLoader::ImportMaterialProperty(FbxSurfaceMaterial* material, const char* propertyName, const char* factorName)
+{
+	FbxDouble3 result;
+	FbxProperty property = material->FindProperty(propertyName);
+	FbxProperty factor = material->FindProperty(factorName);
+
+	if (property.IsValid() && factor.IsValid()) {
+		result = property.Get<FbxDouble3>();
+		f64 factorVal = factor.Get<FbxDouble>();
+		result[0] *= factorVal;
+		result[1] *= factorVal;
+		result[2] *= factorVal;
+
+
+	}
+	return result;
 }
 
 #endif
