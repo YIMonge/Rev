@@ -12,6 +12,7 @@
 	typedef signed long long	int64;		
 
 	using f32 = float;
+	using f64 = double;
 
 	typedef void(*Function)();
 
