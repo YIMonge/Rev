@@ -64,20 +64,24 @@ private:
 class revConstantBufferBinding
 {
 public:
+	const revString& GetName() const { name; }
 	uint8 GetRegisterIndex() const { return registerIndex; }
 	uint32 GetSizeOfBytes() const { return sizeOfBytes; }
 #ifdef _DEBUG
+	void SetName(const char* name) { this->name = name; }
 	void SetRegisterIndex(uint8 index) { registerIndex = index; }
 	void SetSizeOfBytes(uint32 size) { sizeOfBytes = size; }
 #endif
 
 	SERIALIZE_FUNC()
 	{
-		archive(REV_NVP(registerIndex), 
+		archive(REV_NVP(name),
+			REV_NVP(registerIndex), 
 			REV_NVP(sizeOfBytes)
 		);
 	}
 private:
+	revString name;
 	uint8 registerIndex;
 	uint32 sizeOfBytes;
 };
