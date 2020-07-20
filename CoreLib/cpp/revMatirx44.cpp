@@ -1,6 +1,6 @@
 #include "revMatrix44.h"
 
-const revMatrix44 revMatrix44::Identity = revMatrix44();
+const revMatrix44 revMatrix44::IDENTITY = revMatrix44();
 
 revMatrix44::revMatrix44()
 {

@@ -7,7 +7,7 @@
 class revMatrix44
 {
 public:
-	static const revMatrix44 Identity;
+	static const revMatrix44 IDENTITY;
 
 	union
 	{
