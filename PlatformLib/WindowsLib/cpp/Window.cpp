@@ -15,12 +15,10 @@ Window::~Window()
 
 void Window::Create(const char* name, int width, int height, int pos_x/* = 0 */, int pos_y/* = 0*/)
 {
-	WNDCLASSEX wc;
+	WNDCLASSEX wc = {};
 
 	this->width = width;
 	this->height = height;
-
-	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.lpszClassName = name;
