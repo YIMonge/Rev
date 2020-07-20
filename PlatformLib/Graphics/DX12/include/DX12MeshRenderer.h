@@ -15,10 +15,11 @@ public:
 	virtual ~DX12MeshRenderer();
 
 	virtual void SetModel(const revModel* model);
-	virtual void SetMesh(uint32 index, const revMesh& mesh);
+	virtual void SetMesh(uint32 index, const revMesh* mesh);
 	void Destroy();
 
 	void Initialize(DX12DescriptorHeap* cBufferHeap);
+	virtual void PrepareDraw(const revCamera& camera);
 	virtual void Draw(revGraphicsCommandList& commandList, DX12DescriptorHeap& cBufferHeap, DX12DescriptorHeap& textureHeap, DX12DescriptorHeap& samplerHeap);
 
 private:

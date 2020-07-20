@@ -39,7 +39,7 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 	HRESULT hr = D3DCompileFromFile(wstr.c_str(),
 		nullptr,
 		nullptr,
-		"main", //type == SHADER_TYPE::VERTX ? "VSMain" : "PSMain",
+		"main", 
 		type == SHADER_TYPE::VERTX ? "vs_5_0" : "ps_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
 		0,
@@ -117,7 +117,8 @@ void DX12Shader::CreateMetaDataFromShader(const char* metaPath)
         D3D12_SHADER_BUFFER_DESC bufferDesc;
         cbuffer->GetDesc(&bufferDesc);
         revConstantBufferBinding cbufferBinding;
-        cbufferBinding.SetRegisterIndex(0);
+        cbufferBinding.SetRegisterIndex(i);
+		cbufferBinding.SetName(bufferDesc.Name);
         uint32 sizeOfBytes = 0;
         for (uint32 j = 0; j < bufferDesc.Variables; ++j) {
             auto variable = cbuffer->GetVariableByIndex(j);

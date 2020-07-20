@@ -38,6 +38,7 @@ public:
 		{
 			D3D12_CPU_DESCRIPTOR_HANDLE newHandle = base;
 			if (index >= maxAllocationNum) {
+				NATIVE_LOGE("Descriptor Heap Over run! file:%s, line:%s", __FILE__, __LINE__);
 				newHandle.ptr = 0;
 				return newHandle;
 			}

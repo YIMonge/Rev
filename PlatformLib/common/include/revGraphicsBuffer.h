@@ -27,6 +27,7 @@ public:
 
     virtual bool Create(const void* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC) = 0;
     virtual void Destroy() = 0;
+	virtual bool Update(const void* data, uint32 sizeOfCopyBytes, uint32 offset = 0) = 0;
 
     const revGraphicsResource* GetHandlePtr() const { return &buffer; }
     uint32 GetSizeOfBytes() const { return sizeOfBytes; }

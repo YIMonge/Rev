@@ -22,7 +22,7 @@ void DX12MeshRenderer::SetModel(const revModel* model)
 	}
 }
 
-void DX12MeshRenderer::SetMesh(uint32 index, const revMesh& mesh)
+void DX12MeshRenderer::SetMesh(uint32 index, const revMesh* mesh)
 {
 	revMeshRenderer::SetMesh(index, mesh);
 
@@ -32,13 +32,14 @@ void DX12MeshRenderer::SetMesh(uint32 index, const revMesh& mesh)
 	vertexBufferViews[index] = new DX12VertexBufferView();
 	vertexBufferViews[index]->Create(revGraphics::Get().GetDevice(), vertexBuffers[index]);
 
-	if (indexBufferViews.size() <= index) {
-		indexBufferViews.resize(index + 1);
-	}
+	if (indexBufferViews.size() <= index) indexBufferViews.resize(index + 1);
+	
 	if (indexBuffers[index] != nullptr) {
 		indexBufferViews[index] = new DX12IndexBufferView();
 		indexBufferViews[index]->Create(revGraphics::Get().GetDevice(), indexBuffers[index]);
 	}
+
+	
 }
 
 void DX12MeshRenderer::Destroy()
@@ -56,6 +57,8 @@ void DX12MeshRenderer::Destroy()
 		}
 	}
 	vertexBufferViews.clear();
+
+	revMeshRenderer::Destroy();
 }
 
 void DX12MeshRenderer::Initialize(DX12DescriptorHeap* cBufferHeap)
@@ -67,14 +70,33 @@ void DX12MeshRenderer::Initialize(DX12DescriptorHeap* cBufferHeap)
 	}
 }
 
+void DX12MeshRenderer::PrepareDraw(const revCamera& camera)
+{
+	revTransform::CBuffer cbuffer;
+	revMatrix44 viewProj = camera.GetViewMatrix() * camera.GetProjectionMatrix();
+
+	uint32 cbufferviewCount = static_cast<uint32>(constantBufferViews.size());
+	for (uint32 i = 0; i < cbufferviewCount; ++i) {
+		cbuffer.world = transforms[i]->GetWorldMatrix();
+		cbuffer.wvp = cbuffer.world * viewProj;
+		cbuffer.world.Transpose();
+		cbuffer.wvp.Transpose();
+
+		constantBuffers[i]->Update(&cbuffer, sizeof(cbuffer));
+	}
+}
+
+
 void DX12MeshRenderer::Draw(revGraphicsCommandList& commandList, DX12DescriptorHeap& cBufferHeap, DX12DescriptorHeap& textureHeap, DX12DescriptorHeap& samplerHeap)
 {
 	auto& list = commandList.GetList();
 
 	list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	uint32 constantBufferCount = static_cast<uint32>(constantBufferViews.size());
 	for (uint32 i = 0; i < static_cast<uint32>(vertexBufferViews.size()); ++i) {
-		if (constantBufferViews[i] != nullptr) {
-			cBufferHeap.Apply(commandList, 0, cbufferHeapChunk.GetDescriptorOffset(i));
+		int32 transformIndex = model->GetMeshes()[i]->GetTransformIndex();
+		if (transformIndex != -1 && constantBufferViews[transformIndex] != nullptr) {
+			cBufferHeap.Apply(commandList, 0, cbufferHeapChunk.GetDescriptorOffset(transformIndex));
 		}
 		list->IASetVertexBuffers(0, 1, vertexBufferViews[i]->GetResourceView());
 		if (indexBufferViews.size() > i && indexBufferViews[i] != nullptr) {

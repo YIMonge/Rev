@@ -15,9 +15,7 @@ public:
 
 	virtual bool Create(const void* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
 	virtual void Destroy();
-
-	bool Update(const void* data, uint32 sizeOfCopyBytes, uint32 offset = 0);
-
+	virtual bool Update(const void* data, uint32 sizeOfCopyBytes, uint32 offset = 0);
 protected:
 	D3D12_RESOURCE_STATES destResourceState;
 
