@@ -10,11 +10,12 @@ struct PSInput
     float2 uv : TEXCOORD;
 };
 
-cbuffer global : register(b0)
+
+cbuffer transform : register(b0)
 {
-	matrix world;
 	matrix view;
 	matrix projection;
+	matrix world;
 	matrix wvp;
 }
 

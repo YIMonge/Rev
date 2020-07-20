@@ -14,7 +14,8 @@ public:
 private:
 	bool LoadMetaFile(const char* metaPath, revModel* model);
 #ifdef _WINDOWS
-	void writeMDL(const char* path, const revModel& model);
+	bool LoadFBXFromFile(const char* path, revModel* model);
+	void WriteMDL(const char* path, const revModel& model);	
 #endif
 
 };

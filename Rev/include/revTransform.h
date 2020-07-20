@@ -10,6 +10,7 @@ public:
 	revTransform(revTransform* parent = nullptr);
 	virtual ~revTransform();
 
+	revTransform* GetParent() const { return parent; }
 	const revVector3& GetScale() const { return scale; }
 	const revVector3& GetPosition() const { return position; }
 	const revQuaternion& GetRotaion() const { return rotation; }
@@ -62,8 +63,16 @@ public:
 		return local;
 	}
 
-	void UpdateMatrix(const revMatrix44& parentMatrix = revMatrix44::Identity);
+	void UpdateMatrix(const revMatrix44& parentMatrix = revMatrix44::IDENTITY);
 	void LookAt(const revVector3& target, const revVector3& up = revVector3::UP);
+
+	struct CBuffer
+	{
+		revMatrix44 view;
+		revMatrix44 projection;
+		revMatrix44 world;
+		revMatrix44 wvp;
+	};
 
 private:
 

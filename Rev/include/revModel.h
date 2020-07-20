@@ -13,12 +13,14 @@ public:
 	revModel() {}
 	virtual ~revModel(){}
 
-	const revArray<revMesh>& GetMeshes() const { return meshes; }
-	const revArray<revTransform>& GetTransforms() const { return transforms; }
+	void Destroy();
+
+	const revArray<revMesh*>& GetMeshes() const { return meshes; }
+	const revArray<revTransform*>& GetTransforms() const { return transforms; }
 
 #ifdef _DEBUG
-	void AddMesh(const revMesh& mesh) { meshes.push_back(mesh); }
-	void AddTransform(const revTransform& transform) { transforms.push_back(transform); }
+	void AddMesh(revMesh* mesh) { meshes.push_back(mesh); }
+	void AddTransform(revTransform* transform) { transforms.push_back(transform); }
 #endif
 	class ImportSetting
 	{
@@ -58,9 +60,10 @@ private:
 	DefaultMetaData metaData;
 	ImportSetting importSetting;
 
-	revArray<revTransform> transforms;
-	revArray<revMesh> meshes;
-	revArray<uint32> materials;
+	revArray<revTransform*> transforms;
+	revArray<revMesh*> meshes;
+	revArray<revMaterial*> materials;
 };
 
 #endif
+

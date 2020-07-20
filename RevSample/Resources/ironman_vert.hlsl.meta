@@ -24,6 +24,7 @@
         ],
         "cbuffers": [
             {
+                "name": "transform",
                 "registerIndex": 0,
                 "sizeOfBytes": 3435973836
             }

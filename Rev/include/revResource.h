@@ -13,6 +13,7 @@ public:
 	virtual ~revResource() {}
 
 	const revString& GetName() const { return name; }
+	uint64 GetUUID() const { return uuid; }
 
 	void SetName(const revString& name) { this->name = name; }
 	void SetName(const char* name) { this->name = name; }
@@ -24,18 +25,19 @@ public:
 		strcat(metaPath, ".meta");
 	}
 private:
+	uint64 uuid;
 	revString name;
 };
 
 struct DefaultMetaData
 {
-	uint32 guid;
+	uint64 uuid;
 	revString userData;
 };
 
 SERIALIZE_FUNC_NON_INTRUSIVE(DefaultMetaData, data)
 {
-	archive(REV_MAKE_NVP(guid, data.guid),
+	archive(REV_MAKE_NVP(uuid, data.uuid),
 		REV_MAKE_NVP(userData, data.userData));
 }
 #endif

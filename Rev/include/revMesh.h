@@ -10,7 +10,8 @@ class revMesh : public revResource
 friend class revModelLoader;
 public:
 	revMesh() :
-	readOnly(false){}
+	readOnly(false),
+	influenceTransformIndex(-1){}
 	~revMesh() {}
 
 	const revArray<f32>& GetVertexData() const { return vertexData; }
@@ -19,6 +20,7 @@ public:
 	const revArray<revVector2>& GetTexCoordArray(uint32 index) const { return texCoords[index]; }
 	const revArray<revColor>& GetColorArray(uint32 index) const { return colors[index]; }
 	const revArray<revIndex3>& GetIndexArray() const { return indices; }
+	int32 GetTransformIndex() const { return influenceTransformIndex; }
 	bool hasElement(INPUT_ELEMENT_TYPE element) const { return format & (1 << static_cast<uint32>(element));  }
 	uint32 GetSizeOfBytes() const
 	{
@@ -39,6 +41,7 @@ public:
 	void SetIndexArray(const revArray<revIndex3>& i) { indices = i; }
 	void SetFormat(INPUT_ELEMENT_TYPE element) { format |= (1 << static_cast<uint32>(element)); }
 	void SetReadOnly(bool flag) { readOnly = flag; }
+	void SetTransformIndex(int32 index) { influenceTransformIndex = index; }
 #endif 
 
 private:
@@ -53,6 +56,7 @@ private:
 	revArray<revIndex3> indices;
 	uint32 materialId;
 	uint32 format;
+	int32 influenceTransformIndex;
 	bool readOnly;
 };
 
