@@ -136,8 +136,69 @@ public:
         uint8 polygonMode;
     };
 
+	// Material parameter that includes color or texture.
+	class Property
+	{
+	public:
+		Property()
+		{}
+		Property(revColor color) :
+			color(color),
+			type(TYPE::COLOR)
+		{
+		}
+		Property(revTexture* texture) :
+			texture(texture),
+			type(TYPE::TEXTURE)
+		{
+			uuid = texture->GetUUID();
+		}
+		Property(f32 value) :
+			value(value),
+			type(TYPE::FLOAT)
+		{
+		}
+
+		enum class TYPE
+		{
+			TEXTURE,
+			COLOR,
+			FLOAT,
+		};
+
+
+		TYPE GetType() const { return type; }
+		f32 GetValue() const {
+			if (type != TYPE::FLOAT) NATIVE_LOGE("Material Property Type miss match. file:%s, line:%s", __FILE__, __LINE__);
+			return value;
+		}
+		revTexture* GetTexture() const {
+			if (type != TYPE::TEXTURE) NATIVE_LOGE("Material Property Type miss match. file:%s, line:%s", __FILE__, __LINE__);
+			return texture;
+		}
+		const revColor& GetColor() const {
+			if (type != TYPE::COLOR) NATIVE_LOGE("Material Property Type miss match. file:%s, line:%s", __FILE__, __LINE__);
+			return color;
+		}
+
+	private:
+		union {
+			struct {
+				revTexture* texture;
+				uint64 uuid;
+			};
+			struct {
+				f32 value;
+				uint32 padding[3];
+			};
+			revColor color;
+		};
+		TYPE type;
+	};
+
+
     const revShader* GetShader(SHADER_TYPE type) const { return shader[static_cast<uint32>(type)]; }
-    const revArray<revTexture*> GetTextures() const { return textures; }
+    const revArray<Property>& GetProperties() const { return properties; }
     const BlendState& GetBlendState() const { return blend; }
 	const DepthStencilState& GetDepthStencil() const { return depthStencil; }
     const RasterizationState& GetRasterization() const { return rasterization; }
@@ -147,12 +208,6 @@ public:
     void SetShader(SHADER_TYPE type, revShader* shader)
     {
         this->shader[static_cast<uint32>(type)] = shader;
-        dirty = true;
-    }
-
-    void SetTexture(const revArray<revTexture*> textures)
-    {
-        this->textures = textures;
         dirty = true;
     }
 
@@ -181,13 +236,16 @@ public:
         );
     }
 
+
 protected:
-    DefaultMetaData metaData;
     revShader* shader[2];
-    revArray<revTexture*> textures; // TODO: material batch
+    revArray<Property> properties; 
+	DefaultMetaData metaData;
     BlendState blend;
 	DepthStencilState depthStencil;
     RasterizationState rasterization;
+
+
     bool dirty;
 };
 
