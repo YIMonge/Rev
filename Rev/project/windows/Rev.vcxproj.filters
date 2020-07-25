@@ -100,5 +100,8 @@
     <ClInclude Include="..\..\include\revCamera.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\revResourceManager.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
