@@ -19,12 +19,13 @@ private:
 	void ImportNode(FbxNode* node, revModel* model, revTransform* parent);
 	void ImportVertexData(FbxNode* node, revModel* model, int32 influenceTransformIndex = -1);
 	revTransform* ImportMatrix(FbxNode* node, revModel* model, revTransform* parent);
-	void ImportMaterialData(FbxSurfaceMaterial* material, revModel* model);
-	FbxDouble3 ImportMaterialProperty(FbxSurfaceMaterial* material, const char* propertyName, const char* factorName);
+	void ImportMaterialData(FbxSurfaceMaterial* fbxMaterial, revModel* model);
+	revMaterial::Property ImportMaterialProperty(FbxSurfaceMaterial* fbxMaterial, const char* propertyName, const char* factorName);
 
 	revMatrix44 globalMatrix;
 	FbxManager* manager;
 	FbxScene* scene;
+	
 };
 
 #endif

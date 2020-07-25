@@ -40,9 +40,11 @@ FBXLoader::~FBXLoader()
 bool FBXLoader::LoadFromFile(const revString& path, revModel* model)
 {
 	if (model == nullptr) return false;
+	revString resourcePath(RESOURCE_PATH);
+	resourcePath += path;
 
 	FbxImporter* importer = FbxImporter::Create(manager, "");
-	if (!importer->Initialize(path.c_str(), -1, manager->GetIOSettings())) {
+	if (!importer->Initialize(resourcePath.c_str(), -1, manager->GetIOSettings())) {
 		NATIVE_LOGE("[FBX] Load Error %s, %d", __FILE__, __LINE__);
 		return false;
 	}
@@ -119,13 +121,13 @@ void FBXLoader::ImportVertexData(FbxNode* node, revModel* model, int32 influence
 			for (uint32 j = 0; j < 3; ++j) {
 				uint32 fbxIndex = meshNode->GetPolygonVertex(i, j);
 				FbxVector4 fbxPosition = meshNode->GetControlPointAt(fbxIndex);
-				revVector3 position(fbxPosition[0], fbxPosition[1], fbxPosition[2]);
+				revVector3 position(static_cast<f32>(fbxPosition[0]), static_cast<f32>(fbxPosition[1]), static_cast<f32>(fbxPosition[2]));
 				vertices.push_back(position);
 				
 				if (normalCount > 0) {
 					FbxVector4 fbxNormal;
 					meshNode->GetPolygonVertexNormal(i, j, fbxNormal);
-					revVector3 normal(fbxNormal[0], fbxNormal[1], fbxNormal[2]);
+					revVector3 normal(static_cast<f32>(fbxNormal[0]), static_cast<f32>(fbxNormal[1]), static_cast<f32>(fbxNormal[2]));
 					normals.push_back(normal);
 				}
 				index.data[j] = i * 3 + j;
@@ -165,7 +167,7 @@ void FBXLoader::ImportVertexData(FbxNode* node, revModel* model, int32 influence
 				for (uint32 k = 0; k < 3; ++k) {
 					FbxVector2 fbxUV;
 					meshNode->GetPolygonVertexUV(j, k, uvSetName, fbxUV, unmapped);
-					revVector2 uv(fbxUV[0], fbxUV[1]);
+					revVector2 uv(static_cast<f32>(fbxUV[0]), static_cast<f32>(fbxUV[1]));
 					texcoords[i].push_back(uv);
 				}
 			}
@@ -238,37 +240,59 @@ revTransform* FBXLoader::ImportMatrix(FbxNode* node, revModel* model, revTransfo
 	return transform;
 }
 
-void FBXLoader::ImportMaterialData(FbxSurfaceMaterial* material, revModel* model)
+void FBXLoader::ImportMaterialData(FbxSurfaceMaterial* fbxMaterial, revModel* model)
 {
-	if (material == nullptr) return;
+	if (fbxMaterial == nullptr) return;
 
-	if (material->GetClassId().Is(FbxSurfaceLambert::ClassId)) {
-
+	if (fbxMaterial->GetClassId().Is(FbxSurfaceLambert::ClassId)) {
 	}
-	else if (material->GetClassId().Is(FbxSurfacePhong::ClassId)) {
-
+	else if (fbxMaterial->GetClassId().Is(FbxSurfacePhong::ClassId)) {
 	}
 
+	revMaterial::Property emissive = ImportMaterialProperty(fbxMaterial, FbxSurfaceMaterial::sEmissive, FbxSurfaceMaterial::sEmissiveFactor);
+	revMaterial::Property ambient = ImportMaterialProperty(fbxMaterial, FbxSurfaceMaterial::sAmbient, FbxSurfaceMaterial::sAmbientFactor);
+	revMaterial::Property diffuse = ImportMaterialProperty(fbxMaterial, FbxSurfaceMaterial::sDiffuse, FbxSurfaceMaterial::sDiffuse);
+	revMaterial::Property specular = ImportMaterialProperty(fbxMaterial, FbxSurfaceMaterial::sSpecular, FbxSurfaceMaterial::sSpecular);
 
-	//FbxDouble3 emissive = Ge
-
+	revMaterial material;
+	material.AddProperty(emissive);
+	material.AddProperty(ambient);
+	material.AddProperty(diffuse);
+	material.AddProperty(specular);
 }
 
-FbxDouble3 FBXLoader::ImportMaterialProperty(FbxSurfaceMaterial* material, const char* propertyName, const char* factorName)
+revMaterial::Property FBXLoader::ImportMaterialProperty(FbxSurfaceMaterial* fbxMaterial, const char* propertyName, const char* factorName)
 {
-	FbxDouble3 result;
-	FbxProperty property = material->FindProperty(propertyName);
-	FbxProperty factor = material->FindProperty(factorName);
+	revMaterial::Property result;
+	FbxProperty property = fbxMaterial->FindProperty(propertyName);
+	FbxProperty factor = fbxMaterial->FindProperty(factorName);
 
 	if (property.IsValid() && factor.IsValid()) {
-		result = property.Get<FbxDouble3>();
+		FbxDouble3 color = property.Get<FbxDouble3>();
 		f64 factorVal = factor.Get<FbxDouble>();
-		result[0] *= factorVal;
-		result[1] *= factorVal;
-		result[2] *= factorVal;
-
-
+		color[0] *= factorVal;
+		color[1] *= factorVal;
+		color[2] *= factorVal;
+		result.SetColor(revColor(static_cast<f32>(color[0]), static_cast<f32>(color[1]), static_cast<f32>(color[2]), 1.0f));
 	}
+	if (property.IsValid()) {
+		result.SetName(propertyName);
+
+		int32 textureLayerCount = property.GetSrcObjectCount<FbxFileTexture>();
+		for (int32 i = 0; i < textureLayerCount; ++i) {
+			FbxLayeredTexture* layeredTexture = property.GetSrcObject<FbxLayeredTexture>();
+			int32 textureCount = layeredTexture->GetSrcObjectCount<FbxFileTexture>();
+			for (int32 j = 0; j < textureCount; ++j) {
+				FbxFileTexture* texture = layeredTexture->GetSrcObject<FbxFileTexture>(j);
+				if (texture == nullptr) continue;
+
+				FbxString uvSetName = texture->UVSet.Get();
+				revString filePath = texture->GetFileName();
+				// TODO: texture import
+			}
+		}
+	}
+
 	return result;
 }
 

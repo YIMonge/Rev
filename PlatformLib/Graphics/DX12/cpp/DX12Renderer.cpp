@@ -112,12 +112,12 @@ bool DX12Renderer::IntialzieForApp()
 
 	vertexShader.LoadFromFile(device, "ironman_vert.hlsl", SHADER_TYPE::VERTX);
 	fragmentShader.LoadFromFile(device, "ironman_frag.hlsl", SHADER_TYPE::FRAGMENT);
-	//FBXLoader loader;
-	//loader.LoadFromFile("../../Resources/Models/ironman.fbx", &model);
+	FBXLoader loader;
+	loader.LoadFromFile("Models/ironman.fbx", &model);
 
-	revModelLoader loader;
-	loader.LoadFromFile("../../Resources/Models/ironman.mdl", &model);
-	//loader.LoadFromFile("../../Resources/Models/cube_blender.mdl", &model);
+	//revModelLoader loader;
+	//loader.LoadFromFile("Models/ironman.mdl", &model);
+	//loader.LoadFromFile("Models/cube_blender.mdl", &model);
 
 
 

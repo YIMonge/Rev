@@ -19,18 +19,25 @@ revModelLoader::~revModelLoader()
 
 bool revModelLoader::LoadFromFile(const char* path, revModel* model)
 {
+	if (model == nullptr) return false;
+
+	revString resourcePath(RESOURCE_PATH);
+	resourcePath += path;
+
+	model->SetFilePath(path);
+
 	char metaPath[256];
-	revResource::MakeMetaPath(metaPath, path);
+	revResource::MakeMetaPath(metaPath, resourcePath.c_str());
 	if (!LoadMetaFile(metaPath, model)) {
 		NATIVE_LOGE("Meta file not found : %s", metaPath);
 		return false;
 	}
 
 	File file;
-	if (!file.Open(path, FileMode::ReadBinary)) {
+	if (!file.Open(resourcePath.c_str(), FileMode::ReadBinary)) {
 #ifdef _WINDOWS
-		if (!LoadFBXFromFile(path, model)) return false;
-		WriteMDL(path, *model);		
+		if (!LoadFBXFromFile(resourcePath.c_str(), model)) return false;
+		WriteMDL(resourcePath.c_str(), *model);
 		return true;
 #endif
 		return false;
@@ -41,8 +48,8 @@ bool revModelLoader::LoadFromFile(const char* path, revModel* model)
 	offset = file.ReadData(&dataVer, sizeof(uint32), offset);
 	if (dataVer != DATA_VERSION) {
 #ifdef _WINDOWS
-		if (!LoadFBXFromFile(path, model)) return false;
-		WriteMDL(path, *model);
+		if (!LoadFBXFromFile(resourcePath.c_str(), model)) return false;
+		WriteMDL(resourcePath.c_str(), *model);
 		return true;
 #endif
 		return false;
@@ -129,6 +136,7 @@ bool revModelLoader::LoadMetaFile(const char* metaPath, revModel* model)
 
 bool revModelLoader::LoadFBXFromFile(const char* path, revModel* model)
 {
+	if (model == nullptr) return false;
 	// try to load fbx and convert
 	FBXLoader fbxLoader;
 	revString fbxPath(path);
