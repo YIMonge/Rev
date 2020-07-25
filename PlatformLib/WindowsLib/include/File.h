@@ -2,6 +2,7 @@
 
 #include "revFile.h"
 #include <stdio.h>
+#include <sys/stat.h>
 
 #ifdef  _DEBUG
 #define RESOURCE_PATH "../../Resources/"
@@ -22,6 +23,22 @@ public:
 	virtual void WriteData(const void* data, uint32 length);
 	void WriteAppend(const void* data, uint32 length);
 	virtual uint32 GetFileSize();
+
+	static revString GetDirectoryPath(const revString& path)
+	{
+		revString result = path;
+		struct stat st;
+		if (stat(result.c_str(), &st) != 0) {
+			return  "";
+		}
+
+		// isDirectory
+		if ((st.st_mode & S_IFMT) == S_IFDIR) {
+			return result;
+		}
+
+		return result.substr(0, path.find_last_of('/'));
+	}
 
 private:
 	FileMode mode;
