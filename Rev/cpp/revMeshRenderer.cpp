@@ -15,11 +15,11 @@ void revMeshRenderer::SetModel(const revModel* model)
 	this->model = model;
 	transforms = revArray<revTransform*>(model->GetTransforms());
 	uint32 count = static_cast<uint32>(transforms.size());
-	constantBuffers.resize(count);
+	transformConstantBuffers.resize(count);
 
 	for (uint32 i = 0; i < count; ++i) {
-		constantBuffers[i] = revGraphics::Get().CreateConstantBuffer();
-		constantBuffers[i]->Create(nullptr, sizeof(revTransform::CBuffer), 1, revGraphicsBuffer::USAGE::DYNAMIC);
+		transformConstantBuffers[i] = revGraphics::Get().CreateConstantBuffer();
+		transformConstantBuffers[i]->Create(nullptr, sizeof(revTransform::CBuffer), 1, revGraphicsBuffer::USAGE::DYNAMIC);
 	}
 	SetMeshes(model->GetMeshes());
 }
@@ -33,29 +33,32 @@ void revMeshRenderer::SetMeshes(const revArray<revMesh*>& meshes)
 
 void revMeshRenderer::SetMesh(uint32 index, const revMesh* mesh)
 {
-	if (static_cast<uint32>(vertexBuffers.size()) <= index) {
-		vertexBuffers.resize(index + 1, nullptr);
+	if (static_cast<uint32>(drawResources.size()) <= index) {
+		drawResources.resize(index + 1, nullptr);
 	}
-	vertexBuffers[index] = revGraphics::Get().CreateVertexBuffer();
-	if (vertexBuffers[index] == nullptr) {
+	DrawResources* drawResource = new DrawResources();
+	drawResources[index] = drawResource;
+
+	drawResource->vertexBuffer = revGraphics::Get().CreateVertexBuffer();
+	if (drawResource->vertexBuffer == nullptr) {
 		NATIVE_LOGE("failed create vertex buffer. file:%s , line:%s", __FILE__, __LINE__);
 	}
+
 	const auto& vertices = mesh->GetVertexData();
 	const uint32 sizeOfBytes = mesh->GetSizeOfBytes();
-	vertexBuffers[index]->Create(vertices.data(), sizeOfBytes, static_cast<uint32>(vertices.size()) / (sizeOfBytes / sizeof(f32)));
+	drawResource->vertexBuffer->Create(vertices.data(), sizeOfBytes, static_cast<uint32>(vertices.size()) / (sizeOfBytes / sizeof(f32)));
 
 	if (mesh->GetIndexArray().size() > 0) {
-		if (static_cast<uint32>(indexBuffers.size()) <= index) {
-			indexBuffers.resize(index + 1, nullptr);
-		}
 
-		indexBuffers[index] = revGraphics::Get().CreateIndexBuffer();
-		if (indexBuffers[index] == nullptr) {
+		drawResource->indexBuffer = revGraphics::Get().CreateIndexBuffer();
+		if (drawResource->indexBuffer == nullptr) {
 			NATIVE_LOGE("failed create index buffer. file:%s , line:%s", __FILE__, __LINE__);
 		}
 		const auto& indicies = mesh->GetIndexArray();
-		indexBuffers[index]->Create(indicies.data(), sizeof(revIndex3), static_cast<uint32>(indicies.size()));
+		drawResource->indexBuffer->Create(indicies.data(), sizeof(revIndex3), static_cast<uint32>(indicies.size()));
 	}
+
+	drawResource->transformIndex = mesh->GetTransformIndex();
 }
 
 void revMeshRenderer::SetMaterials(const revArray<revMaterial*>& materials)
@@ -75,7 +78,10 @@ void revMeshRenderer::SetMaterial(uint32 index, revMaterial* material)
 
 void revMeshRenderer::SetMaterialToAllSubMesh(revMaterial* material)
 {
-	materials.resize(vertexBuffers.size(), material);
+	materials.resize(1, material);
+	for (uint32 i = 0; i < static_cast<uint32>(drawResources.size()); ++i) {
+		drawResources[i]->materialIndex = 0;
+	}
 }
 
 void revMeshRenderer::Update(const revMatrix44& world)
@@ -88,21 +94,26 @@ void revMeshRenderer::Update(const revMatrix44& world)
 
 void revMeshRenderer::Destroy()
 {
-	uint32 count = static_cast<uint32>(vertexBuffers.size());
+	uint32 count = static_cast<uint32>(drawResources.size());
 	for (uint32 i = 0; i < count; ++i) {
-		if (vertexBuffers[i] != nullptr) vertexBuffers[i]->Destroy();
+		if (drawResources[i] != nullptr) {
+			if (drawResources[i]->vertexBuffer != nullptr) {
+				drawResources[i]->vertexBuffer->Destroy();
+				delete drawResources[i]->vertexBuffer;
+			}
+			if (drawResources[i]->indexBuffer != nullptr) {
+				drawResources[i]->indexBuffer->Destroy();
+				delete drawResources[i]->indexBuffer;
+			}
+			delete drawResources[i];
+		}
 	}
-	vertexBuffers.clear();
-	count = static_cast<uint32>(indexBuffers.size());
+	drawResources.clear();
+	count = static_cast<uint32>(transformConstantBuffers.size());
 	for (uint32 i = 0; i < count; ++i) {
-		if (indexBuffers[i] != nullptr) indexBuffers[i]->Destroy();
+		if (transformConstantBuffers[i] != nullptr) transformConstantBuffers[i]->Destroy();
 	}
-	indexBuffers.clear();
-	count = static_cast<uint32>(constantBuffers.size());
-	for (uint32 i = 0; i < count; ++i) {
-		if (constantBuffers[i] != nullptr) constantBuffers[i]->Destroy();
-	}
-	constantBuffers.clear();
+	transformConstantBuffers.clear();
 	// TODO:
 	// revArray<revMaterial*> materials;
 }

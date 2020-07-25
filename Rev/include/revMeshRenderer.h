@@ -29,11 +29,27 @@ public:
 protected:
 	const revModel* model;
 	revArray<revTransform*> transforms;
-	revArray<revGraphicsBuffer*> vertexBuffers;
-	revArray<revGraphicsBuffer*> indexBuffers;
-	revArray<revGraphicsBuffer*> constantBuffers;
+	revArray<revGraphicsBuffer*> transformConstantBuffers;
 	revArray<revMaterial*> materials;
+	revArray<revGraphicsBuffer*> materialsConstantBuffers;
+	//revArray<revGraphicsBuffer*> vertexBuffers;
+	//revArray<revGraphicsBuffer*> indexBuffers;
+	static const int32 DONT_HAVE_CONSTANT_BUFFER = -1;
+	struct DrawResources {
+		DrawResources() :
+			vertexBuffer(nullptr),
+			indexBuffer(nullptr),
+			transformIndex(DONT_HAVE_CONSTANT_BUFFER),
+			materialIndex(DONT_HAVE_CONSTANT_BUFFER)
+		{
+		}
 
+		revGraphicsBuffer* vertexBuffer;
+		revGraphicsBuffer* indexBuffer;
+		int32 transformIndex;
+		int32 materialIndex;
+	};
+	revArray<DrawResources*> drawResources;
 };
 
 #endif
