@@ -1,7 +1,7 @@
 {
     "root": {
-        "data": {
-            "guid": 0,
+        "revResource": {
+            "uuid": 0,
             "userData": ""
         },
         "format": 0,
