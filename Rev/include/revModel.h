@@ -51,15 +51,14 @@ public:
 
 	SERIALIZE_FUNC()
 	{
-		archive(REV_NVP(metaData),
+		archive(
+			SERIALIZE_BASE_CLASS(revResource),
 			REV_NVP(importSetting)
 		);
 	}
 
 private:
-	DefaultMetaData metaData;
 	ImportSetting importSetting;
-
 	revArray<revTransform*> transforms;
 	revArray<revMesh*> meshes;
 	revArray<revMaterial*> materials;

@@ -175,17 +175,28 @@ public:
 
 	struct ShaderMetaData
 	{
-		DefaultMetaData data;
 		revArray<revAttributeBinding> attributes;
 		revArray<revConstantBufferBinding> cbuffers;
 		revArray<revTextureBinding> textures;
 		revArray<revSamplerBinding> samplers;
 	};
+
+
+	SERIALIZE_FUNC()
+	{
+		archive(
+			SERIALIZE_BASE_CLASS(revResource),
+			REV_MAKE_NVP(attributes, metaData.attributes),
+			REV_MAKE_NVP(cbuffers, metaData.cbuffers),
+			REV_MAKE_NVP(textures, metaData.textures),
+			REV_MAKE_NVP(samplers, metaData.samplers)
+		);
+	}
+
 	
 	SHADER_TYPE GetType() const { return type; }
 protected:
 	bool LoadMetaData(const char* path);
-
 	revString name;
     SHADER_TYPE type;
 	revShaderHandle handle;
@@ -193,15 +204,5 @@ protected:
     
 };
 
-
-SERIALIZE_FUNC_NON_INTRUSIVE(revShader::ShaderMetaData, metaData)
-{
-	archive(REV_MAKE_NVP(data, metaData.data),
-		REV_MAKE_NVP(attributes, metaData.attributes),
-		REV_MAKE_NVP(cbuffers, metaData.cbuffers),
-		REV_MAKE_NVP(textures, metaData.textures),
-		REV_MAKE_NVP(samplers, metaData.samplers)	
-		);
-}
 
 #endif

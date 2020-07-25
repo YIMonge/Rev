@@ -26,11 +26,11 @@ bool revTexture::LoadFromFile(revDevice* device, const char* path)
     File metaFile;
     if (!metaFile.Open(metaPath, FileMode::ReadText)) {
         NATIVE_LOGI("meta file is not found. create new file : %s", metaPath);
-       revSerializer::Serialize(metaPath, metaData);
+       revSerializer::Serialize(metaPath, *this);
     }
     else metaFile.Close();
 #endif
-    revSerializer::Deserialize(metaPath, metaData);
+    revSerializer::Deserialize(metaPath, *this);
     
 
     // Load Texture Data

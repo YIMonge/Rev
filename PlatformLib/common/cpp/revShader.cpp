@@ -14,6 +14,6 @@ bool revShader::LoadMetaData(const char* path)
 	}
 	else metaFile.Close();
 #endif
-	revSerializer::Deserialize(metaPath, metaData);
+	revSerializer::Deserialize(metaPath, *this);
 	return true;
 }

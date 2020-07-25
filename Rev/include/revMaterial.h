@@ -140,27 +140,32 @@ public:
 	class Property
 	{
 	public:
-		Property()
+		Property() :
+			type(TYPE::NOT_INITIALIZED)
 		{}
-		Property(revColor color) :
+		Property(revColor color, const revString& name) :
 			color(color),
+			name(name),
 			type(TYPE::COLOR)
-		{
-		}
-		Property(revTexture* texture) :
+		{}
+		Property(revTexture* texture, const revString& name) :
 			texture(texture),
+			name(name),
 			type(TYPE::TEXTURE)
 		{
 			uuid = texture->GetUUID();
 		}
-		Property(f32 value) :
+		Property(f32 value, const revString& name) :
 			value(value),
+			name(name),
 			type(TYPE::FLOAT)
 		{
 		}
 
+
 		enum class TYPE
 		{
+			NOT_INITIALIZED,
 			TEXTURE,
 			COLOR,
 			FLOAT,
@@ -180,6 +185,32 @@ public:
 			if (type != TYPE::COLOR) NATIVE_LOGE("Material Property Type miss match. file:%s, line:%s", __FILE__, __LINE__);
 			return color;
 		}
+		const revString& GetName() const { return name; }
+
+		void SetValue(f32 value) {
+			if (type != TYPE::FLOAT) {
+				if (type == TYPE::TEXTURE) texture = nullptr;
+			}
+			this->value = value;
+			type = TYPE::FLOAT;
+		}
+		void SetTexture(revTexture* texture){
+			this->texture = texture;
+			type = TYPE::TEXTURE;
+		}
+		void SetColor(const revColor& color)
+		{
+			this->color = color;
+			type = TYPE::COLOR;
+		}
+		void SetName(const revString& name)
+		{
+			this->name = name;
+		}
+		void SetName(const char* name)
+		{
+			this->name = name;
+		}
 
 	private:
 		union {
@@ -193,12 +224,28 @@ public:
 			};
 			revColor color;
 		};
+		revString name;
 		TYPE type;
 	};
 
 
     const revShader* GetShader(SHADER_TYPE type) const { return shader[static_cast<uint32>(type)]; }
     const revArray<Property>& GetProperties() const { return properties; }
+	const Property& GetProperty(uint32 index) const {
+		if(index >= static_cast<uint32>(properties.size())) NATIVE_LOGE("Out of range Material property. file:%s, line:%s", __FILE__, __LINE__);
+		return properties[index];
+	}
+	const Property& GetProperty(const revString& propertyName)
+	{
+		for (auto property : properties)
+		{
+			if (property.GetName() == propertyName) {
+				return property;
+			}
+		}
+		NATIVE_LOGI("Could not found property:%s, file:%s, line:%s", propertyName, __FILE__, __LINE__);
+		return properties[0];
+	}
     const BlendState& GetBlendState() const { return blend; }
 	const DepthStencilState& GetDepthStencil() const { return depthStencil; }
     const RasterizationState& GetRasterization() const { return rasterization; }
@@ -222,6 +269,11 @@ public:
         rasterization = rasterizationState;
         dirty = true;
     }
+	void AddProperty(const Property& property)
+	{
+		properties.push_back(property);
+		dirty = true;
+	}
 
 	const revShader* const GetVertexShader() const { return shader[0]; }
 	const revShader* const GetPixelShader() const { return shader[1]; }
@@ -229,7 +281,7 @@ public:
     SERIALIZE_FUNC()
     {
         archive(
-			REV_NVP(metaData),
+			SERIALIZE_BASE_CLASS(revResource),
 			REV_NVP(blend),
 			REV_NVP(depthStencil),
             REV_NVP(rasterization)
@@ -240,7 +292,6 @@ public:
 protected:
     revShader* shader[2];
     revArray<Property> properties; 
-	DefaultMetaData metaData;
     BlendState blend;
 	DepthStencilState depthStencil;
     RasterizationState rasterization;

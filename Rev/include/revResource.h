@@ -5,6 +5,7 @@
 #include "revTypedef.h"
 #include "revArray.h"
 #include "revString.h"
+#include "revHash.h"
 
 class revResource
 {
@@ -17,27 +18,36 @@ public:
 
 	void SetName(const revString& name) { this->name = name; }
 	void SetName(const char* name) { this->name = name; }
-
+	void SetFilePath(const revString& filePath)
+	{
+		this->filePath = filePath;
+		uuid = revHash<const char*>()(filePath.c_str());
+	}
+	void SetFilePath(const char* filePath)
+	{
+		this->filePath = filePath;
+		uuid = revHash<const char*>()(filePath);
+	}
 	static const uint32 MAX_META_PATH_LENGTH = 256;
 	static void MakeMetaPath(char* metaPath, const char* path)
 	{
 		strcpy(metaPath, path);
 		strcat(metaPath, ".meta");
 	}
+
+	
+	SERIALIZE_FUNC()
+	{
+		archive(REV_NVP(uuid),
+			REV_NVP(userData));
+	}
+	
+
 private:
 	uint64 uuid;
 	revString name;
-};
-
-struct DefaultMetaData
-{
-	uint64 uuid;
+	revString filePath;
 	revString userData;
 };
 
-SERIALIZE_FUNC_NON_INTRUSIVE(DefaultMetaData, data)
-{
-	archive(REV_MAKE_NVP(uuid, data.uuid),
-		REV_MAKE_NVP(userData, data.userData));
-}
 #endif

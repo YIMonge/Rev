@@ -31,6 +31,7 @@ std::wstring DX12Shader::utf8_decode(const std::string &str)
 
 bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, SHADER_TYPE shaderType)
 {	
+	SetFilePath(path);
 	revString resourcePath(RESOURCE_PATH);
 	resourcePath += path;
 	type = shaderType;
@@ -177,9 +178,7 @@ void DX12Shader::CreateMetaDataFromShader(const char* metaPath)
     //metaData.samplers.clear();
     //metaData.samplers.resize(shaderDesc.sa)
 
-
-
-    revSerializer::Serialize(metaPath, metaData);
+    revSerializer::Serialize(metaPath, static_cast<revShader&>(*this));
 
     reflection->Release();
 }

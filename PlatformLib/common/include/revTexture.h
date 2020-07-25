@@ -108,7 +108,6 @@ public:
 
     struct TextureMetaData
     {
-		DefaultMetaData data;
 		uint32 format;
 		SamplerDesc sampler;
     };
@@ -120,6 +119,15 @@ public:
 	const revTextureHandle& GetHandle() const { return handle; }
 	const SamplerDesc& GetSamplerDesc() const { return metaData.sampler; }
 
+
+	SERIALIZE_FUNC()
+	{
+		archive(
+			SERIALIZE_BASE_CLASS(revResource),
+			REV_MAKE_NVP(format, metaData.format),
+			REV_MAKE_NVP(sampler, metaData.sampler));
+	}
+
 protected:
 	virtual bool CreateTexture(revDevice* device, uint8* imageData) = 0;
 
@@ -129,14 +137,6 @@ protected:
 	TextureMetaData metaData;
 };
  
-
-SERIALIZE_FUNC_NON_INTRUSIVE(revTexture::TextureMetaData, metaData)
-{
-	archive(REV_MAKE_NVP(data, metaData.data),
-		REV_MAKE_NVP(format, metaData.format),
-		REV_MAKE_NVP(sampler, metaData.sampler));
-}
-
 
 
 #endif

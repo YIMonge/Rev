@@ -6,6 +6,7 @@
 #include "cereal/archives/json.hpp"
 #include "cereal/types/vector.hpp"
 #include "cereal/types/string.hpp"
+#include "cereal/types/polymorphic.hpp"
 #include "File.h"
 #include "revString.h"
 #include <sstream>
@@ -18,6 +19,7 @@ using revStringStream = std::stringstream;
 #define SERIALIZE_FUNC_NON_INTRUSIVE(type, name) template<class Archive>\
      void serialize(Archive& archive, type& name)
 
+#define SERIALIZE_BASE_CLASS(type) cereal::make_nvp(#type, ::cereal::base_class<type>(this))
 
 #define REV_MAKE_NVP(N, T) ::cereal::make_nvp(#N, T)
 #define REV_NVP(T) ::cereal::make_nvp(#T, T)
@@ -84,8 +86,5 @@ SERIALIZE_FUNC_NON_INTRUSIVE(revColor, c)
 {
     archive(REV_MAKE_NVP(r, c.r), REV_MAKE_NVP(g, c.g), REV_MAKE_NVP(b, c.b), REV_MAKE_NVP(a, c.a));
 }
-
-
-
 
 #endif
