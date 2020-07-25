@@ -47,7 +47,9 @@
     <ClInclude Include="..\..\include\revArray.h" />
     <ClInclude Include="..\..\include\revBitset.h" />
     <ClInclude Include="..\..\include\revColor.h" />
+    <ClInclude Include="..\..\include\revDictionary.h" />
     <ClInclude Include="..\..\include\revFixedArray.h" />
+    <ClInclude Include="..\..\include\revHash.h" />
     <ClInclude Include="..\..\include\revIterator.h" />
     <ClInclude Include="..\..\include\revMap.h" />
     <ClInclude Include="..\..\include\revMath.h" />
@@ -83,7 +85,7 @@
     <ProjectGuid>{FCA6123C-15FC-417C-B3BF-32BDA3B497D4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>CoreLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|Win32'" Label="Configuration">
