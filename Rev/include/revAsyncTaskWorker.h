@@ -1,12 +1,13 @@
 #ifndef __REVASYNCTASKWORKER_H__
 #define __REVASYNCTASKWORKER_H__
 
+#include "revTypedef.h"
 class Thread;
 
 class revAsyncTaskWoker
 {
 public:
-	revAsyncTaskWoker(UInt32 woker_num);
+	revAsyncTaskWoker(uint32 woker_num);
 	~revAsyncTaskWoker();
 
 private:
