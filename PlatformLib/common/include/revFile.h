@@ -2,6 +2,7 @@
 #define __REVFILE_H__
 
 #include "revTypedef.h"
+#include "revString.h"
 
 enum class FileMode : uint8
 {
