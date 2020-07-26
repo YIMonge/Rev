@@ -7,6 +7,7 @@
 
 class revMaterial : public revResource
 {
+friend class revMaterialLoader;
 public:
     revMaterial(){}
     virtual ~revMaterial(){}
@@ -296,8 +297,7 @@ protected:
 	DepthStencilState depthStencil;
     RasterizationState rasterization;
 
-
-    bool dirty;
+	bool dirty;
 };
 
 #endif

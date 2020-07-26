@@ -2,17 +2,20 @@
 #define __REVMODELLOADER_H__
 
 #include "revModel.h"
+#include "revResourceLoader.h"
 
-class revModelLoader
+class revModelLoader : public revResourceLoader<revModel>
 {
 public:
 	revModelLoader();
 	virtual ~revModelLoader();
 
-	bool LoadFromFile(const char* path, revModel* model);
+	virtual bool LoadFromFile(const char* path, revModel* model);
+
+protected:
+	virtual bool OnLoadFailed(const char* resourcePath, revModel* model);
 
 private:
-	bool LoadMetaFile(const char* metaPath, revModel* model);
 #ifdef _WINDOWS
 	bool LoadFBXFromFile(const char* path, revModel* model);
 	void WriteMDL(const char* path, const revModel& model);	

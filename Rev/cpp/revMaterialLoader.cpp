@@ -3,7 +3,8 @@
 const uint32 DATA_VERSION = 1;
 
 revMaterialLoader::revMaterialLoader()
-{}
+{
+}
 
 revMaterialLoader::~revMaterialLoader()
 {}

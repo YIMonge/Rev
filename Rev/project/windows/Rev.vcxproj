@@ -52,14 +52,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\cpp\revApp.cpp" />
-    <ClCompile Include="..\..\cpp\revCamera.cpp" />
     <ClCompile Include="..\..\cpp\revDrawCommand.cpp" />
     <ClCompile Include="..\..\cpp\revGraphics.cpp" />
     <ClCompile Include="..\..\cpp\revLogger.cpp" />
+    <ClCompile Include="..\..\cpp\revMaterialLoader.cpp" />
     <ClCompile Include="..\..\cpp\revMesh.cpp" />
     <ClCompile Include="..\..\cpp\revMeshRenderer.cpp" />
     <ClCompile Include="..\..\cpp\revModel.cpp" />
     <ClCompile Include="..\..\cpp\revModelLoader.cpp" />
+    <ClCompile Include="..\..\cpp\revResourceManager.cpp" />
     <ClCompile Include="..\..\cpp\revThreadPool.cpp" />
     <ClCompile Include="..\..\cpp\revTransform.cpp" />
   </ItemGroup>
@@ -72,13 +73,16 @@
     <ClInclude Include="..\..\include\revGraphics.h" />
     <ClInclude Include="..\..\include\revLogger.h" />
     <ClInclude Include="..\..\include\revMaterial.h" />
+    <ClInclude Include="..\..\include\revMaterialLoader.h" />
     <ClInclude Include="..\..\include\revMesh.h" />
     <ClInclude Include="..\..\include\revMeshRenderer.h" />
     <ClInclude Include="..\..\include\revModel.h" />
     <ClInclude Include="..\..\include\revModelLoader.h" />
     <ClInclude Include="..\..\include\revResource.h" />
+    <ClInclude Include="..\..\include\revResourceLoader.h" />
     <ClInclude Include="..\..\include\revResourceManager.h" />
     <ClInclude Include="..\..\include\revSerializer.h" />
+    <ClInclude Include="..\..\include\revShaderLoader.h" />
     <ClInclude Include="..\..\include\revSystemBase.h" />
     <ClInclude Include="..\..\include\revThreadPool.h" />
     <ClInclude Include="..\..\include\revTransform.h" />

@@ -1,5 +1,12 @@
 #include "FBXLoader.h"
 #include "Log.h"
+#include "revMaterialLoader.h"
+#if defined(_USE_DIRECTX12)
+#include "DX12Shader.h"
+#elif defined(_USE_VULKAN)
+#include "VulkanShader.h"
+#endif
+
 #ifdef _DEBUG
 
 using namespace fbxsdk;
@@ -40,11 +47,13 @@ FBXLoader::~FBXLoader()
 bool FBXLoader::LoadFromFile(const revString& path, revModel* model)
 {
 	if (model == nullptr) return false;
-	revString resourcePath(RESOURCE_PATH);
-	resourcePath += path;
+	revString filePath(RESOURCE_PATH);
+	filePath += path;
+
+	directoryPath = File::GetDirectoryPath(filePath);
 
 	FbxImporter* importer = FbxImporter::Create(manager, "");
-	if (!importer->Initialize(resourcePath.c_str(), -1, manager->GetIOSettings())) {
+	if (!importer->Initialize(filePath.c_str(), -1, manager->GetIOSettings())) {
 		NATIVE_LOGE("[FBX] Load Error %s, %d", __FILE__, __LINE__);
 		return false;
 	}
@@ -249,16 +258,76 @@ void FBXLoader::ImportMaterialData(FbxSurfaceMaterial* fbxMaterial, revModel* mo
 	else if (fbxMaterial->GetClassId().Is(FbxSurfacePhong::ClassId)) {
 	}
 
+	FbxString fbxMaterialName = fbxMaterial->GetName();
+	revString fileName = fbxMaterialName.Buffer();
+	uint32 fileNameLength = static_cast<uint32>(fileName.size()); 
+	for (uint32 i = 0; i < fileNameLength; ++i) {
+		if (('0' <= fileName[i] && fileName[i] <= '9') ||
+			('A' <= fileName[i] && fileName[i] <= 'Z') ||
+			('a' <= fileName[i] && fileName[i] <= 'z'))
+		{
+			continue;
+		}
+		fileName[i] = '_';
+	}
+	fileName += ".mat";
+
+
+
+	revMaterial* material = new revMaterial();
+	File file;
+	revString materialPath(directoryPath);
+	materialPath += fileName;
+	revString resourcePath(RESOURCE_PATH);
+	resourcePath += materialPath;
+
+	revMaterialLoader materialLoader;
+	// TODO : Load material 
+	// すでにマテリアルがあればロード、なければインポートした値を元に作る
+	if (materialLoader.LoadFromFile(resourcePath.c_str(), material)) {
+		model->AddMaterial(material);
+		return;
+	}
+
+	delete material;
+	material = new revMaterial();
+
 	revMaterial::Property emissive = ImportMaterialProperty(fbxMaterial, FbxSurfaceMaterial::sEmissive, FbxSurfaceMaterial::sEmissiveFactor);
 	revMaterial::Property ambient = ImportMaterialProperty(fbxMaterial, FbxSurfaceMaterial::sAmbient, FbxSurfaceMaterial::sAmbientFactor);
 	revMaterial::Property diffuse = ImportMaterialProperty(fbxMaterial, FbxSurfaceMaterial::sDiffuse, FbxSurfaceMaterial::sDiffuse);
 	revMaterial::Property specular = ImportMaterialProperty(fbxMaterial, FbxSurfaceMaterial::sSpecular, FbxSurfaceMaterial::sSpecular);
 
-	revMaterial material;
-	material.AddProperty(emissive);
-	material.AddProperty(ambient);
-	material.AddProperty(diffuse);
-	material.AddProperty(specular);
+	emissive.SetName("Emissive");
+	ambient.SetName("Ambient");
+	diffuse.SetName("Diffuse");
+	specular.SetName("Specular");
+
+	material->AddProperty(emissive);
+	material->AddProperty(ambient);
+	material->AddProperty(diffuse);
+	material->AddProperty(specular);
+
+	revShader* vertexShader;
+	revShader* fragmentShader;
+#if defined(_USE_DIRECTX12)
+	vertexShader = new DX12Shader();
+	fragmentShader = new DX12Shader();
+	const char* DEFAULT_VERTEX_SHADER_NAME = "default_vert.hlsl";
+	const char* DEFAULT_FRAGMENT_SHADER_NAME = "fragment_vert.hlsl";
+#elif defined(_USE_VULKAN)
+	vertexShader =  new VulkanShader();
+	fragmentShader = new VUlkanShader();
+	const char* DEFAULT_VERTEX_SHADER_NAME = "default_vert.spv";
+	const char* DEFAULT_FRAGMENT_SHADER_NAME = "fragment_vert.spv";
+#endif
+	// TODO: ResourceManagerにロードを作ってそこでDeviceを保持してロードさせないとだめ
+	//vertexShader->LoadFromFile(&device, DEFAULT_VERTEX_SHADER_NAME);
+	//fragmentShader->LoadFromFile(&device, DEFAULT_FRAGMENT_SHADER_NAME);
+
+	//material->SetShader();
+
+	materialLoader.WriteMaterial(resourcePath.c_str(), *material);
+	model->AddMaterial(material);
 }
 
 revMaterial::Property FBXLoader::ImportMaterialProperty(FbxSurfaceMaterial* fbxMaterial, const char* propertyName, const char* factorName)
@@ -276,8 +345,6 @@ revMaterial::Property FBXLoader::ImportMaterialProperty(FbxSurfaceMaterial* fbxM
 		result.SetColor(revColor(static_cast<f32>(color[0]), static_cast<f32>(color[1]), static_cast<f32>(color[2]), 1.0f));
 	}
 	if (property.IsValid()) {
-		result.SetName(propertyName);
-
 		int32 textureLayerCount = property.GetSrcObjectCount<FbxFileTexture>();
 		for (int32 i = 0; i < textureLayerCount; ++i) {
 			FbxLayeredTexture* layeredTexture = property.GetSrcObject<FbxLayeredTexture>();

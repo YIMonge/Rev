@@ -38,10 +38,13 @@
     <ClCompile Include="..\..\cpp\revTransform.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cpp\revCamera.cpp">
+    <ClCompile Include="..\..\cpp\revModel.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cpp\revModel.cpp">
+    <ClCompile Include="..\..\cpp\revMaterialLoader.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cpp\revResourceManager.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,6 +104,15 @@
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\revResourceManager.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revMaterialLoader.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revResourceLoader.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revShaderLoader.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>

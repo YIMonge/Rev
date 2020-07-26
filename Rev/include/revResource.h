@@ -28,6 +28,8 @@ public:
 		this->filePath = filePath;
 		uuid = revHash<const char*>()(filePath);
 	}
+	const char* GetFilePath() const { return filePath.c_str(); }
+
 	static const uint32 MAX_META_PATH_LENGTH = 256;
 	static void MakeMetaPath(char* metaPath, const char* path)
 	{

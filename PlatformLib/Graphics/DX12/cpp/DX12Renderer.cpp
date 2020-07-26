@@ -3,6 +3,7 @@
 #include "DX12Renderer.h"
 #include "Window.h"
 
+#include "revResourceManager.h"
 #include "FbxLoader.h"
 #include "revModelLoader.h"
 #include "revTransform.h"
@@ -114,6 +115,8 @@ bool DX12Renderer::IntialzieForApp()
 	fragmentShader.LoadFromFile(device, "ironman_frag.hlsl", SHADER_TYPE::FRAGMENT);
 	FBXLoader loader;
 	loader.LoadFromFile("Models/ironman.fbx", &model);
+
+	revResourceManager::Get().Load<revModel>("Models/ironman.fbx");
 
 	//revModelLoader loader;
 	//loader.LoadFromFile("Models/ironman.mdl", &model);

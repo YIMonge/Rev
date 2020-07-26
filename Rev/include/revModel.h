@@ -21,6 +21,7 @@ public:
 #ifdef _DEBUG
 	void AddMesh(revMesh* mesh) { meshes.push_back(mesh); }
 	void AddTransform(revTransform* transform) { transforms.push_back(transform); }
+	void AddMaterial(revMaterial* material) { materials.push_back(material); }
 #endif
 	class ImportSetting
 	{

@@ -22,6 +22,8 @@ private:
 	void ImportMaterialData(FbxSurfaceMaterial* fbxMaterial, revModel* model);
 	revMaterial::Property ImportMaterialProperty(FbxSurfaceMaterial* fbxMaterial, const char* propertyName, const char* factorName);
 
+	revString filePath;
+	revString directoryPath;
 	revMatrix44 globalMatrix;
 	FbxManager* manager;
 	FbxScene* scene;
