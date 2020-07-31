@@ -16,7 +16,7 @@ public:
 		resourcePath += path;
 		resource->SetFilePath(path);
 
-		if (!LoadMetaFile(path, resource))	return false;
+		if (!LoadMetaFile(resourcePath.c_str(), resource))	return false;
 		if (!file.Open(resourcePath.c_str(), FileMode::ReadBinary)) {
 			return OnLoadFailed(resource);
 		}
