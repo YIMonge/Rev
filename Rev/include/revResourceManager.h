@@ -6,6 +6,13 @@
 #include "revResourceLoader.h"
 #include "revModelLoader.h"
 #include "revMaterialLoader.h"
+#include "revShaderLoader.h"
+#ifdef _USE_DIRECTX12
+#include "DX12Shader.h"
+#elif defined(_USE_VULKAN)
+#include "VulkanShader.h"
+#endif
+
 
 class revResourceManager : public revSingleton<revResourceManager>
 {
@@ -34,7 +41,7 @@ private:
 
 			return nullptr;
 		}
-		if (resources.find(resource->GetUUID()) == resources.end()) {
+		if (resources.find(resource->GetUUID()) != resources.end()) {
 			NATIVE_LOGE("ResouceManager Hash confrict. file1:%s file2:%s", resource->GetFilePath(), resources[resource->GetUUID()]->GetFilePath());
 			return resource;
 		}
