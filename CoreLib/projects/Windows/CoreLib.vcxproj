@@ -71,8 +71,6 @@
     <ClInclude Include="..\..\include\revVector4.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\include\revArray.inl" />
-    <None Include="..\..\include\revBitset.inl" />
     <None Include="..\..\include\revMatrix44.inl" />
     <None Include="..\..\include\revQuaternion.inl" />
     <None Include="..\..\include\revQueue.inl" />

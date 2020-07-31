@@ -111,12 +111,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\include\revArray.inl">
-      <Filter>header</Filter>
-    </None>
-    <None Include="..\..\include\revBitset.inl">
-      <Filter>header</Filter>
-    </None>
     <None Include="..\..\include\revMatrix44.inl">
       <Filter>header</Filter>
     </None>
