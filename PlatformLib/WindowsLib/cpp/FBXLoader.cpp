@@ -278,13 +278,11 @@ void FBXLoader::ImportMaterialData(FbxSurfaceMaterial* fbxMaterial, revModel* mo
 	File file;
 	revString materialPath(directoryPath);
 	materialPath += fileName;
-	revString resourcePath(RESOURCE_PATH);
-	resourcePath += materialPath;
+	materialPath.replace(0, strlen(RESOURCE_PATH), "");
 
 	revMaterialLoader materialLoader;
 	// TODO : Load material 
-	// すでにマテリアルがあればロード、なければインポートした値を元に作る
-	if (materialLoader.LoadFromFile(resourcePath.c_str(), material)) {
+	if (materialLoader.LoadFromFile(materialPath.c_str(), material)) {
 		model->AddMaterial(material);
 		return;
 	}
@@ -320,13 +318,12 @@ void FBXLoader::ImportMaterialData(FbxSurfaceMaterial* fbxMaterial, revModel* mo
 	const char* DEFAULT_VERTEX_SHADER_NAME = "default_vert.spv";
 	const char* DEFAULT_FRAGMENT_SHADER_NAME = "fragment_vert.spv";
 #endif
-	// TODO: ResourceManagerにロードを作ってそこでDeviceを保持してロードさせないとだめ
-	//vertexShader->LoadFromFile(&device, DEFAULT_VERTEX_SHADER_NAME);
-	//fragmentShader->LoadFromFile(&device, DEFAULT_FRAGMENT_SHADER_NAME);
+	material->SetShader(SHADER_TYPE::VERTX, vertexShader);
+	material->SetShader(SHADER_TYPE::FRAGMENT, fragmentShader);
 
-	//material->SetShader();
-
-	materialLoader.WriteMaterial(resourcePath.c_str(), *material);
+	revString materialResourcePath(directoryPath);
+	materialResourcePath += fileName;
+	materialLoader.WriteMaterial(materialResourcePath.c_str(), *material);
 	model->AddMaterial(material);
 }
 
