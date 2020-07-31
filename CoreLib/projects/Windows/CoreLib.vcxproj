@@ -62,6 +62,7 @@
     <ClInclude Include="..\..\include\revRect.h" />
     <ClInclude Include="..\..\include\revSingleton.h" />
     <ClInclude Include="..\..\include\revSmartPointer.h" />
+    <ClInclude Include="..\..\include\revStack.h" />
     <ClInclude Include="..\..\include\revStreamReader.h" />
     <ClInclude Include="..\..\include\revString.h" />
     <ClInclude Include="..\..\include\revTypedef.h" />
