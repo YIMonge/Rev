@@ -111,12 +111,12 @@ void DX12Renderer::Render()
 bool DX12Renderer::IntialzieForApp()
 {
 
-	vertexShader.LoadFromFile(device, "ironman_vert.hlsl", SHADER_TYPE::VERTX);
-	fragmentShader.LoadFromFile(device, "ironman_frag.hlsl", SHADER_TYPE::FRAGMENT);
-	FBXLoader loader;
-	loader.LoadFromFile("Models/ironman.fbx", &model);
+	vertexShader.LoadFromFile(&device, "ironman_vert.hlsl", SHADER_TYPE::VERTX);
+	fragmentShader.LoadFromFile(&device, "ironman_frag.hlsl", SHADER_TYPE::FRAGMENT);
+	//FBXLoader loader;
+	//loader.LoadFromFile("Models/ironman.fbx", &model);
 
-	revResourceManager::Get().Load<revModel>("Models/ironman.fbx");
+	model = revResourceManager::Get().Load<revModel>("Models/ironman.mdl");
 
 	//revModelLoader loader;
 	//loader.LoadFromFile("Models/ironman.mdl", &model);
@@ -127,7 +127,7 @@ bool DX12Renderer::IntialzieForApp()
 	mat.SetShader(SHADER_TYPE::VERTX, &vertexShader);
 	mat.SetShader(SHADER_TYPE::FRAGMENT, &fragmentShader);
 
-	meshRenderer.SetModel(&model);
+	meshRenderer.SetModel(model);
 	//meshRenderer.SetMeshes(model.GetMeshes());
 	meshRenderer.SetMaterialToAllSubMesh(&mat);
 	meshRenderer.Initialize(&cbufferHeap);

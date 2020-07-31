@@ -56,7 +56,7 @@ private:
 	DX12Shader vertexShader;
 	DX12Shader fragmentShader;
 	revMaterial mat;
-	revModel model;
+	revModel* model;
 	DX12MeshRenderer meshRenderer;
 	DX12Texture texture;
 	DX12TextureView textureView;
