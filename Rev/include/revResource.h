@@ -37,6 +37,8 @@ public:
 		strcat(metaPath, ".meta");
 	}
 
+	virtual void Destroy() {};
+
 	
 	SERIALIZE_FUNC()
 	{
