@@ -1,6 +1,7 @@
 #include "revApp.h"
 #include "revMemory.h"
 #include "revGraphics.h"
+#include "revSceneManager.h"
 
 revApp::revApp()
 : fixed_delta_time(0.0f)
@@ -16,6 +17,7 @@ revApp::revApp()
 	revMemory::Get().StartUp(ToMegaByte(128));
 	GraphicsDesc desc = {};
 	revGraphics::Get().StartUp(window, desc);
+	revSceneManager::Get().StartUp();
 	initialized = true;
 }
 
@@ -23,6 +25,7 @@ revApp::revApp()
 {
 	revMemory::Get().ShutDown();
 	revGraphics::Get().ShutDown();
+	revSceneManager::Get().ShutDown();
 }
 
 void revApp::Run()
