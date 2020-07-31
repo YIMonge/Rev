@@ -12,10 +12,7 @@ public:
 	DX12Shader();
 	~DX12Shader();
 
-#ifdef _DEBUG
-	virtual bool LoadFromFile(const revDevice& deviceContext, const char* path, SHADER_TYPE shaderType);
-#endif
-
+	virtual bool LoadFromFile(const revDevice* device, const char* path, SHADER_TYPE shaderType);
 	void Release();
 
 	std::wstring utf8_decode(const std::string &str);
