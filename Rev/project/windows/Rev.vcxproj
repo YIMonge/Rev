@@ -61,6 +61,9 @@
     <ClCompile Include="..\..\cpp\revModel.cpp" />
     <ClCompile Include="..\..\cpp\revModelLoader.cpp" />
     <ClCompile Include="..\..\cpp\revResourceManager.cpp" />
+    <ClCompile Include="..\..\cpp\revScene.cpp" />
+    <ClCompile Include="..\..\cpp\revSceneLoader.cpp" />
+    <ClCompile Include="..\..\cpp\revSceneManager.cpp" />
     <ClCompile Include="..\..\cpp\revThreadPool.cpp" />
     <ClCompile Include="..\..\cpp\revTransform.cpp" />
   </ItemGroup>
@@ -81,6 +84,9 @@
     <ClInclude Include="..\..\include\revResource.h" />
     <ClInclude Include="..\..\include\revResourceLoader.h" />
     <ClInclude Include="..\..\include\revResourceManager.h" />
+    <ClInclude Include="..\..\include\revSceneLoader.h" />
+    <ClInclude Include="..\..\include\revSceneManager.h" />
+    <ClInclude Include="..\..\include\revScene.h" />
     <ClInclude Include="..\..\include\revSerializer.h" />
     <ClInclude Include="..\..\include\revShaderLoader.h" />
     <ClInclude Include="..\..\include\revSystemBase.h" />
