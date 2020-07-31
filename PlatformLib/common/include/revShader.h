@@ -166,7 +166,7 @@ public:
 	{
 	}
 	virtual ~revShader(){}
-	virtual bool LoadFromFile(const revDevice& deviceContext, const char* path, SHADER_TYPE shaderType) = 0;
+	virtual bool LoadFromFile(const revDevice* device, const char* path, SHADER_TYPE shaderType) = 0;
 	revShaderHandle GetHandle() const { return handle; }
 	const revArray<revAttributeBinding>& GetAttributes() const { return metaData.attributes; }
 	const revArray<revConstantBufferBinding>& GetConstantBufferBindings() const { return metaData.cbuffers; }

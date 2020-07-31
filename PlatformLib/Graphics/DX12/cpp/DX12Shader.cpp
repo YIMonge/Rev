@@ -19,7 +19,6 @@ DX12Shader::~DX12Shader()
 	Release();
 }
 
-#ifdef _DEBUG
 std::wstring DX12Shader::utf8_decode(const std::string &str)
 {
     if(str.empty()) return std::wstring();
@@ -29,7 +28,7 @@ std::wstring DX12Shader::utf8_decode(const std::string &str)
     return wstrTo;
 }
 
-bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, SHADER_TYPE shaderType)
+bool DX12Shader::LoadFromFile(const revDevice* device, const char* path, SHADER_TYPE shaderType)
 {	
 	SetFilePath(path);
 	revString resourcePath(RESOURCE_PATH);
@@ -76,7 +75,7 @@ bool DX12Shader::LoadFromFile(const revDevice& deviceContext, const char* path, 
 }
 
 
-
+#ifdef _DEBUG
 void DX12Shader::CreateMetaDataFromShader(const char* metaPath)
 {
     // Shader reflection for Input Assembler 
