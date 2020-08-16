@@ -1,6 +1,8 @@
 #ifndef __REVRESOURCELOADER_H__
 #define __REVRESOURCELOADER_H__
 
+#include "File.h"
+
 template<typename T>
 class revResourceLoader
 {
