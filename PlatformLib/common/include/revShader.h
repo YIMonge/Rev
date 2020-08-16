@@ -73,6 +73,13 @@ public:
 	void SetSizeOfBytes(uint32 size) { sizeOfBytes = size; }
 #endif
 
+	bool operator == (const revConstantBufferBinding& binding)
+	{
+		return name == binding.GetName() &&
+			registerIndex == binding.GetRegisterIndex() &&
+			sizeOfBytes && binding.GetSizeOfBytes();
+	}
+
 	SERIALIZE_FUNC()
 	{
 		archive(REV_NVP(name),

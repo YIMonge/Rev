@@ -3,10 +3,8 @@
 #include "DX12IndexBufferView.h"
 
 
-void DX12IndexBufferView::Create(revDevice* device, const revGraphicsBuffer* buffer)
+void DX12IndexBufferView::Create(const revGraphicsBuffer* buffer)
 {
-    this->device = device;
-
 	auto handlePtr = buffer->GetHandlePtr();
 	view.BufferLocation = (*handlePtr)->GetGPUVirtualAddress();
 	view.SizeInBytes = buffer->GetSizeOfBytes() * buffer->GetLength();

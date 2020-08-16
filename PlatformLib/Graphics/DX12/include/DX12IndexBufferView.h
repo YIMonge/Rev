@@ -2,17 +2,17 @@
 #define __DX12INDEXBUFFERVIEW_H__
 #ifdef _USE_DIRECTX12
 
-#include "revShaderResourceView.h"
+#include "revGraphicsResource.h"
 #include "DX12DescriptorHeap.h"
 #include "DX12Buffer.h"
 
-class DX12IndexBufferView : public revShaderResourceView
+class DX12IndexBufferView : public revGraphicsResource
 {
 public:
-	DX12IndexBufferView() {}
+	DX12IndexBufferView(revDevice* device) : revGraphicsResource(device) {}
 	virtual ~DX12IndexBufferView(){}
 	
-	void Create(revDevice* device, const revGraphicsBuffer* buffer);
+	void Create(const revGraphicsBuffer* buffer);
 	virtual void Destroy();
 
 	const D3D12_INDEX_BUFFER_VIEW* GetResourceView() const { return &view; }

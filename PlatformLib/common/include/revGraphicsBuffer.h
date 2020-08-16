@@ -4,17 +4,18 @@
 #include "revMath.h"
 #include "revArray.h"
 #include "revDevice.h"
+#include "revGraphicsResource.h"
 
-class revGraphicsBuffer
+class revGraphicsBuffer : public revGraphicsResource
 {
 public:
     revGraphicsBuffer(revDevice* device) :
+		revGraphicsResource(device),
         buffer(NULL_HANDLE),
         sizeOfBytes(0),
         length(0),
         usage(USAGE::STATIC)
         {
-			this->device = device;
 		}
     virtual ~revGraphicsBuffer(){}
 
@@ -29,13 +30,12 @@ public:
     virtual void Destroy() = 0;
 	virtual bool Update(const void* data, uint32 sizeOfCopyBytes, uint32 offset = 0) = 0;
 
-    const revGraphicsResource* GetHandlePtr() const { return &buffer; }
+    const revGraphicsResourceHandle* GetHandlePtr() const { return &buffer; }
     uint32 GetSizeOfBytes() const { return sizeOfBytes; }
     uint32 GetLength() const { return length; }
 
 protected:
-    revDevice* device;
-    revGraphicsResource buffer;
+    revGraphicsResourceHandle buffer;
     uint32 sizeOfBytes;
     uint32 length;
     USAGE usage;

@@ -5,10 +5,8 @@ class Window;
 
 #include "revTypedef.h"
 #include "revDevice.h"
-
-class revColor;
-enum class BLEND_FUNC : uint8;
-enum class ALPHA_TEST : uint8;
+#include "revArray.h"
+#include "revGraphicsCommandList.h"
 
 class revRenderer
 {
@@ -19,44 +17,15 @@ public:
 	virtual void StartUp(Window* window, const GraphicsDesc& desc) = 0;
 	virtual void ShutDown() = 0;
 
+	virtual void OpenGlobalCommandList() = 0;
+	virtual void CloseGlobalCommandList() = 0;
+
+	virtual void ExecuteCommand(revArray<revGraphicsCommandList>& lists) = 0;
+	virtual void ExecuteCommand(revGraphicsCommandList& list) = 0;
+
 	virtual void Render() = 0;
 
 	virtual revDevice* GetDevice() = 0;
-private:
-};
-
-enum class BLEND_FUNC : uint8
-{
-    NONE,
-    ALPHABLEND,
-    ADDITIVE,
-
-};
-
-enum class ALPHA_TEST : uint8
-{
-	NONE,
-	LESS,
-	EQUAL,
-	LEQUAL,
-	GREATER,
-	NOTEQUAL,
-	GEQUAL,
-	ALWAYS,
-};
-
-class IRenderState
-{
-public:
-	virtual ~IRenderState(){};
-
-	virtual void SetBlendFunc(BLEND_FUNC func) = 0;
-	virtual void SetAlphaTest(ALPHA_TEST func, float value) = 0;
-
-protected:
-	BLEND_FUNC 	blend_func;
-	ALPHA_TEST 	alpha_test;
-	float 		alpha_value;
 };
 
 

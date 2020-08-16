@@ -25,7 +25,7 @@ protected:
 	VkBufferUsageFlags bufferUsageFlags;
 
 private:
-	bool CreateBuffer(uint32 size, VkBufferUsageFlags usageFlag, VkMemoryPropertyFlags properties, revGraphicsResource& buffer, VkDeviceMemory& memory);
+	bool CreateBuffer(uint32 size, VkBufferUsageFlags usageFlag, VkMemoryPropertyFlags properties, revGraphicsResourceHandle& buffer, VkDeviceMemory& memory);
 
     void* mappedMemory;
     VkDeviceMemory deviceMemory; 

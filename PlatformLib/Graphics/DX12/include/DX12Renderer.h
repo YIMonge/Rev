@@ -20,26 +20,27 @@
 #include "revMaterial.h"
 #include "revArray.h"
 #include "revModel.h"
+#include "revDictionary.h"
 
 class Window;
 
 class DX12Renderer : public revRenderer
 {
 public:
+	DX12Renderer(){}
+	virtual ~DX12Renderer(){}
 	virtual void StartUp(Window* window, const GraphicsDesc& desc);
 	virtual void ShutDown();
 
 	virtual void Render();
 
 	virtual revDevice* GetDevice() { return &device; }
-private:
-	bool IntialzieForApp();
 
-	void LoadAssets();
-	void LoadPipeline();
+	virtual void OpenGlobalCommandList();
+	virtual void CloseGlobalCommandList();
 
-	void ExecuteCommand(revArray<revGraphicsCommandList>& lists);
-	void ExecuteCommand(revGraphicsCommandList& list);
+	virtual void ExecuteCommand(revArray<revGraphicsCommandList>& lists);
+	virtual void ExecuteCommand(revGraphicsCommandList& list);
 
 private:
 	Window* main_window;
@@ -52,6 +53,9 @@ private:
 	DX12DescriptorHeap textureHeap;
 	DX12DescriptorHeap samplerHeap;
 
+	revDictionary<uint32, revGraphicsResource*> graphicsResources;
+
+	/*
 	// resources for test
 	DX12Shader vertexShader;
 	DX12Shader fragmentShader;
@@ -64,8 +68,7 @@ private:
 
 	DX12ConstantBuffer* constantBuffer;
 	DX12ConstantBufferView constantBufferView;
-
-
+	*/
 };
 
 #endif

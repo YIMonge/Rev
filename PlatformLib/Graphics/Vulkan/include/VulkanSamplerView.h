@@ -1,11 +1,11 @@
 #ifndef __VULKANSAMPLERVIEW_H__
 #define __VULKANSAMPLERVIEW_H__
 
-#include "revShaderResourceView.h"
+#include "revGraphicsResource.h"
 #include "VulkanDescriptorSet.h"
 #include "VulkanSampler.h"
 
-class VulkanSamplerView : public revShaderResourceView
+class VulkanSamplerView : public revGraphicsResource
 {
 public:
 	VulkanSamplerView(){}

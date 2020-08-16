@@ -5,7 +5,7 @@
 #include "VulkanBuffer.h"
 #include "Log.h"
 
-bool VulkanBuffer::CreateBuffer(uint32 size, VkBufferUsageFlags usageFlag, VkMemoryPropertyFlags properties, revGraphicsResource& buffer, VkDeviceMemory& memory)
+bool VulkanBuffer::CreateBuffer(uint32 size, VkBufferUsageFlags usageFlag, VkMemoryPropertyFlags properties, revGraphicsResourceHandle& buffer, VkDeviceMemory& memory)
 {
 	const auto& device = this->device->GetDevice();
 	

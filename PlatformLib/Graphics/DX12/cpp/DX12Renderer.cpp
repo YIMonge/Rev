@@ -33,8 +33,7 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	if (!samplerHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::SAMPLER, 128)) return;
 	if (!swapChain.Create(&device, *window)) return;
 
-	IntialzieForApp();
-
+	/*
 	revDescriptorBindingDesc rootSignatureDesc;
 	rootSignatureDesc.AddMaterial(mat);
 	rootSiganture.Create(&device, rootSignatureDesc);
@@ -51,12 +50,15 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	DX12DescriptorHeap::Chunk samplerChunk = samplerHeap.Allocation(1);
 	auto samplerHandle = samplerChunk.GetHandle();
 	sampler.Create(&device, texture, &samplerHandle);
+	*/
 
+	/*
 	DX12CommandList& commandList = device.GetGlobalCommandList();
 	commandList.Close();
 	ExecuteCommand(commandList);
 	swapChain.WaitForPreviousFrame();
 	commandList.ReleaseResoucers();
+	*/
 }
 
 void DX12Renderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists)
@@ -79,15 +81,15 @@ void DX12Renderer::ExecuteCommand(revGraphicsCommandList& list)
 
 void DX12Renderer::ShutDown()
 {
-	meshRenderer.Destroy();
+	//meshRenderer.Destroy();
 	swapChain.Destroy();
 	device.Destroy();
 }
 
 void DX12Renderer::Render()
 {
-	meshRenderer.Update();
-	meshRenderer.PrepareDraw(camera);
+	//meshRenderer.Update();
+	//meshRenderer.PrepareDraw(camera);
 
 	// Render 
 	DX12CommandList& globalCommandList = device.GetGlobalCommandList();
@@ -99,7 +101,7 @@ void DX12Renderer::Render()
 	pipelineState.Apply(globalCommandList);
 	swapChain.Appply(globalCommandList, revColor::BLUE);
 
-	meshRenderer.Draw(globalCommandList, cbufferHeap, textureHeap, samplerHeap);
+//	meshRenderer.Draw(globalCommandList, cbufferHeap, textureHeap, samplerHeap);
 
 	globalCommandList.Close();
 	ExecuteCommand(globalCommandList);
@@ -108,19 +110,33 @@ void DX12Renderer::Render()
 	globalCommandList.ReleaseResoucers();
 }
 
+void DX12Renderer::OpenGlobalCommandList()
+{
+	device.GetGlobalCommandList().Open();
+}
+
+void DX12Renderer::CloseGlobalCommandList()
+{
+	// Render 
+	DX12CommandList& globalCommandList = device.GetGlobalCommandList();
+	globalCommandList.Close();
+	ExecuteCommand(globalCommandList);
+}
+
+/*
 bool DX12Renderer::IntialzieForApp()
 {
 
-	vertexShader.LoadFromFile(&device, "ironman_vert.hlsl", SHADER_TYPE::VERTX);
-	fragmentShader.LoadFromFile(&device, "ironman_frag.hlsl", SHADER_TYPE::FRAGMENT);
-	//FBXLoader loader;
-	//loader.LoadFromFile("Models/ironman.fbx", &model);
+	vertexShader.LoadFromFile(&device, "ironman_vert", SHADER_TYPE::VERTX);
+	fragmentShader.LoadFromFile(&device, "ironman_frag", SHADER_TYPE::FRAGMENT);
+	FBXLoader loader;
+	loader.LoadFromFile("Models/ironman.fbx", &model);
 
 	model = revResourceManager::Get().Load<revModel>("Models/ironman.mdl");
 
-	//revModelLoader loader;
-	//loader.LoadFromFile("Models/ironman.mdl", &model);
-	//loader.LoadFromFile("Models/cube_blender.mdl", &model);
+	revModelLoader loader;
+	loader.LoadFromFile("Models/ironman.mdl", &model);
+	loader.LoadFromFile("Models/cube_blender.mdl", &model);
 
 
 
@@ -137,7 +153,7 @@ bool DX12Renderer::IntialzieForApp()
 
 	return true;
 }
-
+*/
 
 
 #endif

@@ -21,7 +21,7 @@ protected:
 
 private:
 	void* mappedMemory;
-	revGraphicsResource uploadBuffer;
+	revGraphicsResourceHandle uploadBuffer;
 };
 
 class DX12VertexBuffer : public DX12Buffer

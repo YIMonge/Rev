@@ -2,11 +2,11 @@
 #define __VULKANTEXTUREVIEW_H__
 #ifdef _USE_VULKAN
 
-#include "revShaderResourceView.h"
+#include "revGraphicsResource.h"
 #include "VulkanDescriptorSet.h"
 #include "VulkanSampler.h"
 
-class VulkanTextureView : public revShaderResourceView
+class VulkanTextureView : public revGraphicsResource
 {
 public:
     VulkanTextureView(){}

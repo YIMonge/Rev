@@ -1,11 +1,11 @@
 #ifndef __VULKANCONSTANTBUFFERVIEW_H__
 #define __VULKANCONSTANTBUFFERVIEW_H__
 
-#include "revShaderResourceView.h"
+#include "revGraphicsResource.h"
 #include "VulkanDescriptorSet.h"
 #include "VulkanBuffer.h"
 
-class VulkanConstantBufferView : public revShaderResourceView
+class VulkanConstantBufferView : public revGraphicsResource
 {
 public:
     VulkanConstantBufferView(){}

@@ -8,6 +8,7 @@
 #include "Log.h"
 #endif
 
+const char* SHADER_EXT = ".hlsl";
 
 DX12Shader::DX12Shader()
 {
@@ -33,6 +34,7 @@ bool DX12Shader::LoadFromFile(const revDevice* device, const char* path, SHADER_
 	SetFilePath(path);
 	revString resourcePath(RESOURCE_PATH);
 	resourcePath += path;
+	resourcePath += SHADER_EXT;
 	type = shaderType;
 	std::wstring wstr = utf8_decode(resourcePath.c_str());
     ID3DBlob* error = nullptr;

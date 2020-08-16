@@ -15,10 +15,11 @@ void DX12MeshRenderer::SetModel(const revModel* model)
 {
 	revMeshRenderer::SetModel(model);
 
+	revDevice* device = revGraphics::Get().GetDevice();
 	uint32 transformCount = static_cast<uint32>(transforms.size());
 	transformConstantBufferViews.resize(transformCount, nullptr);
 	for (uint32 i = 0; i < transformCount; ++i) {
-		transformConstantBufferViews[i] = new DX12ConstantBufferView();
+		transformConstantBufferViews[i] = new DX12ConstantBufferView(device);
 	}
 }
 
@@ -28,17 +29,19 @@ void DX12MeshRenderer::SetMesh(uint32 index, const revMesh* mesh)
 
 	if (drawResources[index] == nullptr || drawResources[index]->vertexBuffer == nullptr) return;
 
+	revDevice* device = revGraphics::Get().GetDevice();
+
 	if (vertexBufferViews.size() <= index) {
 		vertexBufferViews.resize(index + 1);
 	}
-	vertexBufferViews[index] = new DX12VertexBufferView();
-	vertexBufferViews[index]->Create(revGraphics::Get().GetDevice(), drawResources[index]->vertexBuffer);
+	vertexBufferViews[index] = new DX12VertexBufferView(device);
+	vertexBufferViews[index]->Create(drawResources[index]->vertexBuffer);
 
 	if (indexBufferViews.size() <= index) indexBufferViews.resize(index + 1);
 	
 	if (drawResources[index]->indexBuffer != nullptr) {
-		indexBufferViews[index] = new DX12IndexBufferView();
-		indexBufferViews[index]->Create(revGraphics::Get().GetDevice(), drawResources[index]->indexBuffer);
+		indexBufferViews[index] = new DX12IndexBufferView(device);
+		indexBufferViews[index]->Create(drawResources[index]->indexBuffer);
 	}
 
 	
@@ -68,7 +71,7 @@ void DX12MeshRenderer::Initialize(DX12DescriptorHeap* cBufferHeap)
 	uint32 cbufferviewCount = static_cast<uint32>(transformConstantBufferViews.size());
 	transformCbufferHeapChunk = cBufferHeap->Allocation(cbufferviewCount);
 	for (uint32 i = 0; i < cbufferviewCount; ++i) {
-		transformConstantBufferViews[i]->Create(revGraphics::Get().GetDevice(), transformConstantBuffers[i], transformCbufferHeapChunk.GetHandle(i));
+		transformConstantBufferViews[i]->Create(transformConstantBuffers[i], transformCbufferHeapChunk.GetHandle(i));
 	}
 }
 

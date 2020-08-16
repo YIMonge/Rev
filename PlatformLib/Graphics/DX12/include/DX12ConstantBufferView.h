@@ -2,17 +2,17 @@
 #define __DX12CONSTANTBUFFERVIEW_H__
 #ifdef _USE_DIRECTX12
 
-#include "revShaderResourceView.h"
+#include "revGraphicsResource.h"
 #include "DX12DescriptorHeap.h"
 #include "DX12Buffer.h"
 
-class DX12ConstantBufferView : public revShaderResourceView
+class DX12ConstantBufferView : public revGraphicsResource
 {
 public:
-	DX12ConstantBufferView() {}
+	DX12ConstantBufferView(revDevice* device) : revGraphicsResource(device) {}
 	virtual ~DX12ConstantBufferView(){}
 	
-	void Create(revDevice* device, const revGraphicsBuffer* cbuffer, const D3D12_CPU_DESCRIPTOR_HANDLE& heap);
+	void Create(const revGraphicsBuffer* cbuffer, const D3D12_CPU_DESCRIPTOR_HANDLE& heap);
 	virtual void Destroy();
 private:
 	

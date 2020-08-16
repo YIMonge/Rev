@@ -4,6 +4,9 @@
 #include "File.h"
 #include "Log.h"
 
+const char* SHADER_EXT = ".hlsl";
+
+
 
 VulkanShader::VulkanShader()
 {
@@ -13,8 +16,10 @@ VulkanShader::VulkanShader()
 
 bool VulkanShader::LoadFromFile(const revDevice* device, const char* path, SHADER_TYPE shaderType)
 {
+	SetFilePath(path);
     revString resourcePath(RESOURCE_PATH);
     resourcePath += path;
+	resourcePath += SHADER_EXT;
     File file;
     if(!file.Open(resourcePath.c_str(), FileMode::ReadBinary)){
         NATIVE_LOGE("file not found : %s", path);

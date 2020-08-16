@@ -15,7 +15,7 @@ bool DX12Texture::CreateTexture(revDevice* device, uint8* imageData)
     // TODO: serialize to meta data
     D3D12_RESOURCE_DESC textureDesc = {};
     textureDesc.MipLevels = 1;
-    textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	textureDesc.Format = ConvertToDXFormat(GetFormat()); // DXGI_FORMAT_R8G8B8A8_UNORM;
     textureDesc.Width = width;
     textureDesc.Height = height;
     textureDesc.Flags = D3D12_RESOURCE_FLAG_NONE;

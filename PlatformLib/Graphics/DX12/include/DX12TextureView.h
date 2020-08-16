@@ -2,14 +2,14 @@
 #define __DX12TEXTUREVIEW_H__
 #ifdef _USE_DIRECTX12
 
-#include "revShaderResourceView.h"
+#include "revGraphicsResource.h"
 #include "DX12DescriptorHeap.h"
 #include "revTexture.h"
 
-class DX12TextureView : public revShaderResourceView
+class DX12TextureView : public revGraphicsResource
 {
 public:
-	DX12TextureView() {}
+	DX12TextureView(revDevice* device) : revGraphicsResource(device) {}
 	virtual ~DX12TextureView(){}
 	
 	void Create(revDevice* device, const revTexture& texture, D3D12_CPU_DESCRIPTOR_HANDLE* heap);
