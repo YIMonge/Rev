@@ -7,10 +7,13 @@
 #include "revModelLoader.h"
 #include "revMaterialLoader.h"
 #include "revShaderLoader.h"
+#include "revTextureLoader.h"
 #ifdef _USE_DIRECTX12
 #include "DX12Shader.h"
+#include "DX12Texture.h"
 #elif defined(_USE_VULKAN)
 #include "VulkanShader.h"
+#include "VulkanTexture.h"
 #endif
 
 
@@ -54,25 +57,11 @@ private:
 };
 
 template<>
-revModel* revResourceManager::Load<revModel>(const char* path)
-{
-	return Load<revModel, revModelLoader>(path);
-}
-
+revModel* revResourceManager::Load<revModel>(const char* path);
 template<>
-revMaterial* revResourceManager::Load<revMaterial>(const char* path)
-{
-	return Load<revMaterial, revMaterialLoader>(path);
-}
-
+revTexture* revResourceManager::Load<revTexture>(const char* path);
 template<>
-revShader* revResourceManager::Load<revShader>(const char* path)
-{
-#ifdef _USE_DIRECTX12
-	return Load<DX12Shader, revShaderLoader>(path);
-#elif defined(_USE_VULKAN)
-	return Load<VulkanShader, revShaderLoader>(path);
-#endif
-}
-
+revMaterial* revResourceManager::Load<revMaterial>(const char* path);
+template<>
+revShader* revResourceManager::Load<revShader>(const char* path);
 #endif
