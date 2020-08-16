@@ -180,15 +180,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\DX12\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\DX12\include;$(IncludePath);$(ProjectDir)..\..\ThirdParty\stb</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\Graphics\DX12\include;$(ProjectDir)..\..\ThirdParty\fbx\include;$(ProjectDir)..\..\ThirdParty\cereal\include;$(ProjectDir)..\..\ThirdParty\stb;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\Graphics\DX12\include;$(ProjectDir)..\..\ThirdParty\fbx\include;$(ProjectDir)..\..\ThirdParty\cereal\include;$(ProjectDir)..\..\ThirdParty\stb;$(IncludePath);$(ProjectDir)..\..\ThirdParty\stb</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VK|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\Vulkan\include;$(VULKAN_SDK)\include;$(ProjectDir)..\..\ThirdParty\cereal\include;$(ProjectDir)..\..\ThirdParty\stb;$(ProjectDir)..\..\ThirdParty\fbx\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\Vulkan\include;$(VULKAN_SDK)\include;$(ProjectDir)..\..\ThirdParty\cereal\include;$(ProjectDir)..\..\ThirdParty\stb;$(ProjectDir)..\..\ThirdParty\fbx\include;$(IncludePath);$(ProjectDir)..\..\ThirdParty\stb</IncludePath>
     <LibraryPath>$(LibraryPath);$(VULKAN_SDK)\Lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -217,15 +217,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\DX12\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\DX12\include;$(IncludePath);$(ProjectDir)..\..\ThirdParty\stb</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\DX12\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\DX12\include;$(IncludePath);$(ProjectDir)..\..\ThirdParty\stb</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_VK|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\Vulkan\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)..\common\include;$(ProjectDir)..\..\CoreLib\include;$(ProjectDir)include;$(ProjectDir)..\..\Rev\include;$(ProjectDir)..\..\Rev\lib;$(ProjectDir)..\Graphics\Vulkan\include;$(IncludePath);$(ProjectDir)..\..\ThirdParty\stb</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -454,7 +454,7 @@
     <ClInclude Include="..\common\include\revRenderer.h" />
     <ClInclude Include="..\common\include\revSampler.h" />
     <ClInclude Include="..\common\include\revShader.h" />
-    <ClInclude Include="..\common\include\revShaderResourceView.h" />
+    <ClInclude Include="..\common\include\revGraphicsResource.h" />
     <ClInclude Include="..\common\include\revTexture.h" />
     <ClInclude Include="..\common\include\revThread.h" />
     <ClInclude Include="..\Graphics\DX12\include\DX12Buffer.h" />
@@ -494,10 +494,12 @@
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanSwapChain.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanTexture.h" />
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanTextureView.h" />
-    <ClInclude Include="include\CriticalSection.h" />
+    <ClInclude Include="include\AtomicCounter.h" />
+    <ClInclude Include="include\revCriticalSection.h" />
     <ClInclude Include="include\FBXLoader.h" />
     <ClInclude Include="include\File.h" />
     <ClInclude Include="include\Log.h" />
+    <ClInclude Include="include\revSemaphore.h" />
     <ClInclude Include="include\Thread.h" />
     <ClInclude Include="include\Window.h" />
   </ItemGroup>

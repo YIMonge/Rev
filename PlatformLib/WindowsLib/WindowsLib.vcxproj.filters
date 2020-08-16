@@ -155,16 +155,10 @@
     <ClInclude Include="..\common\include\revShader.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\include\revShaderResourceView.h">
-      <Filter>header</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\include\revTexture.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="..\common\include\revThread.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CriticalSection.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="include\File.h">
@@ -202,6 +196,18 @@
     </ClInclude>
     <ClInclude Include="..\Graphics\Vulkan\include\VulkanRenderingBuffer.h">
       <Filter>Graphics\Vulkan\header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AtomicCounter.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\revGraphicsResource.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\revCriticalSection.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\revSemaphore.h">
+      <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
