@@ -9,14 +9,15 @@
 
 class revTexture : public revResource
 {
+friend class revTextureLoader;
 public:
 	revTexture()
 	{
-		metaData.format = static_cast<uint8>(GRAPHICS_FORMAT ::R8G8B8A8_UNORM);
+		metaData.format = static_cast<uint8>(GRAPHICS_FORMAT::R8G8B8A8_UNORM);
 	}
 	virtual ~revTexture() {}
 
-	bool LoadFromFile(revDevice* device, const char* path);
+	//bool LoadFromFile(revDevice* device, const char* path);
 
     class SamplerDesc {
     public:
