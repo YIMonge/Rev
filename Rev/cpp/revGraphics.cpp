@@ -3,9 +3,11 @@
 #if defined(_USE_DIRECTX12)
 	#include "DX12Renderer.h"
 	#include "DX12Buffer.h"
+	#include "DX12MeshRenderer.h"
 #elif defined(_USE_VULKAN)
 	#include "VulkanRenderer.h"
 	#include "VulkanBuffer.h"
+	#include "VulkanMeshRenderer.h"
 #endif
 
 #include "Window.h"
@@ -40,6 +42,16 @@ void revGraphics::Draw()
 	renderer->Render();
 }
 
+void revGraphics::BeginLoad()
+{
+	renderer->OpenGlobalCommandList();
+}
+
+void revGraphics::EndLoad()
+{
+	renderer->CloseGlobalCommandList();
+}
+
 revGraphicsBuffer* revGraphics::CreateVertexBuffer()
 {
 	revDevice* device = renderer->GetDevice();
@@ -67,5 +79,15 @@ revGraphicsBuffer* revGraphics::CreateConstantBuffer()
 	return new DX12ConstantBuffer(device);
 #elif defined(_USE_VULKAN)
 	return new VulkanConstantBuffer(device);
+#endif
+}
+
+revMeshRenderer* revGraphics::CreateMeshRenderer()
+{
+	revDevice* device = renderer->GetDevice();
+#if defined(_USE_DIRECTX12)
+	return new DX12MeshRenderer();
+#elif defined(_USE_VULKAN)
+	return new VulkanMeshRenderer();
 #endif
 }
