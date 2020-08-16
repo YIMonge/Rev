@@ -8,6 +8,11 @@ bool revSceneManager::StartUp(revScene* entry)
 		return false;
 	}
 
+
+	entry->Load();
+	scenes.push(entry);
+
+	return true;
 }
 
 void revSceneManager::ShutDown()
