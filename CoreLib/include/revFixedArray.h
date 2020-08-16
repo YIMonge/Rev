@@ -1,16 +1,10 @@
 #ifndef __REVFIXEDARRAY_H__
 #define __REVFIXEDARRAY_H__
 
-#include <assert>
+#include <array>
+#include "revTypedef.h"
 
-template<typename T, int SIZE>
-class revFixedArray
-{
-public:
-
-
-private:	
-	T data[SIZE];
-};
+template<typename T, int32 NUM>
+using revFixedArray = std::array<T, NUM>;
 
 #endif
