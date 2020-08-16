@@ -16,9 +16,6 @@ public:
 	void WriteScene(const char* path, revScene* scene);
 #endif
 
-protected:
-	virtual bool OnLoadFailed(const char* resourcePath, revScene* scene);
-
 };
 
 #endif
