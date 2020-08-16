@@ -6,6 +6,8 @@
 #include "revThread.h"
 #include "revArray.h"
 #include "revAsyncable.h"
+#include "revSemaphore.h"
+#include "revCriticalSection.h"
 
 class revThreadPool
 {
@@ -16,7 +18,8 @@ public:
 			: priority(_priority)
 			, stack_size(_stack_size)
 			, max_work_num(_max_work_num)
-		{}
+		{
+		}
 		uint32 priority;
 		uint32 stack_size;
 		uint32 max_work_num;
@@ -34,18 +37,15 @@ private:
 	class Worker : public revAsyncable
 	{
 	public:
-		Worker()
-        {
+		Worker(const WorkerInfo& info, revThreadPool* owner)
+		{
+			this->owner = owner;
         }
 
         virtual ~Worker()
         {
 		}
 
-		void Init(const WorkerInfo& info)
-		{
-			job_queue = revQueue<Function>(info.max_work_num);
-		}
 
 		virtual bool AsyncFunc()
 		{
@@ -53,12 +53,14 @@ private:
 		}
 
 	private:
+		revThreadPool* owner;
 		revThread* thread;
-		revQueue<Function> job_queue;
 	};
 
-
-	revArray<Worker> workers;
+	revQueue<Function> jobQueue;
+	revArray<Worker*> workers;
+	revSemaphore* semaphore;
+	revCriticalSection criticalSection;
 };
 
 #endif

@@ -3,6 +3,8 @@
 
 revThreadPool::revThreadPool(const WorkerInfo& info, uint32 worker_num)
 {
+	jobQueue = revQueue<Function>(info.max_work_num);
+
 
 }
 
@@ -26,5 +28,7 @@ void revThreadPool::Join()
 
 void revThreadPool::AddWork(Function work)
 {
-
+	criticalSection.Lock();
+	jobQueue.Enqueue(work);
+	criticalSection.Unlock();
 }

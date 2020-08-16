@@ -6,6 +6,7 @@
 #include "revArray.h"
 #include "revString.h"
 #include "revHash.h"
+#include "AtomicCounter.h"
 
 class revResource
 {
@@ -52,6 +53,8 @@ private:
 	revString name;
 	revString filePath;
 	revString userData;
+
+	mutable AtomicCounter refCount;
 };
 
 #endif

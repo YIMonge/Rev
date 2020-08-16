@@ -2,7 +2,9 @@
 #define __REVAPP_H__
 
 #include "revSingleton.h"
-#include "Window.h"
+
+class Window;
+class revScene;
 
 // management application 
 class revApp : public revSingleton<revApp>
@@ -17,7 +19,7 @@ public:
 		return initialized;
 	}
 
-	virtual void StartUp(Window* window);
+	virtual void StartUp(Window* window, revScene* scene);
 	virtual void ShutDown();
 private:
 	float fixed_delta_time;

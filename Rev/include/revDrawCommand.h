@@ -6,6 +6,8 @@
 #include "revTypedef.h"
 #include "revShader.h"
 #include "revGraphicsBuffer.h"
+#include "revGraphicsResource.h"
+#include "revFixedArray.h"
 #include "revArray.h"
 
 class revMaterial;
@@ -22,15 +24,41 @@ enum DRAW_COMMAND_TYPE
     DCT_MAX_NUM,
 };
 
-struct revDrawCommand
+class revDrawCommand
 {
+friend class revDrawCommandStorage;
+public:
+
+	// Store Cbuffer 
+	class ShaderParameterMap
+	{
+
+		revArray<revGraphicsResource*> resources;
+	};
+
+	class ShaderBinding
+	{
+	public:
+
+	private:
+		revFixedArray<revShader*, 2> shaders;	
+		ShaderParameterMap parameterMapinfo;
+	};
+
+
+	class VertexStream
+	{
+
+	};
+
+private:
     union {
         DRAW_COMMAND_TYPE type;                     // type of draw command
         uint32 next;                                // next index for storage
     };
-    revShader*                    program;            // shader
-    revArray<revGraphicsBuffer*>  buffers;            // shader resources
-    revMaterial*                material;           // material
+    revShader*						program[2];         // shader
+    revArray<revGraphicsBuffer*>	buffers;            // shader resources
+    revMaterial*					material;           // material
 };
 
 // DrawCommand cache, if use multi thread must set threadNum for lock free.

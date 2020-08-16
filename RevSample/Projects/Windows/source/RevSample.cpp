@@ -3,13 +3,14 @@
 #include "revApp.h"
 #include "revWindow.h"
 #include <Windows.h>
+#include "SampleScene.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
 	Window* window = new revWindow();
 	window->Create("MainWindow", 1280, 780);
 	window->SetHInstance(hInstance);
-	revApp::Get().StartUp(window);
+	revApp::Get().StartUp(window, new SampleScene());
 	window->Disp();
 		
 	float r = 0.0f;

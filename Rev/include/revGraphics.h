@@ -10,6 +10,7 @@
 class Color;
 class Window;
 class revGraphicsBuffer;
+class revMeshRenderer;
 
 class revGraphics : public revSingleton<revGraphics>
 {
@@ -19,12 +20,16 @@ public:
 
 	void ResizeWindow(int w, int h);
 
+	void BeginLoad();	// should call the function before load graphics resource
+	void EndLoad();		// upload graphics resource to vram 
+
 	void Draw();	
 
 	revGraphicsBuffer* CreateVertexBuffer();
 	revGraphicsBuffer* CreateIndexBuffer();
 	revGraphicsBuffer* CreateConstantBuffer();
 
+	revMeshRenderer* CreateMeshRenderer();
 	revDevice* GetDevice() { return renderer->GetDevice(); }
 
 private:
