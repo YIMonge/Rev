@@ -51,10 +51,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\GameCharacter.cpp" />
     <ClCompile Include="source\RevSample.cpp" />
+    <ClCompile Include="source\SampleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\GameCharacter.h" />
     <ClInclude Include="include\RevSample.h" />
+    <ClInclude Include="include\SampleScene.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -200,17 +204,17 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include;$(ProjectDir)..\..\..\ThirdParty\cereal\include</IncludePath>
     <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include;$(ProjectDir)..\..\..\ThirdParty\cereal\include</IncludePath>
     <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)..\..\..\ThirdParty\fbx\lib\vs2017\x64\debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_VK|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\Vulkan\include;$(VULKAN_SDK)\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\Vulkan\include;$(VULKAN_SDK)\include;$(ProjectDir)..\..\..\ThirdParty\cereal\include</IncludePath>
     <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(VULKAN_SDK)\Lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\Vulkan\libs;$(ProjectDir)..\..\..\ThirdParty\fbx\lib\vs2017\x64\debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -230,17 +234,17 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include;$(ProjectDir)..\..\..\ThirdParty\cereal\include</IncludePath>
     <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\DX12\include;$(ProjectDir)..\..\..\ThirdParty\cereal\include</IncludePath>
     <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_VK|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\Vulkan\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(WindowsSdkDir)bin\x86;$(ExecutablePath);include;$(SollutionDir)..\..\..\CoreLib\include;$(SollutionDir)..\..\..\Rev\include;$(ProjectDir)..\..\..\PlatformLib\common\include;$(ProjectDir)..\..\..\PlatformLib\WindowsLib\include;$(SollutionDir)..\..\..\Rev\lib;$(ProjectDir)..\..\..\PlatformLib\Graphics\Vulkan\include;$(ProjectDir)..\..\..\ThirdParty\cereal\include</IncludePath>
     <LibraryPath>$(OutDir);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -290,7 +294,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_USE_DIRECTX12</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_USE_DIRECTX12;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile />
     </ClCompile>
@@ -304,7 +308,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);_USE_DIRECTX12;_WINDOWS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);_USE_DIRECTX12;_WINDOWS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile />
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -319,7 +323,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);_USE_VULKAN;_WINDOWS;VK_USE_PLATFORM_WIN32_KHR</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);_USE_VULKAN;_WINDOWS;VK_USE_PLATFORM_WIN32_KHR;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
@@ -396,7 +400,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_USE_DIRECTX12</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_USE_DIRECTX12;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile />
     </ClCompile>
@@ -414,7 +418,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);_USE_DIRECTX12;_WINDOWS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);_USE_DIRECTX12;_WINDOWS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile />
     </ClCompile>
@@ -433,7 +437,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);_USE_DIRECTX12;_WINDOWS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);_USE_DIRECTX12;_WINDOWS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>

@@ -14,9 +14,21 @@
     <ClCompile Include="source\RevSample.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="source\SampleScene.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GameCharacter.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RevSample.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SampleScene.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameCharacter.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>

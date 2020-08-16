@@ -56,15 +56,21 @@
     <ClCompile Include="..\..\cpp\revSceneLoader.cpp">
       <Filter>cpp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\cpp\revTextureLoader.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cpp\revGameObject.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cpp\revGameObjectManager.cpp">
+      <Filter>cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\revApp.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\revAsyncTaskWorker.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\revCriticalSection.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\revDrawCommand.h">
@@ -131,6 +137,18 @@
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\revSceneLoader.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revTextureLoader.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revComponent.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revGameObject.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\revGameObjectManager.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>
