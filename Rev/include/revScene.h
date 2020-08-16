@@ -24,6 +24,7 @@ public:
 
 protected:
 	revArray<revString> shaderResources;
+	revArray<revString> textureResources;
 	revArray<revString> materialResources;
 	revArray<revString> modelResources;
 
