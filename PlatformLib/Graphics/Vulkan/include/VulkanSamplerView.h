@@ -8,10 +8,10 @@
 class VulkanSamplerView : public revGraphicsResource
 {
 public:
-	VulkanSamplerView(){}
+	VulkanSamplerView(revDevice* device) : revGraphicsResource(device){}
     virtual ~VulkanSamplerView(){}
 
-    void Create(revDevice* device, const VulkanSampler& sampler, VulkanDescriptorSet::Chunk& chunk);
+    void Create(const VulkanSampler& sampler, VulkanDescriptorSet::Chunk& chunk);
     virtual void Destroy();
 private:
 	VkDescriptorImageInfo descriptorImageInfo;

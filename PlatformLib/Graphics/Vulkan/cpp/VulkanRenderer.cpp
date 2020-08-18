@@ -21,7 +21,7 @@ cbuffer cbufferData;
 VulkanRenderer::VulkanRenderer() :
         initialized(false)
 {
-    clearValue = revColor::blue;
+    clearValue = revColor::BLUE;
 }
 
 
@@ -62,7 +62,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     //-----------------------------------------------------------------------------------------------
     // TEST CODE
     // Load Assets
-
+	/*
 
 	cbufferData.view.CreateLookAtMatrixLH(revVector3(0.0f, 0.0f, -10.0f), revVector3(0.0f, 0.0f, 0.0f), revVector3(0.0f, 1.0f, 0.0f));
 	cbufferData.projection.CreatePerspectiveMatrixLH(MathUtil::ToRadian(45.0f), window->GetAspectRatio(), 0.001f, 100.0f);
@@ -94,7 +94,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     // TODO: wait for fence move to device from swapchain.
 	WaitForFence();
 	ResetFence();
-
+	*/
     //-----------------------------------------------------------------------------
 
     revDescriptorBindingDesc descriptorBindingDesc;

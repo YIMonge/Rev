@@ -1,10 +1,8 @@
 #ifdef _USE_VULKAN
 #include "VulkanTextureView.h"
 
-void VulkanTextureView::Create(revDevice* device, const revTexture& texture, const VulkanSampler& sampler, VulkanDescriptorSet::Chunk& chunk)
+void VulkanTextureView::Create(const revTexture& texture, const VulkanSampler& sampler, VulkanDescriptorSet::Chunk& chunk)
 {
-    this->device = device;
-
     VkImageViewCreateInfo imageViewCreateInfo = {};
     imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     imageViewCreateInfo.pNext = nullptr;

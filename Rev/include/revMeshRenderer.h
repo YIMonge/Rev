@@ -32,8 +32,6 @@ protected:
 	revArray<revGraphicsBuffer*> transformConstantBuffers;
 	revArray<revMaterial*> materials;
 	revArray<revGraphicsBuffer*> materialsConstantBuffers;
-	//revArray<revGraphicsBuffer*> vertexBuffers;
-	//revArray<revGraphicsBuffer*> indexBuffers;
 	static const int32 DONT_HAVE_CONSTANT_BUFFER = -1;
 	struct DrawResources {
 		DrawResources() :

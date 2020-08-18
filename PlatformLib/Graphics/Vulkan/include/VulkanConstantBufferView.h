@@ -8,10 +8,10 @@
 class VulkanConstantBufferView : public revGraphicsResource
 {
 public:
-    VulkanConstantBufferView(){}
+    VulkanConstantBufferView(revDevice* device) : revGraphicsResource(device){}
     virtual ~VulkanConstantBufferView(){}
 
-    void Create(revDevice* device, const VulkanConstantBuffer& cbuffer, VulkanDescriptorSet::Chunk& chunk);
+    void Create(const VulkanConstantBuffer& cbuffer, VulkanDescriptorSet::Chunk& chunk);
     virtual void Destroy();
 private:
     VkDescriptorBufferInfo descriptorBufferInfo;

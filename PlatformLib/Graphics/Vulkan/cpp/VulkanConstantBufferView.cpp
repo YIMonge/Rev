@@ -2,9 +2,8 @@
 
 #include "VulkanConstantBufferView.h"
 
-void VulkanConstantBufferView::Create(revDevice* device, const VulkanConstantBuffer& cbuffer, VulkanDescriptorSet::Chunk& chunk)
+void VulkanConstantBufferView::Create(const VulkanConstantBuffer& cbuffer, VulkanDescriptorSet::Chunk& chunk)
 {
-    this->device = device;
     descriptorBufferInfo = {};
     descriptorBufferInfo.buffer = *cbuffer.GetHandlePtr();
     descriptorBufferInfo.offset = 0;
