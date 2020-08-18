@@ -1,0 +1,35 @@
+{
+    "root": {
+        "revResource": {
+            "uuid": 9297535733160863555,
+            "userData": ""
+        },
+        "attributes": [
+            {
+                "type": 0,
+                "binding": 0,
+                "location": 0,
+                "format": 10,
+                "offset": 0,
+                "inputClass": 205
+            },
+            {
+                "type": 1,
+                "binding": 0,
+                "location": 1,
+                "format": 10,
+                "offset": 12,
+                "inputClass": 205
+            }
+        ],
+        "cbuffers": [
+            {
+                "name": "transform",
+                "registerIndex": 0,
+                "sizeOfBytes": 3435973836
+            }
+        ],
+        "textures": [],
+        "samplers": []
+    }
+}
