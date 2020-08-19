@@ -288,7 +288,7 @@ using revGraphicsCommandQueue = VkQueue;
 using revGraphicsPipeline = VkPipeline;
 using revTextureHandle = VkImage;
 using revTextureSampler = VkSampler;
-using revDescriptorHeap = void;
+using revDescriptorCPUHandle = uint32;
 #define NULL_HANDLE VK_NULL_HANDLE
 
 
@@ -559,7 +559,7 @@ using revGraphicsCommandQueue = ID3D12CommandQueue*;
 using revGraphicsPipeline = ID3D12PipelineState*;
 using revTextureHandle = ID3D12Resource*;
 using revTextureSampler = D3D12_GPU_DESCRIPTOR_HANDLE;
-using revDescriptorHeap = ID3D12DescriptorHeap;
+using revDescriptorCPUHandle = D3D12_CPU_DESCRIPTOR_HANDLE;
 #define NULL_HANDLE nullptr
 
 namespace {

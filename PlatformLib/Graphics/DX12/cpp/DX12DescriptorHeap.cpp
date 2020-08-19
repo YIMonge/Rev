@@ -3,8 +3,8 @@
 #include "DX12DescriptorHeap.h"
 #include "Log.h"
 
-DX12DescriptorHeap::DX12DescriptorHeap() :
-device(nullptr),
+DX12DescriptorHeap::DX12DescriptorHeap(revDevice* device) :
+revDescriptorHeap(device),
 heap(nullptr),
 type(DESCRIPTOR_HEAP_TYPE::TEXTURE),
 maxDescriptors(0),
@@ -13,9 +13,8 @@ incrementalSize(0)
 {
 }
 
-bool DX12DescriptorHeap::Create(DX12Device* device, DESCRIPTOR_HEAP_TYPE type, uint32 numDescriptors, bool shaderVisiblity)
+bool DX12DescriptorHeap::Create(DESCRIPTOR_HEAP_TYPE type, uint32 numDescriptors, bool shaderVisiblity)
 {
-	this->device = device;
 	this->type = type;
 	this->maxDescriptors = numDescriptors;
 	auto& dxDevice = device->GetDevice();

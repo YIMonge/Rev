@@ -445,6 +445,7 @@
   <ItemGroup>
     <ClInclude Include="..\common\include\revAsyncable.h" />
     <ClInclude Include="..\common\include\revDescriptorBindingDesc.h" />
+    <ClInclude Include="..\common\include\revDescriptorHeap.h" />
     <ClInclude Include="..\common\include\revDevice.h" />
     <ClInclude Include="..\common\include\revFile.h" />
     <ClInclude Include="..\common\include\revGraphicsBuffer.h" />

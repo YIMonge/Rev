@@ -209,6 +209,9 @@
     <ClInclude Include="include\revSemaphore.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\include\revDescriptorHeap.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\File.cpp">

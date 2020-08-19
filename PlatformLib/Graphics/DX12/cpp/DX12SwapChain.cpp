@@ -16,6 +16,9 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 {
 	this->device = device;
 
+	renderTargetHeap = new DX12DescriptorHeap(device);
+	depthStencilHeap = new DX12DescriptorHeap(device);
+
 	uint32 dxgiFlags = 0;
 #ifdef _DEBUG
 	dxgiFlags |= DXGI_CREATE_FACTORY_DEBUG;
@@ -77,11 +80,11 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	renderTargetDesc.Texture2D.MipSlice = 0;
 	renderTargetDesc.Texture2D.PlaneSlice = 0;
 
-	renderTargetHeap.Create(device, DESCRIPTOR_HEAP_TYPE::RENDER_TARGET, bufferNum, false);
-	depthStencilHeap.Create(device, DESCRIPTOR_HEAP_TYPE::DEPTH_STENCIL, bufferNum, false);
+	renderTargetHeap->Create(DESCRIPTOR_HEAP_TYPE::RENDER_TARGET, bufferNum, false);
+	depthStencilHeap->Create(DESCRIPTOR_HEAP_TYPE::DEPTH_STENCIL, bufferNum, false);
 
 	renderTarget.resize(bufferNum);
-	auto chunkForRenderTarget = renderTargetHeap.Allocation(bufferNum);
+	auto chunkForRenderTarget = renderTargetHeap->Allocation(bufferNum);
 	for (uint32 i = 0; i < bufferNum; ++i) {
 		hr = swapChain->GetBuffer(i, IID_PPV_ARGS(&renderTarget[i]));
 		if (FAILED(hr)) {
@@ -138,7 +141,7 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
 
-	auto chunkForDepthStencil = depthStencilHeap.Allocation(bufferNum);
+	auto chunkForDepthStencil = depthStencilHeap->Allocation(bufferNum);
 	dxdevice->CreateDepthStencilView(depthStencil, &depthStencilDesc, chunkForDepthStencil.GetHandle());
 
 	dxgiFactory->Release();
@@ -172,8 +175,8 @@ void DX12SwapChain::Appply(DX12CommandList& commandList, const revColor& clearCo
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.pResource = renderTarget;
 
-	auto renderTargetHandle = renderTargetHeap.GetCPUHandle(frameIndex);
-	auto depthStenclisHandle = depthStencilHeap.GetCPUHandle();
+	auto renderTargetHandle = renderTargetHeap->GetCPUHandle(frameIndex);
+	auto depthStenclisHandle = depthStencilHeap->GetCPUHandle();
 	dxCommandList->ResourceBarrier(1, &barrier);
 	dxCommandList->OMSetRenderTargets(1,
 		&renderTargetHandle,
@@ -229,8 +232,8 @@ void DX12SwapChain::Destroy()
 		}
 	}
 
-	renderTargetHeap.Destroy();
-	depthStencilHeap.Destroy();
+	renderTargetHeap->Destroy();
+	depthStencilHeap->Destroy();
 
 	if (swapChain != nullptr) {
 		swapChain->Release();

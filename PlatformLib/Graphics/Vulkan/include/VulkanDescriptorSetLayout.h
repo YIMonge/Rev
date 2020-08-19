@@ -16,13 +16,9 @@ public:
     void Destroy();
     
     uint32 GetDescriptorSetCount() const { return static_cast<uint32>(descriptorSetLayouts.size()); }
-    //const DESCRIPTOR_HEAP_TYPE GetDescriptorHeapType(uint32 index) const { return descriptorHeapTypes[index];}
     const VkDescriptorSetLayout* GetDescriptorSets() const { return descriptorSetLayouts.data(); }
-    //const VkDescriptorSetLayout* GetDescriptorSets() const { return &descriptorSetLayout; }
 private:
     revDevice* device;
-    //revArray<DESCRIPTOR_HEAP_TYPE> descriptorHeapTypes;
-    //VkDescriptorSetLayout descriptorSetLayout;
     revArray<VkDescriptorSetLayout> descriptorSetLayouts;
 };
 

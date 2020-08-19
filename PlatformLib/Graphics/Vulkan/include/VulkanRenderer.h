@@ -46,7 +46,7 @@ private:
     VulkanDevice device;
 	VulkanSwapChain swapChain;
 	VulkanFrameBuffer frameBuffer;
-	VulkanDescriptorSet descriptorSet;
+	VulkanDescriptorSet* descriptorSet;
 	VulkanDescriptorSetLayout descriptorSetLayout;
 	VulkanPipelineState pipelineState;
     VulkanDescriptorPool descriptorPool;
@@ -59,9 +59,9 @@ private:
 	VulkanConstantBuffer* constantBuffer;
 	VulkanConstantBufferView constantBufferView;
 	VulkanTexture texture;
-	VulkanTextureView textureView;
+	VulkanTextureView* textureView;
 	VulkanSampler sampler;
-	VulkanSamplerView samplerView;
+	VulkanSamplerView* samplerView;
 	VulkanRenderPass renderPass;
 	revMaterial mat;
 	revModel model;

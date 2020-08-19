@@ -1,8 +1,8 @@
 #include "../include/revDrawCommand.h"
+
 revDrawCommandStorage::revDrawCommandStorage(uint32 capacity, uint32 threadNum)
 {
-    emptyBlock.resize(threadNum);
-    emptyBlock.assign(threadNum, 0);
+    emptyBlock.resize(threadNum, 0);
     storage = new revDrawCommand*[threadNum];
     for(uint32 i = 0; i < threadNum; ++i){
         storage[i] = new revDrawCommand[capacity];
@@ -10,6 +10,22 @@ revDrawCommandStorage::revDrawCommandStorage(uint32 capacity, uint32 threadNum)
             storage[i][j].next = j+1;
         }
     }
+}
+
+revDrawCommandStorage::~revDrawCommandStorage()
+{
+	if (storage != nullptr) {
+		uint32 threadNum = static_cast<uint32>(emptyBlock.size());
+		for (uint32 i = 0; i < threadNum; ++i) {
+			if (storage[i] != nullptr) {
+				delete storage[i];
+				storage[i] = nullptr;
+			}
+		}
+
+		delete[] storage;
+		storage = nullptr;
+	}
 }
 
 revDrawCommand* revDrawCommandStorage::Borrow(uint32 threadId)

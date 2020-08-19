@@ -49,9 +49,9 @@ private:
 	DX12RootSignature rootSiganture;
 	DX12PipelineState pipelineState;
 
-	DX12DescriptorHeap cbufferHeap;
-	DX12DescriptorHeap textureHeap;
-	DX12DescriptorHeap samplerHeap;
+	DX12DescriptorHeap* cbufferHeap;
+	DX12DescriptorHeap* textureHeap;
+	DX12DescriptorHeap* samplerHeap;
 
 	revDictionary<uint32, revGraphicsResource*> graphicsResources;
 

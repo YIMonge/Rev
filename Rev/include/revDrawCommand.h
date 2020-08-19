@@ -32,17 +32,17 @@ public:
 	// Store Cbuffer 
 	class ShaderParameterMap
 	{
-
 		revArray<revGraphicsResource*> resources;
 	};
 
+	// 
 	class ShaderBinding
 	{
 	public:
 
 	private:
-		revFixedArray<revShader*, 2> shaders;	
-		ShaderParameterMap parameterMapinfo;
+		revFixedArray<revShader*, 2> shaders;	// vertex, fragment shader
+		ShaderParameterMap parameterMapinfo;	// cbuffer and etc.
 	};
 
 

@@ -6,30 +6,30 @@
 #include "VulkanDescriptorSetLayout.h"
 #include "revMaterial.h"
 #include "VulkanDescriptorPool.h"
+#include "revDescriptorHeap.h"
 
-class VulkanDescriptorSet
+class VulkanDescriptorSet : public revDescriptorHeap
 {
 public:
-    VulkanDescriptorSet():
-        device(nullptr),
+    VulkanDescriptorSet(revDevice* device, VkPipelineLayout* pipelineLayout) :
+		revDescriptorHeap(device),
         maxDescriptors(0),
         allocNum(0)
         {}
     virtual ~VulkanDescriptorSet(){}
 
-    bool Create(revDevice* device, const VulkanDescriptorSetLayout& layout, uint32 numDescriptors, const VulkanDescriptorPool& descriptorPool);
+    bool Create(const VulkanDescriptorSetLayout& layout, uint32 numDescriptors, const VulkanDescriptorPool& descriptorPool);
     void Destroy();
-
     void Update();
-    void Apply(VulkanCommandList& commandList, const VkPipelineLayout& pipelineLayout);
+    virtual void Apply(VulkanCommandList& commandList, const VkPipelineLayout& pipelineLayout);
 
     const VkDescriptorSet& GetHandle() const { return descriptorSet; }
 
-    class Chunk
+    class Chunk : public revDescriptorHeap::Chunk
     {
     friend class VulkanDescriptorSet;
     public:
-        uint32 GetBindingSlot() const { return binding; }
+		virtual revDescriptorCPUHandle GetHandle(uint32 index = 0) const { return handle; }
 		void UpdateResource(uint32 index, DESCRIPTOR_TYPE type, const VkDescriptorImageInfo* imageInfo, const VkDescriptorBufferInfo* bufferInfo, const VkBufferView* texelView)
 		{
 			writeDescriptorSets[index].descriptorType = ConvertToVKDescriptorType(type);
@@ -43,13 +43,12 @@ public:
         {
             this->writeDescriptorSets = writeDescriptorSets;
             this->numOfDescriptors = allocationNum;
-            this->binding = binding;
+			handle = binding;
         }
 
     private:
         VkWriteDescriptorSet* writeDescriptorSets;
         uint32 numOfDescriptors;
-        uint32 binding;
     };
 
     Chunk Allocation(uint32 allocationNum, uint32 binding)

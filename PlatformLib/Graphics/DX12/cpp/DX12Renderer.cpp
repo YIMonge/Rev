@@ -28,9 +28,12 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
 	main_window = window;
 	if (!device.Create(desc)) return;		
-	if (!cbufferHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::BUFFER, 1024)) return;
-	if (!textureHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::TEXTURE, 1024)) return;
-	if (!samplerHeap.Create(&device, DESCRIPTOR_HEAP_TYPE::SAMPLER, 128)) return;
+	cbufferHeap = new DX12DescriptorHeap(&device);
+	textureHeap = new DX12DescriptorHeap(&device);
+	samplerHeap = new DX12DescriptorHeap(&device);
+	if (!cbufferHeap->Create(DESCRIPTOR_HEAP_TYPE::BUFFER, 1024)) return;
+	if (!textureHeap->Create(DESCRIPTOR_HEAP_TYPE::TEXTURE, 1024)) return;
+	if (!samplerHeap->Create(DESCRIPTOR_HEAP_TYPE::SAMPLER, 128)) return;
 	if (!swapChain.Create(&device, *window)) return;
 
 	/*

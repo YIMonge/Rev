@@ -6,9 +6,8 @@
 // TODO: reference DX12 HEAP
 
 
-bool VulkanDescriptorSet::Create(revDevice* device, const VulkanDescriptorSetLayout& layout, uint32 numDescriptors, const VulkanDescriptorPool& descriptorPool)
+bool VulkanDescriptorSet::Create(const VulkanDescriptorSetLayout& layout, uint32 numDescriptors, const VulkanDescriptorPool& descriptorPool)
 {
-    this->device = device;
     this->maxDescriptors = numDescriptors;
     this->writeDescriptorSets.reserve(numDescriptors);
 
@@ -54,5 +53,6 @@ void VulkanDescriptorSet::Apply(VulkanCommandList& commandList, const VkPipeline
             nullptr // dynamic offsets (uint32*)
             );
 }
+
 
 #endif

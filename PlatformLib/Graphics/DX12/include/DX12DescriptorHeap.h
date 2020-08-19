@@ -5,14 +5,15 @@
 #include "DX12Device.h"
 #include "DX12CommandList.h"
 #include "log.h"
+#include "revDescriptorHeap.h"
 
-class DX12DescriptorHeap 
+class DX12DescriptorHeap : public revDescriptorHeap
 {
 public:
-	DX12DescriptorHeap();
+	DX12DescriptorHeap(revDevice* device);
 	virtual ~DX12DescriptorHeap() {}
 
-	bool Create(DX12Device* device, DESCRIPTOR_HEAP_TYPE type, uint32 numDescriptors, bool shaderVisiblity = true);
+	bool Create(DESCRIPTOR_HEAP_TYPE type, uint32 numDescriptors, bool shaderVisiblity = true);
 	void Destroy();
 
 	void Apply(revGraphicsCommandList& commandList, uint32 rootIndex, uint32 offset = 0);
@@ -28,15 +29,15 @@ public:
 		return GetHandle(gpuHandle, index); 
 	}
 
-	class Chunk
+	class Chunk : public revDescriptorHeap::Chunk
 	{
 		friend class DX12DescriptorHeap;
 	public:
 		Chunk(){}
 
-		D3D12_CPU_DESCRIPTOR_HANDLE GetHandle(uint32 index = 0)
+		virtual revDescriptorCPUHandle GetHandle(uint32 index = 0) const 
 		{
-			D3D12_CPU_DESCRIPTOR_HANDLE newHandle = base;
+			revDescriptorCPUHandle newHandle = base;
 			if (index >= maxAllocationNum) {
 				NATIVE_LOGE("Descriptor Heap Over run! file:%s, line:%s", __FILE__, __LINE__);
 				newHandle.ptr = 0;
@@ -49,16 +50,14 @@ public:
 		uint32 GetIndexStartAllocation() const { return startIndex; }
 		uint32 GetDescriptorOffset(uint32 indexOfAllocation) const { return startIndex + indexOfAllocation; }
 	private:
-		Chunk(D3D12_CPU_DESCRIPTOR_HANDLE handle, uint32 allocationNum, uint32 startIndex, uint32 incrementalSize) {
+		Chunk(revDescriptorCPUHandle handle, uint32 allocationNum, uint32 startIndex, uint32 incrementalSize) {
 			base = handle;
 			maxAllocationNum = allocationNum;
 			this->startIndex = startIndex;
 			this->incrementalSize = incrementalSize;
 		}
-
-
 	private:
-		D3D12_CPU_DESCRIPTOR_HANDLE base;
+		revDescriptorCPUHandle base;
 		uint32 maxAllocationNum;
 		uint32 incrementalSize;
 		uint32 startIndex;
@@ -82,14 +81,13 @@ private:
 		return newHandle;
 	}
 
-	DX12Device* device;
 	DESCRIPTOR_HEAP_TYPE type;
 	uint32 maxDescriptors;
 	uint32 incrementalSize;
 	uint32 allocNum;
 	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle;
 	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle;
-	revDescriptorHeap* heap;
+	ID3D12DescriptorHeap* heap;
 };
 
 #endif

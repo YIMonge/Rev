@@ -314,7 +314,7 @@ void FBXLoader::ImportMaterialData(FbxSurfaceMaterial* fbxMaterial, revModel* mo
 	const char* DEFAULT_FRAGMENT_SHADER_NAME = "fragment_vert.hlsl";
 #elif defined(_USE_VULKAN)
 	vertexShader =  new VulkanShader();
-	fragmentShader = new VUlkanShader();
+	fragmentShader = new VulkanShader();
 	const char* DEFAULT_VERTEX_SHADER_NAME = "default_vert.spv";
 	const char* DEFAULT_FRAGMENT_SHADER_NAME = "fragment_vert.spv";
 #endif

@@ -44,8 +44,8 @@ private:
 	revArray<ID3D12Resource*> renderTarget;
 	ID3D12Resource* depthStencil;
 
-	DX12DescriptorHeap renderTargetHeap;
-	DX12DescriptorHeap depthStencilHeap;
+	DX12DescriptorHeap* renderTargetHeap;
+	DX12DescriptorHeap* depthStencilHeap;
 
 	ID3D12Fence* fence;
 	uint32 fenceValue;

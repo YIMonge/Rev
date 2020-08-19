@@ -110,17 +110,18 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
     pipelineState.Create(&device, pipelineStateDesc);
 
     descriptorPool.Create(&device, 128, 128);
-    descriptorSet.Create(&device, descriptorSetLayout, 128, descriptorPool);
+	descriptorSet = new VulkanDescriptorSet(&device);
+    descriptorSet->Create(&device, descriptorSetLayout, 128, descriptorPool);
 
     
-	VulkanDescriptorSet::Chunk chunk = descriptorSet.Allocation(1, 0);
+	VulkanDescriptorSet::Chunk chunk = descriptorSet->Allocation(1, 0);
 	constantBufferView.Create(&device, *constantBuffer, chunk);
-	chunk = descriptorSet.Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::TEXTURE_SHADER_RESOURCE_VIEW));
+	chunk = descriptorSet->Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::TEXTURE_SHADER_RESOURCE_VIEW));
     textureView.Create(&device, texture, sampler, chunk);
-	chunk = descriptorSet.Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::SAMPLER));
+	chunk = descriptorSet->Allocation(1, 0 + GetDescriptorBindingOffset(DESCRIPTOR_TYPE::SAMPLER));
 	samplerView.Create(&device, sampler, chunk);
 
-    descriptorSet.Update();
+    descriptorSet->Update();
 
     // Make Draw Command
     auto& commandLists = device.GetCommandLists();
@@ -130,7 +131,7 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
         auto& frameBuffer = swapChain.GetFrameBuffer();
         renderPass.Begin(commandList, frameBuffer.GetFrameBuffer(i), clearValue, swapChain.GetDisplaySize());
         pipelineState.Apply(commandList);
-        descriptorSet.Apply(commandList, pipelineState.GetPipelineLayout());
+        descriptorSet->Apply(commandList, pipelineState.GetPipelineLayout());
 
 		meshRenderer.Draw(commandList);
 
@@ -144,7 +145,9 @@ void VulkanRenderer::StartUp(Window* window, const GraphicsDesc& desc)
 void VulkanRenderer::ShutDown()
 {
     descriptorSetLayout.Destroy();
-    descriptorSet.Destroy();
+    descriptorSet->Destroy();
+	delete descriptorSet;
+
     pipelineState.Destroy();
     swapChain.Destroy();
     device.Destroy();
