@@ -38,15 +38,20 @@ private:
 	template<typename T, typename LOADER>
 	T* Load(const char* path)
 	{
+		// already loaded ?
+		uint64 hash = revHash<const char*>()(path);
+		if (resources.find(hash) != resources.end()) {
+			return resource[hash];
+		}
+
 		T* resource = new T();
 		LOADER loader;
 		if (!loader.LoadFromFile(path, resource)) {
 
 			return nullptr;
 		}
+		// TODO: hash confrict
 		if (resources.find(resource->GetUUID()) != resources.end()) {
-			NATIVE_LOGE("ResouceManager Hash confrict. file1:%s file2:%s", resource->GetFilePath(), resources[resource->GetUUID()]->GetFilePath());
-			return resource;
 		}
 		resources.emplace(resource->GetUUID(), resource);
 		return resource;

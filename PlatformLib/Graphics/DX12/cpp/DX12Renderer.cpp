@@ -26,7 +26,7 @@ revCamera camera;
 
 void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
-	main_window = window;
+	this->window = window;
 	if (!device.Create(desc)) return;		
 	cbufferHeap = new DX12DescriptorHeap(&device);
 	textureHeap = new DX12DescriptorHeap(&device);
@@ -36,32 +36,6 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	if (!samplerHeap->Create(DESCRIPTOR_HEAP_TYPE::SAMPLER, 128)) return;
 	if (!swapChain.Create(&device, *window)) return;
 
-	/*
-	revDescriptorBindingDesc rootSignatureDesc;
-	rootSignatureDesc.AddMaterial(mat);
-	rootSiganture.Create(&device, rootSignatureDesc);
-	revRect windowSize(window->GetWidth(), window->GetHeight());
-	pipelineState.Create(&device, mat, rootSiganture, windowSize, windowSize);
-
-	// Load resource 
-	texture.LoadFromFile(&device, "sample_tex.png");
-	DX12DescriptorHeap::Chunk resourceChunk = textureHeap.Allocation(1);
-	auto resourceHandle = resourceChunk.GetHandle();
-	textureView.Create(&device, texture, &resourceHandle);
-	
-
-	DX12DescriptorHeap::Chunk samplerChunk = samplerHeap.Allocation(1);
-	auto samplerHandle = samplerChunk.GetHandle();
-	sampler.Create(&device, texture, &samplerHandle);
-	*/
-
-	/*
-	DX12CommandList& commandList = device.GetGlobalCommandList();
-	commandList.Close();
-	ExecuteCommand(commandList);
-	swapChain.WaitForPreviousFrame();
-	commandList.ReleaseResoucers();
-	*/
 }
 
 void DX12Renderer::ExecuteCommand(revArray<revGraphicsCommandList>& lists)
@@ -126,10 +100,12 @@ void DX12Renderer::CloseGlobalCommandList()
 	ExecuteCommand(globalCommandList);
 }
 
-/*
-bool DX12Renderer::IntialzieForApp()
-{
 
+// TEST
+
+#include "revResourcerManager.h"
+void DX12Renderer::TestCode()
+{
 	vertexShader.LoadFromFile(&device, "ironman_vert", SHADER_TYPE::VERTX);
 	fragmentShader.LoadFromFile(&device, "ironman_frag", SHADER_TYPE::FRAGMENT);
 	FBXLoader loader;
@@ -140,8 +116,6 @@ bool DX12Renderer::IntialzieForApp()
 	revModelLoader loader;
 	loader.LoadFromFile("Models/ironman.mdl", &model);
 	loader.LoadFromFile("Models/cube_blender.mdl", &model);
-
-
 
 	mat.SetShader(SHADER_TYPE::VERTX, &vertexShader);
 	mat.SetShader(SHADER_TYPE::FRAGMENT, &fragmentShader);
@@ -154,9 +128,36 @@ bool DX12Renderer::IntialzieForApp()
 	camera.GetTransform().SetPosition(revVector3(0.0f, 5.0f, -20.0f));
 	camera.GetTransform().LookAt(revVector3::ZERO, revVector3::UP);
 
-	return true;
+
+
+	revDescriptorBindingDesc rootSignatureDesc;
+	rootSignatureDesc.AddMaterial(mat);
+	rootSiganture.Create(&device, rootSignatureDesc);
+	revRect windowSize(window->GetWidth(), window->GetHeight());
+	pipelineState.Create(&device, mat, rootSiganture, windowSize, windowSize);
+
+	revResourceManager& resMgr = revResourceManager::Get();
+
+	resMgr.Load
+	texture.LoadFromFile(&device, "sample_tex.png");
+	DX12DescriptorHeap::Chunk resourceChunk = textureHeap->Allocation(1);
+	auto resourceHandle = resourceChunk.GetHandle();
+	textureView.Create(&device, texture, &resourceHandle);
+
+
+	DX12DescriptorHeap::Chunk samplerChunk = samplerHeap->Allocation(1);
+	auto samplerHandle = samplerChunk.GetHandle();
+	sampler.Create(&device, texture, &samplerHandle);
+
+
+	DX12CommandList& commandList = device.GetGlobalCommandList();
+	commandList.Close();
+	ExecuteCommand(commandList);
+	swapChain.WaitForPreviousFrame();
+	commandList.ReleaseResoucers();
+
 }
-*/
+
 
 
 #endif

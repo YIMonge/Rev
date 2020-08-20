@@ -49,6 +49,9 @@ void revGraphics::BeginLoad()
 
 void revGraphics::EndLoad()
 {
+#ifdef _USE_DIRECTX12
+	((DX12Renderer*)renderer)->TestCode();
+#endif
 	renderer->CloseGlobalCommandList();
 }
 

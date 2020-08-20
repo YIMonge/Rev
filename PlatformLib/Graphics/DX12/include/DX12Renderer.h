@@ -42,8 +42,10 @@ public:
 	virtual void ExecuteCommand(revArray<revGraphicsCommandList>& lists);
 	virtual void ExecuteCommand(revGraphicsCommandList& list);
 
-private:
-	Window* main_window;
+
+	void TestCode();
+private:	
+	Window* window;
 	DX12Device device;
 	DX12SwapChain swapChain;
 	DX12RootSignature rootSiganture;
@@ -55,7 +57,7 @@ private:
 
 	revDictionary<uint32, revGraphicsResource*> graphicsResources;
 
-	/*
+	
 	// resources for test
 	DX12Shader vertexShader;
 	DX12Shader fragmentShader;
@@ -68,7 +70,6 @@ private:
 
 	DX12ConstantBuffer* constantBuffer;
 	DX12ConstantBufferView constantBufferView;
-	*/
 };
 
 #endif

@@ -7,6 +7,7 @@
 #include "revShader.h"
 #include "revGraphicsBuffer.h"
 #include "revGraphicsResource.h"
+#include "revDescriptorHeap.h"
 #include "revFixedArray.h"
 #include "revArray.h"
 
@@ -32,7 +33,11 @@ public:
 	// Store Cbuffer 
 	class ShaderParameterMap
 	{
-		revArray<revGraphicsResource*> resources;
+	public:
+
+
+	private:
+		revArray<revDescriptorHeap*> resources;
 	};
 
 	// 
