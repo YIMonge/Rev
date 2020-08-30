@@ -24,6 +24,7 @@ void revApp::StartUp(Window* window, revScene* scene)
 	// TODO: splito to another thread
 	graphics.BeginLoad();
 	revSceneManager::Get().StartUp(scene);
+	graphics.Test();
 	graphics.EndLoad();
 
 	initialized = true;
