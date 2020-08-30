@@ -28,12 +28,7 @@ public:
 	}
 
 	void Appply(DX12CommandList& commandList, const revColor& clearColor = revColor::WHITE);
-
-	bool Present() const;
-
-	// TODO: swapchain should have fence, value, event. 
-	bool WaitForPreviousFrame();
-
+	bool Present();
 private:
 	DX12Device* device;
 
@@ -46,10 +41,6 @@ private:
 
 	DX12DescriptorHeap* renderTargetHeap;
 	DX12DescriptorHeap* depthStencilHeap;
-
-	ID3D12Fence* fence;
-	uint32 fenceValue;
-	HANDLE fenceEvent;
 };
 
 #endif

@@ -16,11 +16,15 @@ public:
 
 	DX12CommandList& GetGlobalCommandList() { return globalCommandList; }
 	revArray<DX12CommandList>& GetCommandLists() { return commandLists; }
+	IDXGIFactory4* GetFactory() const { return dxgiFactory; }
+
 private:
 	// commandList for initialize(load asset, pipeline) 
 	DX12CommandList globalCommandList;
 	// commandList for each thread 
 	revArray<DX12CommandList> commandLists;
+	// DXGIFactory
+	IDXGIFactory4* dxgiFactory;
 
 };
 

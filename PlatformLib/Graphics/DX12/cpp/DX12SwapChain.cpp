@@ -19,19 +19,7 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	renderTargetHeap = new DX12DescriptorHeap(device);
 	depthStencilHeap = new DX12DescriptorHeap(device);
 
-	uint32 dxgiFlags = 0;
-#ifdef _DEBUG
-	dxgiFlags |= DXGI_CREATE_FACTORY_DEBUG;
-#endif
-
-	IDXGIFactory4* dxgiFactory;
-	HRESULT hr = CreateDXGIFactory2(dxgiFlags, IID_PPV_ARGS(&dxgiFactory));
-	if (FAILED(hr)) {
-		if (dxgiFactory != nullptr) dxgiFactory->Release();
-		NATIVE_LOGE("failed to create dxgi factory");
-		return false;
-	}
-
+	IDXGIFactory4* dxgiFactory = device->GetFactory();
 	GraphicsDesc graphicsDesc  = device->GetDesc();
 	uint32 bufferNum = graphicsDesc.GetBufferNum();
 
@@ -50,12 +38,11 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	swapChainDesc.Windowed = !graphicsDesc.useFullscreen;
 
 	IDXGISwapChain* tempSwapChain;
-	hr = dxgiFactory->CreateSwapChain(
+	HRESULT hr = dxgiFactory->CreateSwapChain(
 		device->GetQueue(),
 		&swapChainDesc,
 		&tempSwapChain);
 	if (FAILED(hr)) {
-		if (dxgiFactory != nullptr) dxgiFactory->Release();
 		if (tempSwapChain != nullptr) tempSwapChain->Release();
 		NATIVE_LOGE("failed to create swapchain");
 		return false;
@@ -144,21 +131,6 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	auto chunkForDepthStencil = depthStencilHeap->Allocation(bufferNum);
 	dxdevice->CreateDepthStencilView(depthStencil, &depthStencilDesc, chunkForDepthStencil.GetHandle());
 
-	dxgiFactory->Release();
-
-	// create fence 
-	hr = dxdevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
-	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to create fence");
-		return false;
-	}
-	fenceValue = 1;
-	fenceEvent = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
-	if (fenceEvent == nullptr) {
-		NATIVE_LOGE("failed to create event for sync");
-		return false;
-	}
-
 	return true;
 }
 
@@ -194,32 +166,10 @@ void DX12SwapChain::Appply(DX12CommandList& commandList, const revColor& clearCo
 }
 
 
-bool DX12SwapChain::WaitForPreviousFrame()
-{
-    ID3D12CommandQueue* queue = device->GetQueue();
-	const uint64 tempFenceValue = fenceValue;
-	HRESULT hr = queue->Signal(fence, tempFenceValue);
-	if (FAILED(hr)) {
-		NATIVE_LOGE("failed to set fence to command queue");
-		return false;
-	}
-	fenceValue++;
-	if (fence->GetCompletedValue() < tempFenceValue) {
-		hr = fence->SetEventOnCompletion(tempFenceValue, fenceEvent);
-		if (FAILED(hr)) {
-			NATIVE_LOGE("failed to set event to fence");
-			return false;
-		}
-		WaitForSingleObject(fenceEvent, INFINITE);
-	}
-	frameIndex = swapChain->GetCurrentBackBufferIndex();
-	return true;
-}
-
-
-bool DX12SwapChain::Present() const
+bool DX12SwapChain::Present() 
 {
 	HRESULT hr = swapChain->Present(1, 0);
+	frameIndex = swapChain->GetCurrentBackBufferIndex();
 	return (((HRESULT)(hr)) < 0);
 }
 

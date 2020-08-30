@@ -45,6 +45,18 @@ bool DX12Device::Create(const GraphicsDesc& desc)
 	}
 
 	globalCommandList.Create(this, nullptr);
+
+	uint32 dxgiFlags = 0;
+#ifdef _DEBUG
+	dxgiFlags |= DXGI_CREATE_FACTORY_DEBUG;
+#endif
+	hr = CreateDXGIFactory2(dxgiFlags, IID_PPV_ARGS(&dxgiFactory));
+	if (FAILED(hr)) {
+		if (dxgiFactory != nullptr) dxgiFactory->Release();
+		NATIVE_LOGE("failed to create dxgi factory");
+		return false;
+	}
+
 	return true;
 }
 
