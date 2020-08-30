@@ -4,6 +4,7 @@
 
 #include "revRenderer.h"
 #include "DX12Device.h"
+#include "DX12Fence.h"
 #include "DX12SwapChain.h"
 #include "DX12Shader.h"
 #include "DX12Buffer.h"
@@ -20,7 +21,6 @@
 #include "revMaterial.h"
 #include "revArray.h"
 #include "revModel.h"
-#include "revDictionary.h"
 
 class Window;
 
@@ -38,6 +38,7 @@ public:
 
 	virtual void OpenGlobalCommandList();
 	virtual void CloseGlobalCommandList();
+	virtual void ExecuteGlobalCommandList();
 
 	virtual void ExecuteCommand(revArray<revGraphicsCommandList>& lists);
 	virtual void ExecuteCommand(revGraphicsCommandList& list);
@@ -47,6 +48,7 @@ public:
 private:	
 	Window* window;
 	DX12Device device;
+	DX12Fence* fence;
 	DX12SwapChain swapChain;
 	DX12RootSignature rootSiganture;
 	DX12PipelineState pipelineState;
@@ -54,22 +56,20 @@ private:
 	DX12DescriptorHeap* cbufferHeap;
 	DX12DescriptorHeap* textureHeap;
 	DX12DescriptorHeap* samplerHeap;
-
-	revDictionary<uint32, revGraphicsResource*> graphicsResources;
-
 	
 	// resources for test
-	DX12Shader vertexShader;
-	DX12Shader fragmentShader;
+	revShader* vertexShader;
+	revShader* fragmentShader;
 	revMaterial mat;
 	revModel* model;
 	DX12MeshRenderer meshRenderer;
-	DX12Texture texture;
-	DX12TextureView textureView;
+	revTexture* texture;
+	DX12TextureView* textureView;
 	DX12Sampler sampler;
 
 	DX12ConstantBuffer* constantBuffer;
-	DX12ConstantBufferView constantBufferView;
+	DX12ConstantBufferView* constantBufferView;
+
 };
 
 #endif

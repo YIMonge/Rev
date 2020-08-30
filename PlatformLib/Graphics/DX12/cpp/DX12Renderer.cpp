@@ -28,6 +28,9 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 {
 	this->window = window;
 	if (!device.Create(desc)) return;		
+	fence = new DX12Fence(&device);
+	if (!fence->Create()) return;
+
 	cbufferHeap = new DX12DescriptorHeap(&device);
 	textureHeap = new DX12DescriptorHeap(&device);
 	samplerHeap = new DX12DescriptorHeap(&device);
@@ -58,8 +61,24 @@ void DX12Renderer::ExecuteCommand(revGraphicsCommandList& list)
 
 void DX12Renderer::ShutDown()
 {
-	//meshRenderer.Destroy();
+
+	if (cbufferHeap) {
+		cbufferHeap->Destroy();
+		delete cbufferHeap;
+	}
+	if (textureHeap) {
+		textureHeap->Destroy();
+		delete textureHeap;
+	}
+	if (samplerHeap) {
+		samplerHeap->Destroy();
+		delete samplerHeap;
+	}
 	swapChain.Destroy();
+	if (fence) {
+		fence->Destroy();
+		delete fence;
+	}
 	device.Destroy();
 }
 
@@ -82,8 +101,8 @@ void DX12Renderer::Render()
 
 	globalCommandList.Close();
 	ExecuteCommand(globalCommandList);
+	fence->WaitForQueue();
 	swapChain.Present();
-	swapChain.WaitForPreviousFrame();
 	globalCommandList.ReleaseResoucers();
 }
 
@@ -97,38 +116,35 @@ void DX12Renderer::CloseGlobalCommandList()
 	// Render 
 	DX12CommandList& globalCommandList = device.GetGlobalCommandList();
 	globalCommandList.Close();
-	ExecuteCommand(globalCommandList);
 }
 
+void DX12Renderer::ExecuteGlobalCommandList()
+{
+	DX12CommandList& globalCommandList = device.GetGlobalCommandList();
+	ExecuteCommand(globalCommandList);
+	fence->WaitForQueue();
+	globalCommandList.ReleaseResoucers();
+}
 
 // TEST
 
-#include "revResourcerManager.h"
+#include "revResourceManager.h"
 void DX12Renderer::TestCode()
 {
-	vertexShader.LoadFromFile(&device, "ironman_vert", SHADER_TYPE::VERTX);
-	fragmentShader.LoadFromFile(&device, "ironman_frag", SHADER_TYPE::FRAGMENT);
-	FBXLoader loader;
-	loader.LoadFromFile("Models/ironman.fbx", &model);
-
+	revResourceManager& resMgr = revResourceManager::Get();
+	vertexShader = resMgr.Load<revShader>("ironman_vert");
+	fragmentShader = resMgr.Load<revShader>("ironman_frag");
 	model = revResourceManager::Get().Load<revModel>("Models/ironman.mdl");
 
-	revModelLoader loader;
-	loader.LoadFromFile("Models/ironman.mdl", &model);
-	loader.LoadFromFile("Models/cube_blender.mdl", &model);
-
-	mat.SetShader(SHADER_TYPE::VERTX, &vertexShader);
-	mat.SetShader(SHADER_TYPE::FRAGMENT, &fragmentShader);
+	mat.SetShader(SHADER_TYPE::VERTX, vertexShader);
+	mat.SetShader(SHADER_TYPE::FRAGMENT, fragmentShader);
 
 	meshRenderer.SetModel(model);
-	//meshRenderer.SetMeshes(model.GetMeshes());
 	meshRenderer.SetMaterialToAllSubMesh(&mat);
-	meshRenderer.Initialize(&cbufferHeap);
+	meshRenderer.Initialize(cbufferHeap);
 
 	camera.GetTransform().SetPosition(revVector3(0.0f, 5.0f, -20.0f));
 	camera.GetTransform().LookAt(revVector3::ZERO, revVector3::UP);
-
-
 
 	revDescriptorBindingDesc rootSignatureDesc;
 	rootSignatureDesc.AddMaterial(mat);
@@ -136,26 +152,15 @@ void DX12Renderer::TestCode()
 	revRect windowSize(window->GetWidth(), window->GetHeight());
 	pipelineState.Create(&device, mat, rootSiganture, windowSize, windowSize);
 
-	revResourceManager& resMgr = revResourceManager::Get();
-
-	resMgr.Load
-	texture.LoadFromFile(&device, "sample_tex.png");
+	texture = resMgr.Load<revTexture>("sample_tex.png");
 	DX12DescriptorHeap::Chunk resourceChunk = textureHeap->Allocation(1);
 	auto resourceHandle = resourceChunk.GetHandle();
-	textureView.Create(&device, texture, &resourceHandle);
-
+	textureView = new DX12TextureView(&device);
+	textureView->Create(&device, texture, &resourceHandle);
 
 	DX12DescriptorHeap::Chunk samplerChunk = samplerHeap->Allocation(1);
 	auto samplerHandle = samplerChunk.GetHandle();
 	sampler.Create(&device, texture, &samplerHandle);
-
-
-	DX12CommandList& commandList = device.GetGlobalCommandList();
-	commandList.Close();
-	ExecuteCommand(commandList);
-	swapChain.WaitForPreviousFrame();
-	commandList.ReleaseResoucers();
-
 }
 
 
