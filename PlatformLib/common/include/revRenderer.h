@@ -19,6 +19,8 @@ public:
 
 	virtual void OpenGlobalCommandList() = 0;
 	virtual void CloseGlobalCommandList() = 0;
+	virtual void ExecuteGlobalCommandList() = 0;
+
 
 	virtual void ExecuteCommand(revArray<revGraphicsCommandList>& lists) = 0;
 	virtual void ExecuteCommand(revGraphicsCommandList& list) = 0;
@@ -26,6 +28,7 @@ public:
 	virtual void Render() = 0;
 
 	virtual revDevice* GetDevice() = 0;
+
 };
 
 
