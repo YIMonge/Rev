@@ -8,7 +8,7 @@
 class DX12Sampler : public revSampler
 {
 public:
-	bool Create(DX12Device* device, const revTexture& texture, D3D12_CPU_DESCRIPTOR_HANDLE* heap);
+	bool Create(DX12Device* device, const revTexture* texture, D3D12_CPU_DESCRIPTOR_HANDLE* heap);
 	void Destroy();
 };
 

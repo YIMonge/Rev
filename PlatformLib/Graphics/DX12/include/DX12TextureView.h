@@ -12,7 +12,7 @@ public:
 	DX12TextureView(revDevice* device) : revGraphicsResource(device) {}
 	virtual ~DX12TextureView(){}
 	
-	void Create(revDevice* device, const revTexture& texture, D3D12_CPU_DESCRIPTOR_HANDLE* heap);
+	void Create(revDevice* device, const revTexture* texture, D3D12_CPU_DESCRIPTOR_HANDLE* heap);
 	virtual void Destroy();
 private:
 	

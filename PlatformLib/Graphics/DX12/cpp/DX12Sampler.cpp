@@ -2,11 +2,11 @@
 
 #include "DX12Sampler.h"
 
-bool DX12Sampler::Create(DX12Device* device, const revTexture& texture, D3D12_CPU_DESCRIPTOR_HANDLE* heap)
+bool DX12Sampler::Create(DX12Device* device, const revTexture* texture, D3D12_CPU_DESCRIPTOR_HANDLE* heap)
 {
 	this->device = device;
 	auto& dxDevice = device->GetDevice();
-	desc = texture.GetSamplerDesc();
+	desc = texture->GetSamplerDesc();
 	D3D12_SAMPLER_DESC dxDesc;
 	memset(&dxDesc, 0, sizeof(dxDesc));
 	dxDesc.AddressU = ConverToDXTextureAddressMode(desc.GetAddressModeU());
