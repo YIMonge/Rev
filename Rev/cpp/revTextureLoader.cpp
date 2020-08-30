@@ -3,9 +3,9 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 // TODO: set memory allocation way
-//#define STBI_MALLOC(sz)           malloc(sz)
-//#define STBI_REALLOC(p,newsz)     realloc(p,newsz)
-//#define STBI_FREE(p)              free(p)
+#define STBI_MALLOC(sz)           malloc(sz)
+#define STBI_REALLOC(p,newsz)     realloc(p,newsz)
+#define STBI_FREE(p)              free(p)
 #include "stb_image.h"
 
 
@@ -35,14 +35,8 @@ bool revTextureLoader::LoadFromFile(const char* path, revTexture* texture)
 	uint8* imageData = stbi_load_from_memory(reinterpret_cast<uint8*>(data), fileLength, reinterpret_cast<int32*>(&width), reinterpret_cast<int32*>(&height), &n, 4);
 	texture->width = width;
 	texture->height = height;
+	texture->rawData = imageData;
 
-	if (!texture->CreateTexture(revGraphics::Get().GetDevice(), imageData)) {
-		stbi_image_free(imageData);
-		delete[] data;
-		return false;
-	}
-
-	stbi_image_free(imageData);
 	delete[] data;
 	return true;
 }
