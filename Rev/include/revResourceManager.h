@@ -39,9 +39,9 @@ private:
 	T* Load(const char* path)
 	{
 		// already loaded ?
-		uint64 hash = revHash<const char*>()(path);
+		uint64 hash = revHash::GetHash(path);
 		if (resources.find(hash) != resources.end()) {
-			return resource[hash];
+			return reinterpret_cast<T*>(resources[hash]);
 		}
 
 		T* resource = new T();
