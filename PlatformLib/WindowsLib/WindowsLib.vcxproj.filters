@@ -212,6 +212,9 @@
     <ClInclude Include="..\common\include\revDescriptorHeap.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Graphics\DX12\include\DX12Fence.h">
+      <Filter>Graphics\DX12\header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\File.cpp">
@@ -348,6 +351,9 @@
     </ClCompile>
     <ClCompile Include="..\Graphics\Vulkan\cpp\VulkanDepthBuffer.cpp">
       <Filter>Graphics\Vulkan\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Graphics\DX12\cpp\DX12Fence.cpp">
+      <Filter>Graphics\DX12\cpp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
