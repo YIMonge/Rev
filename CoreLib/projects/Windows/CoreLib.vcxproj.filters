@@ -109,6 +109,9 @@
     <ClInclude Include="..\..\include\revStack.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\revList.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\revMatrix44.inl">

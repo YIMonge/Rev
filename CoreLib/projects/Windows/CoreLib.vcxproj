@@ -51,6 +51,7 @@
     <ClInclude Include="..\..\include\revFixedArray.h" />
     <ClInclude Include="..\..\include\revHash.h" />
     <ClInclude Include="..\..\include\revIterator.h" />
+    <ClInclude Include="..\..\include\revList.h" />
     <ClInclude Include="..\..\include\revMap.h" />
     <ClInclude Include="..\..\include\revMath.h" />
     <ClInclude Include="..\..\include\revMathUtil.h" />
