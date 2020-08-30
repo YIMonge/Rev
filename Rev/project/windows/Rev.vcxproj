@@ -98,6 +98,7 @@
     <ClInclude Include="..\..\include\revTextureLoader.h" />
     <ClInclude Include="..\..\include\revThreadPool.h" />
     <ClInclude Include="..\..\include\revTransform.h" />
+    <ClInclude Include="..\..\include\revUploadableResource.h" />
     <ClInclude Include="..\..\include\revWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

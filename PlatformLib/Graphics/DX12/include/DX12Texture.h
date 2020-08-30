@@ -5,14 +5,30 @@
 #include "DX12Device.h"
 #include "revTexture.h"
 
+/// <summary>
+/// Texture resource for DX12
+/// </summary>
 class DX12Texture : public revTexture
 {
 public:
 	DX12Texture();
 	virtual ~DX12Texture();
 
-protected:
-	virtual bool CreateTexture(revDevice* device, uint8* imageData);
+	/// <summary>
+	/// Upload texture to VRAM
+	/// the method use UpdateSubResource from cpu can access memory to gpu only access memory
+	/// </summary>
+	/// <param name="device"></param>
+	/// <returns></returns>
+	virtual bool Upload(revDevice* device);
+
+	/// <summary>
+	/// create texture view after upload texture resource
+	/// </summary>
+	virtual void OnUploaded();
+
+private:
+	ID3D12Resource* uploadHeap;
 };
 
 #endif

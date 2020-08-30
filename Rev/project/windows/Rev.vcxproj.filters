@@ -151,5 +151,8 @@
     <ClInclude Include="..\..\include\revGameObjectManager.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\revUploadableResource.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

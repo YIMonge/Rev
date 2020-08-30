@@ -10,7 +10,7 @@ DX12Texture::~DX12Texture()
 {
 }
 
-bool DX12Texture::CreateTexture(revDevice* device, uint8* imageData)
+bool DX12Texture::Upload(revDevice* device)
 {
     // TODO: serialize to meta data
     D3D12_RESOURCE_DESC textureDesc = {};
@@ -37,7 +37,6 @@ bool DX12Texture::CreateTexture(revDevice* device, uint8* imageData)
 
     
     const uint64 bufferSize = GetRequiredIntermediateSize(handle, 0, 1);
-    ID3D12Resource* uploadHeap;
     hr = dxdevice->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
         D3D12_HEAP_FLAG_NONE,
         &CD3DX12_RESOURCE_DESC::Buffer(bufferSize),
@@ -51,7 +50,7 @@ bool DX12Texture::CreateTexture(revDevice* device, uint8* imageData)
     }
     
     D3D12_SUBRESOURCE_DATA textureData = {};
-    textureData.pData = imageData;
+    textureData.pData = rawData;
     textureData.RowPitch = width * 4; // TODO:RGB texture use only 3
     textureData.SlicePitch = textureData.RowPitch * height;
 
@@ -59,7 +58,21 @@ bool DX12Texture::CreateTexture(revDevice* device, uint8* imageData)
 
     UpdateSubresources(commandList.GetList(), handle, uploadHeap, 0, 0, 1, &textureData);
     commandList.AddTransitionBarrier(handle, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-    commandList.ReserveRelease(uploadHeap);
     return true;
 }
+
+
+void DX12Texture::OnUploaded()
+{
+	if (uploadHeap != nullptr) {
+		uploadHeap->Release();
+		uploadHeap = nullptr;
+	}
+
+	
+
+
+}
+
+
 #endif

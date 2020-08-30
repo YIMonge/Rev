@@ -2,22 +2,20 @@
 #define __REVTEXTURE_H__
 
 #include "revGraphicsTypedef.h"
-#include "revResource.h"
+#include "revUploadableResource.h"
 #include "revDevice.h"
 #include "Log.h"
 #include "revMath.h"
 
-class revTexture : public revResource
+class revTexture : public revUploadableResource
 {
 friend class revTextureLoader;
 public:
-	revTexture()
+	revTexture() : rawData(nullptr)
 	{
 		metaData.format = static_cast<uint8>(GRAPHICS_FORMAT::R8G8B8A8_UNORM);
 	}
 	virtual ~revTexture() {}
-
-	//bool LoadFromFile(revDevice* device, const char* path);
 
     class SamplerDesc {
     public:
@@ -130,12 +128,11 @@ public:
 	}
 
 protected:
-	virtual bool CreateTexture(revDevice* device, uint8* imageData) = 0;
-
 	uint32 width;
 	uint32 height;
 	revTextureHandle handle;
 	TextureMetaData metaData;
+	uint8* rawData;
 };
  
 
