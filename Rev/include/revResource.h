@@ -22,12 +22,12 @@ public:
 	void SetFilePath(const revString& filePath)
 	{
 		this->filePath = filePath;
-		uuid = revHash<const char*>()(filePath.c_str());
+		uuid = revHash::GetHash(filePath.c_str());
 	}
 	void SetFilePath(const char* filePath)
 	{
 		this->filePath = filePath;
-		uuid = revHash<const char*>()(filePath);
+		uuid = revHash::GetHash(filePath);
 	}
 	const char* GetFilePath() const { return filePath.c_str(); }
 
@@ -43,8 +43,7 @@ public:
 	
 	SERIALIZE_FUNC()
 	{
-		archive(REV_NVP(uuid),
-			REV_NVP(userData));
+		archive(REV_NVP(userData));
 	}
 	
 
