@@ -1,4 +1,5 @@
 #include "revGraphics.h"
+#include "revUploadableResource.h"
 
 #if defined(_USE_DIRECTX12)
 	#include "DX12Renderer.h"
@@ -12,6 +13,11 @@
 
 #include "Window.h"
 
+/// <summary>
+/// instantiate and initialize renderer 
+/// </summary>
+/// <param name="window">window class</param>
+/// <param name="desc">graphics desc</param>
 void revGraphics::StartUp(Window* window, const GraphicsDesc& desc)
 {
 	this->desc = desc;
@@ -30,11 +36,30 @@ void revGraphics::StartUp(Window* window, const GraphicsDesc& desc)
 	renderer->StartUp(window, desc);
 }
 
+/// <summary>
+/// finalize system
+/// </summary>
 void revGraphics::ShutDown()
 {
 	renderer->ShutDown();
 	delete renderer;
 	renderer = nullptr;
+}
+
+/// <summary>
+/// upload requested resources to VRAM 
+/// </summary>
+void revGraphics::Update()
+{
+	revDevice* device = renderer->GetDevice();
+	renderer->OpenGlobalCommandList();
+	uint32 count = readyForUploadResources.Count();
+	for (uint32 i = 0; i < count; ++i) {
+		revUploadableResource* resource = readyForUploadResources.Dequeue();
+		resource->Upload(device);
+		uploadingResources.Enqueue(resource);
+	}
+	renderer->CloseGlobalCommandList();
 }
 
 void revGraphics::Draw()
@@ -49,9 +74,6 @@ void revGraphics::BeginLoad()
 
 void revGraphics::EndLoad()
 {
-#ifdef _USE_DIRECTX12
-	((DX12Renderer*)renderer)->TestCode();
-#endif
 	renderer->CloseGlobalCommandList();
 }
 
@@ -92,5 +114,13 @@ revMeshRenderer* revGraphics::CreateMeshRenderer()
 	return new DX12MeshRenderer();
 #elif defined(_USE_VULKAN)
 	return new VulkanMeshRenderer();
+#endif
+}
+
+
+void revGraphics::Test()
+{
+#ifdef _USE_DIRECTX12
+	((DX12Renderer*)renderer)->TestCode();
 #endif
 }
