@@ -1,8 +1,9 @@
 #ifdef _USE_DIRECTX12
 
 #include "DX12Texture.h"
-
-DX12Texture::DX12Texture()
+#include "DX12TextureView.h"
+DX12Texture::DX12Texture() :
+uploadHeap(nullptr)
 {
 }
 
@@ -58,20 +59,23 @@ bool DX12Texture::Upload(revDevice* device)
 
     UpdateSubresources(commandList.GetList(), handle, uploadHeap, 0, 0, 1, &textureData);
     commandList.AddTransitionBarrier(handle, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-    return true;
+
+	return true;
 }
 
 
-void DX12Texture::OnUploaded()
+revGraphicsResource* DX12Texture::OnUploaded(revDevice* device)
 {
 	if (uploadHeap != nullptr) {
 		uploadHeap->Release();
 		uploadHeap = nullptr;
 	}
 
-	
-
-
+	DX12TextureView* view = new DX12TextureView(device);
+	revDescriptorHeap* heap = device->GetDescriptorHeap(DESCRIPTOR_HEAP_TYPE::TEXTURE);
+	revDescriptorHeap::Chunk* chunk =  heap->Allocation();
+	view->Create(this, heap, chunk);
+	return view;
 }
 
 

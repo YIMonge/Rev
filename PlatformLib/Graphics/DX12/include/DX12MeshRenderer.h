@@ -27,8 +27,6 @@ private:
 	revArray<DX12IndexBufferView*> indexBufferViews;
 	revArray<DX12ConstantBufferView*> transformConstantBufferViews;
 	revArray<DX12ConstantBufferView*> materialConstantBufferViews;
-	DX12DescriptorHeap::Chunk transformCbufferHeapChunk;
-	DX12DescriptorHeap::Chunk materialCbufferHeapChunk;
 };
 
 

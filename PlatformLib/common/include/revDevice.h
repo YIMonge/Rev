@@ -3,6 +3,7 @@
 
 #include "revTypedef.h"
 #include "revGraphicsTypedef.h"
+class revDescriptorHeap;
 
 class revDevice
 {
@@ -14,11 +15,18 @@ public:
 	const revGraphicsCommandQueue& GetQueue() const { return queue; }
 	const GraphicsDesc& GetDesc() const { return desc; }
 
+	revDescriptorHeap* GetDescriptorHeap(DESCRIPTOR_HEAP_TYPE type) const
+	{
+		return descriptorHeap[static_cast<uint32>(type)];
+	}
 protected:
 	revGraphicsDevice device;
 	revGraphicsAdapter adapter;
 	revGraphicsCommandQueue queue;
 	GraphicsDesc desc;
+
+	revDescriptorHeap* descriptorHeap[DESCRIPTOR_HEAP_TYPE_MAX_NUM];
+
 };
 
 #endif

@@ -15,9 +15,8 @@ DX12SwapChain::~DX12SwapChain()
 bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 {
 	this->device = device;
-
-	renderTargetHeap = new DX12DescriptorHeap(device);
-	depthStencilHeap = new DX12DescriptorHeap(device);
+	this->renderTargetHeap = device->GetDescriptorHeap(DESCRIPTOR_HEAP_TYPE::RENDER_TARGET);
+	this->depthStencilHeap = device->GetDescriptorHeap(DESCRIPTOR_HEAP_TYPE::DEPTH_STENCIL);
 
 	IDXGIFactory4* dxgiFactory = device->GetFactory();
 	GraphicsDesc graphicsDesc  = device->GetDesc();
@@ -52,14 +51,6 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 
 	frameIndex = swapChain->GetCurrentBackBufferIndex();
 
-
-	// create descriptorheap for render target 
-	D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
-	memset(&heapDesc, 0, sizeof(heapDesc));
-	heapDesc.NumDescriptors = bufferNum;
-	heapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	heapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-
 	auto dxdevice = device->GetDevice();
 	D3D12_RENDER_TARGET_VIEW_DESC renderTargetDesc;
 	renderTargetDesc.Format = ConvertToDXFormat(GRAPHICS_FORMAT::R8G8B8A8_UNORM); // TODO: 
@@ -67,18 +58,15 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	renderTargetDesc.Texture2D.MipSlice = 0;
 	renderTargetDesc.Texture2D.PlaneSlice = 0;
 
-	renderTargetHeap->Create(DESCRIPTOR_HEAP_TYPE::RENDER_TARGET, bufferNum, false);
-	depthStencilHeap->Create(DESCRIPTOR_HEAP_TYPE::DEPTH_STENCIL, bufferNum, false);
-
 	renderTarget.resize(bufferNum);
-	auto chunkForRenderTarget = renderTargetHeap->Allocation(bufferNum);
+	renderTargetChunk = renderTargetHeap->Allocation(bufferNum);
 	for (uint32 i = 0; i < bufferNum; ++i) {
 		hr = swapChain->GetBuffer(i, IID_PPV_ARGS(&renderTarget[i]));
 		if (FAILED(hr)) {
 			NATIVE_LOGE("failed to get render target");
 			return false;
 		}
-		dxdevice->CreateRenderTargetView(renderTarget[i], &renderTargetDesc, chunkForRenderTarget.GetHandle(i));
+		dxdevice->CreateRenderTargetView(renderTarget[i], &renderTargetDesc, renderTargetChunk->GetHandle(i));
 	}
 
 	// create depth stencil view 
@@ -128,8 +116,8 @@ bool DX12SwapChain::Create(DX12Device* device, const Window& window)
 	depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
 
-	auto chunkForDepthStencil = depthStencilHeap->Allocation(bufferNum);
-	dxdevice->CreateDepthStencilView(depthStencil, &depthStencilDesc, chunkForDepthStencil.GetHandle());
+	depthStencilChunk = depthStencilHeap->Allocation();
+	dxdevice->CreateDepthStencilView(depthStencil, &depthStencilDesc, depthStencilChunk->GetHandle());
 
 	return true;
 }
@@ -147,8 +135,8 @@ void DX12SwapChain::Appply(DX12CommandList& commandList, const revColor& clearCo
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.pResource = renderTarget;
 
-	auto renderTargetHandle = renderTargetHeap->GetCPUHandle(frameIndex);
-	auto depthStenclisHandle = depthStencilHeap->GetCPUHandle();
+	auto renderTargetHandle = renderTargetChunk->GetHandle(frameIndex);
+	auto depthStenclisHandle = depthStencilChunk->GetHandle();
 	dxCommandList->ResourceBarrier(1, &barrier);
 	dxCommandList->OMSetRenderTargets(1,
 		&renderTargetHandle,
@@ -181,9 +169,6 @@ void DX12SwapChain::Destroy()
 			renderTarget[i] = nullptr;
 		}
 	}
-
-	renderTargetHeap->Destroy();
-	depthStencilHeap->Destroy();
 
 	if (swapChain != nullptr) {
 		swapChain->Release();

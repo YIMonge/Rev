@@ -16,11 +16,16 @@ public:
 	virtual bool Create(const void* data, uint32 sizeOfBytes, uint32 length, USAGE usage = USAGE::STATIC);
 	virtual void Destroy();
 	virtual bool Update(const void* data, uint32 sizeOfCopyBytes, uint32 offset = 0);
+
+	virtual bool Upload(revDevice* device);
 protected:
+	void ReleaseUploadBuffer();
+
 	D3D12_RESOURCE_STATES destResourceState;
 
 private:
 	void* mappedMemory;
+	D3D12_SUBRESOURCE_DATA subResourceData;
 	revGraphicsResourceHandle uploadBuffer;
 };
 
@@ -35,6 +40,7 @@ public:
 	bool Create(const revArray<revVector3>& data, USAGE usage = USAGE::STATIC);
 	bool Create(const revArray<revVector4>& data, USAGE usage = USAGE::STATIC);
 	bool Create(const revArray<float>& data, USAGE usage = USAGE::STATIC);
+	virtual revGraphicsResource* OnUploaded(revDevice* device);
 };
 
 
@@ -45,6 +51,8 @@ public:
 		DX12Buffer(device)
 	{}
 	virtual ~DX12ConstantBuffer(){}
+
+	virtual revGraphicsResource* OnUploaded(revDevice* device);
 };
 
 class DX12IndexBuffer : public DX12Buffer
@@ -58,6 +66,7 @@ public:
 	virtual ~DX12IndexBuffer() {}
 
 	bool Create(const uint32* index, uint32 length);
+	virtual revGraphicsResource* OnUploaded(revDevice* device);
 };
 
 #endif

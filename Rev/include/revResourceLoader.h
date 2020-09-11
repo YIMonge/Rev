@@ -22,15 +22,29 @@ public:
 		if (!file.Open(resourcePath.c_str(), FileMode::ReadBinary)) {
 			return OnLoadFailed(resource);
 		}
-
+		OnLoadComplete(resource);
 		return true;
 	}
 
 
 protected:
+	/// <summary>
+	/// Called when file load failed.
+	/// </summary>
+	/// <param name="resource"></param>
+	/// <returns>lif try to reload and sccess in this function, should return true</returns>
 	virtual bool OnLoadFailed(T* resource)
 	{
 		return false;
+	}
+
+	/// <summary>
+	/// Called when load completed
+	/// </summary>
+	/// <param name="resource"></param>
+	virtual void OnLoadComplete(T* resource)
+	{
+
 	}
 
 

@@ -7,6 +7,7 @@ class Window;
 #include "revDevice.h"
 #include "revArray.h"
 #include "revGraphicsCommandList.h"
+#include "revDescriptorHeap.h"
 
 class revRenderer
 {
@@ -28,7 +29,6 @@ public:
 	virtual void Render() = 0;
 
 	virtual revDevice* GetDevice() = 0;
-
 };
 
 

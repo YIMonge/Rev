@@ -25,7 +25,7 @@ public:
 	/// <summary>
 	/// create texture view after upload texture resource
 	/// </summary>
-	virtual void OnUploaded();
+	virtual revGraphicsResource* OnUploaded(revDevice* device);
 
 private:
 	ID3D12Resource* uploadHeap;

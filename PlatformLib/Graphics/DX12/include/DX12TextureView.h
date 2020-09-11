@@ -9,13 +9,15 @@
 class DX12TextureView : public revGraphicsResource
 {
 public:
-	DX12TextureView(revDevice* device) : revGraphicsResource(device) {}
+	DX12TextureView(revDevice* device) : 
+		revGraphicsResource(device)
+	{}
 	virtual ~DX12TextureView(){}
 	
-	void Create(revDevice* device, const revTexture* texture, D3D12_CPU_DESCRIPTOR_HANDLE* heap);
+	void Create(const revTexture* texture, revDescriptorHeap* descriptorHeap, revDescriptorHeap::Chunk* allocatedChunk = nullptr, uint32 offset = 0);
 	virtual void Destroy();
 private:
-	
+	revDescriptorHeap* descriptorHeap;
 };
 
 #endif

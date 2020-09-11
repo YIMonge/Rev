@@ -31,12 +31,6 @@ void DX12Renderer::StartUp(Window* window, const GraphicsDesc& desc)
 	fence = new DX12Fence(&device);
 	if (!fence->Create()) return;
 
-	cbufferHeap = new DX12DescriptorHeap(&device);
-	textureHeap = new DX12DescriptorHeap(&device);
-	samplerHeap = new DX12DescriptorHeap(&device);
-	if (!cbufferHeap->Create(DESCRIPTOR_HEAP_TYPE::BUFFER, 1024)) return;
-	if (!textureHeap->Create(DESCRIPTOR_HEAP_TYPE::TEXTURE, 1024)) return;
-	if (!samplerHeap->Create(DESCRIPTOR_HEAP_TYPE::SAMPLER, 128)) return;
 	if (!swapChain.Create(&device, *window)) return;
 
 }
@@ -61,19 +55,6 @@ void DX12Renderer::ExecuteCommand(revGraphicsCommandList& list)
 
 void DX12Renderer::ShutDown()
 {
-
-	if (cbufferHeap) {
-		cbufferHeap->Destroy();
-		delete cbufferHeap;
-	}
-	if (textureHeap) {
-		textureHeap->Destroy();
-		delete textureHeap;
-	}
-	if (samplerHeap) {
-		samplerHeap->Destroy();
-		delete samplerHeap;
-	}
 	swapChain.Destroy();
 	if (fence) {
 		fence->Destroy();
@@ -93,8 +74,8 @@ void DX12Renderer::Render()
 
 	auto& commandList = globalCommandList.GetList();
 
-	rootSiganture.Apply(globalCommandList);
-	pipelineState.Apply(globalCommandList);
+	//rootSiganture.Apply(globalCommandList);
+	//pipelineState.Apply(globalCommandList);
 	swapChain.Appply(globalCommandList, revColor::BLUE);
 
 //	meshRenderer.Draw(globalCommandList, cbufferHeap, textureHeap, samplerHeap);
@@ -103,7 +84,6 @@ void DX12Renderer::Render()
 	ExecuteCommand(globalCommandList);
 	fence->WaitForQueue();
 	swapChain.Present();
-	globalCommandList.ReleaseResoucers();
 }
 
 void DX12Renderer::OpenGlobalCommandList()
@@ -123,7 +103,6 @@ void DX12Renderer::ExecuteGlobalCommandList()
 	DX12CommandList& globalCommandList = device.GetGlobalCommandList();
 	ExecuteCommand(globalCommandList);
 	fence->WaitForQueue();
-	globalCommandList.ReleaseResoucers();
 }
 
 // TEST
@@ -131,6 +110,7 @@ void DX12Renderer::ExecuteGlobalCommandList()
 #include "revResourceManager.h"
 void DX12Renderer::TestCode()
 {
+	/*
 	revResourceManager& resMgr = revResourceManager::Get();
 	vertexShader = resMgr.Load<revShader>("ironman_vert");
 	fragmentShader = resMgr.Load<revShader>("ironman_frag");
@@ -153,14 +133,15 @@ void DX12Renderer::TestCode()
 	pipelineState.Create(&device, mat, rootSiganture, windowSize, windowSize);
 
 	texture = resMgr.Load<revTexture>("sample_tex.png");
-	DX12DescriptorHeap::Chunk resourceChunk = textureHeap->Allocation(1);
+	DX12DescriptorHeap::Chunk* resourceChunk = GetDescriptorHeap(DESCRIPTOR_HEAP_TYPE::TEXTURE);
 	auto resourceHandle = resourceChunk.GetHandle();
 	textureView = new DX12TextureView(&device);
-	textureView->Create(&device, texture, &resourceHandle);
+	textureView->Create(texture, &resourceHandle);
 
-	DX12DescriptorHeap::Chunk samplerChunk = samplerHeap->Allocation(1);
+	DX12DescriptorHeap::Chunk *samplerChunk = GetDescriptorHeap(DESCRIPTOR_HEAP_TYPE::SAMPLER);
 	auto samplerHandle = samplerChunk.GetHandle();
 	sampler.Create(&device, texture, &samplerHandle);
+	*/
 }
 
 

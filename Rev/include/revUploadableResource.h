@@ -4,6 +4,7 @@
 #include "revResource.h"
 
 class revDevice;
+class revGraphicsResource;
 
 /// <summary>
 /// the resource can upload tp VRAM
@@ -23,7 +24,7 @@ public:
 	/// <summary 
 	/// notify coplete upload 
 	/// </summary>
-	virtual void OnUploaded(){}
+	virtual revGraphicsResource* OnUploaded(revDevice* device) = 0;
 };
 
 #endif

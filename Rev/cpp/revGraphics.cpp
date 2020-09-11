@@ -52,29 +52,49 @@ void revGraphics::ShutDown()
 void revGraphics::Update()
 {
 	revDevice* device = renderer->GetDevice();
-	renderer->OpenGlobalCommandList();
-	uint32 count = readyForUploadResources.Count();
-	for (uint32 i = 0; i < count; ++i) {
-		revUploadableResource* resource = readyForUploadResources.Dequeue();
-		resource->Upload(device);
-		uploadingResources.Enqueue(resource);
+	uint32 count = static_cast<uint32>(uploadingResources.size());
+	if (count > 0) {
+		for (uint32 i = 0; i < count; ++i) {
+			revUploadableResource* resource = uploadingResources.front();
+			uploadingResources.pop();
+
+			uint64 uuid = resource->GetUUID();
+			if (graphicsResources.find(uuid) == graphicsResources.end()) {
+				revGraphicsResource* graphicsResource = resource->OnUploaded(device);
+				graphicsResources.emplace(uuid, graphicsResource);
+			}
+		}
 	}
-	renderer->CloseGlobalCommandList();
+
+	count = static_cast<uint32>(readyForUploadResources.size());
+	if (count > 0) {
+		renderer->OpenGlobalCommandList();
+		for (uint32 i = 0; i < count; ++i) {
+			revUploadableResource* resource = readyForUploadResources.front();
+			readyForUploadResources.pop();
+
+			resource->Upload(device);
+			uploadingResources.push(resource);
+		}
+		renderer->CloseGlobalCommandList();
+	}
 }
 
+/// <summary>
+/// enqyeye to waiting list for upload  
+/// </summary>
+/// <param name="resource"></param>
+void revGraphics::UploadResource(revUploadableResource* resource)
+{
+	readyForUploadResources.push(resource);
+}
+
+/// <summary>
+/// Draw Scene
+/// </summary>
 void revGraphics::Draw()
 {
 	renderer->Render();
-}
-
-void revGraphics::BeginLoad()
-{
-	renderer->OpenGlobalCommandList();
-}
-
-void revGraphics::EndLoad()
-{
-	renderer->CloseGlobalCommandList();
 }
 
 revGraphicsBuffer* revGraphics::CreateVertexBuffer()

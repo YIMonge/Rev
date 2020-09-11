@@ -8,19 +8,20 @@ DX12MeshRenderer::DX12MeshRenderer()
 
 DX12MeshRenderer::~DX12MeshRenderer()
 {
-
 }
 
 void DX12MeshRenderer::SetModel(const revModel* model)
 {
 	revMeshRenderer::SetModel(model);
-
 	revDevice* device = revGraphics::Get().GetDevice();
 	uint32 transformCount = static_cast<uint32>(transforms.size());
 	transformConstantBufferViews.resize(transformCount, nullptr);
+
+	/* TODO: upload 
 	for (uint32 i = 0; i < transformCount; ++i) {
 		transformConstantBufferViews[i] = new DX12ConstantBufferView(device);
 	}
+	*/
 }
 
 void DX12MeshRenderer::SetMesh(uint32 index, const revMesh* mesh)
@@ -34,6 +35,8 @@ void DX12MeshRenderer::SetMesh(uint32 index, const revMesh* mesh)
 	if (vertexBufferViews.size() <= index) {
 		vertexBufferViews.resize(index + 1);
 	}
+
+	/*
 	vertexBufferViews[index] = new DX12VertexBufferView(device);
 	vertexBufferViews[index]->Create(drawResources[index]->vertexBuffer);
 
@@ -43,10 +46,12 @@ void DX12MeshRenderer::SetMesh(uint32 index, const revMesh* mesh)
 		indexBufferViews[index] = new DX12IndexBufferView(device);
 		indexBufferViews[index]->Create(drawResources[index]->indexBuffer);
 	}
-
-	
+	*/	
 }
 
+/// <summary>
+/// destroy all resources in this renderer.
+/// </summary>
 void DX12MeshRenderer::Destroy()
 {
 	const uint32 vertexBufferCount = static_cast<uint32>(drawResources.size());
@@ -62,19 +67,16 @@ void DX12MeshRenderer::Destroy()
 		}
 	}
 	vertexBufferViews.clear();
+	
+
 
 	revMeshRenderer::Destroy();
 }
 
-void DX12MeshRenderer::Initialize(DX12DescriptorHeap* cBufferHeap)
-{
-	uint32 cbufferviewCount = static_cast<uint32>(transformConstantBufferViews.size());
-	transformCbufferHeapChunk = cBufferHeap->Allocation(cbufferviewCount);
-	for (uint32 i = 0; i < cbufferviewCount; ++i) {
-		transformConstantBufferViews[i]->Create(transformConstantBuffers[i], transformCbufferHeapChunk.GetHandle(i));
-	}
-}
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="camera"></param>
 void DX12MeshRenderer::PrepareDraw(const revCamera& camera)
 {
 	revTransform::CBuffer cbuffer;
@@ -102,10 +104,11 @@ void DX12MeshRenderer::Draw(revGraphicsCommandList& commandList, DX12DescriptorH
 	for (uint32 i = 0; i < drawCount; ++i) {
 		if (drawResources[i] == nullptr) continue;
 		if (drawResources[i]->transformIndex != DONT_HAVE_CONSTANT_BUFFER) {
-			cBufferHeap.Apply(commandList, 0, transformCbufferHeapChunk.GetDescriptorOffset(drawResources[i]->transformIndex));
+			//cBufferHeap.Apply(commandList, 0, transformCbufferHeapChunk->GetOffset(drawResources[i]->transformIndex));
+			cBufferHeap.Apply(commandList, 0, transformConstantBufferViews[i]->GetOffset());
 		}
 		if (drawResources[i]->materialIndex != DONT_HAVE_CONSTANT_BUFFER) {
-			//cBufferHeap.Apply(commandList, 0, materialCbufferHeapChunk.GetDescriptorOffset(drawResources[i]->materialIndex));
+			//cBufferHeap.Apply(commandList, 0, materialCbufferHeapChunk->GetOffset(drawResources[i]->materialIndex));
 		}
 		list->IASetVertexBuffers(0, 1, vertexBufferViews[i]->GetResourceView());
 		if (drawResources[i]->indexBuffer != nullptr) {

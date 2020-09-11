@@ -78,13 +78,4 @@ void DX12CommandList::AddTransitionBarrier(ID3D12Resource* resource, D3D12_RESOU
 	needBarrierResources.push_back(barrier);
 }
 
-void DX12CommandList::ReleaseResoucers()
-{
-	uint32 length = static_cast<uint32>(needReleaseResources.size());
-	for (uint32 i = 0; i < length; ++i) {
-		needReleaseResources[i]->Release();
-	}
-	needReleaseResources.clear();
-}
-
 #endif

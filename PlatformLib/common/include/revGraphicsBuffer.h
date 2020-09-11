@@ -4,13 +4,13 @@
 #include "revMath.h"
 #include "revArray.h"
 #include "revDevice.h"
-#include "revGraphicsResource.h"
+#include "revUploadableResource.h"
 
-class revGraphicsBuffer : public revGraphicsResource
+class revGraphicsBuffer : public revUploadableResource
 {
 public:
     revGraphicsBuffer(revDevice* device) :
-		revGraphicsResource(device),
+		device(device),
         buffer(NULL_HANDLE),
         sizeOfBytes(0),
         length(0),
@@ -35,6 +35,7 @@ public:
     uint32 GetLength() const { return length; }
 
 protected:
+	revDevice* device;
     revGraphicsResourceHandle buffer;
     uint32 sizeOfBytes;
     uint32 length;

@@ -13,7 +13,7 @@ public:
 	virtual bool LoadFromFile(const char* path, revTexture* texture);
 
 protected:
-	virtual bool OnLoadFailed(const char* resourcePath, revTexture* texture);
+	virtual void OnLoadComplete(revTexture* texture);
 };
 
 #endif

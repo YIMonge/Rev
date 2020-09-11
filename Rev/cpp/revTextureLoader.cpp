@@ -41,8 +41,7 @@ bool revTextureLoader::LoadFromFile(const char* path, revTexture* texture)
 	return true;
 }
 
-bool revTextureLoader::OnLoadFailed(const char* resourcePath, revTexture* texture)
+void revTextureLoader::OnLoadComplete(revTexture* texture)
 {
-
-	return false;
+	revGraphics::Get().UploadResource(texture);
 }

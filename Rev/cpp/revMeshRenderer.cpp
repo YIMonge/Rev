@@ -17,10 +17,13 @@ void revMeshRenderer::SetModel(const revModel* model)
 	uint32 count = static_cast<uint32>(transforms.size());
 	transformConstantBuffers.resize(count);
 
+	revGraphics& graphicsMgr = revGraphics::Get();
 	for (uint32 i = 0; i < count; ++i) {
-		transformConstantBuffers[i] = revGraphics::Get().CreateConstantBuffer();
+		transformConstantBuffers[i] = graphicsMgr.CreateConstantBuffer();
 		transformConstantBuffers[i]->Create(nullptr, sizeof(revTransform::CBuffer), 1, revGraphicsBuffer::USAGE::DYNAMIC);
+		graphicsMgr.UploadResource(transformConstantBuffers[i]);
 	}
+
 	SetMeshes(model->GetMeshes());
 }
 
@@ -33,13 +36,15 @@ void revMeshRenderer::SetMeshes(const revArray<revMesh*>& meshes)
 
 void revMeshRenderer::SetMesh(uint32 index, const revMesh* mesh)
 {
+	revGraphics& graphicsMgr = revGraphics::Get();
 	if (static_cast<uint32>(drawResources.size()) <= index) {
 		drawResources.resize(index + 1, nullptr);
 	}
 	DrawResources* drawResource = new DrawResources();
 	drawResources[index] = drawResource;
 
-	drawResource->vertexBuffer = revGraphics::Get().CreateVertexBuffer();
+
+	drawResource->vertexBuffer = graphicsMgr.CreateVertexBuffer();
 	if (drawResource->vertexBuffer == nullptr) {
 		NATIVE_LOGE("failed create vertex buffer. file:%s , line:%s", __FILE__, __LINE__);
 	}
@@ -47,6 +52,7 @@ void revMeshRenderer::SetMesh(uint32 index, const revMesh* mesh)
 	const auto& vertices = mesh->GetVertexData();
 	const uint32 sizeOfBytes = mesh->GetSizeOfBytes();
 	drawResource->vertexBuffer->Create(vertices.data(), sizeOfBytes, static_cast<uint32>(vertices.size()) / (sizeOfBytes / sizeof(f32)));
+	graphicsMgr.UploadResource(drawResource->vertexBuffer);
 
 	if (mesh->GetIndexArray().size() > 0) {
 
@@ -56,6 +62,7 @@ void revMeshRenderer::SetMesh(uint32 index, const revMesh* mesh)
 		}
 		const auto& indicies = mesh->GetIndexArray();
 		drawResource->indexBuffer->Create(indicies.data(), sizeof(revIndex3), static_cast<uint32>(indicies.size()));
+		graphicsMgr.UploadResource(drawResource->indexBuffer);
 	}
 
 	drawResource->transformIndex = mesh->GetTransformIndex();

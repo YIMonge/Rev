@@ -26,12 +26,6 @@ public:
 	void StartUp(Window* window, const GraphicsDesc& desc);
 	void ShutDown();
 
-	void ResizeWindow(int w, int h);
-
-	// TODO : delete
-	void BeginLoad();	// should call the function before load graphics resource
-	void EndLoad();		// upload graphics resource to vram 
-
 	void Update();
 
 	void Draw();	
@@ -44,12 +38,17 @@ public:
 	revMeshRenderer* CreateMeshRenderer();
 	revDevice* GetDevice() { return renderer->GetDevice(); }
 
+	void UploadResource(revUploadableResource* resource);
+
 private:
 	GraphicsDesc desc;
 	revRenderer* renderer;
 
     revDrawCommandStorage drawCommandStorage;
 
+	/// <summary>
+	/// graphics resources(cbuffer, views)
+	/// </summary>
 	revDictionary<uint64, revGraphicsResource*> graphicsResources;
 
 	/// <summary>

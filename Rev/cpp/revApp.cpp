@@ -14,18 +14,15 @@ revApp::revApp()
 {
 }
 
+
 void revApp::StartUp(Window* window, revScene* scene)
 {
 	revMemory::Get().StartUp(ToMegaByte(128));
 	GraphicsDesc desc = {};
 	revGraphics& graphics = revGraphics::Get();
 	graphics.StartUp(window, desc);
-
-	// TODO: splito to another thread
-	graphics.BeginLoad();
 	revSceneManager::Get().StartUp(scene);
 	graphics.Test();
-	graphics.EndLoad();
 
 	initialized = true;
 }
@@ -43,5 +40,6 @@ void revApp::Run()
 	delta_time = 0.0f;
 	current_time = 0.0f;
 	last_time = 0.0f;
+	revGraphics::Get().Update();
 	revGraphics::Get().Draw();
 }

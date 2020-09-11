@@ -1,3 +1,4 @@
+
 #ifdef _USE_DIRECTX12
 
 #include "DX12DescriptorHeap.h"
@@ -17,6 +18,7 @@ bool DX12DescriptorHeap::Create(DESCRIPTOR_HEAP_TYPE type, uint32 numDescriptors
 {
 	this->type = type;
 	this->maxDescriptors = numDescriptors;
+	availableInfo = new AvailableDescriptorHeapInfo(numDescriptors);
 	auto& dxDevice = device->GetDevice();
 
 	D3D12_DESCRIPTOR_HEAP_DESC  descriptorHeapDesc = {};
@@ -38,6 +40,7 @@ bool DX12DescriptorHeap::Create(DESCRIPTOR_HEAP_TYPE type, uint32 numDescriptors
 
 void DX12DescriptorHeap::Destroy()
 {
+	if (availableInfo != nullptr) delete availableInfo;
 	if (heap != nullptr) heap->Release();
 }
 

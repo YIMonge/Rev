@@ -1,6 +1,9 @@
 #ifdef _USE_DIRECTX12
 
 #include "DX12Buffer.h"
+#include "DX12VertexBufferView.h"
+#include "DX12IndexBufferView.h"
+#include "DX12ConstantBufferView.h"
 
 DX12Buffer::DX12Buffer(revDevice* device) :
 	revGraphicsBuffer(device),
@@ -43,7 +46,6 @@ bool DX12Buffer::Create(const void* data, uint32 sizeOfBytes, uint32 length, USA
 	if (FAILED(hr)) {
 		return false;
 	}
-	
 
 	return Update(data, size);
 }
@@ -65,32 +67,12 @@ bool DX12Buffer::Update(const void* data, uint32 sizeOfCopyBytes, uint32 offset)
 		mappedMemory = nullptr;
 	}
 	else {
-
-		HRESULT hr = device->GetDevice()->CreateCommittedResource(
-			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-			D3D12_HEAP_FLAG_NONE,
-			&CD3DX12_RESOURCE_DESC::Buffer(sizeOfCopyBytes),
-			D3D12_RESOURCE_STATE_GENERIC_READ,
-			nullptr,
-			IID_PPV_ARGS(&uploadBuffer)
-		);
-		if (FAILED(hr)) {
-			return false;
-		}
-
-		D3D12_SUBRESOURCE_DATA subResourceData = {};
+		subResourceData = {};
 		subResourceData.pData = data;
 		subResourceData.RowPitch = sizeOfCopyBytes;
 		subResourceData.SlicePitch = subResourceData.RowPitch;
 
-		DX12CommandList& commandList = static_cast<DX12Device*>(device)->GetGlobalCommandList();
-		UpdateSubresources(commandList.GetList(), buffer, uploadBuffer, 0, 0, 1, &subResourceData);
-		commandList.AddTransitionBarrier(buffer, D3D12_RESOURCE_STATE_COPY_DEST, destResourceState);
-		commandList.ReserveRelease(uploadBuffer);
-
 	}
-
-
 	return true;
 }
 
@@ -105,6 +87,35 @@ void DX12Buffer::Destroy()
 	if (buffer != nullptr) {
 		buffer->Release();
 		buffer = nullptr;
+	}
+}
+
+bool DX12Buffer::Upload(revDevice* device)
+{
+	if (usage == USAGE::STATIC) {
+		HRESULT hr = device->GetDevice()->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+			D3D12_HEAP_FLAG_NONE,
+			&CD3DX12_RESOURCE_DESC::Buffer(subResourceData.RowPitch),
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&uploadBuffer)
+		);
+		if (FAILED(hr)) {
+			return false;
+		}
+
+		DX12CommandList& commandList = static_cast<DX12Device*>(device)->GetGlobalCommandList();
+		UpdateSubresources(commandList.GetList(), buffer, uploadBuffer, 0, 0, 1, &subResourceData);
+		commandList.AddTransitionBarrier(buffer, D3D12_RESOURCE_STATE_COPY_DEST, destResourceState);
+	}
+}
+
+void DX12Buffer::ReleaseUploadBuffer()
+{
+	if (usage == USAGE::STATIC && uploadBuffer != nullptr) {
+		uploadBuffer->Release();
+		uploadBuffer = nullptr;
 	}
 }
 
@@ -123,9 +134,35 @@ bool DX12VertexBuffer::Create(const revArray<float>& data, USAGE usage)
 	return DX12Buffer::Create(&data[0], sizeof(float), static_cast<uint32>(data.size()), usage);
 }
 
+revGraphicsResource* DX12VertexBuffer::OnUploaded(revDevice* device)
+{
+	DX12VertexBufferView* view = new DX12VertexBufferView(device);
+	view->Create(this);
+	return view;
+}
+
 bool DX12IndexBuffer::Create(const uint32* index, uint32 length)
 {
 	return DX12Buffer::Create(index, sizeof(revIndex3), length, USAGE::STATIC);
 }
+
+revGraphicsResource* DX12IndexBuffer::OnUploaded(revDevice* device)
+{
+	DX12IndexBufferView* view = new DX12IndexBufferView(device);
+	view->Create(this);
+	return view;
+}
+
+revGraphicsResource* DX12ConstantBuffer::OnUploaded(revDevice* device)
+{
+	ReleaseUploadBuffer();
+
+	DX12ConstantBufferView* view = new DX12ConstantBufferView(device);
+	revDescriptorHeap* heap = device->GetDescriptorHeap(DESCRIPTOR_HEAP_TYPE::BUFFER);
+	revDescriptorHeap::Chunk* chunk = heap->Allocation();
+	view->Create(this, heap, chunk);
+	return view;
+}
+
 
 #endif

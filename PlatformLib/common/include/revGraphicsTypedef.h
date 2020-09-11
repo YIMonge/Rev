@@ -229,7 +229,6 @@ enum class SHADER_VISIBILITY
 	GEOMETRY,
 	HULL,
 	ALL,
-	MAX_NUM,
 };
 
 enum class DESCRIPTOR_USAGE
@@ -246,8 +245,8 @@ enum class DESCRIPTOR_HEAP_TYPE
 	SAMPLER,
 	RENDER_TARGET,
 	DEPTH_STENCIL,
-	MAX_NUM,
 };
+const uint32 DESCRIPTOR_HEAP_TYPE_MAX_NUM = 5;
 
 enum class SHADER_INPUT_TYPE
 {
@@ -560,7 +559,7 @@ using revGraphicsPipeline = ID3D12PipelineState*;
 using revTextureHandle = ID3D12Resource*;
 using revTextureSampler = D3D12_GPU_DESCRIPTOR_HANDLE;
 using revDescriptorCPUHandle = D3D12_CPU_DESCRIPTOR_HANDLE;
-#define NULL_HANDLE nullptr
+#define NULL_HANDLE 0
 
 namespace {
 	REV_INLINE D3D12_FILTER ConvertToDXFilter(FILTER_MODE minFilter, FILTER_MODE magFilter, MIP_FILTER_MODE mip, uint32 anisotorpy, bool compare)

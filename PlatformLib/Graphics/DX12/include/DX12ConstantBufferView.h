@@ -12,10 +12,10 @@ public:
 	DX12ConstantBufferView(revDevice* device) : revGraphicsResource(device) {}
 	virtual ~DX12ConstantBufferView(){}
 	
-	void Create(const revGraphicsBuffer* cbuffer, const D3D12_CPU_DESCRIPTOR_HANDLE& heap);
+	void Create(const revGraphicsBuffer* cbuffer, revDescriptorHeap* descriptorHeap, revDescriptorHeap::Chunk* allocatedChunk = nullptr, uint32 offset = 0);
 	virtual void Destroy();
 private:
-	
+	revDescriptorHeap* descriptorHeap;
 };
 
 #endif

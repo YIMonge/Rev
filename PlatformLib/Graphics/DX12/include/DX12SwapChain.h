@@ -38,9 +38,10 @@ private:
 	uint32 renderTargetViewDescriptorSize;
 	revArray<ID3D12Resource*> renderTarget;
 	ID3D12Resource* depthStencil;
-
-	DX12DescriptorHeap* renderTargetHeap;
-	DX12DescriptorHeap* depthStencilHeap;
+	revDescriptorHeap* renderTargetHeap;
+	revDescriptorHeap* depthStencilHeap;
+	revDescriptorHeap::Chunk* renderTargetChunk;
+	revDescriptorHeap::Chunk* depthStencilChunk;
 };
 
 #endif
