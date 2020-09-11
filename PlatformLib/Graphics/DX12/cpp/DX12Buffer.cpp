@@ -109,6 +109,7 @@ bool DX12Buffer::Upload(revDevice* device)
 		UpdateSubresources(commandList.GetList(), buffer, uploadBuffer, 0, 0, 1, &subResourceData);
 		commandList.AddTransitionBarrier(buffer, D3D12_RESOURCE_STATE_COPY_DEST, destResourceState);
 	}
+	return true;
 }
 
 void DX12Buffer::ReleaseUploadBuffer()
